@@ -2,7 +2,8 @@ package il.ac.mta.zuli.evolution.engine.data;
 
 public class Subject {
     private int id;
-    private  String name;
+    private String name;
+
     public String getName() {
         return name;
     }

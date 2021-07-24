@@ -2,13 +2,12 @@ package il.ac.mta.zuli.evolution.engine.data;
 
 import il.ac.mta.zuli.evolution.engine.data.generated.ETTTeacher;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 public class Teacher {
-    private  int id;
-    private  String name;
-    private List<Integer> subjects;
+    private int id;
+    private String name;
+    private Map<Integer, Subject> subjects;
 
     public Teacher(ETTTeacher loadedData) {
         setName(loadedData.getETTName());
@@ -31,21 +30,24 @@ public class Teacher {
     public void setName(String name) {
         this.name = name;
     }
-
-    public List<Integer> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(List<Integer> subjects) {
-
-        subjects = new ArrayList<Integer>();
-        for(int subject: subjects){
-            subjects.add(subject);
-        }
-    }
-
-    @Override
-    public String toString(){
-        return String.format(id+" "+name +subjects);
-    }
 }
+
+//    public List<Integer> getSubjects() {
+//        return subjects;
+//    }
+//
+//    public void setSubjects(List<Integer> subjects) {
+
+//    public void setSubjects(List<Integer> subjects) {
+//
+//        subjects = new ArrayList<Integer>();
+//        for (int subject : subjects) {
+//            subjects.add(subject);
+//        }
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return String.format(id + " " + name + subjects);
+//    }
+//}

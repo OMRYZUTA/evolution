@@ -1,5 +1,5 @@
 package il.ac.mta.zuli.evolution.engine.data;
 
-public class Rules {
-
+public enum RuleType {
+    SOFT, HARD
 }
