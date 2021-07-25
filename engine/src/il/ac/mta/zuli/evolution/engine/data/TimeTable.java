@@ -14,16 +14,16 @@ public class TimeTable {
     private Map<Integer, Teacher> teachers;
     private Map<Integer, Subject> subjects;
     private Map<Integer, SchoolClass> schoolClasses;
-    private List<Rule> rules;
+    private List<Rule> rules;//still need to figure out rules - delete later
 
 
     public TimeTable(ETTTimeTable tt) {
+        setRules(tt.getETTRules());
         setDays(tt.getDays());
         setHours(tt.getHours());
         setSubjects(tt.getETTSubjects());
-        setTeachers(tt.getETTTeachers());
         setSchoolClasses(tt.getETTClasses());
-        setRules(tt.getETTRules());
+        setTeachers(tt.getETTTeachers());
     }
 
     public int getDays() {
@@ -49,6 +49,7 @@ public class TimeTable {
     private void setTeachers(ETTTeachers teachers) {
         this.teachers = new HashMap<Integer, Teacher>();
 
+        //check parameter is not null - delete later
         for (ETTTeacher t : teachers.getETTTeacher()
         ) {
             //check ID is unique first - delete later
@@ -79,7 +80,7 @@ public class TimeTable {
 
         for (ETTClass c : classes.getETTClass()
         ) {
-            this.schoolClasses.put(c.getId(), new SchoolClass(c.));
+            this.schoolClasses.put(c.getId(), new SchoolClass(c));
         }
 
     }
