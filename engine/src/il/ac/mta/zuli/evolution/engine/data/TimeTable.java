@@ -1,22 +1,95 @@
 package il.ac.mta.zuli.evolution.engine.data;
 
-import il.ac.mta.zuli.evolution.engine.data.generated.ETTTimeTable;
+import il.ac.mta.zuli.evolution.engine.data.generated.*;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class TimeTable {
-    private final int days;
-    private final int hours;
+    private int days;
+    private int hours;
     private Map<Integer, Teacher> teachers;
     private Map<Integer, Subject> subjects;
     private Map<Integer, SchoolClass> schoolClasses;
     private List<Rule> rules;
 
+
     public TimeTable(ETTTimeTable tt) {
-        this.days = tt.getDays();
-        this.hours = tt.getHours();
-        //continue - delete later
+        setDays(tt.getDays());
+        setHours(tt.getHours());
+        setSubjects(tt.getETTSubjects());
+        setTeachers(tt.getETTTeachers());
+        setSchoolClasses(tt.getETTClasses());
+        setRules(tt.getETTRules());
+    }
+
+    public int getDays() {
+        return days;
+    }
+
+    private void setDays(int days) {
+        this.days = days;
+    }
+
+    public int getHours() {
+        return hours;
+    }
+
+    private void setHours(int hours) {
+        this.hours = hours;
+    }
+
+    public Map<Integer, Teacher> getTeachers() {
+        return Collections.unmodifiableMap(teachers);
+    }
+
+    private void setTeachers(ETTTeachers teachers) {
+        this.teachers = new HashMap<Integer, Teacher>();
+
+        for (ETTTeacher t : teachers.getETTTeacher()
+        ) {
+            //check ID is unique first - delete later
+            this.teachers.put(t.getId(), new Teacher(t));
+        }
+    }
+
+    public Map<Integer, Subject> getSubjects() {
+        return Collections.unmodifiableMap(subjects);
+    }
+
+    private void setSubjects(ETTSubjects subjects) {
+        this.subjects = new HashMap<Integer, Subject>();
+
+        for (ETTSubject s : subjects.getETTSubject()
+        ) {
+            //check ID is unique first - delete later
+            this.subjects.put(s.getId(), new Subject(s));
+        }
+    }
+
+    public Map<Integer, SchoolClass> getSchoolClasses() {
+        return Collections.unmodifiableMap(schoolClasses);
+    }
+
+    private void setSchoolClasses(ETTClasses classes) {
+        this.schoolClasses = new HashMap<Integer, SchoolClass>();
+
+        for (ETTClass c : classes.getETTClass()
+        ) {
+            this.schoolClasses.put(c.getId(), new SchoolClass(c.));
+        }
+
+    }
+
+    public List<Rule> getRules() {
+        return Collections.unmodifiableList(rules);
+    }
+
+    //complete - delete later
+    private void setRules(ETTRules rules) {
     }
 
     @Override

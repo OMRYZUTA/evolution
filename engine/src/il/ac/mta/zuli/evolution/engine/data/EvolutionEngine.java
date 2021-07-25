@@ -4,7 +4,7 @@ import il.ac.mta.zuli.evolution.engine.data.generated.ETTEvolutionEngine;
 
 import java.util.List;
 
-public class EvolutionEngine {
+public class EvolutionEngine implements engine {
     private final int initialPopulationSize;
     private String selection;
     private Crossover crossover;

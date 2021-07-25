@@ -1,14 +1,22 @@
 package il.ac.mta.zuli.evolution.engine.data;
 
+import il.ac.mta.zuli.evolution.engine.data.generated.ETTSubject;
+
 public class Subject {
     private int id;
     private String name;
+
+    public Subject(ETTSubject s) {
+        setId(s.getId());
+        setName(s.getName());
+    }
+
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -16,7 +24,7 @@ public class Subject {
         return id;
     }
 
-    public void setId(int id) {
+    private void setId(int id) {
         this.id = id;
     }
 }
