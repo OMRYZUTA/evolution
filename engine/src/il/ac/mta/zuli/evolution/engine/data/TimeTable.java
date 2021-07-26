@@ -48,17 +48,35 @@ public class TimeTable {
         this.teachers = new HashMap<Integer, Teacher>();
         List<ETTTeacher> teacherList = ettTeachers.getETTTeacher();
 
-        for (ETTTeacher t : teacherList) {
-            Teacher newTeacher = new Teacher(t);
-            //putIfAbsent - If the specified key is not already associated with a value (or is mapped to null) associates it with the given value and returns null, else returns the current value.
-            this.teachers.putIfAbsent(t.getId(), newTeacher);
+        //sorting in order to check the IDs of subjects in file cover numbers 1-numOfSubjects
+        teacherList.sort(new Comparator<ETTTeacher>() {
+            @Override
+            public int compare(ETTTeacher o1, ETTTeacher o2) {
+                return o1.getId() - o2.getId();
+            }
+        });
 
-            //add subjects to the teacher we just created
-            List<ETTTeaches> teaches = t.getETTTeaching().getETTTeaches();
+        ETTTeacher t = null;
 
-            for (ETTTeaches s : teaches) {
-                Subject temp = this.subjects.get(s.getSubjectId()); //only adding subject to teacher if the subject exists in the timeTable
-                newTeacher.addSubject(temp);
+        for (int i = 0; i < teacherList.size(); i++) {
+            t = teacherList.get(i);
+
+            if (i + 1 == t.getId()) {
+                //not sure we need putIfAbsent because we're checking IDs across index
+                //if putIfAbsent returned a value different than NULL it means the key was not unique and we should throw an exception - delete later
+                Teacher newTeacher = new Teacher(t);
+                this.teachers.putIfAbsent(t.getId(), newTeacher);
+
+                //add subjects to the teacher we just created
+                List<ETTTeaches> teaches = t.getETTTeaching().getETTTeaches();
+
+                for (ETTTeaches s : teaches) {
+                    Subject tempSubject = this.subjects.get(s.getSubjectId()); //only adding subject to teacher if the subject exists in the timeTable
+                    newTeacher.addSubject(tempSubject);
+                }
+            } else {
+                System.out.println("UI report error: teacher ID " + t.getId() + " not according to required count");//throw exception - need to think about it
+                return;
             }
         }
     }
@@ -71,10 +89,30 @@ public class TimeTable {
         this.subjects = new HashMap<Integer, Subject>();
         List<ETTSubject> subjectList = ettSubjects.getETTSubject();
 
-        for (ETTSubject s : subjectList) {
-            this.subjects.putIfAbsent(s.getId(), new Subject(s));
+        //sorting in order to check the IDs of subjects in file cover numbers 1-numOfSubjects
+        subjectList.sort(new Comparator<ETTSubject>() {
+            @Override
+            public int compare(ETTSubject o1, ETTSubject o2) {
+                return o1.getId() - o2.getId();
+            }
+        });
+
+        ETTSubject s = null;
+
+        for (int i = 0; i < subjectList.size(); i++) {
+            s = subjectList.get(i);
+
+            if (i + 1 == s.getId()) {
+                //not sure we need putIfAbsent because we're checking IDs across index
+                //if putIfAbsent returned a value different than NULL it means the key was not unique and we should throw an exception - delete later
+                this.subjects.putIfAbsent(s.getId(), new Subject(s));
+            } else {
+                System.out.println("UI report error: subject ID " + s.getId() + " not according to required count");//throw exception - need to think about it
+                return;
+            }
         }
     }
+
 
     public Map<Integer, SchoolClass> getSchoolClasses() {
         return Collections.unmodifiableMap(schoolClasses);

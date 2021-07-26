@@ -12,6 +12,7 @@ import java.io.File;
 public class XMLParser {
     public Descriptor unmarshall() {
         try {
+            //! validate - file ends with xml - delete later
             String path = "engine/src/resources/EX1-small.xml"; // modify later
             File file = new File(path);
 
@@ -42,12 +43,4 @@ public class XMLParser {
             e.printStackTrace();
         }
     }
-//
-//    public Teacher createTeacher() {
-//        return new Teacher(loadedData);
-//    }
-//
-//    public Teacher createTeacher() {
-//        return new Teacher(loadedData);
-//    }
 }
