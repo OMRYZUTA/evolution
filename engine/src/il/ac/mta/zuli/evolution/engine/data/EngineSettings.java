@@ -4,13 +4,13 @@ import il.ac.mta.zuli.evolution.engine.data.generated.ETTEvolutionEngine;
 
 import java.util.List;
 
-public class EvolutionEngine implements engine {
+public class EngineSettings {
     private final int initialPopulationSize;
     private String selection;
     private Crossover crossover;
     private List<Mutation> mutations;
 
-    public EvolutionEngine(ETTEvolutionEngine ee) {
+    public EngineSettings(ETTEvolutionEngine ee) {
         this.initialPopulationSize = ee.getETTInitialPopulation().getSize();
     }
 }

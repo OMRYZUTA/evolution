@@ -1,11 +1,12 @@
 package il.ac.mta.zuli.evolution.engine.data;
 
 import il.ac.mta.zuli.evolution.engine.data.generated.*;
+import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-
+//make TimeTable singleton
 public class TimeTable {
     private int days;
     private int hours;
@@ -13,6 +14,7 @@ public class TimeTable {
     private Map<Integer, Subject> subjects;
     private Map<Integer, SchoolClass> schoolClasses;
     private List<Rule> rules;//still need to figure out rules - delete later
+    private int hardRulesWeight;
 
 
     public TimeTable(ETTTimeTable tt) {
@@ -22,6 +24,7 @@ public class TimeTable {
         setSubjects(tt.getETTSubjects());
         setSchoolClasses(tt.getETTClasses());
         setTeachers(tt.getETTTeachers());
+        setHardRulesWeight(tt.getETTRules().getHardRulesWeight());
     }
 
     public int getDays() {
@@ -65,14 +68,14 @@ public class TimeTable {
                 //not sure we need putIfAbsent because we're checking IDs across index
                 //if putIfAbsent returned a value different than NULL it means the key was not unique and we should throw an exception - delete later
                 Teacher newTeacher = new Teacher(t);
-                this.teachers.putIfAbsent(t.getId(), newTeacher);
-
                 //add subjects to the teacher we just created
                 List<ETTTeaches> teaches = t.getETTTeaching().getETTTeaches();
 
                 for (ETTTeaches s : teaches) {
-                    Subject tempSubject = this.subjects.get(s.getSubjectId()); //only adding subject to teacher if the subject exists in the timeTable
+                    Subject tempSubject = this.subjects.get(s.getSubjectId()); //only adding subject to teacher if the subject exists in  timeTable
                     newTeacher.addSubject(tempSubject);
+
+                    this.teachers.putIfAbsent(t.getId(), newTeacher);
                 }
             } else {
                 System.out.println("UI report error: teacher ID " + t.getId() + " not according to required count");//throw exception - need to think about it
@@ -122,8 +125,27 @@ public class TimeTable {
         this.schoolClasses = new HashMap<Integer, SchoolClass>();
         List<ETTClass> classList = ettClasses.getETTClass();
 
-        for (ETTClass c : classList) {
-            this.schoolClasses.putIfAbsent(c.getId(), new SchoolClass(c));
+        //sorting in order to check the IDs of classes in file cover numbers 1-numOfClasses
+        classList.sort(new Comparator<ETTClass>() {
+            @Override
+            public int compare(ETTClass o1, ETTClass o2) {
+                return o1.getId() - o2.getId();
+            }
+        });
+
+        ETTClass c = null;
+
+        for (int i = 0; i < classList.size(); i++) {
+            c = classList.get(i);
+
+            if (i + 1 == c.getId()) {
+                //not sure we need putIfAbsent because we're checking IDs across index
+                //if putIfAbsent returned a value different than NULL it means the key was not unique and we should throw an exception - delete later
+                this.schoolClasses.putIfAbsent(c.getId(), new SchoolClass(c));
+            } else {
+                System.out.println("UI report error: schoolClass ID " + c.getId() + " not according to required count");//throw exception - need to think about it
+                return;
+            }
         }
     }
 
@@ -134,6 +156,14 @@ public class TimeTable {
     //complete - delete later
     private void setRules(ETTRules rules) {
         this.rules = new ArrayList<Rule>();
+    }
+
+    public int getHardRulesWeight() {
+        return hardRulesWeight;
+    }
+
+    private void setHardRulesWeight(int hardRulesWeight) {
+        this.hardRulesWeight = hardRulesWeight;
     }
 
     @Override

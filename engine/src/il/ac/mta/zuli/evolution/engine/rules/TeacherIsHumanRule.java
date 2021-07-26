@@ -1,4 +1,6 @@
-package il.ac.mta.zuli.evolution.engine.data;
+package il.ac.mta.zuli.evolution.engine.rules;
+
+import il.ac.mta.zuli.evolution.engine.data.RuleType;
 
 import java.util.List;
 
