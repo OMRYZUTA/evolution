@@ -8,8 +8,5 @@ public class Program {
         XMLParser xmlParser = new XMLParser();
         Descriptor d = xmlParser.unmarshall();
         System.out.println(d);
-
-//        Teacher teacher = xmlParser.createTeacher();
-//        System.out.println(teacher);
     }
 }

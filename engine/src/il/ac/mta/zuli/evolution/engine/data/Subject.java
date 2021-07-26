@@ -11,7 +11,6 @@ public class Subject {
         setName(s.getName());
     }
 
-
     public String getName() {
         return name;
     }
@@ -26,5 +25,13 @@ public class Subject {
 
     private void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Subject{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

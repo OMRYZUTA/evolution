@@ -15,9 +15,9 @@ public class Descriptor {
 
     @Override
     public String toString() {
-        return "Descriptor: " +
-                "timeTable: " + timeTable +
-                ", engine: " + engine +
-                "***";
+        return "Descriptor{" +
+                "timeTable=" + timeTable +
+                ", engine=" + engine +
+                '}';
     }
 }

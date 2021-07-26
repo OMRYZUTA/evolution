@@ -40,14 +40,21 @@ public class SchoolClass {
         return Collections.unmodifiableList(requirements);
     }
 
-    private void setRequirements(ETTRequirements requirements) {
+    private void setRequirements(ETTRequirements ettRequirements) {
         this.requirements = new ArrayList<Requirement>();
-        //public List<ETTStudy> getETTStudy() {
-        for (ETTStudy requirement : requirements.getETTStudy()
-        ) {
-//this.requirements.add(requirement); //continue to fix
+        List<ETTStudy> requirementList = ettRequirements.getETTStudy();
+
+        for (ETTStudy r : requirementList) {
+            this.requirements.add(new Requirement(r));
         }
     }
 
-
+    @Override
+    public String toString() {
+        return "SchoolClass{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", requirements=" + requirements +
+                '}';
+    }
 }
