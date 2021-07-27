@@ -2,8 +2,10 @@ package il.ac.mta.zuli.evolution.engine.data;
 
 import il.ac.mta.zuli.evolution.engine.data.generated.ETTTeacher;
 import il.ac.mta.zuli.evolution.engine.data.generated.ETTTeaches;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ public class Teacher {
     private String name;
     private Map<Integer, Subject> subjects; //the subjects the teacher teaches
 
-    public Teacher(ETTTeacher t) {
+    public Teacher(@NotNull ETTTeacher t) {
         setName(t.getETTName());
         setId(t.getId());
         setSubjects(t.getETTTeaching().getETTTeaches());
@@ -23,6 +25,7 @@ public class Teacher {
     }
 
     private void setId(int id) {
+        //no need to validate id in here because we validate it's a running count outside
         this.id = id;
     }
 
@@ -30,22 +33,21 @@ public class Teacher {
         return name;
     }
 
-    private void setName(String name) {
+    private void setName(@NotNull String name) {
         this.name = name;
     }
 
-    private void setSubjects(List<ETTTeaches> subjectList) {
+    private void setSubjects(@NotNull List<ETTTeaches> subjectList) {
+        this.subjects = new HashMap<>();
+        Subject subjectToAdd;
         Map<Integer, Subject> existingSubjects = Descriptor.getInstance().getTimeTable().getSubjects();
-        Subject subjectToAdd = null;
 
         for (ETTTeaches s : subjectList) {
-            //only adding subject to teacher if the subject exists in  timeTable
-            if ((subjectToAdd = existingSubjects.get(s.getSubjectId())) != null) {
-                this.subjects.put(subjectToAdd.getId(), subjectToAdd);
-            } else {
-                //throw exception - delete later
+            if ((subjectToAdd = existingSubjects.get(s.getSubjectId())) == null) {
+                //TODO throw exception
                 System.out.println("Teacher " + id + "has subject that doesn't exist in the timetable");
             }
+            this.subjects.put(subjectToAdd.getId(), subjectToAdd);
         }
     }
 

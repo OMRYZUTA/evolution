@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-//make TimeTable singleton
+
 public class TimeTable {
     private int days;
     private int hours;
@@ -17,14 +17,15 @@ public class TimeTable {
     private int hardRulesWeight;
 
 
-    public TimeTable(ETTTimeTable tt) {
+    public TimeTable(@NotNull ETTTimeTable tt) {
+        //TODO throw exception
         setRules(tt.getETTRules());
+        setHardRulesWeight(tt.getETTRules().getHardRulesWeight());
         setDays(tt.getDays());
         setHours(tt.getHours());
         setSubjects(tt.getETTSubjects());
         setSchoolClasses(tt.getETTClasses());
         setTeachers(tt.getETTTeachers());
-        setHardRulesWeight(tt.getETTRules().getHardRulesWeight());
     }
 
     public int getDays() {
@@ -32,7 +33,10 @@ public class TimeTable {
     }
 
     private void setDays(int days) {
-        this.days = days;
+        if (days > 0) {
+            this.days = days;
+        } else {//TODO throw exception
+        }
     }
 
     public int getHours() {
@@ -40,7 +44,10 @@ public class TimeTable {
     }
 
     private void setHours(int hours) {
-        this.hours = hours;
+        if (hours > 0) {
+            this.hours = hours;
+        } else {//TODO throw exception
+        }
     }
 
     public Map<Integer, Teacher> getTeachers() {
@@ -48,31 +55,22 @@ public class TimeTable {
     }
 
     private void setTeachers(@NotNull ETTTeachers ettTeachers) {
-        this.teachers = new HashMap<Integer, Teacher>();
+        this.teachers = new HashMap<>();
+
         List<ETTTeacher> teacherList = ettTeachers.getETTTeacher();
-
         //sorting in order to check the IDs of subjects in file cover numbers 1-numOfSubjects
-        teacherList.sort(new Comparator<ETTTeacher>() {
-            @Override
-            public int compare(ETTTeacher o1, ETTTeacher o2) {
-                return o1.getId() - o2.getId();
-            }
-        });
-
-        ETTTeacher t = null;
+        teacherList.sort(Comparator.comparingInt(ETTTeacher::getId));
+        ETTTeacher t;
 
         for (int i = 0; i < teacherList.size(); i++) {
             t = teacherList.get(i);
 
-            if (i + 1 == t.getId()) {
-                //not sure we need putIfAbsent because we're checking IDs across index
-                //if putIfAbsent returned a value different than NULL it means the key was not unique and we should throw an exception - delete later
-                this.teachers.putIfAbsent(t.getId(), new Teacher(t));
-            } else {
-                //throw exception - delete later
+            if (i + 1 != t.getId()) {
+                //TODO throw exception
                 System.out.println("UI report error: teacher ID " + t.getId() + " not according to required count");//throw exception - need to think about it
                 return;
             }
+            this.teachers.put(t.getId(), new Teacher(t));
         }
     }
 
@@ -81,30 +79,22 @@ public class TimeTable {
     }
 
     private void setSubjects(@NotNull ETTSubjects ettSubjects) {
-        this.subjects = new HashMap<Integer, Subject>();
+        this.subjects = new HashMap<>();
+
         List<ETTSubject> subjectList = ettSubjects.getETTSubject();
-
         //sorting in order to check the IDs of subjects in file cover numbers 1-numOfSubjects
-        subjectList.sort(new Comparator<ETTSubject>() {
-            @Override
-            public int compare(ETTSubject o1, ETTSubject o2) {
-                return o1.getId() - o2.getId();
-            }
-        });
-
-        ETTSubject s = null;
+        subjectList.sort(Comparator.comparingInt(ETTSubject::getId));
+        ETTSubject s;
 
         for (int i = 0; i < subjectList.size(); i++) {
             s = subjectList.get(i);
 
-            if (i + 1 == s.getId()) {
-                //not sure we need putIfAbsent because we're checking IDs across index
-                //if putIfAbsent returned a value different than NULL it means the key was not unique and we should throw an exception - delete later
-                this.subjects.putIfAbsent(s.getId(), new Subject(s));
-            } else {
+            if (i + 1 != s.getId()) {
+                //TODO throw exception
                 System.out.println("UI report error: subject ID " + s.getId() + " not according to required count");//throw exception - need to think about it
                 return;
             }
+            this.subjects.put(s.getId(), new Subject(s)); //no need for putIfAbsent because we're checking IDs here
         }
     }
 
@@ -114,30 +104,22 @@ public class TimeTable {
     }
 
     private void setSchoolClasses(@NotNull ETTClasses ettClasses) {
-        this.schoolClasses = new HashMap<Integer, SchoolClass>();
+        this.schoolClasses = new HashMap<>();
+
         List<ETTClass> classList = ettClasses.getETTClass();
-
         //sorting in order to check the IDs of classes in file cover numbers 1-numOfClasses
-        classList.sort(new Comparator<ETTClass>() {
-            @Override
-            public int compare(ETTClass o1, ETTClass o2) {
-                return o1.getId() - o2.getId();
-            }
-        });
-
+        classList.sort(Comparator.comparingInt(ETTClass::getId));
         ETTClass c = null;
 
         for (int i = 0; i < classList.size(); i++) {
             c = classList.get(i);
 
-            if (i + 1 == c.getId()) {
-                //not sure we need putIfAbsent because we're checking IDs across index
-                //if putIfAbsent returned a value different than NULL it means the key was not unique and we should throw an exception - delete later
-                this.schoolClasses.putIfAbsent(c.getId(), new SchoolClass(c));
-            } else {
+            if (i + 1 != c.getId()) {
+                //TODO throw exception
                 System.out.println("UI report error: schoolClass ID " + c.getId() + " not according to required count");//throw exception - need to think about it
                 return;
             }
+            this.schoolClasses.put(c.getId(), new SchoolClass(c));
         }
     }
 
@@ -145,9 +127,9 @@ public class TimeTable {
         return Collections.unmodifiableList(rules);
     }
 
-    //complete - delete later
-    private void setRules(ETTRules rules) {
-        this.rules = new ArrayList<Rule>();
+    private void setRules(@NotNull ETTRules rules) {
+        //TODO throw exception
+        this.rules = new ArrayList<>();
     }
 
     public int getHardRulesWeight() {

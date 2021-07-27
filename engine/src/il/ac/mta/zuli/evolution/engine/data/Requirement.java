@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.data;
 
 import il.ac.mta.zuli.evolution.engine.data.generated.ETTStudy;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -9,10 +10,9 @@ public class Requirement {
     private int hours;
     private Subject subject;
 
-    public Requirement(ETTStudy ettRequirement) {
+    public Requirement(@NotNull ETTStudy ettRequirement) {
         setHours(ettRequirement.getHours());
         setSubject(ettRequirement.getSubjectId());
-        //after ctor add subject using timeTable's subject map
     }
 
     public int getHours() {
@@ -22,7 +22,8 @@ public class Requirement {
     private void setHours(int hours) {
         if (hours > 0) {
             this.hours = hours;
-        } else {//throw exception
+        } else {
+            //TODO throw exception
             System.out.println("hours are 0 or negative");
         }
     }
@@ -36,7 +37,7 @@ public class Requirement {
         Map<Integer, Subject> ttSubjects = d.getTimeTable().getSubjects();
 
         if ((subject = ttSubjects.get(id)) == null) {
-            //throw exception - delete later
+            //TODO throw exception
             System.out.println("subject ID: " + id + " does not exist in tt");
         }
     }

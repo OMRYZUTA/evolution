@@ -19,7 +19,9 @@ public class XMLParser {
 
             //creating singleton Descriptor and setting its fields using the ETTDescriptor
             Descriptor newDescriptor = Descriptor.getInstance();
+            //TODO start debugging from here
             newDescriptor.setDescriptor(d);
+            System.out.println("in xml parser" + newDescriptor); //delete later
 
             return newDescriptor;
 

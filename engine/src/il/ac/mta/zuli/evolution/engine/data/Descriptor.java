@@ -27,8 +27,9 @@ public class Descriptor {
             try {
                 timeTable = new TimeTable(d.getETTTimeTable());
                 engine = new EngineSettings(d.getETTEvolutionEngine());
+                System.out.println("in setDescriptor" + timeTable + engine); //delete later
             } catch (Exception e) {
-                //change later to the exception relevant to me - delete later
+                //TODO catch exception
             }
         } else {
             //only if received another valid file we want to overwrite the previous descriptor instance
