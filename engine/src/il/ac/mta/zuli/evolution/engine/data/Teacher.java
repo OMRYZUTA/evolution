@@ -1,20 +1,21 @@
 package il.ac.mta.zuli.evolution.engine.data;
 
 import il.ac.mta.zuli.evolution.engine.data.generated.ETTTeacher;
+import il.ac.mta.zuli.evolution.engine.data.generated.ETTTeaches;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Teacher {
     private int id;
     private String name;
-    private final Map<Integer, Subject> subjects; //the subjects the teacher teaches
+    private Map<Integer, Subject> subjects; //the subjects the teacher teaches
 
     public Teacher(ETTTeacher t) {
         setName(t.getETTName());
         setId(t.getId());
-        this.subjects = new HashMap<Integer, Subject>(); //adding subjects on the outsife, after the ctor
+        setSubjects(t.getETTTeaching().getETTTeaches());
     }
 
     public int getId() {
@@ -33,9 +34,19 @@ public class Teacher {
         this.name = name;
     }
 
-    public void addSubject(Subject subjectToAdd) {
-        //check id is unique before adding
-        this.subjects.put(subjectToAdd.getId(), subjectToAdd);
+    private void setSubjects(List<ETTTeaches> subjectList) {
+        Map<Integer, Subject> existingSubjects = Descriptor.getInstance().getTimeTable().getSubjects();
+        Subject subjectToAdd = null;
+
+        for (ETTTeaches s : subjectList) {
+            //only adding subject to teacher if the subject exists in  timeTable
+            if ((subjectToAdd = existingSubjects.get(s.getSubjectId())) != null) {
+                this.subjects.put(subjectToAdd.getId(), subjectToAdd);
+            } else {
+                //throw exception - delete later
+                System.out.println("Teacher " + id + "has subject that doesn't exist in the timetable");
+            }
+        }
     }
 
     public Map<Integer, Subject> getSubjects() {

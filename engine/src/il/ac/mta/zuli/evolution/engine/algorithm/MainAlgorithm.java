@@ -12,8 +12,8 @@ public class MainAlgorithm {
 
 
     //first generation of solutions - numOfSolutions = initialPopulationSize
-    generateSolutions(initialPopulationSize);
+    //generateSolutions(initialPopulationSize);
 
 
 }
-}
+

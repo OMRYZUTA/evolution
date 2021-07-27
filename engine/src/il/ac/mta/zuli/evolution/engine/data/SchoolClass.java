@@ -44,8 +44,18 @@ public class SchoolClass {
         this.requirements = new ArrayList<Requirement>();
         List<ETTStudy> requirementList = ettRequirements.getETTStudy();
 
+        TimeTable tt = (Descriptor.getInstance()).getTimeTable();
+        int totalClassHours = 0;
+
         for (ETTStudy r : requirementList) {
-            this.requirements.add(new Requirement(r));
+            Requirement newReq = new Requirement(r);
+            this.requirements.add(newReq);
+            totalClassHours += newReq.getHours();
+        }
+
+        if (totalClassHours > tt.getHours() * tt.getDays()) {
+            //throw exception - delete later
+            System.out.println("class " + name + " has too many hours");
         }
     }
 

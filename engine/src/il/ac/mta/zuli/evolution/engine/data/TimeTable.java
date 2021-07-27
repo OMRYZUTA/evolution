@@ -67,17 +67,9 @@ public class TimeTable {
             if (i + 1 == t.getId()) {
                 //not sure we need putIfAbsent because we're checking IDs across index
                 //if putIfAbsent returned a value different than NULL it means the key was not unique and we should throw an exception - delete later
-                Teacher newTeacher = new Teacher(t);
-                //add subjects to the teacher we just created
-                List<ETTTeaches> teaches = t.getETTTeaching().getETTTeaches();
-
-                for (ETTTeaches s : teaches) {
-                    Subject tempSubject = this.subjects.get(s.getSubjectId()); //only adding subject to teacher if the subject exists in  timeTable
-                    newTeacher.addSubject(tempSubject);
-
-                    this.teachers.putIfAbsent(t.getId(), newTeacher);
-                }
+                this.teachers.putIfAbsent(t.getId(), new Teacher(t));
             } else {
+                //throw exception - delete later
                 System.out.println("UI report error: teacher ID " + t.getId() + " not according to required count");//throw exception - need to think about it
                 return;
             }
