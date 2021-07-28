@@ -10,9 +10,9 @@ public class Requirement {
     private int hours;
     private Subject subject;
 
-    public Requirement(@NotNull ETTStudy ettRequirement) {
+    public Requirement(@NotNull ETTStudy ettRequirement, Map<Integer, Subject> existingSubjects) {
         setHours(ettRequirement.getHours());
-        setSubject(ettRequirement.getSubjectId());
+        setSubject(ettRequirement.getSubjectId(), existingSubjects);
     }
 
     public int getHours() {
@@ -32,16 +32,13 @@ public class Requirement {
         return subject;
     }
 
-    private void setSubject(int id) {
-        Descriptor d = Descriptor.getInstance();
-        Map<Integer, Subject> ttSubjects = d.getTimeTable().getSubjects();
+    private void setSubject(int id, Map<Integer, Subject> existingSubjects) {
 
-        if ((subject = ttSubjects.get(id)) == null) {
+        if ((subject = existingSubjects.get(id)) == null) {
             //TODO throw exception
             System.out.println("subject ID: " + id + " does not exist in tt");
         }
     }
-
 
     @Override
     public String toString() {

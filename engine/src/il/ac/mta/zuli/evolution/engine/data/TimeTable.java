@@ -70,7 +70,7 @@ public class TimeTable {
                 System.out.println("UI report error: teacher ID " + t.getId() + " not according to required count");//throw exception - need to think about it
                 return;
             }
-            this.teachers.put(t.getId(), new Teacher(t));
+            this.teachers.put(t.getId(), new Teacher(t, this.subjects));
         }
     }
 
@@ -119,7 +119,7 @@ public class TimeTable {
                 System.out.println("UI report error: schoolClass ID " + c.getId() + " not according to required count");//throw exception - need to think about it
                 return;
             }
-            this.schoolClasses.put(c.getId(), new SchoolClass(c));
+            this.schoolClasses.put(c.getId(), new SchoolClass(c, this.subjects, (this.hours * this.days)));
         }
     }
 

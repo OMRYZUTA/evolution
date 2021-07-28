@@ -34,9 +34,8 @@ public class Descriptor {
             tempTimeTable = new TimeTable(d.getETTTimeTable());
             tempEngineSetting = new EngineSettings(d.getETTEvolutionEngine());
 
-            timeTable = tempTimeTable;
-            engine = tempEngineSetting;
-            System.out.println("in setDescriptor" + timeTable + engine); //delete later
+            this.timeTable = tempTimeTable;
+            this.engine = tempEngineSetting;
         } catch (Exception e) {
             //did we previously have a valid file loaded or was Descriptor empty - loadXML method will handle this
             //TODO throw exception

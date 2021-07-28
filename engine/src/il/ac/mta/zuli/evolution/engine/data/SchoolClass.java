@@ -7,16 +7,17 @@ import il.ac.mta.zuli.evolution.engine.data.generated.ETTStudy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class SchoolClass {
     private int id;
     private String name;
     private List<Requirement> requirements; //requirement is hours per subject
 
-    public SchoolClass(ETTClass srcClass) {
+    public SchoolClass(ETTClass srcClass, Map<Integer, Subject> existingSubjects, int totalHours) {
         setId(srcClass.getId());
         setName(srcClass.getETTName());
-        setRequirements(srcClass.getETTRequirements());
+        setRequirements(srcClass.getETTRequirements(), totalHours, existingSubjects);
     }
 
 
@@ -40,21 +41,21 @@ public class SchoolClass {
         return Collections.unmodifiableList(requirements);
     }
 
-    private void setRequirements(ETTRequirements ettRequirements) {
+
+    private void setRequirements(ETTRequirements ettRequirements, int totalHours, Map<Integer, Subject> existingSubjects) {
         this.requirements = new ArrayList<Requirement>();
         List<ETTStudy> requirementList = ettRequirements.getETTStudy();
 
-        TimeTable tt = (Descriptor.getInstance()).getTimeTable();
         int totalClassHours = 0;
 
         for (ETTStudy r : requirementList) {
-            Requirement newReq = new Requirement(r);
+            Requirement newReq = new Requirement(r, existingSubjects);
             this.requirements.add(newReq);
             totalClassHours += newReq.getHours();
         }
 
-        if (totalClassHours > tt.getHours() * tt.getDays()) {
-            //throw exception - delete later
+        if (totalClassHours > totalHours) {
+            //TODO throw exception
             System.out.println("class " + name + " has too many hours");
         }
     }

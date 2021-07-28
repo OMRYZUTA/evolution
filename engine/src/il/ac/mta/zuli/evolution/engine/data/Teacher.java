@@ -14,10 +14,10 @@ public class Teacher {
     private String name;
     private Map<Integer, Subject> subjects; //the subjects the teacher teaches
 
-    public Teacher(@NotNull ETTTeacher t) {
+    public Teacher(@NotNull ETTTeacher t, Map<Integer, Subject> existingSubjects) {
         setName(t.getETTName());
         setId(t.getId());
-        setSubjects(t.getETTTeaching().getETTTeaches());
+        setSubjects(t.getETTTeaching().getETTTeaches(), existingSubjects);
     }
 
     public int getId() {
@@ -37,10 +37,10 @@ public class Teacher {
         this.name = name;
     }
 
-    private void setSubjects(@NotNull List<ETTTeaches> subjectList) {
+
+    private void setSubjects(@NotNull List<ETTTeaches> subjectList, Map<Integer, Subject> existingSubjects) {
         this.subjects = new HashMap<>();
         Subject subjectToAdd;
-        Map<Integer, Subject> existingSubjects = Descriptor.getInstance().getTimeTable().getSubjects();
 
         for (ETTTeaches s : subjectList) {
             if ((subjectToAdd = existingSubjects.get(s.getSubjectId())) == null) {

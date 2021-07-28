@@ -21,7 +21,6 @@ public class XMLParser {
             Descriptor newDescriptor = Descriptor.getInstance();
             //TODO start debugging from here
             newDescriptor.setDescriptor(d);
-            System.out.println("in xml parser" + newDescriptor); //delete later
 
             return newDescriptor;
 
