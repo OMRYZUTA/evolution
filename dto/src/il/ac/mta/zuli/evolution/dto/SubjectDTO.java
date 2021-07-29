@@ -16,4 +16,12 @@ public class SubjectDTO {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "SubjectDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

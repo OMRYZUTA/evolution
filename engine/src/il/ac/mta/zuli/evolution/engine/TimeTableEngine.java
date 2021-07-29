@@ -1,13 +1,18 @@
 package il.ac.mta.zuli.evolution.engine;
 
+import il.ac.mta.zuli.evolution.dto.SubjectDTO;
+import il.ac.mta.zuli.evolution.dto.TimeTableDTO;
 import il.ac.mta.zuli.evolution.engine.data.Descriptor;
+import il.ac.mta.zuli.evolution.engine.data.Subject;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TimeTableEngine implements Engine {
     private Descriptor descriptor;
@@ -29,9 +34,19 @@ public class TimeTableEngine implements Engine {
     }
 
     @Override
-    public void showDetails() {
+    public TimeTableDTO getSystemDetails() {
         //DTO: list of subjects, list of teachers, list of SchoolClasses, list of rules
-        TimeTableDTO();
+        return new TimeTableDTO( createSubjectDTOCollection());
+    }
+
+
+    private Map<Integer, SubjectDTO> createSubjectDTOCollection() {
+        Map<Integer, SubjectDTO> subjectDTOS = new HashMap<>();
+        Map<Integer, Subject> subjects = descriptor.getTimeTable().getSubjects();
+        for (Map.Entry<Integer, Subject> subject : subjects.entrySet()){
+            subjectDTOS.put(subject.getKey(), new SubjectDTO(subject.getKey(),subject.getValue().getName()));
+        }
+        return subjectDTOS;
     }
 
     @Override
