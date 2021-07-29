@@ -24,13 +24,14 @@ public class TimeTableEngine implements Engine {
             System.out.println(descriptor);
             fireEvent("file is loaded");
         } catch (Exception e) {
-
+            //TODO handle exception
         }
     }
 
     @Override
     public void showDetails() {
-
+        //DTO: list of subjects, list of teachers, list of SchoolClasses, list of rules
+        TimeTableDTO();
     }
 
     @Override

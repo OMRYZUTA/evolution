@@ -15,7 +15,8 @@ public class Subject {
         return name;
     }
 
-    private void setName(String name) {
+    //TODO return to private
+    public void setName(String name) {
         this.name = name;
     }
 
