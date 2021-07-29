@@ -1,15 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
-import il.ac.mta.zuli.evolution.engine.algorithm.Quintet;
-
-import java.util.Collection;
-
-public abstract class Rule {
+public abstract class Rule implements RuleInterface {
     private final RuleType ruleType; //hard or soft
-
-    protected boolean isHardRule() {
-        return this.ruleType == RuleType.HARD;
-    }
 
     protected Rule(String ruleType) {
         if (ruleType == "soft") {
@@ -19,10 +11,12 @@ public abstract class Rule {
         }
     }
 
-    abstract public int fitness(Collection<Quintet> solution);
-
     public RuleType getRuleType() {
         return ruleType;
+    }
+
+    protected boolean isHardRule() {
+        return this.ruleType == RuleType.HARD;
     }
 
     @Override
