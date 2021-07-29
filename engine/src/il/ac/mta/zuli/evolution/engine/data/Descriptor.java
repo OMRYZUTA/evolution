@@ -7,25 +7,9 @@ import il.ac.mta.zuli.evolution.engine.data.generated.ETTDescriptor;
 
 public class Descriptor {
     private TimeTable timeTable;
-    private EngineSettings engine;
-    /* pre-initialized instance of the singleton */
-    private static Descriptor instance;
+    private EngineSettings engineSettings;
 
-    private Descriptor() {
-    }
-
-    /* Access point to the unique instance of the singleton */
-    public static Descriptor getInstance() {
-        if (instance == null) {
-            synchronized (Descriptor.class) {
-                instance = new Descriptor();
-            }
-        }
-
-        return instance;
-    }
-
-    public void setDescriptor(ETTDescriptor d) {
+    public Descriptor(ETTDescriptor d) {
         //only if received another valid file we want to overwrite the previous descriptor instance
         TimeTable tempTimeTable = null;
         EngineSettings tempEngineSetting = null;
@@ -35,18 +19,28 @@ public class Descriptor {
             tempEngineSetting = new EngineSettings(d.getETTEvolutionEngine());
 
             this.timeTable = tempTimeTable;
-            this.engine = tempEngineSetting;
+            this.engineSettings = tempEngineSetting;
         } catch (Exception e) {
             //did we previously have a valid file loaded or was Descriptor empty - loadXML method will handle this
             //TODO throw exception
         }
     }
 
+    /* Access point to the unique instance of the singleton */
+   /* public static Descriptor getInstance() {
+        if (instance == null) {
+            synchronized (Descriptor.class) {
+                instance = new Descriptor();
+            }
+        }
+        return instance;
+    }*/
+
     @Override
     public String toString() {
         return "Descriptor{" +
                 "timeTable=" + timeTable +
-                ", engine=" + engine +
+                ", engine=" + engineSettings +
                 '}';
     }
 
@@ -54,8 +48,7 @@ public class Descriptor {
         return timeTable;
     }
 
-
-    public EngineSettings getEngine() {
-        return engine;
+    public EngineSettings getEngineSettings() {
+        return engineSettings;
     }
 }

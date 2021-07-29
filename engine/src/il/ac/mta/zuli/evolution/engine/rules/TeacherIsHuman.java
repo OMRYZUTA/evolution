@@ -1,6 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
-import il.ac.mta.zuli.evolution.engine.algorithm.Quintet;
+import il.ac.mta.zuli.evolution.engine.Quintet;
 
 import java.util.Collection;
 

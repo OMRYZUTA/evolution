@@ -1,4 +1,4 @@
-package il.ac.mta.zuli.evolution.engine.algorithm;
+package il.ac.mta.zuli.evolution.engine;
 
 
 import il.ac.mta.zuli.evolution.engine.data.SchoolClass;

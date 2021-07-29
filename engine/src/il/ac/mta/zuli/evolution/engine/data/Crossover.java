@@ -1,6 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.data;
 
 public class Crossover {
-    private String name;
+    private CrossoverType type;
     private int cuttingPoint;
 }

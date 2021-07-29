@@ -17,12 +17,7 @@ public class XMLParser {
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             ETTDescriptor d = (ETTDescriptor) jaxbUnmarshaller.unmarshal(file);
 
-            //creating singleton Descriptor and setting its fields using the ETTDescriptor
-            Descriptor newDescriptor = Descriptor.getInstance();
-            //TODO start debugging from here
-            newDescriptor.setDescriptor(d);
-
-            return newDescriptor;
+            return new Descriptor(d);
 
         } catch (JAXBException e) {
             e.printStackTrace();
