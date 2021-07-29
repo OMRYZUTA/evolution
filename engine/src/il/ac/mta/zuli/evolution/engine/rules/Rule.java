@@ -1,13 +1,19 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
 public abstract class Rule implements RuleInterface {
-    private final RuleType ruleType; //hard or soft
+    private RuleType ruleType; //hard or soft
 
     protected Rule(String ruleType) {
-        if (ruleType == "soft") {
-            this.ruleType = RuleType.SOFT;
-        } else {
-            this.ruleType = RuleType.HARD;
+        switch (ruleType.toLowerCase()) {
+            case "soft":
+                this.ruleType = RuleType.SOFT;
+                break;
+            case "hard":
+                this.ruleType = RuleType.HARD;
+                break;
+            default:
+                //TODO throw exception
+                System.out.println("invalid rule type");
         }
     }
 

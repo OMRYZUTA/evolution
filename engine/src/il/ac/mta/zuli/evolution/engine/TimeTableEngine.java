@@ -36,16 +36,17 @@ public class TimeTableEngine implements Engine {
     @Override
     public TimeTableDTO getSystemDetails() {
         //DTO: list of subjects, list of teachers, list of SchoolClasses, list of rules
-        return new TimeTableDTO( createSubjectDTOCollection());
+        //DescriptorDTO descriptorDTO = new DescriptorDTO();
+        return new TimeTableDTO(createSubjectDTOCollection());
     }
-
 
     private Map<Integer, SubjectDTO> createSubjectDTOCollection() {
         Map<Integer, SubjectDTO> subjectDTOS = new HashMap<>();
         Map<Integer, Subject> subjects = descriptor.getTimeTable().getSubjects();
-        for (Map.Entry<Integer, Subject> subject : subjects.entrySet()){
-            subjectDTOS.put(subject.getKey(), new SubjectDTO(subject.getKey(),subject.getValue().getName()));
+        for (Map.Entry<Integer, Subject> subject : subjects.entrySet()) {
+            subjectDTOS.put(subject.getKey(), new SubjectDTO(subject.getKey(), subject.getValue().getName()));
         }
+        //TODO need to sort according to ID, can't rely on the way we currently build the map
         return subjectDTOS;
     }
 

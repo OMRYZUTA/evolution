@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Selection {
     private SelectionType type;
-    //configuration
+    private Configuration configuration;
 
     public Selection(@NotNull ETTSelection ettSelection) {
         setType(ettSelection.getType());
