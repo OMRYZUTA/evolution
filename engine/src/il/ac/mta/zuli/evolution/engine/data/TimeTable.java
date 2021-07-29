@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.data;
 
 import il.ac.mta.zuli.evolution.engine.data.generated.*;
-import il.ac.mta.zuli.evolution.engine.rules.Rule;
+import il.ac.mta.zuli.evolution.engine.rules.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -13,7 +13,7 @@ public class TimeTable {
     private Map<Integer, Teacher> teachers;
     private Map<Integer, Subject> subjects;
     private Map<Integer, SchoolClass> schoolClasses;
-    private List<Rule> rules;//still need to figure out rules - delete later
+    private Set<Rule> rules; //a rule doesn't repeat
     private int hardRulesWeight;
 
 
@@ -123,13 +123,37 @@ public class TimeTable {
         }
     }
 
-    public List<Rule> getRules() {
-        return Collections.unmodifiableList(rules);
+    public Set<Rule> getRules() {
+        return Collections.unmodifiableSet(rules);
     }
 
-    private void setRules(@NotNull ETTRules rules) {
-        //TODO throw exception
-        this.rules = new ArrayList<>();
+    private void setRules(@NotNull ETTRules ettRules) {
+        this.rules = new HashSet<>();
+        List<ETTRule> ruleList = ettRules.getETTRule();
+        Rule ruleToAdd;
+
+        for (ETTRule r : ruleList) {
+            switch (r.getETTRuleId()) {
+                case "TeacherIsHuman":
+                    ruleToAdd = new TeacherIsHuman(r.getType());
+                    break;
+                case "Singularity":
+                    ruleToAdd = new Singularity(r.getType());
+                    break;
+                case "Knowledgeable":
+                    ruleToAdd = new Knowledgeable(r.getType());
+                    break;
+                case "Satisfactory":
+                    ruleToAdd = new Satisfactory(r.getType());
+                    break;
+                default:
+                    //TODO throw exception?
+                    throw new IllegalStateException("Unexpected value: " + r.getETTRuleId());
+            }
+
+            //TODO check for duplicate rules
+            this.rules.add(ruleToAdd);
+        }
     }
 
     public int getHardRulesWeight() {
