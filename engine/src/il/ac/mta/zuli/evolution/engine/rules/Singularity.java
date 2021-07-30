@@ -1,8 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
-import il.ac.mta.zuli.evolution.engine.Quintet;
-
-import java.util.Collection;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 
 public class Singularity extends Rule {
     public Singularity(String ruleType) {
@@ -10,7 +8,7 @@ public class Singularity extends Rule {
     }
 
     @Override
-    public int fitnessEvaluation(Collection<Quintet> solution) {
+    public int fitnessEvaluation(Solution solution) {
 
         return 0;
     }

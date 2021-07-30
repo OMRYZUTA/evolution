@@ -1,10 +1,8 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
-import il.ac.mta.zuli.evolution.engine.Quintet;
-
-import java.util.Collection;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 
 
 public interface RuleInterface {
-    int fitnessEvaluation(Collection<Quintet> solution);
+    int fitnessEvaluation(Solution solution);
 }

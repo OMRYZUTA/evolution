@@ -1,8 +1,8 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
 import il.ac.mta.zuli.evolution.engine.Quintet;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 
-import java.util.Collection;
 import java.util.HashSet;
 
 public class TeacherIsHuman extends Rule {
@@ -10,8 +10,9 @@ public class TeacherIsHuman extends Rule {
         super(ruleType);
     }
 
+    //returns score 0-100
     @Override
-    public int fitnessEvaluation(Collection<Quintet> solution) {
+    public int fitnessEvaluation(Solution solution) {
         int collision = 0;
         HashSet<String> tempSet = new HashSet<>();
 
