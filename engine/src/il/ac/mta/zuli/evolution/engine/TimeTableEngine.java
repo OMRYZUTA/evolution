@@ -3,14 +3,12 @@ package il.ac.mta.zuli.evolution.engine;
 import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.data.*;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
+import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class TimeTableEngine implements Engine {
     private Descriptor descriptor;
@@ -37,10 +35,20 @@ public class TimeTableEngine implements Engine {
         Map<Integer, SubjectDTO> subjectsDTO = createSortedSubjectDTOCollection(descriptor.getTimeTable().getSubjects());
         Map<Integer, TeacherDTO> teachersDTO = createSortedTeacherDTOCollection();
         Map<Integer, SchoolClassDTO> schoolClassesDTO = createSortedClassesDTOCollection();
-        TimeTableDTO timeTableDTO = new TimeTableDTO(subjectsDTO, teachersDTO, schoolClassesDTO);
+        Set<RuleDTO> rulesDTO = createRulesDTOSet();
+        TimeTableDTO timeTableDTO = new TimeTableDTO(subjectsDTO, teachersDTO, schoolClassesDTO, rulesDTO);
 
         return timeTableDTO;
         //return new DescriptorDTO();
+    }
+
+    private Set<RuleDTO> createRulesDTOSet() {
+        Set<Rule> rules = descriptor.getTimeTable().getRules();
+        Set<RuleDTO> rulesDTO= new HashSet<>();
+        for (Rule rule:rules) {
+            rulesDTO.add(new RuleDTO(rule.getClass().getSimpleName(),rule.getRuleType().toString()));
+        }
+        return  rulesDTO;
     }
 
     private Map<Integer, SubjectDTO> createSortedSubjectDTOCollection(Map<Integer, Subject> subjects) {

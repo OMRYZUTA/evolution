@@ -1,15 +1,13 @@
 package il.ac.mta.zuli.evolution.ui;
 
-import il.ac.mta.zuli.evolution.dto.SchoolClassDTO;
-import il.ac.mta.zuli.evolution.dto.SubjectDTO;
-import il.ac.mta.zuli.evolution.dto.TeacherDTO;
-import il.ac.mta.zuli.evolution.dto.TimeTableDTO;
+import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
+import java.util.Set;
 
 public class UI implements ActionListener {
     Engine engine;
@@ -31,12 +29,18 @@ public class UI implements ActionListener {
         Map<Integer, SubjectDTO> subjects = timeTableDTO.getSubjects();
         Map<Integer, TeacherDTO> teachers = timeTableDTO.getTeachers();
         Map<Integer, SchoolClassDTO> schoolClasses = timeTableDTO.getSchoolClasses();
-
+        Set<RuleDTO> rules = timeTableDTO.getRules();
         System.out.println("in ui showsystemdetails:");
         printMap(subjects);
         printMap(teachers);
         printMap(schoolClasses);
+        printSet(rules);
+    }
 
+    private void printSet(Set<RuleDTO> rules) {
+        for (RuleDTO rule: rules) {
+            System.out.println(rule);
+        }
     }
 
     private <K, V> void printMap(Map<K, V> map) {

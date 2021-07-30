@@ -1,17 +1,21 @@
 package il.ac.mta.zuli.evolution.dto;
 
 import java.util.Map;
+import java.util.Set;
 
 public class TimeTableDTO {
     Map<Integer, SubjectDTO> subjects;
     Map<Integer, TeacherDTO> teachers;
     Map<Integer, SchoolClassDTO> schoolClasses;
-
-    public TimeTableDTO(Map<Integer, SubjectDTO> subjects, Map<Integer, TeacherDTO> teachers,
-                        Map<Integer, SchoolClassDTO> schoolClasses) {
+    Set<RuleDTO> rules;
+    public TimeTableDTO(Map<Integer, SubjectDTO> subjects,
+                        Map<Integer, TeacherDTO> teachers,
+                        Map<Integer, SchoolClassDTO> schoolClasses,
+                        Set<RuleDTO> rules) {
         this.subjects = subjects;
         this.teachers = teachers;
         this.schoolClasses = schoolClasses;
+        this.rules = rules;
     }
 
     public Map<Integer, SubjectDTO> getSubjects() {
@@ -25,6 +29,8 @@ public class TimeTableDTO {
     public Map<Integer, SchoolClassDTO> getSchoolClasses() {
         return schoolClasses;
     }
+
+    public Set<RuleDTO> getRules() { return rules; }
 }
 
 
