@@ -24,4 +24,13 @@ public class SchoolClassDTO {
     public List<RequirementDTO> getRequirements() {
         return requirements;
     }
+
+    @Override
+    public String toString() {
+        return "SchoolClassDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", requirements=" + requirements +
+                '}';
+    }
 }

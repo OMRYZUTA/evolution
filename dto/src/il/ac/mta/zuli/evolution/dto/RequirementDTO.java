@@ -16,4 +16,12 @@ public class RequirementDTO {
     public SubjectDTO getSubject() {
         return subject;
     }
+
+    @Override
+    public String toString() {
+        return "RequirementDTO{" +
+                "hours=" + hours +
+                ", subject=" + subject +
+                '}';
+    }
 }

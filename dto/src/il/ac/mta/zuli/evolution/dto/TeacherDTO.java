@@ -24,4 +24,13 @@ public class TeacherDTO {
     public Map<Integer, SubjectDTO> getSubjects() {
         return subjects;
     }
+
+    @Override
+    public String toString() {
+        return "TeacherDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", subjects=" + subjects +
+                '}';
+    }
 }

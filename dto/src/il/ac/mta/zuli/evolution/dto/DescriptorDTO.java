@@ -16,4 +16,12 @@ public class DescriptorDTO {
     public EngineSettingsDTO getEngineSettings() {
         return engineSettings;
     }
+
+    @Override
+    public String toString() {
+        return "DescriptorDTO{" +
+                "timeTable=" + timeTable +
+                ", engineSettings=" + engineSettings +
+                '}';
+    }
 }

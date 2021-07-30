@@ -1,8 +1,11 @@
 package il.ac.mta.zuli.evolution.engine.data;
 
 import il.ac.mta.zuli.evolution.engine.data.generated.ETTSubject;
+import org.jetbrains.annotations.NotNull;
 
-public class Subject {
+import java.util.Objects;
+
+public class Subject implements Comparable {
     private int id;
     private String name;
 
@@ -15,8 +18,7 @@ public class Subject {
         return name;
     }
 
-    //TODO return to private
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -26,6 +28,24 @@ public class Subject {
 
     private void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Subject subject = (Subject) o;
+        return id == subject.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public int compareTo(@NotNull Object o) {
+        return this.id - ((Subject) o).getId();
     }
 
     @Override
