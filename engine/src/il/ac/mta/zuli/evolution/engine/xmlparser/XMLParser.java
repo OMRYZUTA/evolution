@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.xmlparser;
 
-import il.ac.mta.zuli.evolution.engine.data.Descriptor;
-import il.ac.mta.zuli.evolution.engine.data.generated.ETTDescriptor;
+import il.ac.mta.zuli.evolution.engine.Descriptor;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTDescriptor;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

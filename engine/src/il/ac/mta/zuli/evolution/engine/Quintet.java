@@ -1,9 +1,9 @@
 package il.ac.mta.zuli.evolution.engine;
 
 
-import il.ac.mta.zuli.evolution.engine.data.SchoolClass;
-import il.ac.mta.zuli.evolution.engine.data.Subject;
-import il.ac.mta.zuli.evolution.engine.data.Teacher;
+import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
+import il.ac.mta.zuli.evolution.engine.timetable.Subject;
+import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 
 import java.time.DayOfWeek;
 

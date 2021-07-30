@@ -1,9 +1,12 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.dto.*;
-import il.ac.mta.zuli.evolution.engine.data.*;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
+import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
+import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
+import il.ac.mta.zuli.evolution.engine.timetable.Subject;
+import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 
 import java.awt.event.ActionEvent;
