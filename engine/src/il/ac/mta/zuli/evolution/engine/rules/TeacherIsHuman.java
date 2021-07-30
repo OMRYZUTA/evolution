@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.engine.rules;
 import il.ac.mta.zuli.evolution.engine.Quintet;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 public class TeacherIsHuman extends Rule {
     public TeacherIsHuman(String ruleType) {
@@ -10,9 +11,19 @@ public class TeacherIsHuman extends Rule {
     }
 
     @Override
-    public int fitness(Collection<Quintet> solution) {
+    public int fitnessEvaluation(Collection<Quintet> solution) {
         int collision = 0;
-        //TODO create KEY as String from Day, Hour, Teacher and add to Set, each collision, advance a counter
-        return collision; //or other grade?
+        HashSet<String> tempSet = new HashSet<>();
+
+        for (Quintet quintet : solution) {
+            String DHT = String.format("%s_%d_%d", quintet.getDay(), quintet.getHour(), (quintet.getTeacher().getId()));
+            System.out.println("quintet day,hour,teacherID: " + DHT); //delete later
+            //add(): if this set already contains the element, the call leaves the set unchanged and returns false.
+            if (!tempSet.add(DHT)) {
+                collision++;
+            }
+        }
+
+        return collision; //TODO figure out score
     }
 }

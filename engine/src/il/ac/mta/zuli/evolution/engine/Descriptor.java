@@ -8,8 +8,8 @@ import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTDescriptor;
 //order of ctors - for example, subjects to be created before teachers
 
 public class Descriptor {
-    private TimeTable timeTable;
-    private EngineSettings engineSettings;
+    private final TimeTable timeTable;
+    private final EngineSettings engineSettings;
 
     public Descriptor(ETTDescriptor d) throws Exception {
         //only if received another valid file we want to overwrite the previous descriptor instance
@@ -25,7 +25,7 @@ public class Descriptor {
         } catch (Exception e) {
             //did we previously have a valid file loaded or was Descriptor empty - loadXML method will handle this
             //TODO throw exception
-            throw  e;
+            throw e;
         }
     }
 
@@ -42,7 +42,7 @@ public class Descriptor {
     @Override
     public String toString() {
         return "Descriptor{" +
-                "timeTable=" + timeTable +
+                "timeTable=" + timeTable + System.lineSeparator() +
                 ", engine=" + engineSettings +
                 '}';
     }

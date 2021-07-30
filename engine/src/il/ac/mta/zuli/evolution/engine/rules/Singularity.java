@@ -10,7 +10,7 @@ public class Singularity extends Rule {
     }
 
     @Override
-    public int fitness(Collection<Quintet> solution) {
+    public int fitnessEvaluation(Collection<Quintet> solution) {
 
         return 0;
     }

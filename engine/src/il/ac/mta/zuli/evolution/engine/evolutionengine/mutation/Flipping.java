@@ -36,15 +36,14 @@ public class Flipping implements Mutation {
 
     @Override
     public String toString() {
-        return "Flipping{" +
+        return "Mutation: " + this.getClass().getSimpleName() +
                 "probability=" + probability +
                 ", maxTupples=" + maxTupples +
-                ", component=" + component +
-                '}';
+                ", component=" + component;
     }
 
     @Override
     public void mutate(Solution solution) {
-
+        //TODO implement
     }
 }

@@ -24,6 +24,12 @@ public class DayTimeOriented implements Crossover {
     }
 
     @Override
+    public String toString() {
+        return "crossover: " + this.getClass().getSimpleName() +
+                "numOfCuttingPoints=" + numOfCuttingPoints;
+    }
+
+    @Override
     public List<Solution> crossover(List<Solution> parentSolutions) {
         //TODO implement
         return null;

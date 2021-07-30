@@ -6,5 +6,5 @@ import java.util.Collection;
 
 
 public interface RuleInterface {
-    int fitness(Collection<Quintet> solution);
+    int fitnessEvaluation(Collection<Quintet> solution);
 }

@@ -76,12 +76,12 @@ public class EngineSettings {
 
         for (ETTMutation ettMutation : ettMutations) {
             if (ettMutation.getName().equalsIgnoreCase("flipping")) {
-                int maxTupplesIndex = (ettMutation.getConfiguration()).indexOf("MaxTupples=")+"MaxTupples=".length();
+                int maxTupplesIndex = (ettMutation.getConfiguration()).indexOf("MaxTupples=") + "MaxTupples=".length();
                 int commaIndex = ettMutation.getConfiguration().indexOf(",");
-                String maxTupplesStr =(ettMutation.getConfiguration()).substring(maxTupplesIndex  ,commaIndex);
+                String maxTupplesStr = (ettMutation.getConfiguration()).substring(maxTupplesIndex, commaIndex);
                 int maxTupples = Integer.parseInt(maxTupplesStr);
-                int componentIndex = (ettMutation.getConfiguration()).indexOf("Component=")+"Component=".length();
-                String componentStr = (ettMutation.getConfiguration()).substring(componentIndex,componentIndex+1 );
+                int componentIndex = (ettMutation.getConfiguration()).indexOf("Component=") + "Component=".length();
+                String componentStr = (ettMutation.getConfiguration()).substring(componentIndex, componentIndex + 1);
                 ComponentName component = ComponentName.valueOf(componentStr.toUpperCase());
                 mutations.add(new Flipping(ettMutation.getProbability(), maxTupples, component));
             } else throw new Exception("invalid mutation name (for ex 1)");
@@ -92,8 +92,8 @@ public class EngineSettings {
     public String toString() {
         return "EngineSettings{" +
                 "initialPopulationSize=" + initialPopulationSize +
-                ", selection='" + selection + '\'' +
-                ", crossover=" + crossover +
+                ", selection='" + selection + System.lineSeparator() +
+                ", crossover=" + crossover + System.lineSeparator() +
                 ", mutations=" + mutations +
                 '}';
     }

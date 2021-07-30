@@ -8,10 +8,10 @@ import java.util.Collection;
 public class Truncation implements Selection {
     private int topPercent;
 
-    public Truncation(ETTSelection ettSelection) throws Exception{
+    public Truncation(ETTSelection ettSelection) throws Exception {
         String configuration = ettSelection.getConfiguration();
         int index = configuration.indexOf('=');
-        int num = Integer. parseInt(configuration.substring(index+1));
+        int num = Integer.parseInt(configuration.substring(index + 1));
         setTopPercent(num);
     }
 
@@ -29,9 +29,8 @@ public class Truncation implements Selection {
 
     @Override
     public String toString() {
-        return "Truncation{" +
-                "topPercent=" + topPercent +
-                '}';
+        return "Selection: " + this.getClass().getSimpleName() +
+                "topPercent=" + topPercent;
     }
 
     //TODO implement selection()
