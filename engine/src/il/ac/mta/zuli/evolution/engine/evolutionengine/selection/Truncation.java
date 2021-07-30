@@ -27,6 +27,13 @@ public class Truncation implements Selection {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Truncation{" +
+                "topPercent=" + topPercent +
+                '}';
+    }
+
     //TODO implement selection()
     @Override
     public Collection<Solution> select(Collection<Solution> solutions) {
