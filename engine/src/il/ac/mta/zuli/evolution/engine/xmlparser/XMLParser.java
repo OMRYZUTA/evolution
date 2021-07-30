@@ -9,7 +9,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.File;
 
 public class XMLParser {
-    public Descriptor unmarshall(String path) {
+    public Descriptor unmarshall(String path) throws Exception {
         try {
             File file = new File(path);
 

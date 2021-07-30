@@ -8,6 +8,7 @@ import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,20 +30,27 @@ public class TimeTableEngine implements Engine {
             fireEvent("file is loaded");
         } catch (Exception e) {
             //TODO handle exception
+            System.out.println(e.getMessage());
         }
     }
 
     @Override
     public TimeTableDTO getSystemDetails() {
         //DTO: list of subjects, list of teachers, list of SchoolClasses, list of rules
+        TimeTableDTO timeTableDTO = createTimeTableDTO();
+
+        return timeTableDTO;
+        //return new DescriptorDTO();
+    }
+
+    @NotNull
+    private TimeTableDTO createTimeTableDTO() {
         Map<Integer, SubjectDTO> subjectsDTO = createSortedSubjectDTOCollection(descriptor.getTimeTable().getSubjects());
         Map<Integer, TeacherDTO> teachersDTO = createSortedTeacherDTOCollection();
         Map<Integer, SchoolClassDTO> schoolClassesDTO = createSortedClassesDTOCollection();
         Set<RuleDTO> rulesDTO = createRulesDTOSet();
         TimeTableDTO timeTableDTO = new TimeTableDTO(subjectsDTO, teachersDTO, schoolClassesDTO, rulesDTO);
-
         return timeTableDTO;
-        //return new DescriptorDTO();
     }
 
     private Set<RuleDTO> createRulesDTOSet() {

@@ -11,7 +11,7 @@ public class Descriptor {
     private TimeTable timeTable;
     private EngineSettings engineSettings;
 
-    public Descriptor(ETTDescriptor d) {
+    public Descriptor(ETTDescriptor d) throws Exception {
         //only if received another valid file we want to overwrite the previous descriptor instance
         TimeTable tempTimeTable = null;
         EngineSettings tempEngineSetting = null;
@@ -25,6 +25,7 @@ public class Descriptor {
         } catch (Exception e) {
             //did we previously have a valid file loaded or was Descriptor empty - loadXML method will handle this
             //TODO throw exception
+            throw  e;
         }
     }
 
