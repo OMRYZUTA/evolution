@@ -2,6 +2,8 @@ package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
@@ -42,13 +44,47 @@ public class TimeTableEngine implements Engine {
         EngineSettingsDTO engineSettingsDTO = createEngineSettingsDTO();
         return new DescriptorDTO(timeTableDTO, engineSettingsDTO);
     }
-//SelectionDTO selection, CrossoverDTO crossover, List<MutationDTO> mutations
-    private EngineSettingsDTO createEngineSettingsDTO() {
-        int initialSize =descriptor.getEngineSettings().getInitialPopulationSize();
-        Selection<TimeTableSolution> selection =descriptor.getEngineSettings().getSelection();
-        SelectionDTO selectionDTO = new SelectionDTO(selection.getClass().getSimpleName(),selection.getConfiguration());
 
-        return null; //new EngineSettingsDTO(,)
+    //SelectionDTO selection, CrossoverDTO crossover, List<MutationDTO> mutations
+    private EngineSettingsDTO createEngineSettingsDTO() {
+        int initialSize = descriptor.getEngineSettings().getInitialPopulationSize();
+        SelectionDTO selectionDTO = createSelectionDTO();
+        CrossoverDTO crossoverDTO = createCrossoverDTO();
+        List<MutationDTO> mutationDTOS = createMutationDTOS();
+
+        return new EngineSettingsDTO(initialSize, selectionDTO, crossoverDTO, mutationDTOS);
+    }
+
+    @NotNull
+    private List<MutationDTO> createMutationDTOS() {
+        List<Mutation> mutations = descriptor.getEngineSettings().getMutations();
+        List<MutationDTO> mutationDTOS = createMutationsDTO();
+        return mutationDTOS;
+    }
+
+    @NotNull
+    private CrossoverDTO createCrossoverDTO() {
+        Crossover<TimeTableSolution> crossover = descriptor.getEngineSettings().getCrossover();
+        CrossoverDTO crossoverDTO = new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getCuttingPointsStr());
+        return crossoverDTO;
+    }
+
+    @NotNull
+    private SelectionDTO createSelectionDTO() {
+        Selection<TimeTableSolution> selection = descriptor.getEngineSettings().getSelection();
+        SelectionDTO selectionDTO = new SelectionDTO(selection.getClass().getSimpleName(), selection.getConfiguration());
+        return selectionDTO;
+    }
+
+    private List<MutationDTO> createMutationsDTO() {
+        List<MutationDTO> mutationDTOS = new ArrayList<>();
+        for (Mutation mutation : descriptor.getEngineSettings().getMutations()) {
+            String name = mutation.getClass().getSimpleName();
+            String probability = mutation.getProbabilityStr();
+            String configuration = mutation.getConfiguration();
+            mutationDTOS.add(new MutationDTO(name, probability, configuration));
+        }
+        return mutationDTOS;
     }
 
     @NotNull
@@ -63,11 +99,11 @@ public class TimeTableEngine implements Engine {
 
     private Set<RuleDTO> createRulesDTOSet() {
         Set<Rule> rules = descriptor.getTimeTable().getRules();
-        Set<RuleDTO> rulesDTO= new HashSet<>();
-        for (Rule rule:rules) {
-            rulesDTO.add(new RuleDTO(rule.getClass().getSimpleName(),rule.getRuleType().toString()));
+        Set<RuleDTO> rulesDTO = new HashSet<>();
+        for (Rule rule : rules) {
+            rulesDTO.add(new RuleDTO(rule.getClass().getSimpleName(), rule.getRuleType().toString()));
         }
-        return  rulesDTO;
+        return rulesDTO;
     }
 
     private Map<Integer, SubjectDTO> createSortedSubjectDTOCollection(Map<Integer, Subject> subjects) {

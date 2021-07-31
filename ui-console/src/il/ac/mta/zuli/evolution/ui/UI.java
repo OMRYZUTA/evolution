@@ -6,6 +6,7 @@ import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,7 +26,31 @@ public class UI implements ActionListener {
     }
 
     private void showSystemDetails() {
-        TimeTableDTO timeTableDTO = engine.getSystemDetails();
+        DescriptorDTO descriptorDTO = engine.getSystemDetails();
+        TimeTableDTO timeTableDTO = descriptorDTO.getTimeTable();
+        EngineSettingsDTO engineSettingsDTO = descriptorDTO.getEngineSettings();
+
+        printTimeTable(timeTableDTO);
+        printEngineSetting(engineSettingsDTO);
+    }
+
+    private void printEngineSetting(EngineSettingsDTO engineSettingsDTO) {
+        System.out.println(String.format("population size : %d",engineSettingsDTO.getInitialPopulationSize()));
+        SelectionDTO selectionDTO = engineSettingsDTO.getSelection();
+        CrossoverDTO crossoverDTO = engineSettingsDTO.getCrossover();
+        List<MutationDTO> mutationDTOList = engineSettingsDTO.getMutations();
+        System.out.println(selectionDTO);
+        System.out.println(crossoverDTO);
+        printList(mutationDTOList);
+    }
+
+    private void printList(List<?> values) {
+        for (Object object: values) {
+            System.out.println(object);
+        }
+    }
+
+    private void printTimeTable(TimeTableDTO timeTableDTO) {
         Map<Integer, SubjectDTO> subjects = timeTableDTO.getSubjects();
         Map<Integer, TeacherDTO> teachers = timeTableDTO.getTeachers();
         Map<Integer, SchoolClassDTO> schoolClasses = timeTableDTO.getSchoolClasses();

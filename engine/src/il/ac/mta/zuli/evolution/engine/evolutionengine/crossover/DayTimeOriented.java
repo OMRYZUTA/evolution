@@ -37,8 +37,8 @@ public class DayTimeOriented implements Crossover<TimeTableSolution> {
     }
 
     @Override
-    public String getConfiguration() {
-        return null;
+    public String getCuttingPointsStr() {
+        return String.format("num of cutting point = %d", numOfCuttingPoints);
     }
 
 }

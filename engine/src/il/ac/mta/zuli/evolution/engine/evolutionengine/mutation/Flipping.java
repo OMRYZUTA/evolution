@@ -1,7 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.mutation;
 
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
-import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 
 public class Flipping implements Mutation<TimeTableSolution> {
     double probability;
@@ -47,4 +46,15 @@ public class Flipping implements Mutation<TimeTableSolution> {
     public void mutate(TimeTableSolution solution) {
         //TODO implement
     }
+
+    @Override
+    public String getConfiguration() {
+        return String.format("max tuples = %d, Component = %s",maxTupples,component.toString());
+    }
+
+    @Override
+    public String getProbabilityStr() {
+        return String.format("probability: %1$,.2f",probability);
+    }
+
 }
