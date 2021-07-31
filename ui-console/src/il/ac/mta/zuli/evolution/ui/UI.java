@@ -19,7 +19,7 @@ public class UI implements ActionListener {
             engine.addHandler(this);
             engine.loadXML("engine/src/resources/EX1-small.xml");
             showSystemDetails();
-            engine.executeEvolutionAlgo();
+            engine.executeEvolutionAlgorithm();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             //TODO handleException

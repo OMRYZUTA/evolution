@@ -2,6 +2,7 @@ package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
+import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -23,7 +24,7 @@ public class TimeTableSolution implements Solution {
         return solutionSize;
     }
 
-    public int setRandNumOfQuintets() {
+    private int setRandNumOfQuintets() {
         return 0;
     }
 
@@ -35,4 +36,12 @@ public class TimeTableSolution implements Solution {
         return Collections.unmodifiableCollection(solution);
     }
 
+    public TimeTableSolution getSolutionforClass(SchoolClass sc) {
+        TimeTableSolution classSolution = new TimeTableSolution();
+
+        //get only the quintets for sc
+        // solution.stream().
+
+        return classSolution;
+    }
 }

@@ -132,6 +132,7 @@ public class TimeTable {
         List<ETTRule> ruleList = ettRules.getETTRule();
         Rule ruleToAdd;
 
+        //TODO toLower()?
         for (ETTRule r : ruleList) {
             switch (r.getETTRuleId()) {
                 case "TeacherIsHuman":
@@ -144,7 +145,7 @@ public class TimeTable {
                     ruleToAdd = new Knowledgeable(r.getType());
                     break;
                 case "Satisfactory":
-                    ruleToAdd = new Satisfactory(r.getType());
+                    ruleToAdd = new Satisfactory(r.getType(), this.schoolClasses);
                     break;
                 default:
                     //TODO throw exception?

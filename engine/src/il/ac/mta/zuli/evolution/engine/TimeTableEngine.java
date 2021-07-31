@@ -46,6 +46,7 @@ public class TimeTableEngine implements Engine {
         //DTO: list of subjects, list of teachers, list of SchoolClasses, list of rules
         TimeTableDTO timeTableDTO = createTimeTableDTO();
         EngineSettingsDTO engineSettingsDTO = createEngineSettingsDTO();
+
         return new DescriptorDTO(timeTableDTO, engineSettingsDTO);
     }
 
@@ -63,6 +64,7 @@ public class TimeTableEngine implements Engine {
     private List<MutationDTO> createMutationDTOS() {
         List<Mutation> mutations = descriptor.getEngineSettings().getMutations();
         List<MutationDTO> mutationDTOS = createMutationsDTO();
+
         return mutationDTOS;
     }
 
@@ -70,6 +72,7 @@ public class TimeTableEngine implements Engine {
     private CrossoverDTO createCrossoverDTO() {
         Crossover<TimeTableSolution> crossover = descriptor.getEngineSettings().getCrossover();
         CrossoverDTO crossoverDTO = new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getCuttingPoints());
+
         return crossoverDTO;
     }
 
@@ -77,17 +80,20 @@ public class TimeTableEngine implements Engine {
     private SelectionDTO createSelectionDTO() {
         Selection<TimeTableSolution> selection = descriptor.getEngineSettings().getSelection();
         SelectionDTO selectionDTO = new SelectionDTO(selection.getClass().getSimpleName(), selection.getConfiguration());
+
         return selectionDTO;
     }
 
     private List<MutationDTO> createMutationsDTO() {
         List<MutationDTO> mutationDTOS = new ArrayList<>();
+
         for (Mutation mutation : descriptor.getEngineSettings().getMutations()) {
             String name = mutation.getClass().getSimpleName();
             double probability = mutation.getProbability();
             String configuration = mutation.getConfiguration();
             mutationDTOS.add(new MutationDTO(name, probability, configuration));
         }
+
         return mutationDTOS;
     }
 
@@ -98,15 +104,18 @@ public class TimeTableEngine implements Engine {
         Map<Integer, SchoolClassDTO> schoolClassesDTO = createSortedClassesDTOCollection();
         Set<RuleDTO> rulesDTO = createRulesDTOSet();
         TimeTableDTO timeTableDTO = new TimeTableDTO(subjectsDTO, teachersDTO, schoolClassesDTO, rulesDTO);
+
         return timeTableDTO;
     }
 
     private Set<RuleDTO> createRulesDTOSet() {
         Set<Rule> rules = descriptor.getTimeTable().getRules();
         Set<RuleDTO> rulesDTO = new HashSet<>();
+
         for (Rule rule : rules) {
             rulesDTO.add(new RuleDTO(rule.getClass().getSimpleName(), rule.getRuleType().toString()));
         }
+
         return rulesDTO;
     }
 
@@ -160,26 +169,30 @@ public class TimeTableEngine implements Engine {
 
 
     @Override
-    public void executeEvolutionAlgo()
-    {
-        int totalRequiredHours = createTotalRequiredHours();
-        int quintetsNum =getRandomQuintetNumber(1,totalRequiredHours);
-        //randomly generate 1-total-required-hours quintets to create a single solution
-        System.out.println(" required hours:"+totalRequiredHours);
-        System.out.println(" quintet num:"+quintetsNum);
+    public void executeEvolutionAlgorithm() {
+        //randomly generate 1-'total-required-hours' quintets to create a single solution
+        int quintetsNum = getRandomQuintetNumber(1, calculateTotalRequiredHours());
+
+        System.out.println(" required hours:" + calculateTotalRequiredHours());
+        System.out.println(" quintet num:" + quintetsNum);
+
+        //I think the collection of quintets should be a set so that we don't have duplicate quintets
     }
 
-    private int createTotalRequiredHours() {
+    private int calculateTotalRequiredHours() {
         int totalRequiredHours = 0;
-        Map<Integer,SchoolClass> classes = descriptor.getTimeTable().getSchoolClasses();
+        Map<Integer, SchoolClass> classes = descriptor.getTimeTable().getSchoolClasses();
+
         for (Map.Entry<Integer, SchoolClass> entry : classes.entrySet()) {
-            totalRequiredHours+= entry.getValue().getTotalRequiredHours();
+            totalRequiredHours += entry.getValue().getTotalRequiredHours();
         }
+
         return totalRequiredHours;
     }
 
     private int getRandomQuintetNumber(int min, int max) {
         Random random = new Random();
+
         return random.nextInt(max - min) + min;
     }
 
