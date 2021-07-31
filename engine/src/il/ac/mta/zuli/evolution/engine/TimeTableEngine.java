@@ -2,6 +2,7 @@ package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
@@ -44,7 +45,9 @@ public class TimeTableEngine implements Engine {
 //SelectionDTO selection, CrossoverDTO crossover, List<MutationDTO> mutations
     private EngineSettingsDTO createEngineSettingsDTO() {
         int initialSize =descriptor.getEngineSettings().getInitialPopulationSize();
-        SelectionDTO selectionDTO = new SelectionDTO();
+        Selection<TimeTableSolution> selection =descriptor.getEngineSettings().getSelection();
+        SelectionDTO selectionDTO = new SelectionDTO(selection.getClass().getSimpleName(),selection.getConfiguration());
+
         return null; //new EngineSettingsDTO(,)
     }
 

@@ -35,4 +35,10 @@ public class DayTimeOriented implements Crossover<TimeTableSolution> {
 
         return null;
     }
+
+    @Override
+    public String getConfiguration() {
+        return null;
+    }
+
 }

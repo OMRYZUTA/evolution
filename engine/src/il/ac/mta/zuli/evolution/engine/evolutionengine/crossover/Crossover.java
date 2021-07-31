@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface Crossover<T extends Solution> {
     List<T> crossover(T s1, T s2);
+    String getConfiguration();
 }

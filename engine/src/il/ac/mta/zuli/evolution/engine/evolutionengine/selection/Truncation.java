@@ -39,5 +39,8 @@ public class Truncation implements Selection<TimeTableSolution> {
         return null;
     }
 
+    public String getConfiguration(){
+        return String.format("TopPercent = %d",topPercent);
+    }
 
 }
