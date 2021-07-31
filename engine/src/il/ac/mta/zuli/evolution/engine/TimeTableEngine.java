@@ -65,7 +65,7 @@ public class TimeTableEngine implements Engine {
     @NotNull
     private CrossoverDTO createCrossoverDTO() {
         Crossover<TimeTableSolution> crossover = descriptor.getEngineSettings().getCrossover();
-        CrossoverDTO crossoverDTO = new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getCuttingPointsStr());
+        CrossoverDTO crossoverDTO = new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getCuttingPoints());
         return crossoverDTO;
     }
 

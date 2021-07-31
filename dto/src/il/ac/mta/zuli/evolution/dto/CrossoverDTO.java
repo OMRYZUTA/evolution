@@ -2,8 +2,8 @@ package il.ac.mta.zuli.evolution.dto;
 
 public class CrossoverDTO {
     String name;
-    String cuttingPoints;
-    public  CrossoverDTO(String name, String cuttingPoints){
+    int cuttingPoints;
+    public  CrossoverDTO(String name, int cuttingPoints){
         this.name = name;
         this.cuttingPoints = cuttingPoints;
     }
@@ -12,7 +12,7 @@ public class CrossoverDTO {
         return name;
     }
 
-    public String getCuttingPoints() {
+    public int getCuttingPoints() {
         return cuttingPoints;
     }
 

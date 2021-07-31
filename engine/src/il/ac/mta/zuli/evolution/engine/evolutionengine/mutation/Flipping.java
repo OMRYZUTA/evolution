@@ -52,5 +52,4 @@ public class Flipping implements Mutation<TimeTableSolution> {
     public double getProbability() {
         return probability;
     }
-
 }
