@@ -17,4 +17,6 @@ public interface Engine {
     void showEvolutionProcess();
 
     void leaveSystem();
+
+    boolean isXMLLoaded();
 }

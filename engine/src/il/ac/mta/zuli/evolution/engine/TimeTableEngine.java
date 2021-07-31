@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.util.*;
 
 public class TimeTableEngine implements Engine {
+    private boolean isXMLLoaded = false;
     private Descriptor descriptor;
     private final XMLParser xmlParser = new XMLParser();
     private EvolutionEngine evolutionEngine;
@@ -31,6 +32,9 @@ public class TimeTableEngine implements Engine {
             descriptor = xmlParser.unmarshall(path);
             System.out.println(descriptor);
             fireEvent("file is loaded");
+            if (descriptor != null) {
+                isXMLLoaded = true;
+            }
         } catch (Exception e) {
             //TODO handle exception
             System.out.println(e.getMessage());
@@ -192,6 +196,11 @@ public class TimeTableEngine implements Engine {
     @Override
     public void leaveSystem() {
 
+    }
+
+    @Override
+    public boolean isXMLLoaded() {
+        return isXMLLoaded;
     }
 
     public void EventsGeneratorComponent() {
