@@ -8,7 +8,7 @@ import java.util.Collection;
 public class Truncation implements Selection<TimeTableSolution> {
     private int topPercent;
 
-    public Truncation(ETTSelection ettSelection) throws Exception {
+    public Truncation(ETTSelection ettSelection)  {
         String configuration = ettSelection.getConfiguration();
         int index = configuration.indexOf('=');
         int num = Integer.parseInt(configuration.substring(index + 1));
@@ -19,11 +19,11 @@ public class Truncation implements Selection<TimeTableSolution> {
         return topPercent;
     }
 
-    private void setTopPercent(int topPercent) throws Exception {
+    private void setTopPercent(int topPercent) {
         if (topPercent >= 1 && topPercent <= 100) {
             this.topPercent = topPercent;
         } else {
-            throw new Exception("invalid top percent value");
+            throw new RuntimeException("invalid top percent value");
         }
     }
 
