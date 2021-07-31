@@ -44,8 +44,8 @@ public class TimeTableEngine implements Engine {
 //SelectionDTO selection, CrossoverDTO crossover, List<MutationDTO> mutations
     private EngineSettingsDTO createEngineSettingsDTO() {
         int initialSize =descriptor.getEngineSettings().getInitialPopulationSize();
-        SelectionDTO selectionDTO = new SelectionDTO()
-        return new EngineSettingsDTO(,)
+        SelectionDTO selectionDTO = new SelectionDTO();
+        return null; //new EngineSettingsDTO(,)
     }
 
     @NotNull
