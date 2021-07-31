@@ -80,7 +80,7 @@ public class TimeTableEngine implements Engine {
         List<MutationDTO> mutationDTOS = new ArrayList<>();
         for (Mutation mutation : descriptor.getEngineSettings().getMutations()) {
             String name = mutation.getClass().getSimpleName();
-            String probability = mutation.getProbabilityStr();
+            double probability = mutation.getProbability();
             String configuration = mutation.getConfiguration();
             mutationDTOS.add(new MutationDTO(name, probability, configuration));
         }

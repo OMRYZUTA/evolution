@@ -13,10 +13,6 @@ public class Flipping implements Mutation<TimeTableSolution> {
         this.component = component;
     }
 
-    public double getProbability() {
-        return probability;
-    }
-
     private void setProbability(double probability) throws Exception {
         if (0 <= probability && probability <= 1) {
             this.probability = probability;
@@ -49,12 +45,12 @@ public class Flipping implements Mutation<TimeTableSolution> {
 
     @Override
     public String getConfiguration() {
-        return String.format("max tuples = %d, Component = %s",maxTupples,component.toString());
+        return String.format("max tuples = %d, Component = %s", maxTupples, component.toString());
     }
 
     @Override
-    public String getProbabilityStr() {
-        return String.format("probability: %1$,.2f",probability);
+    public double getProbability() {
+        return probability;
     }
 
 }
