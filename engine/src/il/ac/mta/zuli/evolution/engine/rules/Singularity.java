@@ -1,6 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
-import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 
 public class Singularity extends Rule {
     public Singularity(String ruleType) {
@@ -8,7 +8,7 @@ public class Singularity extends Rule {
     }
 
     @Override
-    public int fitnessEvaluation(Solution solution) {
+    public int fitnessEvaluation(TimeTableSolution solution) {
 
         return 0;
     }
