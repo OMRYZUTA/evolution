@@ -156,10 +156,27 @@ public class TimeTableEngine implements Engine {
 
 
     @Override
-    public void executeEvolutionAlgo() {
-
+    public void executeEvolutionAlgo()
+    {
+        int totalRequiredHours = createTotalRequiredHours();
+        int quintetsNum =getRandomQuintetNumber(1,totalRequiredHours);
         //randomly generate 1-total-required-hours quintets to create a single solution
+        System.out.println(" required hours:"+totalRequiredHours);
+        System.out.println(" quintet num:"+quintetsNum);
+    }
 
+    private int createTotalRequiredHours() {
+        int totalRequiredHours = 0;
+        Map<Integer,SchoolClass> classes = descriptor.getTimeTable().getSchoolClasses();
+        for (Map.Entry<Integer, SchoolClass> entry : classes.entrySet()) {
+            totalRequiredHours+= entry.getValue().getTotalRequiredHours();
+        }
+        return totalRequiredHours;
+    }
+
+    private int getRandomQuintetNumber(int min, int max) {
+        Random random = new Random();
+        return random.nextInt(max - min) + min;
     }
 
     @Override

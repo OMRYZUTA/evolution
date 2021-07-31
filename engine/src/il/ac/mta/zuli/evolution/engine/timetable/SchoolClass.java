@@ -68,4 +68,12 @@ public class SchoolClass {
                 ", requirements=" + requirements +
                 '}';
     }
+
+    public  int getTotalRequiredHours(){
+        int totalRequiredHours =0;
+        for (Requirement requirement:requirements) {
+            totalRequiredHours+= requirement.getHours();
+        }
+        return  totalRequiredHours;
+    }
 }
