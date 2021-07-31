@@ -5,7 +5,6 @@ import il.ac.mta.zuli.evolution.engine.rules.Rule;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 public class TimeTableSolution implements Solution {
@@ -36,9 +35,4 @@ public class TimeTableSolution implements Solution {
         return Collections.unmodifiableCollection(solution);
     }
 
-
-    @Override
-    public List<Solution> whatever(Solution other) {
-        return null;
-    }
 }

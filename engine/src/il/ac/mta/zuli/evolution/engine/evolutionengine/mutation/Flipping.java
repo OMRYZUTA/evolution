@@ -1,8 +1,9 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.mutation;
 
+import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 
-public class Flipping implements Mutation {
+public class Flipping implements Mutation<TimeTableSolution> {
     double probability;
     int maxTupples;
     ComponentName component;
@@ -43,7 +44,7 @@ public class Flipping implements Mutation {
     }
 
     @Override
-    public void mutate(Solution solution) {
+    public void mutate(TimeTableSolution solution) {
         //TODO implement
     }
 }

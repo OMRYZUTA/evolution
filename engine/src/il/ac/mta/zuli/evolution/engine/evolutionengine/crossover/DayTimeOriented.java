@@ -32,6 +32,7 @@ public class DayTimeOriented implements Crossover<TimeTableSolution> {
 
     @Override
     public List<TimeTableSolution> crossover(TimeTableSolution s1, TimeTableSolution s2) {
+
         return null;
     }
 }

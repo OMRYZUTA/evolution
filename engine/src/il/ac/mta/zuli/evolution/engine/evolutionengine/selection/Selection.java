@@ -5,7 +5,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import java.util.Collection;
 
 //TODO deceide what collection
-public interface Selection {
+public interface Selection<T extends  Solution> {
 
-    Collection<Solution> select(Collection<Solution> solutions);
+    Collection<T> select(Collection<T> solutions);
 }

@@ -27,10 +27,15 @@ public class SchoolClassDTO {
 
     @Override
     public String toString() {
-        return "SchoolClassDTO{" +
+        StringBuilder sb =new StringBuilder();
+        sb.append("SchoolClass:" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", requirements=" + requirements +
-                '}';
+                ", name:" + name);
+        for (RequirementDTO requirement: requirements) {
+            sb.append(System.lineSeparator());
+            sb.append(requirement);
+        }
+        return  sb.toString();
+
     }
 }

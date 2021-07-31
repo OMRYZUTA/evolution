@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine;
 
+import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.DayTimeOriented;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.ComponentName;
@@ -19,9 +20,9 @@ import java.util.List;
 
 public class EngineSettings {
     private int initialPopulationSize;
-    private Selection selection;
-    private Crossover crossover;
-    private List<Mutation> mutations;
+    private Selection<TimeTableSolution> selection;
+    private Crossover<TimeTableSolution> crossover;
+    private List<Mutation<TimeTableSolution>> mutations;
 
     public EngineSettings(@NotNull ETTEvolutionEngine ee) throws Exception {
         setInitialPopulationSize(ee.getETTInitialPopulation().getSize());
@@ -40,13 +41,13 @@ public class EngineSettings {
         return initialPopulationSize;
     }
 
-    public Selection getSelection() {
+    public Selection<TimeTableSolution> getSelection() {
         return selection;
     }
 
     private void setSelection(@NotNull ETTSelection ettSelection) throws Exception {
         if ((ettSelection.getType()).equalsIgnoreCase("truncation")) {
-            this.selection = new Truncation(ettSelection);
+            this.selection =  new Truncation(ettSelection);
         } else {
             throw new Exception("invalid selection type (for ex. 1)");
         }

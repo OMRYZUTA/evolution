@@ -1,11 +1,11 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.selection;
 
-import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTSelection;
 
 import java.util.Collection;
 
-public class Truncation implements Selection {
+public class Truncation implements Selection<TimeTableSolution> {
     private int topPercent;
 
     public Truncation(ETTSelection ettSelection) throws Exception {
@@ -35,7 +35,7 @@ public class Truncation implements Selection {
 
     //TODO implement selection()
     @Override
-    public Collection<Solution> select(Collection<Solution> solutions) {
+    public Collection<TimeTableSolution> select(Collection<TimeTableSolution> solutions) {
         return null;
     }
 

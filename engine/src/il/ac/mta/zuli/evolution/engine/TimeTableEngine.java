@@ -35,12 +35,17 @@ public class TimeTableEngine implements Engine {
     }
 
     @Override
-    public TimeTableDTO getSystemDetails() {
+    public DescriptorDTO getSystemDetails() {
         //DTO: list of subjects, list of teachers, list of SchoolClasses, list of rules
         TimeTableDTO timeTableDTO = createTimeTableDTO();
-
-        return timeTableDTO;
-        //return new DescriptorDTO();
+        EngineSettingsDTO engineSettingsDTO = createEngineSettingsDTO();
+        return new DescriptorDTO(timeTableDTO, engineSettingsDTO);
+    }
+//SelectionDTO selection, CrossoverDTO crossover, List<MutationDTO> mutations
+    private EngineSettingsDTO createEngineSettingsDTO() {
+        int initialSize =descriptor.getEngineSettings().getInitialPopulationSize();
+        SelectionDTO selectionDTO = new SelectionDTO()
+        return new EngineSettingsDTO(,)
     }
 
     @NotNull
