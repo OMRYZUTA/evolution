@@ -24,7 +24,7 @@ public class Singularity extends Rule {
             //if the set already contains the element, the call leaves the set unchanged and returns false.
             if (!tempSet.add(DHC)) {
                 if (isHardRule()) {
-                    return 0;
+                    return HARDRULEFAILURE;
                 } else {
                     collisions++;
                 }

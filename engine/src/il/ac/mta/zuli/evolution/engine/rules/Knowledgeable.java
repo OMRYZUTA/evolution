@@ -7,6 +7,7 @@ import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import java.util.Collection;
 import java.util.Map;
 
+
 //teachers only teach subjects from their subject-collection
 public class Knowledgeable extends Rule {
     public Knowledgeable(String ruleType) {
@@ -26,7 +27,7 @@ public class Knowledgeable extends Rule {
                 qualifiedQuintets++;
             } else {
                 if (this.isHardRule()) {
-                    return 0;
+                    return HARDRULEFAILURE;
                 }
             }
         }

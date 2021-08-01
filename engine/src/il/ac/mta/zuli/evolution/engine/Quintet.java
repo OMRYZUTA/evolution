@@ -50,6 +50,10 @@ public class Quintet {
         return schoolClass;
     }
 
+    public int getSchoolClassID() {
+        return schoolClass.getId();
+    }
+
     public void setSchoolClass(SchoolClass schoolClass) {
         this.schoolClass = schoolClass;
     }

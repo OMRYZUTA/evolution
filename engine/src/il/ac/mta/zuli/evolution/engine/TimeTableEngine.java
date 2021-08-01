@@ -170,31 +170,12 @@ public class TimeTableEngine implements Engine {
 
     @Override
     public void executeEvolutionAlgorithm() {
-        //randomly generate 1-'total-required-hours' quintets to create a single solution
-        int quintetsNum = getRandomQuintetNumber(1, calculateTotalRequiredHours());
 
-        System.out.println(" required hours:" + calculateTotalRequiredHours());
-        System.out.println(" quintet num:" + quintetsNum);
-
-        //I think the collection of quintets should be a set so that we don't have duplicate quintets
+        // create single solution including randomly generate numOfQuintets for a single solution
+        TimeTableSolution solution = new TimeTableSolution(descriptor.getTimeTable());
     }
 
-    private int calculateTotalRequiredHours() {
-        int totalRequiredHours = 0;
-        Map<Integer, SchoolClass> classes = descriptor.getTimeTable().getSchoolClasses();
 
-        for (Map.Entry<Integer, SchoolClass> entry : classes.entrySet()) {
-            totalRequiredHours += entry.getValue().getTotalRequiredHours();
-        }
-
-        return totalRequiredHours;
-    }
-
-    private int getRandomQuintetNumber(int min, int max) {
-        Random random = new Random();
-
-        return random.nextInt(max - min) + min;
-    }
 
     @Override
     public void showBestSolution() {

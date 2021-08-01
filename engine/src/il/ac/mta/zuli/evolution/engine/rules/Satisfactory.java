@@ -1,9 +1,13 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
+import il.ac.mta.zuli.evolution.engine.Quintet;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Satisfactory extends Rule {
     Map<Integer, SchoolClass> schoolClasses;
@@ -29,6 +33,25 @@ public class Satisfactory extends Rule {
         //or maybe as stream - first sort the Quintets according to class, then separate to collection-per-class
         //then sum up hours-per-subject-per-class in the Solution
         //and compare to the requirements
+
+        //in order to check every class gets the requiredHours-per Subject:
+        //1.to get solution only per class
+        //2.
+
+        /*solution.getSolution().stream()
+                .sorted(
+                        (Quintet q1, Quintet q2) -> Integer.compare(q1.getSchoolClass().getId(), q2.getSchoolClass().getId()).*/
+        Collection<Quintet> solutionQuintets = solution.getSolution();
+
+        ArrayList<ArrayList<Quintet>> lists = new ArrayList<ArrayList<Quintet>>(
+                (Collection<ArrayList<Quintet>>) solutionQuintets.parallelStream()
+                        .collect(Collectors.groupingBy(Quintet::getSchoolClassID)));
+
+        System.out.println(lists);
+
+        //Comparator c = (Computer c1, Computer c2) -> c1.getAge().compareTo(c2.getAge());
+
+
         return 0;
     }
 }
