@@ -2,7 +2,7 @@ package il.ac.mta.zuli.evolution.engine.rules;
 
 //TODO - ask omry why we need a ruleInterface?
 public abstract class Rule implements RuleInterface {
-    private RuleType ruleType; //hard or soft
+    private final RuleType ruleType; //hard or soft
     static final int HARDRULEFAILURE = 0;
 
     protected Rule(String ruleType) {
@@ -14,8 +14,7 @@ public abstract class Rule implements RuleInterface {
                 this.ruleType = RuleType.HARD;
                 break;
             default:
-                //TODO throw exception
-                System.out.println("invalid rule type");
+                throw new RuntimeException("invalid rule type");
         }
     }
 

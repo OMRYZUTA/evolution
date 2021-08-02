@@ -66,9 +66,7 @@ public class TimeTable {
             t = teacherList.get(i);
 
             if (i + 1 != t.getId()) {
-                //TODO throw exception
-                System.out.println("UI report error: teacher ID " + t.getId() + " not according to required count");//throw exception - need to think about it
-                return;
+                throw new RuntimeException("UI report error: teacher ID " + t.getId() + " not according to required count");//throw exception - need to think about it
             }
             this.teachers.put(t.getId(), new Teacher(t, this.subjects));
         }
@@ -90,14 +88,11 @@ public class TimeTable {
             s = subjectList.get(i);
 
             if (i + 1 != s.getId()) {
-                //TODO throw exception
-                System.out.println("UI report error: subject ID " + s.getId() + " not according to required count");//throw exception - need to think about it
-                return;
+                throw new RuntimeException("UI report error: subject ID " + s.getId() + " not according to required count");//throw exception - need to think about it
             }
             this.subjects.put(s.getId(), new Subject(s)); //no need for putIfAbsent because we're checking IDs here
         }
     }
-
 
     public Map<Integer, SchoolClass> getSchoolClasses() {
         return Collections.unmodifiableMap(schoolClasses);
@@ -115,9 +110,7 @@ public class TimeTable {
             c = classList.get(i);
 
             if (i + 1 != c.getId()) {
-                //TODO throw exception
-                System.out.println("UI report error: schoolClass ID " + c.getId() + " not according to required count");//throw exception - need to think about it
-                return;
+                throw new RuntimeException("UI report error: schoolClass ID " + c.getId() + " not according to required count");//throw exception - need to think about it
             }
             this.schoolClasses.put(c.getId(), new SchoolClass(c, this.subjects, (this.hours * this.days)));
         }
@@ -163,6 +156,18 @@ public class TimeTable {
 
     private void setHardRulesWeight(int hardRulesWeight) {
         this.hardRulesWeight = hardRulesWeight;
+    }
+
+    public List<Teacher> getTeachersThatTeachSubject(int subjectID) {
+        List<Teacher> subjectTeacherList = new ArrayList<>();
+
+        for (Teacher teacher : teachers.values()) {
+            if ((teacher.getSubjects()).containsKey(subjectID)) {
+                subjectTeacherList.add(teacher);
+            }
+        }
+
+        return subjectTeacherList;
     }
 
     @Override

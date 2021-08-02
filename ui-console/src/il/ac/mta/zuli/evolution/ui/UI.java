@@ -33,6 +33,7 @@ public class UI implements ActionListener {
 
         printTimeTable(timeTableDTO);
         printEngineSetting(engineSettingsDTO);
+        System.out.println("*********************************");
     }
 
     private void printEngineSetting(EngineSettingsDTO engineSettingsDTO) {

@@ -23,8 +23,7 @@ public class Requirement {
         if (hours > 0) {
             this.hours = hours;
         } else {
-            //TODO throw exception
-            System.out.println("hours are 0 or negative");
+            throw new RuntimeException("invalid hours input - hours are 0 or negative");
         }
     }
 
@@ -35,8 +34,7 @@ public class Requirement {
     private void setSubject(int id, Map<Integer, Subject> existingSubjects) {
 
         if ((subject = existingSubjects.get(id)) == null) {
-            //TODO throw exception
-            System.out.println("subject ID: " + id + " does not exist in tt");
+            throw new RuntimeException("subject ID: " + id + " does not exist in tt");
         }
     }
 

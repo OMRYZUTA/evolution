@@ -65,4 +65,18 @@ public class Quintet {
     public void setSubject(Subject subject) {
         this.subject = subject;
     }
+
+    @Override
+    public String toString() {
+        if (teacher != null && schoolClass != null && subject != null) {
+            return "{day=" + day +
+                    ", hour=" + hour +
+                    ", teacher=" + teacher.getId() +
+                    ", schoolClass=" + schoolClass.getId() +
+                    ", subject=" + subject.getId() +
+                    '}';
+        } else {
+            return "invalid quintet: teacheer/class/subject are null";
+        }
+    }
 }

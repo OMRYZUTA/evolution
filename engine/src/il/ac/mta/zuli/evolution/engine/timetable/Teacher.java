@@ -44,8 +44,7 @@ public class Teacher {
 
         for (ETTTeaches s : subjectList) {
             if ((subjectToAdd = existingSubjects.get(s.getSubjectId())) == null) {
-                //TODO throw exception
-                System.out.println("Teacher " + id + "has subject that doesn't exist in the timetable");
+                throw new RuntimeException("Teacher " + id + "has subject that doesn't exist in the timetable");
             }
             this.subjects.put(subjectToAdd.getId(), subjectToAdd);
         }

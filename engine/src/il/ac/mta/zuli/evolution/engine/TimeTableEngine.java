@@ -30,14 +30,13 @@ public class TimeTableEngine implements Engine {
         try {
             //TODO validatePath()
             descriptor = xmlParser.unmarshall(path);
-            System.out.println(descriptor);
-            fireEvent("file is loaded");
+            fireEvent("in loadXml in TTengine: file is loaded");
             if (descriptor != null) {
                 isXMLLoaded = true;
             }
         } catch (Exception e) {
             //TODO handle exception
-            System.out.println(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -122,8 +121,8 @@ public class TimeTableEngine implements Engine {
     private Map<Integer, SubjectDTO> createSortedSubjectDTOCollection(Map<Integer, Subject> subjects) {
         Map<Integer, SubjectDTO> subjectDTOS = new TreeMap<>();
 
-        for (Map.Entry<Integer, Subject> subject : subjects.entrySet()) {
-            subjectDTOS.put(subject.getKey(), new SubjectDTO(subject.getKey(), subject.getValue().getName()));
+        for (Subject subject : subjects.values()) {
+            subjectDTOS.put(subject.getId(), new SubjectDTO(subject.getId(), subject.getName()));
         }
 
         return subjectDTOS; //in sorted order because of TreeMap
@@ -133,9 +132,9 @@ public class TimeTableEngine implements Engine {
         Map<Integer, TeacherDTO> teacherDTOs = new TreeMap<>();
         Map<Integer, Teacher> teachers = descriptor.getTimeTable().getTeachers();
 
-        for (Map.Entry<Integer, Teacher> teacher : teachers.entrySet()) {
-            Map<Integer, SubjectDTO> subjectsDTO = createSortedSubjectDTOCollection(teacher.getValue().getSubjects());
-            teacherDTOs.put(teacher.getKey(), new TeacherDTO(teacher.getKey(), (teacher.getValue()).getName(), subjectsDTO));
+        for (Teacher teacher : teachers.values()) {
+            Map<Integer, SubjectDTO> subjectsDTO = createSortedSubjectDTOCollection(teacher.getSubjects());
+            teacherDTOs.put(teacher.getId(), new TeacherDTO(teacher.getId(), teacher.getName(), subjectsDTO));
         }
 
         return teacherDTOs; //in sorted order because of TreeMap
@@ -143,13 +142,13 @@ public class TimeTableEngine implements Engine {
 
     private Map<Integer, SchoolClassDTO> createSortedClassesDTOCollection() {
         Map<Integer, SchoolClassDTO> SchoolClassDTOs = new TreeMap<>();
-        Map<Integer, SchoolClass> SchoolClasss = descriptor.getTimeTable().getSchoolClasses();
+        Map<Integer, SchoolClass> SchoolClass = descriptor.getTimeTable().getSchoolClasses();
 
-        for (Map.Entry<Integer, SchoolClass> schoolClass : SchoolClasss.entrySet()) {
-            List<RequirementDTO> requirementsDTO = createRequirementsDTOList(schoolClass.getValue().getRequirements());
-            SchoolClassDTOs.put(schoolClass.getKey(),
-                    new SchoolClassDTO(schoolClass.getKey(),
-                            (schoolClass.getValue()).getName(), requirementsDTO));
+        for (SchoolClass schoolClass : SchoolClass.values()) {
+            List<RequirementDTO> requirementsDTO = createRequirementsDTOList(schoolClass.getRequirements());
+            SchoolClassDTOs.put(schoolClass.getId(),
+                    new SchoolClassDTO(schoolClass.getId(),
+                            schoolClass.getName(), requirementsDTO));
         }
 
         return SchoolClassDTOs; //in sorted order because of TreeMap
@@ -170,11 +169,18 @@ public class TimeTableEngine implements Engine {
 
     @Override
     public void executeEvolutionAlgorithm() {
+        //1. in loop:
+        // 1a. generate as many solutions as required
 
         // create single solution including randomly generate numOfQuintets for a single solution
         TimeTableSolution solution = new TimeTableSolution(descriptor.getTimeTable());
-    }
 
+        //1b. fitnessEvaluation for each solution generated
+        //2. selection
+        //3.mutation
+        //4.crossover
+
+    }
 
 
     @Override

@@ -55,8 +55,7 @@ public class SchoolClass {
         }
 
         if (totalClassHours > totalHours) {
-            //TODO throw exception
-            System.out.println("class " + name + " has too many hours");
+            throw new RuntimeException("class " + name + " has too many hours");
         }
     }
 
@@ -69,11 +68,20 @@ public class SchoolClass {
                 '}';
     }
 
-    public  int getTotalRequiredHours(){
-        int totalRequiredHours =0;
-        for (Requirement requirement:requirements) {
-            totalRequiredHours+= requirement.getHours();
+    public int getTotalRequiredHours() {
+        int totalRequiredHours = 0;
+        for (Requirement requirement : requirements) {
+            totalRequiredHours += requirement.getHours();
         }
-        return  totalRequiredHours;
+        return totalRequiredHours;
+    }
+
+    public List<Subject> getRequiredSubjects() {
+        List<Subject> requiredSubjects = new ArrayList<>();
+        for (Requirement r : requirements) {
+            requiredSubjects.add(r.getSubject());
+        }
+
+        return requiredSubjects;
     }
 }

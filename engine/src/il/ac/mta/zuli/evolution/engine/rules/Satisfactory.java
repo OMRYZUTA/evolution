@@ -47,7 +47,7 @@ public class Satisfactory extends Rule {
                 (Collection<ArrayList<Quintet>>) solutionQuintets.parallelStream()
                         .collect(Collectors.groupingBy(Quintet::getSchoolClassID)));
 
-        System.out.println(lists);
+        System.out.println("in satisfactory rule: " + lists);
 
         //Comparator c = (Computer c1, Computer c2) -> c1.getAge().compareTo(c2.getAge());
 
