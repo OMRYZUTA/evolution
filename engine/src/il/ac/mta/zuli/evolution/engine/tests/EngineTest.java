@@ -20,8 +20,7 @@ class EngineTest {
     void load() {
         engine = new TimeTableEngine();
         engine.loadXML("src/resources/EX1-small.xml");
-        String currentDirectory = System.getProperty("user.dir");
-        System.out.println("The current working directory is " + currentDirectory);
+
         assertTrue(engine.isXMLLoaded());
     }
 }

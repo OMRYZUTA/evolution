@@ -14,7 +14,7 @@ public class TimeTableSolution implements Solution {
     private List<Quintet> solution;
     private final int solutionSize; //number of quintets
     private double totalFitnessScore;
-    private final Map<Rule, Integer> fitnessScorePerRule;
+    private final Map<Rule, Double> fitnessScorePerRule;
     TimeTable timeTable;
 
     public TimeTableSolution(TimeTable timeTable) {
@@ -93,7 +93,7 @@ public class TimeTableSolution implements Solution {
         return totalRequiredHours;
     }
 
-    public void addScoreToRule(Rule rule, int score) {
+    public void addScoreToRule(Rule rule, double score) {
         fitnessScorePerRule.put(rule, score);
     }
 
@@ -102,7 +102,7 @@ public class TimeTableSolution implements Solution {
         double softRuleSum = 0, hardRuleSum = 0;
         int numOfSoftRules = 0, numOfHardRules = 0;
 
-        for (Map.Entry<Rule, Integer> entry : fitnessScorePerRule.entrySet()) {
+        for (Map.Entry<Rule, Double> entry : fitnessScorePerRule.entrySet()) {
             if (entry.getKey().isHardRule()) {
                 numOfHardRules++;
                 hardRuleSum += entry.getValue();
@@ -133,7 +133,7 @@ public class TimeTableSolution implements Solution {
         return totalFitnessScore;
     }
 
-    public Map<Rule, Integer> getFitnessScorePerRule() {
+    public Map<Rule, Double> getFitnessScorePerRule() {
         return Collections.unmodifiableMap(fitnessScorePerRule);
     }
 

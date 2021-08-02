@@ -19,13 +19,13 @@ public class TimeTable {
 
     public TimeTable(@NotNull ETTTimeTable tt) {
         //TODO throw exception
-        setRules(tt.getETTRules());
         setHardRulesWeight(tt.getETTRules().getHardRulesWeight());
         setDays(tt.getDays());
         setHours(tt.getHours());
         setSubjects(tt.getETTSubjects());
         setSchoolClasses(tt.getETTClasses());
         setTeachers(tt.getETTTeachers());
+        setRules(tt.getETTRules());
     }
 
     public int getDays() {

@@ -6,7 +6,7 @@ public abstract class Rule implements RuleInterface {
     static final int HARDRULEFAILURE = 0;
     static final int INVALIDSCORE = -1;
 
-    protected Rule(String ruleType) {
+    protected Rule( String ruleType) { // @NotNull return ?
         switch (ruleType.toLowerCase()) {
             case "soft":
                 this.ruleType = RuleType.SOFT;
