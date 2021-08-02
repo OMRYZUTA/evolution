@@ -10,7 +10,7 @@ public interface Engine {
      void addHandler (ActionListener handler);
     DescriptorDTO getSystemDetails(); //TODO change return value to descriptorDTO
 
-    void executeEvolutionAlgorithm();
+    void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride);
 
     void showBestSolution();
 

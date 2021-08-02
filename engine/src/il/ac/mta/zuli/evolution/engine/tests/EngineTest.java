@@ -1,4 +1,3 @@
-
 package il.ac.mta.zuli.evolution.engine.tests;
 
 import il.ac.mta.zuli.evolution.engine.Engine;
@@ -25,5 +24,4 @@ class EngineTest {
         System.out.println("The current working directory is " + currentDirectory);
         assertTrue(engine.isXMLLoaded());
     }
-
 }

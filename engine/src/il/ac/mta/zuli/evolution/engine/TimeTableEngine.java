@@ -22,7 +22,7 @@ public class TimeTableEngine implements Engine {
     private Descriptor descriptor;
     private final XMLParser xmlParser = new XMLParser();
     private EvolutionEngine evolutionEngine;
-
+    private List<TimeTableSolution> bestSolutionsInHistory;
     private List<ActionListener> handlers = new ArrayList<>();
 
     @Override
@@ -168,17 +168,24 @@ public class TimeTableEngine implements Engine {
 
 
     @Override
-    public void executeEvolutionAlgorithm() {
+    public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
         //1. in loop:
         // 1a. generate as many solutions as required
-
         // create single solution including randomly generate numOfQuintets for a single solution
-        TimeTableSolution solution = new TimeTableSolution(descriptor.getTimeTable());
-
-        //1b. fitnessEvaluation for each solution generated
-        //2. selection
-        //3.mutation
-        //4.crossover
+        List<TimeTableSolution> initialPopulation = new ArrayList<>();
+        for (int i = 0; i <descriptor.getEngineSettings().getInitialPopulationSize() ; i++) {
+            initialPopulation.add(new TimeTableSolution(descriptor.getTimeTable()));
+        }
+        for (TimeTableSolution solution: initialPopulation) {
+            System.out.println(solution);
+        }
+//        evolutionEngine(engineSettings, initialPopulation)
+//
+//        for i of numof generations-1 :
+//              evolution.execute()
+//              if i% stride == 0{
+//                    evolution.getBestSolution() TODO: decide whether to get the best ones before or after the execution.
+//
 
     }
 

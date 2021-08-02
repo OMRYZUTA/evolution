@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
 import il.ac.mta.zuli.evolution.engine.Quintet;
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 
 import java.util.HashSet;
 
@@ -11,7 +11,7 @@ public class Singularity extends Rule {
     }
 
     @Override
-    public int fitnessEvaluation(TimeTableSolution solution) {
+    public void fitnessEvaluation(Solution solution) {
         int collisions = 0;
         int numOfQuintets = solution.getSolutionSize();
         int classID;

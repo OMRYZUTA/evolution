@@ -76,10 +76,10 @@ public class SchoolClass {
         return totalRequiredHours;
     }
 
-    public List<Subject> getRequiredSubjects() {
-        List<Subject> requiredSubjects = new ArrayList<>();
+    public List<Integer> getRequiredSubjectsIDs() {
+        List<Integer> requiredSubjects = new ArrayList<>();
         for (Requirement r : requirements) {
-            requiredSubjects.add(r.getSubject());
+            requiredSubjects.add(r.getSubject().getId());
         }
 
         return requiredSubjects;

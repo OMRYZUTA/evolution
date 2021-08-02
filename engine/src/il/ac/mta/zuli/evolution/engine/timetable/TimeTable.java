@@ -158,12 +158,12 @@ public class TimeTable {
         this.hardRulesWeight = hardRulesWeight;
     }
 
-    public List<Teacher> getTeachersThatTeachSubject(int subjectID) {
-        List<Teacher> subjectTeacherList = new ArrayList<>();
+    public List<Integer> getTeachersThatTeachSubject(int subjectID) {
+        List<Integer> subjectTeacherList = new ArrayList<>();
 
         for (Teacher teacher : teachers.values()) {
             if ((teacher.getSubjects()).containsKey(subjectID)) {
-                subjectTeacherList.add(teacher);
+                subjectTeacherList.add(teacher.getId());
             }
         }
 

@@ -1,8 +1,8 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 
 
 public interface RuleInterface {
-    int fitnessEvaluation(TimeTableSolution solution);
+    void fitnessEvaluation(Solution solution);
 }

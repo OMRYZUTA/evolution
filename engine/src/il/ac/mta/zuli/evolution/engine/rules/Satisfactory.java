@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
 import il.ac.mta.zuli.evolution.engine.Quintet;
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class Satisfactory extends Rule {
     }
 
     @Override
-    public int fitnessEvaluation(TimeTableSolution solution) {
+    public void fitnessEvaluation(Solution solution) {
         //TODO implement
         //iterate throw SchoolClass map, for each class-sc:
         //solution.getSolutionforClass(SchoolClass sc)

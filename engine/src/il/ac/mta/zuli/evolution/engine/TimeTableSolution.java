@@ -1,7 +1,6 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
-import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
@@ -11,26 +10,20 @@ import java.time.DayOfWeek;
 import java.util.*;
 
 public class TimeTableSolution implements Solution {
-    //private final Collection<Quintet> solution; //TODO start with hashSet but end with ArrayList
     private final List<Quintet> solution;
     private final int solutionSize; //number of quintets
     private final int totalFitnessScore;
-    private final Map<Rule, Integer> fitnessScorePerRole;
+    private  Map<String, Integer> fitnessScorePerRule;
     TimeTable timeTable;
 
     public TimeTableSolution(TimeTable timeTable) {
-        fitnessScorePerRole = new HashMap<>();
+        fitnessScorePerRule = new HashMap<>();
         this.timeTable = timeTable;
-        solutionSize = generateRandomNumOfQuintets(1, calculateTotalRequiredHours());
+        solutionSize = generateRandomNum(1, calculateTotalRequiredHours());
         totalFitnessScore = 0;
-        Set<Quintet> tempSolution = generateQuintets(solutionSize);
-        //TODO change set to eventually be an arrayList in order of days-hours
-        //solution = Arrays.asList(new Quintet[solutionSize]);
-        solution = new ArrayList<Quintet>(tempSolution.size());
-        System.out.println("in timeTableSolution Ctor");
-        System.out.println("empty array? " + solution);
-        solution.addAll(tempSolution);
-        System.out.println("full array? " + solution);
+        Set<Quintet> solutionSet = generateQuintets(solutionSize);
+        solution = new ArrayList<Quintet>(solutionSet.size());
+        solution.addAll(solutionSet);
     }
 
     public Collection<Quintet> getSolution() {
@@ -45,8 +38,8 @@ public class TimeTableSolution implements Solution {
         return totalFitnessScore;
     }
 
-    public Map<Rule, Integer> getFitnessScorePerRole() {
-        return Collections.unmodifiableMap(fitnessScorePerRole);
+    public Map<String, Integer> getFitnessScorePerRule() {
+        return Collections.unmodifiableMap(fitnessScorePerRule);
     }
 
     @Override
@@ -54,18 +47,25 @@ public class TimeTableSolution implements Solution {
         return "TimeTableSolution=" + solution + System.lineSeparator() +
                 ", solutionSize=" + solutionSize +
                 ", totalFitnessScore=" + totalFitnessScore + System.lineSeparator() +
-                ", fitnessScorePerRole=" + fitnessScorePerRole;
+                ", fitnessScorePerRole=" + fitnessScorePerRule;
     }
 
-    private int generateRandomNumOfQuintets(int min, int max) {
-        Random random = new Random();
-        return random.nextInt(max - min) + min;
+    private int generateRandomNum(int min, int max) {
+        int result;
+        if (max - min == 0) {
+            result = 1;
+        } else {
+            Random random = new Random();
+
+            result = random.nextInt(max - min) + min;
+        }
+        return result;
     }
 
-    Set<Quintet> generateQuintets(int num) {
+    private Set<Quintet> generateQuintets(int num) {
         Set<Quintet> newSet = new HashSet<>();
         //I think the collection of quintets should be a set so that we don't have duplicate quintets
-
+        System.out.println("num of quintet: " + num);
         while (newSet.size() < num) {
             newSet.add(generateRandomQuintet());
         }
@@ -80,25 +80,22 @@ public class TimeTableSolution implements Solution {
         int randomHour = new Random().nextInt(timeTable.getHours());
 
         //randomly generate class
-        int randomClassID = new Random().nextInt(timeTable.getSchoolClasses().size());
+        int randomClassID = generateRandomNum(1, timeTable.getSchoolClasses().size());
         SchoolClass randomSchoolClass = timeTable.getSchoolClasses().get(randomClassID);
-
+        System.out.println("random class" + randomClassID);
         //randomly generate subject - option 1 randomly but only from class-subjects
-        List<Subject> classRequiredSubjects = randomSchoolClass.getRequiredSubjects();
-        int randomSubjectID = new Random().nextInt(classRequiredSubjects.size());
-        Subject randomSubject = classRequiredSubjects.get(randomSubjectID + 1);
+        List<Integer> classRequiredSubjectsIDs = randomSchoolClass.getRequiredSubjectsIDs();
+        int randomIndex = new Random().nextInt(classRequiredSubjectsIDs.size());
 
-        //randomly generate subject - option 2 totally random from entire subject list
-        /*int randomSubjectID = new Random().nextInt(timeTable.getSubjects().size()-1);
-        Subject randomSubject = timeTable.getSubjects().get(randomSubjectID+1);*/
+        Subject randomSubject = timeTable.getSubjects().get(classRequiredSubjectsIDs.get(randomIndex));
 
-        //randomly generate teacher - option 1 totally random
-       /* int randomTeacherID = new Random().nextInt(timeTable.getTeachers().size() - 1);
-        Teacher randomTeacher = timeTable.getTeachers().get(randomTeacherID + 1);*/
         //randomly generate teacher - option 2 - check if teacher teaches subjects
-        List<Teacher> teachersOfSubject = timeTable.getTeachersThatTeachSubject(randomSubject.getId());
-        int randomTeacherID = new Random().nextInt(teachersOfSubject.size());
-        Teacher randomTeacher = teachersOfSubject.get(randomTeacherID + 1);
+        List<Integer> TeachersIDs = timeTable.getTeachersThatTeachSubject(randomSubject.getId());
+        int randomTeachersIndex = new Random().nextInt(TeachersIDs.size());
+
+        Teacher randomTeacher = timeTable.getTeachers().get(TeachersIDs.get(randomTeachersIndex));
+
+
         System.out.println("in generateRandomQuintet " + randomDay + " " + randomHour + System.lineSeparator()
                 + randomTeacher + System.lineSeparator()
                 + randomSchoolClass + System.lineSeparator()
@@ -108,8 +105,7 @@ public class TimeTableSolution implements Solution {
 
     private DayOfWeek generateRandomDay() {
         DayOfWeek[] enumValues = DayOfWeek.values();
-        int daysInWeek = enumValues.length;
-        int randIndex = new Random().nextInt(daysInWeek);
+        int randIndex = new Random().nextInt(timeTable.getDays());
         return enumValues[randIndex];
     }
 
@@ -123,6 +119,7 @@ public class TimeTableSolution implements Solution {
 
         return totalRequiredHours;
     }
-
-
+    public void addScoreToRule(String ruleName,int score){
+        fitnessScorePerRule.put(ruleName,score);
+    }
 }
