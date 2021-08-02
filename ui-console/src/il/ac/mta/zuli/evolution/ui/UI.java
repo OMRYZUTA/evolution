@@ -22,7 +22,7 @@ public class UI implements ActionListener {
 //            TODO get parameters for evolution algorithm (and validate in engine)
             engine.executeEvolutionAlgorithm(10,1 );
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage() + e.getStackTrace());
             //TODO handleException
         }
     }

@@ -15,22 +15,24 @@ public class TeacherIsHuman extends Rule {
     @Override
     public void fitnessEvaluation(Solution solution) {
         if (!(solution instanceof TimeTableSolution)) {
-            throw new RuntimeException("solution must be time table solution");
+            throw new RuntimeException("solution must be TimeTableSolution");
         }
+
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
-        int collisions = 0;
         int numOfQuintets = timeTableSolution.getSolutionSize();
-        int teacherID;
+        HashSet<String> teacherDayHourSet = new HashSet<>();
+        int score = INVALIDSCORE;
+        int collisions = 0;
         String DHT;
-        HashSet<String> tempSet = new HashSet<>();
-        int score=-1;
+        int teacherID;
+
         for (Quintet quintet : timeTableSolution.getSolution()) {
             teacherID = (quintet.getTeacher()).getId();
             DHT = String.format("%s_%d_%d", quintet.getDay(), quintet.getHour(), teacherID);
             //if the set already contains the element, the call leaves the set unchanged and returns false.
-            if (!tempSet.add(DHT)) {
+            if (!teacherDayHourSet.add(DHT)) {
                 if (isHardRule()) {
-                    score= HARDRULEFAILURE;
+                    score = HARDRULEFAILURE;
                     break;
                 } else {
                     collisions++;
@@ -38,10 +40,10 @@ public class TeacherIsHuman extends Rule {
             }
         }
 
-        if(score !=HARDRULEFAILURE){
-            score =(100 * (numOfQuintets - collisions)) / numOfQuintets;
+        if (score != HARDRULEFAILURE) {
+            score = (100 * (numOfQuintets - collisions)) / numOfQuintets;
         }
 
-        timeTableSolution.addScoreToRule(this.getClass().getSimpleName(),score);
+        timeTableSolution.addScoreToRule(this, score);
     }
 }

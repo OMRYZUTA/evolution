@@ -1,20 +1,19 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
 import il.ac.mta.zuli.evolution.engine.Quintet;
+import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Satisfactory extends Rule {
+    //satisfactory rule - each class gets the exact number of hours-per-subject (the class' requirements are met)
     Map<Integer, SchoolClass> schoolClasses;
-
-    /*public Satisfactory(String ruleType) {
-        super(ruleType);
-    }*/
 
     public Satisfactory(String ruleType, Map<Integer, SchoolClass> schoolClasses) {
         super(ruleType);
@@ -24,6 +23,13 @@ public class Satisfactory extends Rule {
 
     @Override
     public void fitnessEvaluation(Solution solution) {
+        if (!(solution instanceof TimeTableSolution)) {
+            throw new RuntimeException("solution must be TimeTableSolution");
+        }
+
+        TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+        int score = INVALIDSCORE;
+
         //TODO implement
         //iterate throw SchoolClass map, for each class-sc:
         //solution.getSolutionforClass(SchoolClass sc)
@@ -41,17 +47,14 @@ public class Satisfactory extends Rule {
         /*solution.getSolution().stream()
                 .sorted(
                         (Quintet q1, Quintet q2) -> Integer.compare(q1.getSchoolClass().getId(), q2.getSchoolClass().getId()).*/
-        Collection<Quintet> solutionQuintets = solution.getSolution();
+        List<Quintet> solutionQuintets = timeTableSolution.getSolution();
 
-        ArrayList<ArrayList<Quintet>> lists = new ArrayList<ArrayList<Quintet>>(
+        ArrayList<ArrayList<Quintet>> solutionsPerClass = new ArrayList<ArrayList<Quintet>>(
                 (Collection<ArrayList<Quintet>>) solutionQuintets.parallelStream()
                         .collect(Collectors.groupingBy(Quintet::getSchoolClassID)));
 
-        System.out.println("in satisfactory rule: " + lists);
+        System.out.println(solutionsPerClass.get(0));
 
-        //Comparator c = (Computer c1, Computer c2) -> c1.getAge().compareTo(c2.getAge());
-
-
-        return 0;
+        timeTableSolution.addScoreToRule(this, score);
     }
 }

@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
@@ -10,10 +11,10 @@ import java.time.DayOfWeek;
 import java.util.*;
 
 public class TimeTableSolution implements Solution {
-    private final List<Quintet> solution;
+    private List<Quintet> solution;
     private final int solutionSize; //number of quintets
-    private final int totalFitnessScore;
-    private  Map<String, Integer> fitnessScorePerRule;
+    private double totalFitnessScore;
+    private final Map<Rule, Integer> fitnessScorePerRule;
     TimeTable timeTable;
 
     public TimeTableSolution(TimeTable timeTable) {
@@ -21,51 +22,32 @@ public class TimeTableSolution implements Solution {
         this.timeTable = timeTable;
         solutionSize = generateRandomNum(1, calculateTotalRequiredHours());
         totalFitnessScore = 0;
+        setSolutionQuintets();
+    }
+
+    private void setSolutionQuintets() {
         Set<Quintet> solutionSet = generateQuintets(solutionSize);
         solution = new ArrayList<Quintet>(solutionSet.size());
         solution.addAll(solutionSet);
     }
 
-    public Collection<Quintet> getSolution() {
-        return Collections.unmodifiableCollection(solution);
-    }
-
-    public int getSolutionSize() {
-        return solutionSize;
-    }
-
-    public int getTotalFitnessScore() {
-        return totalFitnessScore;
-    }
-
-    public Map<String, Integer> getFitnessScorePerRule() {
-        return Collections.unmodifiableMap(fitnessScorePerRule);
-    }
-
-    @Override
-    public String toString() {
-        return "TimeTableSolution=" + solution + System.lineSeparator() +
-                ", solutionSize=" + solutionSize +
-                ", totalFitnessScore=" + totalFitnessScore + System.lineSeparator() +
-                ", fitnessScorePerRole=" + fitnessScorePerRule;
-    }
-
     private int generateRandomNum(int min, int max) {
         int result;
+
         if (max - min == 0) {
             result = 1;
         } else {
             Random random = new Random();
-
             result = random.nextInt(max - min) + min;
         }
+
         return result;
     }
 
     private Set<Quintet> generateQuintets(int num) {
         Set<Quintet> newSet = new HashSet<>();
-        //I think the collection of quintets should be a set so that we don't have duplicate quintets
-        System.out.println("num of quintet: " + num);
+        //initially creating the solution in order to prevent duplicate quintets
+
         while (newSet.size() < num) {
             newSet.add(generateRandomQuintet());
         }
@@ -74,32 +56,23 @@ public class TimeTableSolution implements Solution {
     }
 
     private Quintet generateRandomQuintet() {
-        //TODO figure out random bounds
-
         DayOfWeek randomDay = generateRandomDay();
         int randomHour = new Random().nextInt(timeTable.getHours());
 
         //randomly generate class
         int randomClassID = generateRandomNum(1, timeTable.getSchoolClasses().size());
         SchoolClass randomSchoolClass = timeTable.getSchoolClasses().get(randomClassID);
-        System.out.println("random class" + randomClassID);
-        //randomly generate subject - option 1 randomly but only from class-subjects
+
+        //randomly generate subject - randomly but only from class-subjects
         List<Integer> classRequiredSubjectsIDs = randomSchoolClass.getRequiredSubjectsIDs();
         int randomIndex = new Random().nextInt(classRequiredSubjectsIDs.size());
-
         Subject randomSubject = timeTable.getSubjects().get(classRequiredSubjectsIDs.get(randomIndex));
 
-        //randomly generate teacher - option 2 - check if teacher teaches subjects
+        //randomly generate teacher - randomly but only from teachers that teach the random subject
         List<Integer> TeachersIDs = timeTable.getTeachersThatTeachSubject(randomSubject.getId());
         int randomTeachersIndex = new Random().nextInt(TeachersIDs.size());
-
         Teacher randomTeacher = timeTable.getTeachers().get(TeachersIDs.get(randomTeachersIndex));
 
-
-        System.out.println("in generateRandomQuintet " + randomDay + " " + randomHour + System.lineSeparator()
-                + randomTeacher + System.lineSeparator()
-                + randomSchoolClass + System.lineSeparator()
-                + randomSubject + System.lineSeparator() + "***********");
         return new Quintet(randomDay, randomHour, randomTeacher, randomSchoolClass, randomSubject);
     }
 
@@ -119,7 +92,56 @@ public class TimeTableSolution implements Solution {
 
         return totalRequiredHours;
     }
-    public void addScoreToRule(String ruleName,int score){
-        fitnessScorePerRule.put(ruleName,score);
+
+    public void addScoreToRule(Rule rule, int score) {
+        fitnessScorePerRule.put(rule, score);
+    }
+
+    public void calculateTotalScore() {
+
+        double softRuleSum = 0, hardRuleSum = 0;
+        int numOfSoftRules = 0, numOfHardRules = 0;
+
+        for (Map.Entry<Rule, Integer> entry : fitnessScorePerRule.entrySet()) {
+            if (entry.getKey().isHardRule()) {
+                numOfHardRules++;
+                hardRuleSum += entry.getValue();
+            } else {
+                numOfSoftRules++;
+                softRuleSum += entry.getValue();
+            }
+        }
+
+        double softRuleAvg = softRuleSum / numOfSoftRules;
+        double hardRuleAvg = hardRuleSum / numOfHardRules;
+        double hardRuleWeightedScore = (hardRuleAvg * timeTable.getHardRulesWeight()) / 100;
+        double softRuleWeightedScore = (softRuleAvg * (100 - timeTable.getHardRulesWeight())) / 100;
+
+        totalFitnessScore = hardRuleWeightedScore + softRuleWeightedScore;
+    }
+
+    public List<Quintet> getSolution() {
+        return Collections.unmodifiableList(solution);
+    }
+
+    public int getSolutionSize() {
+        return solutionSize;
+    }
+
+    @Override
+    public double getTotalFitnessScore() {
+        return totalFitnessScore;
+    }
+
+    public Map<Rule, Integer> getFitnessScorePerRule() {
+        return Collections.unmodifiableMap(fitnessScorePerRule);
+    }
+
+    @Override
+    public String toString() {
+        return "TimeTableSolution=" + solution + System.lineSeparator() +
+                ", solutionSize=" + solutionSize +
+                ", totalFitnessScore=" + totalFitnessScore + System.lineSeparator() +
+                ", fitnessScorePerRole=" + fitnessScorePerRule;
     }
 }

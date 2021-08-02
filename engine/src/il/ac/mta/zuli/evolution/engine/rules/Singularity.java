@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
 import il.ac.mta.zuli.evolution.engine.Quintet;
+import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 
 import java.util.HashSet;
@@ -12,25 +13,36 @@ public class Singularity extends Rule {
 
     @Override
     public void fitnessEvaluation(Solution solution) {
-        int collisions = 0;
-        int numOfQuintets = solution.getSolutionSize();
-        int classID;
-        String DHC;
-        HashSet<String> tempSet = new HashSet<>();
+        if (!(solution instanceof TimeTableSolution)) {
+            throw new RuntimeException("solution must be TimeTableSolution");
+        }
 
-        for (Quintet quintet : solution.getSolution()) {
+        TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+        int numOfQuintets = timeTableSolution.getSolutionSize();
+        HashSet<String> classDayHourSet = new HashSet<>();
+        int score = INVALIDSCORE;
+        int collisions = 0;
+        String DHC;
+        int classID;
+
+        for (Quintet quintet : timeTableSolution.getSolution()) {
             classID = (quintet.getSchoolClass()).getId();
             DHC = String.format("%s_%d_%d", quintet.getDay(), quintet.getHour(), classID);
             //if the set already contains the element, the call leaves the set unchanged and returns false.
-            if (!tempSet.add(DHC)) {
+            if (!classDayHourSet.add(DHC)) {
                 if (isHardRule()) {
-                    return HARDRULEFAILURE;
+                    score = HARDRULEFAILURE;
+                    break;
                 } else {
                     collisions++;
                 }
             }
         }
 
-        return (100 * (numOfQuintets - collisions)) / numOfQuintets;
+        if (score != HARDRULEFAILURE) {
+            score = (100 * (numOfQuintets - collisions)) / numOfQuintets;
+        }
+
+        timeTableSolution.addScoreToRule(this, score);
     }
 }

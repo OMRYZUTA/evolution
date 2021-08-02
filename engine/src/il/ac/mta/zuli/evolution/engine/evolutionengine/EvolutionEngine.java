@@ -3,23 +3,36 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 
 import java.util.List;
+import java.util.Set;
 
-public class EvolutionEngine {
-    private EngineSettings engineSettings;
-    private List<Solution> generation;
-    List<Rule> rules;
-    public EvolutionEngine(EngineSettings engineSettings, List<Solution> initialPopulation, List<Rule> rules) {
+public class EvolutionEngine<T extends Solution> {
+    private final EngineSettings engineSettings;
+    private final List<T> generation;
+    private final Set<Rule> rules;
+
+    //public interface Crossover<T extends Solution> {
+    public EvolutionEngine(List<T> initialPopulation, EngineSettings engineSettings, Set<Rule> rules) {
         this.engineSettings = engineSettings;
         this.generation = initialPopulation;
         this.rules = rules;
     }
 
-    private void fitnessEvaluation(Solution solution){
-        for (Rule rule:rules) {
+
+    //getting fitness score per role for every solution
+    private void fitnessEvaluation(T solution) {
+        for (Rule rule : rules) {
             rule.fitnessEvaluation(solution);
         }
+
+        solution.calculateTotalScore();
+        System.out.println(solution.getTotalFitnessScore());
     }
 
 
+    public void execute() {
+        for (T solution : generation) {
+            fitnessEvaluation(solution);
+        }
+    }
 }
 

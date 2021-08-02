@@ -169,17 +169,18 @@ public class TimeTableEngine implements Engine {
 
     @Override
     public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
-        //1. in loop:
-        // 1a. generate as many solutions as required
-        // create single solution including randomly generate numOfQuintets for a single solution
-        List<TimeTableSolution> initialPopulation = new ArrayList<>();
-        for (int i = 0; i <descriptor.getEngineSettings().getInitialPopulationSize() ; i++) {
-            initialPopulation.add(new TimeTableSolution(descriptor.getTimeTable()));
+
+        List<TimeTableSolution> initialPopulation = getInitialGeneration();
+
+
+        EvolutionEngine evolutionEngine = new EvolutionEngine(initialPopulation,
+                this.descriptor.getEngineSettings(),
+                this.descriptor.getTimeTable().getRules());
+
+        //numOfGenerations-1?
+        for (int i = 0; i < numOfGenerations - 1; i++) {
+            evolutionEngine.execute();
         }
-        for (TimeTableSolution solution: initialPopulation) {
-            System.out.println(solution);
-        }
-//        evolutionEngine(engineSettings, initialPopulation)
 //
 //        for i of numof generations-1 :
 //              evolution.execute()
@@ -187,6 +188,18 @@ public class TimeTableEngine implements Engine {
 //                    evolution.getBestSolution() TODO: decide whether to get the best ones before or after the execution.
 //
 
+    }
+
+    @NotNull
+    private List<TimeTableSolution> getInitialGeneration() {
+        int initialPopulationSize = descriptor.getEngineSettings().getInitialPopulationSize();
+        List<TimeTableSolution> initialPopulation = new ArrayList<>();
+
+        for (int i = 0; i < initialPopulationSize; i++) {
+            initialPopulation.add(new TimeTableSolution(descriptor.getTimeTable()));
+        }
+
+        return initialPopulation;
     }
 
 

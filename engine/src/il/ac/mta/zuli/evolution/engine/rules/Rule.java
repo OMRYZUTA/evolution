@@ -4,6 +4,7 @@ package il.ac.mta.zuli.evolution.engine.rules;
 public abstract class Rule implements RuleInterface {
     private final RuleType ruleType; //hard or soft
     static final int HARDRULEFAILURE = 0;
+    static final int INVALIDSCORE = -1;
 
     protected Rule(String ruleType) {
         switch (ruleType.toLowerCase()) {
@@ -22,7 +23,7 @@ public abstract class Rule implements RuleInterface {
         return ruleType;
     }
 
-    protected boolean isHardRule() {
+    public boolean isHardRule() {
         return this.ruleType == RuleType.HARD;
     }
 

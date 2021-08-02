@@ -1,14 +1,15 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
 import il.ac.mta.zuli.evolution.engine.Quintet;
+import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 
-//teachers only teach subjects from their subject-collection
+//rule meaning: teachers only teach subjects from their subject-collection
 public class Knowledgeable extends Rule {
     public Knowledgeable(String ruleType) {
         super(ruleType);
@@ -16,23 +17,33 @@ public class Knowledgeable extends Rule {
 
     @Override
     public void fitnessEvaluation(Solution solution) {
+        if (!(solution instanceof TimeTableSolution)) {
+            throw new RuntimeException("solution must be TimeTableSolution");
+        }
+
+        TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+        int score = INVALIDSCORE;
         int qualifiedQuintets = 0;
-        Collection<Quintet> solutionQuintets = solution.getSolution();
-        Map<Integer, Subject> teaches;
+        List<Quintet> solutionQuintets = timeTableSolution.getSolution();
+        Map<Integer, Subject> subjectsTeaches;
 
         for (Quintet quintet : solutionQuintets) {
-            teaches = (quintet.getTeacher()).getSubjects();
+            subjectsTeaches = (quintet.getTeacher()).getSubjects();
 
-            if (teaches.containsKey(quintet.getSubject().getId())) {
+            if (subjectsTeaches.containsKey(quintet.getSubject().getId())) {
                 qualifiedQuintets++;
             } else {
                 if (this.isHardRule()) {
-                    return HARDRULEFAILURE;
+                    score = HARDRULEFAILURE;
                 }
             }
         }
 
         //TODO fitnessEvaluation returns double or int?
-        return ((100 * qualifiedQuintets) / (solution.getSolutionSize()));
+        if (score != HARDRULEFAILURE) {
+            score = (100 * qualifiedQuintets) / (timeTableSolution.getSolutionSize());
+        }
+
+        timeTableSolution.addScoreToRule(this, score);
     }
 }
