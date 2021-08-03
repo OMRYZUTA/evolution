@@ -25,6 +25,7 @@ public class TimeTableEngine implements Engine {
     private List<TimeTableSolution> bestSolutionsInHistory;
     private List<ActionListener> handlers = new ArrayList<>();
 
+    //#region ui-matching methods
     @Override
     public void loadXML(String path) {
         try {
@@ -49,20 +50,88 @@ public class TimeTableEngine implements Engine {
         return new DescriptorDTO(timeTableDTO, engineSettingsDTO);
     }
 
-    //SelectionDTO selection, CrossoverDTO crossover, List<MutationDTO> mutations
+    @Override
+    public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
+
+        List<TimeTableSolution> initialPopulation = getInitialGeneration();
+
+
+        EvolutionEngine evolutionEngine = new EvolutionEngine(initialPopulation,
+                this.descriptor.getEngineSettings(),
+                this.descriptor.getTimeTable().getRules());
+
+        evolutionEngine.execute();
+        //numOfGenerations-1?
+        for (int i = 0; i < numOfGenerations - 1; i++) {
+            //evolutionEngine.execute();
+        }
+//
+//        for i of numof generations-1 :
+//              evolution.execute()
+//              if i% stride == 0{
+//                    evolution.getBestSolution() TODO: decide whether to get the best ones before or after the execution.
+//
+
+    }
+
+    @Override
+    public void showBestSolution() {
+
+    }
+
+    @Override
+    public void showEvolutionProcess() {
+
+    }
+
+    @Override
+    public void leaveSystem() {
+    }
+
+    //#endregion
+
+    //#region auxiliary methods
+    @NotNull
+    private List<TimeTableSolution> getInitialGeneration() {
+        int initialPopulationSize = descriptor.getEngineSettings().getInitialPopulationSize();
+        List<TimeTableSolution> initialPopulation = new ArrayList<>();
+
+        for (int i = 0; i < initialPopulationSize; i++) {
+            initialPopulation.add(new TimeTableSolution(descriptor.getTimeTable()));
+        }
+
+        return initialPopulation;
+    }
+
+    @Override
+    public boolean isXMLLoaded() {
+        return isXMLLoaded;
+    }
+
+//#endregion
+
+    //#region DTO-related methods
+
     private EngineSettingsDTO createEngineSettingsDTO() {
         int initialSize = descriptor.getEngineSettings().getInitialPopulationSize();
         SelectionDTO selectionDTO = createSelectionDTO();
         CrossoverDTO crossoverDTO = createCrossoverDTO();
-        List<MutationDTO> mutationDTOS = createMutationDTOS();
+        List<MutationDTO> mutationDTOS = createMutationDTOList();
 
         return new EngineSettingsDTO(initialSize, selectionDTO, crossoverDTO, mutationDTOS);
     }
 
-    @NotNull
-    private List<MutationDTO> createMutationDTOS() {
-        List<Mutation> mutations = descriptor.getEngineSettings().getMutations();
-        List<MutationDTO> mutationDTOS = createMutationsDTO();
+    private List<MutationDTO> createMutationDTOList() {
+        List<MutationDTO> mutationDTOS = new ArrayList<>();
+
+        for (Object mutation : descriptor.getEngineSettings().getMutations()) {
+            //it's safe to cast to Mutation since we're receiving data from within the engineSettings
+            Mutation currMutation = (Mutation) mutation;
+            String name = currMutation.getClass().getSimpleName();
+            double probability = currMutation.getProbability();
+            String configuration = currMutation.getConfiguration();
+            mutationDTOS.add(new MutationDTO(name, probability, configuration));
+        }
 
         return mutationDTOS;
     }
@@ -81,19 +150,6 @@ public class TimeTableEngine implements Engine {
         SelectionDTO selectionDTO = new SelectionDTO(selection.getClass().getSimpleName(), selection.getConfiguration());
 
         return selectionDTO;
-    }
-
-    private List<MutationDTO> createMutationsDTO() {
-        List<MutationDTO> mutationDTOS = new ArrayList<>();
-
-        for (Mutation mutation : descriptor.getEngineSettings().getMutations()) {
-            String name = mutation.getClass().getSimpleName();
-            double probability = mutation.getProbability();
-            String configuration = mutation.getConfiguration();
-            mutationDTOS.add(new MutationDTO(name, probability, configuration));
-        }
-
-        return mutationDTOS;
     }
 
     @NotNull
@@ -166,63 +222,9 @@ public class TimeTableEngine implements Engine {
         return requirementDTOs;
     }
 
+    //#endregion
 
-    @Override
-    public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
-
-        List<TimeTableSolution> initialPopulation = getInitialGeneration();
-
-
-        EvolutionEngine evolutionEngine = new EvolutionEngine(initialPopulation,
-                this.descriptor.getEngineSettings(),
-                this.descriptor.getTimeTable().getRules());
-
-        //numOfGenerations-1?
-        for (int i = 0; i < numOfGenerations - 1; i++) {
-            evolutionEngine.execute();
-        }
-//
-//        for i of numof generations-1 :
-//              evolution.execute()
-//              if i% stride == 0{
-//                    evolution.getBestSolution() TODO: decide whether to get the best ones before or after the execution.
-//
-
-    }
-
-    @NotNull
-    private List<TimeTableSolution> getInitialGeneration() {
-        int initialPopulationSize = descriptor.getEngineSettings().getInitialPopulationSize();
-        List<TimeTableSolution> initialPopulation = new ArrayList<>();
-
-        for (int i = 0; i < initialPopulationSize; i++) {
-            initialPopulation.add(new TimeTableSolution(descriptor.getTimeTable()));
-        }
-
-        return initialPopulation;
-    }
-
-
-    @Override
-    public void showBestSolution() {
-
-    }
-
-    @Override
-    public void showEvolutionProcess() {
-
-    }
-
-    @Override
-    public void leaveSystem() {
-
-    }
-
-    @Override
-    public boolean isXMLLoaded() {
-        return isXMLLoaded;
-    }
-
+    //#region event-related methods
     public void EventsGeneratorComponent() {
         handlers = new ArrayList<>();
     }
@@ -244,5 +246,5 @@ public class TimeTableEngine implements Engine {
             handler.actionPerformed(myEvent);
         }
     }
-
+    //#endregion
 }

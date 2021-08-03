@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine;
 
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.DayTimeOriented;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.ComponentName;
@@ -18,11 +17,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class EngineSettings {
+public class EngineSettings<T extends Solution> {
     private int initialPopulationSize;
-    private Selection<TimeTableSolution> selection;
-    private Crossover<TimeTableSolution> crossover;
-    private List<Mutation<TimeTableSolution>> mutations;
+    private Selection<T> selection;
+    private Crossover<T> crossover;
+    private List<Mutation<T>> mutations;
 
     public EngineSettings(@NotNull ETTEvolutionEngine ee) throws Exception {
         setInitialPopulationSize(ee.getETTInitialPopulation().getSize());
@@ -41,22 +40,18 @@ public class EngineSettings {
         return initialPopulationSize;
     }
 
-    public Selection<TimeTableSolution> getSelection() {
+    public Selection<T> getSelection() {
         return selection;
     }
 
     private void setSelection(@NotNull ETTSelection ettSelection) throws Exception {
         if ((ettSelection.getType()).equalsIgnoreCase("truncation")) {
-            this.selection =  new Truncation(ettSelection);
+            this.selection = new Truncation(ettSelection);
         } else {
             throw new Exception("invalid selection type (for ex. 1)");
         }
         //TODO factory methods
         //TODO different kind of Exception Classes
-    }
-
-    public Crossover getCrossover() {
-        return crossover;
     }
 
     private void setCrossover(@NotNull ETTCrossover ettCrossover) throws Exception {
@@ -66,10 +61,6 @@ public class EngineSettings {
             throw new Exception("invalid crossover type (for ex. 1)");
         }
         //TODO factory methods
-    }
-
-    public List<Mutation> getMutations() {
-        return Collections.unmodifiableList(mutations);
     }
 
     private void setMutations(List<ETTMutation> ettMutations) throws Exception {
@@ -87,6 +78,14 @@ public class EngineSettings {
                 mutations.add(new Flipping(ettMutation.getProbability(), maxTupples, component));
             } else throw new Exception("invalid mutation name (for ex 1)");
         }
+    }
+
+    public Crossover getCrossover() {
+        return crossover;
+    }
+
+    public List<Mutation> getMutations() {
+        return Collections.unmodifiableList(mutations);
     }
 
     @Override

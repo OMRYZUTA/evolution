@@ -1,8 +1,8 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.mutation;
 
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 
-public class Flipping implements Mutation<TimeTableSolution> {
+public class Flipping<S extends Solution> implements Mutation<S> {
     double probability;
     int maxTupples;
     ComponentName component;
@@ -11,6 +11,11 @@ public class Flipping implements Mutation<TimeTableSolution> {
         setProbability(probability);
         this.maxTupples = maxTupples;
         this.component = component;
+    }
+
+    @Override
+    public void mutate(S solution) {
+        //TODO implement
     }
 
     private void setProbability(double probability) throws Exception {
@@ -25,7 +30,6 @@ public class Flipping implements Mutation<TimeTableSolution> {
         return maxTupples;
     }
 
-
     public ComponentName getComponent() {
         return component;
     }
@@ -36,11 +40,6 @@ public class Flipping implements Mutation<TimeTableSolution> {
                 "probability=" + probability +
                 ", maxTupples=" + maxTupples +
                 ", component=" + component;
-    }
-
-    @Override
-    public void mutate(TimeTableSolution solution) {
-        //TODO implement
     }
 
     @Override

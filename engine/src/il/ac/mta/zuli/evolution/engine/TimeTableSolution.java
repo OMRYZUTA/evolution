@@ -95,14 +95,6 @@ public class TimeTableSolution implements Solution {
         return Collections.unmodifiableList(solutionForTeacher);
     }
 
-    @Override
-    public String toString() {
-        return "TimeTableSolution=" + solution + System.lineSeparator() +
-                ", solutionSize=" + solutionSize +
-                ", totalFitnessScore=" + totalFitnessScore + System.lineSeparator() +
-                ", fitnessScorePerRole=" + fitnessScorePerRule;
-    }
-
     private void setSolutionQuintets() {
         Set<Quintet> solutionSet = generateQuintets(solutionSize);
         solution = new ArrayList<Quintet>(solutionSet.size());
@@ -175,5 +167,14 @@ public class TimeTableSolution implements Solution {
     public int compareTo(Solution other) {
 
         return ((Double) totalFitnessScore).compareTo(other.getTotalFitnessScore());
+    }
+
+    @Override
+    public String toString() {
+        return "TimeTableSolution=" + System.lineSeparator() +
+                ", totalFitnessScore=" + totalFitnessScore + System.lineSeparator() +
+                solution + "*****";
+        //", solutionSize=" + solutionSize +
+        //+", fitnessScorePerRole=" + fitnessScorePerRule;
     }
 }

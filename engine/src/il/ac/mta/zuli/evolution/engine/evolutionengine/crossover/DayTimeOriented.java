@@ -1,15 +1,21 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.crossover;
 
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 
 import java.util.List;
 
-//specific crossover for the timetable solution
-public class DayTimeOriented implements Crossover<TimeTableSolution> {
+//public class GenericClassFromGenericInterface<U> implements Moveable<U>
+public class DayTimeOriented<S extends Solution> implements Crossover<S> {
     private int numOfCuttingPoints;
 
     public DayTimeOriented(int numOfCuttingPoints) throws Exception {
         setNumOfCuttingPoints(numOfCuttingPoints);
+    }
+
+    @Override
+    public List<S> crossover(S s1, S s2) {
+
+        return null;
     }
 
     public int getNumOfCuttingPoints() {
@@ -31,13 +37,7 @@ public class DayTimeOriented implements Crossover<TimeTableSolution> {
     }
 
     @Override
-    public List<TimeTableSolution> crossover(TimeTableSolution s1, TimeTableSolution s2) {
-
-        return null;
-    }
-
-    @Override
     public int getCuttingPoints() {
-        return  numOfCuttingPoints;
+        return numOfCuttingPoints;
     }
 }

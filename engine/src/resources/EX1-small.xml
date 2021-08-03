@@ -86,7 +86,7 @@
 	</ETT-TimeTable>
 	<ETT-EvolutionEngine>
 <!--		need to change initial population to 200-->
-		<ETT-InitialPopulation size="5"/>
+		<ETT-InitialPopulation size="25"/>
 		<ETT-Selection type="Truncation" configuration="TopPercent=10"/>
 		<ETT-Crossover name="DayTimeOriented" cutting-points="2"/>
 		<ETT-Mutations>

@@ -4,11 +4,10 @@ import il.ac.mta.zuli.evolution.engine.rules.Rule;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class EvolutionEngine<T extends Solution> {
     private final EngineSettings engineSettings;
-    private final List<T> generation;
+    private List<T> generation;
     private final Set<Rule> rules;
 
     public EvolutionEngine(List<T> initialPopulation, EngineSettings engineSettings, Set<Rule> rules) {
@@ -17,24 +16,25 @@ public class EvolutionEngine<T extends Solution> {
         this.rules = rules;
     }
 
+    public void execute() {
+        for (T solution : generation) {
+            fitnessEvaluation(solution);
+        }
 
-    //getting fitness score per role for every solution
+        System.out.println("in evolutionEngine execute()");
+        System.out.println("gngeration size: " + generation.size());
+        System.out.println(generation);
+        generation = (engineSettings.getSelection()).select(generation);
+        System.out.println("*****" + System.lineSeparator() + "after selection size: " + generation.size());
+        System.out.println(generation);
+    }
+
+    //getting fitness score per rule for every solution
     private void fitnessEvaluation(T solution) {
         for (Rule rule : rules) {
             rule.fitnessEvaluation(solution);
         }
         solution.calculateTotalScore();
-    }
-
-
-    public void execute() {
-        for (T solution : generation) {
-            fitnessEvaluation(solution);
-        }
-        Class klass  = generation.get(0).getClass();
-        List<?> actualGeneration = generation.stream().map(sol -> (klass) sol).collect(Collectors.toList());
-
-        //engineSettings.getSelection().select(generation);
     }
 
 

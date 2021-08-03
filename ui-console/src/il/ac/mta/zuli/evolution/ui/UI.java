@@ -18,9 +18,10 @@ public class UI implements ActionListener {
             engine = new TimeTableEngine();
             engine.addHandler(this);
             engine.loadXML("engine/src/resources/EX1-small.xml");
-//            showSystemDetails();
-//            TODO get parameters for evolution algorithm (and validate in engine)
-            engine.executeEvolutionAlgorithm(10,1 );
+            //showSystemDetails();
+
+            //TODO get parameters for evolution algorithm (and validate in engine)
+            engine.executeEvolutionAlgorithm(10, 1);
         } catch (Exception e) {
             System.out.println(e.getMessage() + e.getStackTrace());
             //TODO handleException
@@ -38,7 +39,7 @@ public class UI implements ActionListener {
     }
 
     private void printEngineSetting(EngineSettingsDTO engineSettingsDTO) {
-        System.out.println(String.format("population size : %d",engineSettingsDTO.getInitialPopulationSize()));
+        System.out.println(String.format("population size : %d", engineSettingsDTO.getInitialPopulationSize()));
         SelectionDTO selectionDTO = engineSettingsDTO.getSelection();
         CrossoverDTO crossoverDTO = engineSettingsDTO.getCrossover();
         List<MutationDTO> mutationDTOList = engineSettingsDTO.getMutations();
@@ -48,7 +49,7 @@ public class UI implements ActionListener {
     }
 
     private void printList(List<?> values) {
-        for (Object object: values) {
+        for (Object object : values) {
             System.out.println(object);
         }
     }
@@ -66,7 +67,7 @@ public class UI implements ActionListener {
     }
 
     private void printSet(Set<RuleDTO> rules) {
-        for (RuleDTO rule: rules) {
+        for (RuleDTO rule : rules) {
             System.out.println(rule);
         }
     }
