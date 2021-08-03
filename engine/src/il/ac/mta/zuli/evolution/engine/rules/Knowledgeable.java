@@ -22,7 +22,7 @@ public class Knowledgeable extends Rule {
         }
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
-        int score = INVALIDSCORE;
+        double score = INVALIDSCORE;
         int qualifiedQuintets = 0;
         List<Quintet> solutionQuintets = timeTableSolution.getSolution();
         Map<Integer, Subject> subjectsTeaches;
@@ -39,9 +39,8 @@ public class Knowledgeable extends Rule {
             }
         }
 
-        //TODO fitnessEvaluation returns double or int?
         if (score != HARDRULEFAILURE) {
-            score = (100 * qualifiedQuintets) / (timeTableSolution.getSolutionSize());
+            score = (100 * qualifiedQuintets) / (double) (timeTableSolution.getSolutionSize());
         }
 
         timeTableSolution.addScoreToRule(this, score);

@@ -20,7 +20,7 @@ public class Singularity extends Rule {
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
         int numOfQuintets = timeTableSolution.getSolutionSize();
         HashSet<String> classDayHourSet = new HashSet<>();
-        int score = INVALIDSCORE;
+        double score = INVALIDSCORE;
         int collisions = 0;
         String DHC;
         int classID;
@@ -40,7 +40,7 @@ public class Singularity extends Rule {
         }
 
         if (score != HARDRULEFAILURE) {
-            score = (100 * (numOfQuintets - collisions)) / numOfQuintets;
+            score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
         }
 
         timeTableSolution.addScoreToRule(this, score);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ETT-Descriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ETT-V1.xsd">
-	<ETT-TimeTable days="4" hours="5">
+	<ETT-TimeTable days="2" hours="4">
 		<ETT-Teachers>
 			<ETT-Teacher id="1">
 				<ETT-Name>Asi Mon</ETT-Name>
@@ -40,16 +40,16 @@
 			<ETT-Class id="1">
 				<ETT-Name>Standart</ETT-Name>
 				<ETT-Requirements>
-					<ETT-Study subject-id="1" hours="3"/>
-					<ETT-Study subject-id="2" hours="4"/>
-					<ETT-Study subject-id="3" hours="2"/>
+					<ETT-Study subject-id="1" hours="1"/>
+					<ETT-Study subject-id="2" hours="1"/>
+					<ETT-Study subject-id="3" hours="5"/>
 				</ETT-Requirements>
 			</ETT-Class>
 			<ETT-Class id="2">
 				<ETT-Name>Nerds</ETT-Name>
 				<ETT-Requirements>
-					<ETT-Study subject-id="2" hours="6"/>
-					<ETT-Study subject-id="4" hours="6"/>
+					<ETT-Study subject-id="2" hours="2"/>
+					<ETT-Study subject-id="4" hours="2"/>
 				</ETT-Requirements>
 			</ETT-Class>
 			<ETT-Class id="3">
@@ -57,17 +57,17 @@
 				<ETT-Requirements>
 					<ETT-Study subject-id="4" hours="2"/>
 					<ETT-Study subject-id="1" hours="4"/>
-					<ETT-Study subject-id="3" hours="6"/>
-					<ETT-Study subject-id="2" hours="4"/>
+					<ETT-Study subject-id="3" hours="1"/>
+					<ETT-Study subject-id="2" hours="1"/>
 				</ETT-Requirements>
 			</ETT-Class>
-			<ETT-Class id="4">
-				<ETT-Name>Biologit</ETT-Name>
-				<ETT-Requirements>
-					<ETT-Study subject-id="4" hours="2"/>
-					<ETT-Study subject-id="2" hours="4"/>
-				</ETT-Requirements>
-			</ETT-Class>
+			<!--			<ETT-Class id="4">-->
+			<!--				<ETT-Name>Biologit</ETT-Name>-->
+			<!--				<ETT-Requirements>-->
+			<!--					<ETT-Study subject-id="4" hours="2"/>-->
+			<!--					<ETT-Study subject-id="2" hours="4"/>-->
+			<!--				</ETT-Requirements>-->
+			<!--			</ETT-Class>-->
 		</ETT-Classes>
 		<ETT-Rules hard-rules-weight="70">
 			<ETT-Rule type="Hard">

@@ -25,7 +25,8 @@ public class EvolutionEngine<T extends Solution> {
         }
 
         solution.calculateTotalScore();
-        System.out.println(solution.getTotalFitnessScore());
+        System.out.println("in EvolutionEngine fintnessEvaluation() " + solution.getTotalFitnessScore());
+        System.out.println("***");
     }
 
 

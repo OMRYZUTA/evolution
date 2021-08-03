@@ -3,10 +3,10 @@ package il.ac.mta.zuli.evolution.engine.rules;
 //TODO - ask omry why we need a ruleInterface?
 public abstract class Rule implements RuleInterface {
     private final RuleType ruleType; //hard or soft
-    static final int HARDRULEFAILURE = 0;
-    static final int INVALIDSCORE = -1;
+    static final double HARDRULEFAILURE = 0;
+    static final double INVALIDSCORE = -1;
 
-    protected Rule( String ruleType) { // @NotNull return ?
+    protected Rule(String ruleType) { // @NotNull return ?
         switch (ruleType.toLowerCase()) {
             case "soft":
                 this.ruleType = RuleType.SOFT;

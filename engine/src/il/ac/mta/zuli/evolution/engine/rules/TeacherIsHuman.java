@@ -21,7 +21,7 @@ public class TeacherIsHuman extends Rule {
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
         int numOfQuintets = timeTableSolution.getSolutionSize();
         HashSet<String> teacherDayHourSet = new HashSet<>();
-        int score = INVALIDSCORE;
+        double score = INVALIDSCORE;
         int collisions = 0;
         String DHT;
         int teacherID;
@@ -41,7 +41,7 @@ public class TeacherIsHuman extends Rule {
         }
 
         if (score != HARDRULEFAILURE) {
-            score = (100 * (numOfQuintets - collisions)) / numOfQuintets;
+            score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
         }
 
         timeTableSolution.addScoreToRule(this, score);
