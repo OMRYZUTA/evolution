@@ -40,7 +40,7 @@ public class Truncation implements Selection<TimeTableSolution> {
         Collections.sort(solutions); //sorting by fitnessScore
         Collections.reverse(solutions); //in descending order
 
-        int topFitnessSolutions = (topPercent * solutions.size()) / 100;
+        int topFitnessSolutions =(int) Math.ceil(((double)topPercent * solutions.size()) / 100);
 
         return solutions.stream().limit(topFitnessSolutions).collect(Collectors.toList());
     }

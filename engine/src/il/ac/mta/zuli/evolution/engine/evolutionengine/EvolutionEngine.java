@@ -29,12 +29,21 @@ public class EvolutionEngine<T extends Solution> {
     public void execute() {
         for (T solution : generation) {
             fitnessEvaluation(solution);
-            select();
+//            select();
         }
     }
 
     private void select() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "EvolutionEngine{" +
+                "engineSettings=" + engineSettings +
+                ", generation=" + generation +
+                ", rules=" + rules +
+                '}';
     }
 }
 
