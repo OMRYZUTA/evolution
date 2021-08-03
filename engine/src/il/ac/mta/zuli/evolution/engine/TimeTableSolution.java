@@ -170,4 +170,10 @@ public class TimeTableSolution implements Solution {
 
         return totalRequiredHours;
     }
+
+    @Override
+    public int compareTo(Solution other) {
+
+        return ((Double) totalFitnessScore).compareTo(other.getTotalFitnessScore());
+    }
 }

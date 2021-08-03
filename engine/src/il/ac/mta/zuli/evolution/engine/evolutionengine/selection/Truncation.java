@@ -3,12 +3,14 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine.selection;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTSelection;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Truncation implements Selection<TimeTableSolution> {
     private int topPercent;
 
-    public Truncation(ETTSelection ettSelection)  {
+    public Truncation(ETTSelection ettSelection) {
         String configuration = ettSelection.getConfiguration();
         int index = configuration.indexOf('=');
         int num = Integer.parseInt(configuration.substring(index + 1));
@@ -33,14 +35,18 @@ public class Truncation implements Selection<TimeTableSolution> {
                 "topPercent=" + topPercent;
     }
 
-    //TODO implement selection()
     @Override
-    public Collection<TimeTableSolution> select(Collection<TimeTableSolution> solutions) {
-        return null;
+    public List<TimeTableSolution> select(List<TimeTableSolution> solutions) {
+        Collections.sort(solutions); //sorting by fitnessScore
+        Collections.reverse(solutions); //in descending order
+
+        int topFitnessSolutions = (topPercent * solutions.size()) / 100;
+
+        return solutions.stream().limit(topFitnessSolutions).collect(Collectors.toList());
     }
 
-    public String getConfiguration(){
-        return String.format("TopPercent = %d",topPercent);
+    public String getConfiguration() {
+        return String.format("TopPercent = %d", topPercent);
     }
 
 }

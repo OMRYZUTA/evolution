@@ -10,7 +10,6 @@ public class EvolutionEngine<T extends Solution> {
     private final List<T> generation;
     private final Set<Rule> rules;
 
-    //public interface Crossover<T extends Solution> {
     public EvolutionEngine(List<T> initialPopulation, EngineSettings engineSettings, Set<Rule> rules) {
         this.engineSettings = engineSettings;
         this.generation = initialPopulation;
@@ -23,17 +22,19 @@ public class EvolutionEngine<T extends Solution> {
         for (Rule rule : rules) {
             rule.fitnessEvaluation(solution);
         }
-
         solution.calculateTotalScore();
-        System.out.println("in EvolutionEngine fintnessEvaluation() " + solution.getTotalFitnessScore());
-        System.out.println("***");
     }
 
 
     public void execute() {
         for (T solution : generation) {
             fitnessEvaluation(solution);
+            select();
         }
+    }
+
+    private void select() {
+
     }
 }
 
