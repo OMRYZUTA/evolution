@@ -45,4 +45,8 @@ public class Requirement {
                 ", subject=" + subject +
                 '}';
     }
+
+    public boolean isRequirementMet(Integer hours) {
+        return this.hours == hours;
+    }
 }
