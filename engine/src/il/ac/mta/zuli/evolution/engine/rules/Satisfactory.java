@@ -36,15 +36,7 @@ public class Satisfactory extends Rule {
             classScores[classID - 1] = classFitnessEvaluation(classID, timeTableSolution.getSubSolutionForClass(classID));
         }
 
-        double score = 0;
-
-        if (this.isHardRule()) {
-            if (!Arrays.stream(classScores).anyMatch(n -> n == HARDRULEFAILURE)) {
-                score = HARDRULEFAILURE;
-            }
-        } else {
-            score = Arrays.stream(classScores).average().getAsDouble();
-        }
+        double score = Arrays.stream(classScores).average().getAsDouble();
 
         timeTableSolution.addScoreToRule(this, score);
 
@@ -60,17 +52,7 @@ public class Satisfactory extends Rule {
 
         int satisfactorySubjects = countSatisfactorySubjects(classRequirements, hoursPerSubjectCounter);
 
-        double score = 0;
-
-        if (this.isHardRule()) {
-            //if there exists a subject that didn't meet the required hours
-            if (satisfactorySubjects != numOfRequiredSubjects)
-                score = HARDRULEFAILURE;
-        } else {
-            score = (100 * satisfactorySubjects) / (double) numOfRequiredSubjects;
-        }
-
-        return score;
+        return (100 * satisfactorySubjects) / (double) numOfRequiredSubjects;
     }
 
     private int countSatisfactorySubjects(List<Requirement> classRequirements, Map<Integer, Integer> hoursPerSubjectCounter) {

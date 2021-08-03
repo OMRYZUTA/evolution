@@ -32,16 +32,12 @@ public class Knowledgeable extends Rule {
 
             if (subjectsTeaches.containsKey(quintet.getSubject().getId())) {
                 qualifiedQuintets++;
-            } else {
-                if (this.isHardRule()) {
-                    score = HARDRULEFAILURE;
-                }
             }
         }
 
-        if (score != HARDRULEFAILURE) {
-            score = (100 * qualifiedQuintets) / (double) (timeTableSolution.getSolutionSize());
-        }
+
+        score = (100 * qualifiedQuintets) / (double) (timeTableSolution.getSolutionSize());
+
 
         timeTableSolution.addScoreToRule(this, score);
     }
