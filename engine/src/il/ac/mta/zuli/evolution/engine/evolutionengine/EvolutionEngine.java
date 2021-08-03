@@ -29,7 +29,7 @@ public class EvolutionEngine<T extends Solution> {
     public void execute() {
         for (T solution : generation) {
             fitnessEvaluation(solution);
-//            select();
+            select();
         }
     }
 

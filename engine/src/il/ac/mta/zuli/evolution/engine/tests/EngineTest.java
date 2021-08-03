@@ -59,9 +59,7 @@ class EngineTest {
     @Test
     void selectReturnsTopPercentSolutions(){
         Selection<TimeTableSolution> selection = descriptor.getEngineSettings().getSelection();
-        System.out.println(selection.select(initialPopulation));
 
-//        selection.select()
-
+        evolutionEngine.execute();
     }
 }
