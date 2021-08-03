@@ -25,6 +25,84 @@ public class TimeTableSolution implements Solution {
         setSolutionQuintets();
     }
 
+    public void addScoreToRule(Rule rule, double score) {
+        fitnessScorePerRule.put(rule, score);
+    }
+
+    public void calculateTotalScore() {
+
+        double softRuleSum = 0, hardRuleSum = 0;
+        int numOfSoftRules = 0, numOfHardRules = 0;
+
+        for (Map.Entry<Rule, Double> entry : fitnessScorePerRule.entrySet()) {
+            if (entry.getKey().isHardRule()) {
+                numOfHardRules++;
+                hardRuleSum += entry.getValue();
+            } else {
+                numOfSoftRules++;
+                softRuleSum += entry.getValue();
+            }
+        }
+
+        double softRuleAvg = softRuleSum / numOfSoftRules;
+        double hardRuleAvg = hardRuleSum / numOfHardRules;
+        double hardRuleWeightedScore = (hardRuleAvg * timeTable.getHardRulesWeight()) / 100;
+        double softRuleWeightedScore = (softRuleAvg * (100 - timeTable.getHardRulesWeight())) / 100;
+
+        totalFitnessScore = hardRuleWeightedScore + softRuleWeightedScore;
+    }
+
+    public List<Quintet> getSolution() {
+        return Collections.unmodifiableList(solution);
+    }
+
+    public int getSolutionSize() {
+        return solutionSize;
+    }
+
+    @Override
+    public double getTotalFitnessScore() {
+        return totalFitnessScore;
+    }
+
+    public Map<Rule, Double> getFitnessScorePerRule() {
+        return Collections.unmodifiableMap(fitnessScorePerRule);
+    }
+
+    //might return an empty list - need to check size of list returned when using this method
+    public List<Quintet> getSubSolutionForClass(int schoolClassID) {
+        List<Quintet> solutionForClass = new ArrayList<>();
+
+        for (Quintet quintet : solution) {
+            if (quintet.getSchoolClassID() == schoolClassID) {
+                solutionForClass.add(quintet);
+            }
+        }
+
+        return Collections.unmodifiableList(solutionForClass);
+    }
+
+    //might return an empty list - need to check size of list returned when using this method
+    public List<Quintet> getSubSolutionForTeacher(int teacherID) {
+        List<Quintet> solutionForTeacher = new ArrayList<>();
+
+        for (Quintet quintet : solution) {
+            if (quintet.getTeacher().getId() == teacherID) {
+                solutionForTeacher.add(quintet);
+            }
+        }
+
+        return Collections.unmodifiableList(solutionForTeacher);
+    }
+
+    @Override
+    public String toString() {
+        return "TimeTableSolution=" + solution + System.lineSeparator() +
+                ", solutionSize=" + solutionSize +
+                ", totalFitnessScore=" + totalFitnessScore + System.lineSeparator() +
+                ", fitnessScorePerRole=" + fitnessScorePerRule;
+    }
+
     private void setSolutionQuintets() {
         Set<Quintet> solutionSet = generateQuintets(solutionSize);
         solution = new ArrayList<Quintet>(solutionSet.size());
@@ -91,57 +169,5 @@ public class TimeTableSolution implements Solution {
         }
 
         return totalRequiredHours;
-    }
-
-    public void addScoreToRule(Rule rule, double score) {
-        fitnessScorePerRule.put(rule, score);
-    }
-
-    public void calculateTotalScore() {
-
-        double softRuleSum = 0, hardRuleSum = 0;
-        int numOfSoftRules = 0, numOfHardRules = 0;
-
-        for (Map.Entry<Rule, Double> entry : fitnessScorePerRule.entrySet()) {
-            if (entry.getKey().isHardRule()) {
-                numOfHardRules++;
-                hardRuleSum += entry.getValue();
-            } else {
-                numOfSoftRules++;
-                softRuleSum += entry.getValue();
-            }
-        }
-
-        double softRuleAvg = softRuleSum / numOfSoftRules;
-        double hardRuleAvg = hardRuleSum / numOfHardRules;
-        double hardRuleWeightedScore = (hardRuleAvg * timeTable.getHardRulesWeight()) / 100;
-        double softRuleWeightedScore = (softRuleAvg * (100 - timeTable.getHardRulesWeight())) / 100;
-
-        totalFitnessScore = hardRuleWeightedScore + softRuleWeightedScore;
-    }
-
-    public List<Quintet> getSolution() {
-        return Collections.unmodifiableList(solution);
-    }
-
-    public int getSolutionSize() {
-        return solutionSize;
-    }
-
-    @Override
-    public double getTotalFitnessScore() {
-        return totalFitnessScore;
-    }
-
-    public Map<Rule, Double> getFitnessScorePerRule() {
-        return Collections.unmodifiableMap(fitnessScorePerRule);
-    }
-
-    @Override
-    public String toString() {
-        return "TimeTableSolution=" + solution + System.lineSeparator() +
-                ", solutionSize=" + solutionSize +
-                ", totalFitnessScore=" + totalFitnessScore + System.lineSeparator() +
-                ", fitnessScorePerRole=" + fitnessScorePerRule;
     }
 }
