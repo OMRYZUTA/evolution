@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class EvolutionEngine<T extends Solution> {
     private final EngineSettings engineSettings;
-    private List<T> generation;
+    private final List<T> generation;
     private final Set<Rule> rules;
 
     public EvolutionEngine(List<T> initialPopulation, EngineSettings engineSettings, Set<Rule> rules) {
@@ -17,24 +17,29 @@ public class EvolutionEngine<T extends Solution> {
     }
 
     public void execute() {
+        //calculate fitness for every solution in generation and save score to solution
         for (T solution : generation) {
-            fitnessEvaluation(solution);
+            fitnessEvaluationPerSolution(solution);
         }
 
-        System.out.println("in evolutionEngine execute()");
-        System.out.println("gngeration size: " + generation.size());
-        System.out.println(generation);
-        generation = (engineSettings.getSelection()).select(generation);
-        System.out.println("*****" + System.lineSeparator() + "after selection size: " + generation.size());
-        System.out.println(generation);
+        // select topPercent of solutions, according to fitness, in order to create next generation
+        List<T> parents = (engineSettings.getSelection()).select(generation);
+
+        //crossover
+
+
     }
 
     //getting fitness score per rule for every solution
-    private void fitnessEvaluation(T solution) {
+    private void fitnessEvaluationPerSolution(T solution) {
         for (Rule rule : rules) {
             rule.fitnessEvaluation(solution);
         }
         solution.calculateTotalScore();
+    }
+
+    private void crossover() {
+
     }
 
 
