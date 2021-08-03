@@ -4,6 +4,7 @@ import il.ac.mta.zuli.evolution.engine.rules.Rule;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class EvolutionEngine<T extends Solution> {
     private final EngineSettings engineSettings;
@@ -29,13 +30,13 @@ public class EvolutionEngine<T extends Solution> {
     public void execute() {
         for (T solution : generation) {
             fitnessEvaluation(solution);
-            select();
         }
+        Class klass  = generation.get(0).getClass();
+        List<?> actualGeneration = generation.stream().map(sol -> (klass) sol).collect(Collectors.toList());
+
+        //engineSettings.getSelection().select(generation);
     }
 
-    private void select() {
-
-    }
 
     @Override
     public String toString() {
