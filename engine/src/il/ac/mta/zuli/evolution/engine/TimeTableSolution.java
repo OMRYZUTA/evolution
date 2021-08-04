@@ -52,7 +52,7 @@ public class TimeTableSolution implements Solution {
         totalFitnessScore = hardRuleWeightedScore + softRuleWeightedScore;
     }
 
-    public List<Quintet> getSolution() {
+    public List<Quintet> getSolutionQuintets() {
         return Collections.unmodifiableList(solution);
     }
 

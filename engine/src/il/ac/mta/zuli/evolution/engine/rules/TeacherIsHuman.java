@@ -26,7 +26,7 @@ public class TeacherIsHuman extends Rule {
         String DHT;
         int teacherID;
 
-        for (Quintet quintet : timeTableSolution.getSolution()) {
+        for (Quintet quintet : timeTableSolution.getSolutionQuintets()) {
             teacherID = (quintet.getTeacher()).getId();
             DHT = String.format("%s_%d_%d", quintet.getDay(), quintet.getHour(), teacherID);
             //if the set already contains the element, the call leaves the set unchanged and returns false.

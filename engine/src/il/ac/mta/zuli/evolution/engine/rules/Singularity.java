@@ -25,7 +25,7 @@ public class Singularity extends Rule {
         String DHC;
         int classID;
 
-        for (Quintet quintet : timeTableSolution.getSolution()) {
+        for (Quintet quintet : timeTableSolution.getSolutionQuintets()) {
             classID = (quintet.getSchoolClass()).getId();
             DHC = String.format("%s_%d_%d", quintet.getDay(), quintet.getHour(), classID);
             //if the set already contains the element, the call leaves the set unchanged and returns false.

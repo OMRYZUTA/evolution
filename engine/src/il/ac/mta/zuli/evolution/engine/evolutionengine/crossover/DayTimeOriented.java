@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine.crossover;
 import il.ac.mta.zuli.evolution.engine.Quintet;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -22,38 +23,69 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
     @Override
     public List<S> crossover(List<S> selectedParents) {
         //algo:
-        // randomize cutting points
+
+        setCuttingPoints(); // randomly generate numOFCuttingPoints cutting points
         // organize each solution as 2-dimension array D*H
+
+        System.out.println("in daytime crossover");
+        for (S solution : selectedParents) {
+            //TODO continue work on convertSolutionToMatrixDH
+            List<List<List<Quintet>>> solutionMatrix = convertSolutionToMatrixDH(solution);
+        }
+
+        System.out.println("in daytime crossover");
+        for (S solution : selectedParents) {
+            List<List<List<Quintet>>> solutionMatrix = convertSolutionToMatrixDH(solution);
+        }
         // randomly select 2 parents to "mate" and remove them from the pool of parents
         // for every 2-parents-couple apply crossoverBetween2Parents()
         // add the 2 returned babies to the baby-collection - return baby collection
 
-        System.out.println("in daytime crossover");
-        for (S solution : selectedParents) {
-            List<List<Quintet>> solutionMatrix = convertSolutionToMatrixDH(solution);
-        }
-
-
         return null;
     }
 
-    private List<List<Quintet>> convertSolutionToMatrixDH(S solution) {
-        //maybe cast here to TimeTablesolution
-        //matrix where the columns are days and the rows are hours
-
-        List<List<Quintet>> solutionMatrix = new ArrayList<>(hours);
-        for (int i = 0; i < hours; i++) {
-            List<Quintet> inner =new ArrayList(days);
-            for (int j = 0; j < days; j++) {
-                inner.add(null);
-
-            }
-            solutionMatrix.add(inner);
+    private List<List<List<Quintet>>> convertSolutionToMatrixDH(S solution) {
+        if (!(solution instanceof TimeTableSolution)) {
+            throw new RuntimeException("solution must be TimeTableSolution");
         }
-        //TODO: put solution in matrix
-        int numOfDays =solutionMatrix.get(0).size();
-//        int width = outer. size(); int length = outer. get(0). size();
-        System.out.println("size " + solutionMatrix.size()*numOfDays);
+
+        TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+
+        List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
+
+        //matrix where the columns are days and the rows are hours - and in each slote a collection of quintets
+        List<List<List<Quintet>>> solutionMatrix = createEmptyDHMatrix();
+
+        for (Quintet quintet : solutionQuintets) {
+            int hourIndex = quintet.getHour(); //hours are zero based TODO: make sure
+            int dayIndex = quintet.getDay().getValue() - 1;
+            (solutionMatrix.get(dayIndex).get(hourIndex)).add(quintet);
+        }
+
+        System.out.println(solutionMatrix);
+  /*      for (int i = 0; i < days; i++) {
+            for (int j = 0; j < hours; j++) {
+                System.out.print(solutionMatrix.get(i).get(j) + "--");
+            }
+            System.out.println("****");
+        }*/
+
+        return solutionMatrix;
+    }
+
+    @NotNull
+    private List<List<List<Quintet>>> createEmptyDHMatrix() {
+        List<List<List<Quintet>>> solutionMatrix = new ArrayList<>(days);
+
+        for (int i = 0; i < days; i++) {
+            List<List<Quintet>> intermediateList = new ArrayList(hours);
+            for (int j = 0; j < hours; j++) {
+                intermediateList.add(new ArrayList<Quintet>());
+            }
+
+            solutionMatrix.add(intermediateList);
+        }
+
         return solutionMatrix;
     }
 
@@ -66,10 +98,10 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         TimeTableSolution ttSolution1 = (TimeTableSolution) s1;
         TimeTableSolution ttSolution2 = (TimeTableSolution) s2;
 
-        Collections.sort(ttSolution1.getSolution(), Comparator.comparing(Quintet::getDay)
+        Collections.sort(ttSolution1.getSolutionQuintets(), Comparator.comparing(Quintet::getDay)
                 .thenComparing(Quintet::getHour));
 
-        Collections.sort(ttSolution2.getSolution(), Comparator.comparing(Quintet::getDay)
+        Collections.sort(ttSolution2.getSolutionQuintets(), Comparator.comparing(Quintet::getDay)
                 .thenComparing(Quintet::getHour));
 
         //TODO: need to move crossover implementation to interface, continue from here
@@ -101,7 +133,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         Set<Integer> tempSetOfPoints = new HashSet<>();
 
         while (tempSetOfPoints.size() < numOfCuttingPoints) {
-            //we want random points from 1 to total size of solution
+            //we want random points from 1 to total size of solution (D*H)
             if (days * hours > 1) {
                 tempSetOfPoints.add((new Random().nextInt((days * hours) - 1)) + 1);
             } else {

@@ -24,7 +24,7 @@ public class Knowledgeable extends Rule {
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
         double score = INVALIDSCORE;
         int qualifiedQuintets = 0;
-        List<Quintet> solutionQuintets = timeTableSolution.getSolution();
+        List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
         Map<Integer, Subject> subjectsTeaches;
 
         for (Quintet quintet : solutionQuintets) {
