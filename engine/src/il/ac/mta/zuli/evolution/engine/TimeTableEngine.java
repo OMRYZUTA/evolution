@@ -61,6 +61,7 @@ public class TimeTableEngine implements Engine {
                 this.descriptor.getTimeTable().getRules());
 
         evolutionEngine.execute();
+
         //numOfGenerations-1?
         for (int i = 0; i < numOfGenerations - 1; i++) {
             //evolutionEngine.execute();
@@ -139,7 +140,7 @@ public class TimeTableEngine implements Engine {
     @NotNull
     private CrossoverDTO createCrossoverDTO() {
         Crossover<TimeTableSolution> crossover = descriptor.getEngineSettings().getCrossover();
-        CrossoverDTO crossoverDTO = new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getCuttingPoints());
+        CrossoverDTO crossoverDTO = new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getNumOfCuttingPoints());
 
         return crossoverDTO;
     }

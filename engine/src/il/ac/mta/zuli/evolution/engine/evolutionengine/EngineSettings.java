@@ -23,10 +23,10 @@ public class EngineSettings<T extends Solution> {
     private Crossover<T> crossover;
     private List<Mutation<T>> mutations;
 
-    public EngineSettings(@NotNull ETTEvolutionEngine ee) throws Exception {
+    public EngineSettings(@NotNull ETTEvolutionEngine ee, int days, int hours) throws Exception {
         setInitialPopulationSize(ee.getETTInitialPopulation().getSize());
         setSelection(ee.getETTSelection());
-        setCrossover(ee.getETTCrossover());
+        setCrossover(ee.getETTCrossover(), days, hours);
         setMutations(ee.getETTMutations().getETTMutation());
     }
 
@@ -54,9 +54,9 @@ public class EngineSettings<T extends Solution> {
         //TODO different kind of Exception Classes
     }
 
-    private void setCrossover(@NotNull ETTCrossover ettCrossover) throws Exception {
+    private void setCrossover(@NotNull ETTCrossover ettCrossover, int days, int hours) throws Exception {
         if ((ettCrossover.getName()).equalsIgnoreCase("daytimeoriented")) {
-            this.crossover = new DayTimeOriented(ettCrossover.getCuttingPoints());
+            this.crossover = new DayTimeOriented(ettCrossover.getCuttingPoints(), days, hours);
         } else {
             throw new Exception("invalid crossover type (for ex. 1)");
         }

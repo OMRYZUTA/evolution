@@ -25,8 +25,7 @@ public class EvolutionEngine<T extends Solution> {
         // select topPercent of solutions, according to fitness, in order to create next generation
         List<T> parents = (engineSettings.getSelection()).select(generation);
 
-        //crossover
-
+        engineSettings.getCrossover().crossover(parents);
 
     }
 
