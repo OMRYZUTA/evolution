@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-
 public class TimeTable {
     private int days;
     private int hours;
@@ -15,7 +14,6 @@ public class TimeTable {
     private Map<Integer, SchoolClass> schoolClasses;
     private Set<Rule> rules; //a rule doesn't repeat
     private int hardRulesWeight;
-
 
     public TimeTable(@NotNull ETTTimeTable tt) {
         //TODO throw exception
@@ -28,10 +26,49 @@ public class TimeTable {
         setRules(tt.getETTRules());
     }
 
+    //#region getters
     public int getDays() {
         return days;
     }
 
+    public int getHours() {
+        return hours;
+    }
+
+    public Map<Integer, Teacher> getTeachers() {
+        return Collections.unmodifiableMap(teachers);
+    }
+
+    public Map<Integer, Subject> getSubjects() {
+        return Collections.unmodifiableMap(subjects);
+    }
+
+    public Map<Integer, SchoolClass> getSchoolClasses() {
+        return Collections.unmodifiableMap(schoolClasses);
+    }
+
+    public Set<Rule> getRules() {
+        return Collections.unmodifiableSet(rules);
+    }
+
+    public int getHardRulesWeight() {
+        return hardRulesWeight;
+    }
+
+    public List<Integer> getTeachersThatTeachSubject(int subjectID) {
+        List<Integer> subjectTeacherList = new ArrayList<>();
+
+        for (Teacher teacher : teachers.values()) {
+            if ((teacher.getSubjects()).containsKey(subjectID)) {
+                subjectTeacherList.add(teacher.getId());
+            }
+        }
+
+        return subjectTeacherList;
+    }
+    //#endregion
+
+    //#region setters
     private void setDays(int days) {
         if (days > 0) {
             this.days = days;
@@ -39,19 +76,11 @@ public class TimeTable {
         }
     }
 
-    public int getHours() {
-        return hours;
-    }
-
     private void setHours(int hours) {
         if (hours > 0) {
             this.hours = hours;
         } else {//TODO throw exception
         }
-    }
-
-    public Map<Integer, Teacher> getTeachers() {
-        return Collections.unmodifiableMap(teachers);
     }
 
     private void setTeachers(@NotNull ETTTeachers ettTeachers) {
@@ -72,10 +101,6 @@ public class TimeTable {
         }
     }
 
-    public Map<Integer, Subject> getSubjects() {
-        return Collections.unmodifiableMap(subjects);
-    }
-
     private void setSubjects(@NotNull ETTSubjects ettSubjects) {
         this.subjects = new HashMap<>();
 
@@ -94,10 +119,6 @@ public class TimeTable {
         }
     }
 
-    public Map<Integer, SchoolClass> getSchoolClasses() {
-        return Collections.unmodifiableMap(schoolClasses);
-    }
-
     private void setSchoolClasses(@NotNull ETTClasses ettClasses) {
         this.schoolClasses = new HashMap<>();
 
@@ -114,10 +135,6 @@ public class TimeTable {
             }
             this.schoolClasses.put(c.getId(), new SchoolClass(c, this.subjects, (this.hours * this.days)));
         }
-    }
-
-    public Set<Rule> getRules() {
-        return Collections.unmodifiableSet(rules);
     }
 
     private void setRules(@NotNull ETTRules ettRules) {
@@ -150,25 +167,10 @@ public class TimeTable {
         }
     }
 
-    public int getHardRulesWeight() {
-        return hardRulesWeight;
-    }
-
     private void setHardRulesWeight(int hardRulesWeight) {
         this.hardRulesWeight = hardRulesWeight;
     }
-
-    public List<Integer> getTeachersThatTeachSubject(int subjectID) {
-        List<Integer> subjectTeacherList = new ArrayList<>();
-
-        for (Teacher teacher : teachers.values()) {
-            if ((teacher.getSubjects()).containsKey(subjectID)) {
-                subjectTeacherList.add(teacher.getId());
-            }
-        }
-
-        return subjectTeacherList;
-    }
+    //#endregion
 
     @Override
     public String toString() {

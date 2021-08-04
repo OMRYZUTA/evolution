@@ -9,6 +9,7 @@ import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 
 import java.time.DayOfWeek;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TimeTableSolution implements Solution {
     private List<Quintet> solution;
@@ -25,33 +26,7 @@ public class TimeTableSolution implements Solution {
         setSolutionQuintets();
     }
 
-    public void addScoreToRule(Rule rule, double score) {
-        fitnessScorePerRule.put(rule, score);
-    }
-
-    public void calculateTotalScore() {
-
-        double softRuleSum = 0, hardRuleSum = 0;
-        int numOfSoftRules = 0, numOfHardRules = 0;
-
-        for (Map.Entry<Rule, Double> entry : fitnessScorePerRule.entrySet()) {
-            if (entry.getKey().isHardRule()) {
-                numOfHardRules++;
-                hardRuleSum += entry.getValue();
-            } else {
-                numOfSoftRules++;
-                softRuleSum += entry.getValue();
-            }
-        }
-
-        double softRuleAvg = softRuleSum / numOfSoftRules;
-        double hardRuleAvg = hardRuleSum / numOfHardRules;
-        double hardRuleWeightedScore = (hardRuleAvg * timeTable.getHardRulesWeight()) / 100;
-        double softRuleWeightedScore = (softRuleAvg * (100 - timeTable.getHardRulesWeight())) / 100;
-
-        totalFitnessScore = hardRuleWeightedScore + softRuleWeightedScore;
-    }
-
+    //#region getters
     public List<Quintet> getSolutionQuintets() {
         return Collections.unmodifiableList(solution);
     }
@@ -69,32 +44,25 @@ public class TimeTableSolution implements Solution {
         return Collections.unmodifiableMap(fitnessScorePerRule);
     }
 
-    //might return an empty list - need to check size of list returned when using this method
+    //TODO might return an empty list - need to check size of list returned when using this method
     public List<Quintet> getSubSolutionForClass(int schoolClassID) {
-        List<Quintet> solutionForClass = new ArrayList<>();
-
-        for (Quintet quintet : solution) {
-            if (quintet.getSchoolClassID() == schoolClassID) {
-                solutionForClass.add(quintet);
-            }
-        }
+        List<Quintet> solutionForClass = solution.stream()
+                .filter(p -> p.getSchoolClassID() == schoolClassID).collect(Collectors.toList());
 
         return Collections.unmodifiableList(solutionForClass);
     }
 
-    //might return an empty list - need to check size of list returned when using this method
+    //TODO might return an empty list - need to check size of list returned when using this method
     public List<Quintet> getSubSolutionForTeacher(int teacherID) {
-        List<Quintet> solutionForTeacher = new ArrayList<>();
-
-        for (Quintet quintet : solution) {
-            if (quintet.getTeacher().getId() == teacherID) {
-                solutionForTeacher.add(quintet);
-            }
-        }
+        List<Quintet> solutionForTeacher = solution.stream()
+                .filter(p -> p.getTeacher().getId() == teacherID).collect(Collectors.toList());
 
         return Collections.unmodifiableList(solutionForTeacher);
     }
 
+    //#endregion
+
+    //#region setters and quintet-generation methods
     private void setSolutionQuintets() {
         Set<Quintet> solutionSet = generateQuintets(solutionSize);
         solution = new ArrayList<Quintet>(solutionSet.size());
@@ -150,6 +118,34 @@ public class TimeTableSolution implements Solution {
         DayOfWeek[] enumValues = DayOfWeek.values();
         int randIndex = new Random().nextInt(timeTable.getDays());
         return enumValues[randIndex];
+    }
+    //#endregion
+
+    public void addScoreToRule(Rule rule, double score) {
+        fitnessScorePerRule.put(rule, score);
+    }
+
+    public void calculateTotalScore() {
+
+        double softRuleSum = 0, hardRuleSum = 0;
+        int numOfSoftRules = 0, numOfHardRules = 0;
+
+        for (Map.Entry<Rule, Double> entry : fitnessScorePerRule.entrySet()) {
+            if (entry.getKey().isHardRule()) {
+                numOfHardRules++;
+                hardRuleSum += entry.getValue();
+            } else {
+                numOfSoftRules++;
+                softRuleSum += entry.getValue();
+            }
+        }
+
+        double softRuleAvg = softRuleSum / numOfSoftRules;
+        double hardRuleAvg = hardRuleSum / numOfHardRules;
+        double hardRuleWeightedScore = (hardRuleAvg * timeTable.getHardRulesWeight()) / 100;
+        double softRuleWeightedScore = (softRuleAvg * (100 - timeTable.getHardRulesWeight())) / 100;
+
+        totalFitnessScore = hardRuleWeightedScore + softRuleWeightedScore;
     }
 
     private int calculateTotalRequiredHours() {

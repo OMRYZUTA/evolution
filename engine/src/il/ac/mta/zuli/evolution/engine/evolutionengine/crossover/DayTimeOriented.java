@@ -22,21 +22,22 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
 
     @Override
     public List<S> crossover(List<S> selectedParents) {
-        // A. randomly generate numOFCuttingPoints cutting points
+        // A. randomly generate numOfCuttingPoints cutting points
         randomlyGenerateCuttingPoints();
 
         // B. organize each solution as 2-dimension array D*H
 
         for (S solution : selectedParents) {
             List<List<Quintet>> solutionMatrix = convertSolutionToMatrixDH(solution);
-            System.out.println(solutionMatrix);
         }
 
-        // randomly select 2 parents to "mate" and remove them from the pool of parents
+        // C. randomly select 2 parents to "mate" and remove them from the pool of parents
         // for every 2-parents-couple apply crossoverBetween2Parents()
         // add the 2 returned babies to the baby-collection - return baby collection
+        List<S> newGeneration = new ArrayList<>();
+        //TODO continue from here
 
-        return null;
+        return newGeneration;
     }
 
     private List<List<Quintet>> convertSolutionToMatrixDH(S solution) {
@@ -59,7 +60,6 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
             (solutionMatrix.get(i)).add(quintet);
         }
 
-        System.out.println(solutionMatrix);
         return solutionMatrix;
     }
 
@@ -90,10 +90,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         Collections.sort(ttSolution2.getSolutionQuintets(), Comparator.comparing(Quintet::getDay)
                 .thenComparing(Quintet::getHour));
 
-        //TODO: need to move crossover implementation to interface, continue from here
-
-        System.out.println("in daytime crossover, after sort: ");
-        System.out.println(ttSolution1);
+        //TODO complete
 
         return null;
     }

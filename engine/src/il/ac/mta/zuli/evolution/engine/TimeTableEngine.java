@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TimeTableEngine implements Engine {
     private boolean isXMLLoaded = false;
@@ -25,7 +26,10 @@ public class TimeTableEngine implements Engine {
     private List<TimeTableSolution> bestSolutionsInHistory;
     private List<ActionListener> handlers = new ArrayList<>();
 
-    //#region ui-matching methods
+    public TimeTableEngine() {
+    }
+
+    //#region ui-parallel methods
     @Override
     public void loadXML(String path) {
         try {
@@ -55,7 +59,6 @@ public class TimeTableEngine implements Engine {
 
         List<TimeTableSolution> initialPopulation = getInitialGeneration();
 
-
         EvolutionEngine evolutionEngine = new EvolutionEngine(initialPopulation,
                 this.descriptor.getEngineSettings(),
                 this.descriptor.getTimeTable().getRules());
@@ -77,6 +80,28 @@ public class TimeTableEngine implements Engine {
 
     @Override
     public void showBestSolution() {
+        TimeTableSolution solution;
+        //TODO implement properly
+        // where will we get this solution from?
+
+        //Option1: RAW with Quintets with this specific order: <D,H,C,T,S>
+
+
+        // Option2: solution per teacher
+        List<Integer> teacherIDs = (((descriptor.getTimeTable()).getTeachers()).keySet()).stream()
+                .sorted().collect(Collectors.toList());
+
+        for (Integer teacherID : teacherIDs) {
+            //solution.getSubSolutionForTeacher(teacherID);
+        }
+
+        // Option2: solution per class
+        List<Integer> classIDs = (((descriptor.getTimeTable()).getSchoolClasses()).keySet()).stream()
+                .sorted().collect(Collectors.toList());
+
+        for (Integer classID : classIDs) {
+            //solution.getSubSolutionForTeacher(teacherID);
+        }
 
     }
 
