@@ -41,13 +41,19 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         //maybe cast here to TimeTablesolution
         //matrix where the columns are days and the rows are hours
 
-        List<List<Quintet>> solutionMatrix = new ArrayList<>();
+        List<List<Quintet>> solutionMatrix = new ArrayList<>(hours);
         for (int i = 0; i < hours; i++) {
-            solutionMatrix.add(new ArrayList(days));
+            List<Quintet> inner =new ArrayList(days);
+            for (int j = 0; j < days; j++) {
+                inner.add(null);
+
+            }
+            solutionMatrix.add(inner);
         }
         //TODO: put solution in matrix
-
-        System.out.println("size " + solutionMatrix.size());
+        int numOfDays =solutionMatrix.get(0).size();
+//        int width = outer. size(); int length = outer. get(0). size();
+        System.out.println("size " + solutionMatrix.size()*numOfDays);
         return solutionMatrix;
     }
 

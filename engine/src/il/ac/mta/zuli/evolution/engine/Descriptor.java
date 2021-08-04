@@ -18,7 +18,7 @@ public class Descriptor {
 
         try {
             tempTimeTable = new TimeTable(d.getETTTimeTable());
-            tempEngineSetting = new EngineSettings(d.getETTEvolutionEngine(), getTimeTable().getDays(), getTimeTable().getHours());
+            tempEngineSetting = new EngineSettings(d.getETTEvolutionEngine(), tempTimeTable.getDays(), tempTimeTable.getHours());
 
             this.timeTable = tempTimeTable;
             this.engineSettings = tempEngineSetting;
