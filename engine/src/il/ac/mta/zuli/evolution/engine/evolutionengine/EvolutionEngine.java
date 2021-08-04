@@ -17,16 +17,20 @@ public class EvolutionEngine<T extends Solution> {
     }
 
     public void execute() {
-        //calculate fitness for every solution in generation and save score to solution
+        // A. calculate fitness for every solution in generation and save score to solution
         for (T solution : generation) {
             fitnessEvaluationPerSolution(solution);
         }
 
-        // select topPercent of solutions, according to fitness, in order to create next generation
+        // B. select topPercent of solutions, according to fitness, in order to create next generation
         List<T> parents = (engineSettings.getSelection()).select(generation);
 
+        // C. crossover to create next generation
         engineSettings.getCrossover().crossover(parents);
 
+        // B. mutate certain quintets
+        //TODO - very important we need to make sure the solution does not contain duplicate quintets after the mutation phase
+        // a solution is like a set of quintets - can use quintets equals() for the check
     }
 
     //getting fitness score per rule for every solution
@@ -36,11 +40,6 @@ public class EvolutionEngine<T extends Solution> {
         }
         solution.calculateTotalScore();
     }
-
-    private void crossover() {
-
-    }
-
 
     @Override
     public String toString() {

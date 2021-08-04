@@ -4,10 +4,7 @@ import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTTeacher;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTTeaches;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Teacher {
     private int id;
@@ -61,5 +58,18 @@ public class Teacher {
                 ", name='" + name + '\'' +
                 ", subjects=" + subjects +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Teacher teacher = (Teacher) o;
+        return id == teacher.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

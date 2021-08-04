@@ -9,6 +9,4 @@ public interface Crossover<T extends Solution> {
     int getNumOfCuttingPoints();
 
     List<T> crossover(List<T> generation);
-
-    List<T> crossoverBetween2Parents(T s1, T s2);
 }

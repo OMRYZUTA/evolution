@@ -177,4 +177,6 @@ public class TimeTableSolution implements Solution {
         //", solutionSize=" + solutionSize +
         //+", fitnessScorePerRole=" + fitnessScorePerRule;
     }
+
+
 }

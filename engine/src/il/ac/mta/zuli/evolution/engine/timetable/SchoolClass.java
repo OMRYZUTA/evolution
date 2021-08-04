@@ -4,10 +4,7 @@ import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTClass;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTRequirements;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTStudy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SchoolClass {
     private int id;
@@ -83,5 +80,18 @@ public class SchoolClass {
         }
 
         return requiredSubjects;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SchoolClass that = (SchoolClass) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

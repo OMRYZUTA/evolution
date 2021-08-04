@@ -6,6 +6,7 @@ import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 
 import java.time.DayOfWeek;
+import java.util.Objects;
 
 public class Quintet {
     private DayOfWeek day;
@@ -78,5 +79,18 @@ public class Quintet {
         } else {
             return "invalid quintet: teacheer/class/subject are null";
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Quintet quintet = (Quintet) o;
+        return hour == quintet.hour && day == quintet.day && teacher.equals(quintet.teacher) && schoolClass.equals(quintet.schoolClass) && subject.equals(quintet.subject);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(day, hour, teacher, schoolClass, subject);
     }
 }

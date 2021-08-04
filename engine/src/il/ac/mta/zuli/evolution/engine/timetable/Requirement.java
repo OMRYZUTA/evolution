@@ -4,6 +4,7 @@ import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTStudy;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class Requirement {
     //required hours per subject
@@ -48,5 +49,18 @@ public class Requirement {
 
     public boolean isRequirementMet(Integer hours) {
         return this.hours == hours;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Requirement that = (Requirement) o;
+        return hours == that.hours && subject.equals(that.subject);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hours, subject);
     }
 }
