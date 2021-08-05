@@ -59,15 +59,21 @@ public class TimeTableEngine implements Engine {
 
         List<TimeTableSolution> initialPopulation = getInitialGeneration();
 
-        EvolutionEngine evolutionEngine = new EvolutionEngine(initialPopulation,
-                this.descriptor.getEngineSettings(),
+        EvolutionEngine evolutionEngine = new EvolutionEngine(this.descriptor.getEngineSettings(),
                 this.descriptor.getTimeTable().getRules());
 
-        evolutionEngine.execute();
-
         //numOfGenerations-1?
+        System.out.println("num of generations " + numOfGenerations);
+
+        List<TimeTableSolution> tempGeneration = initialPopulation;
+
         for (int i = 0; i < numOfGenerations - 1; i++) {
-            //evolutionEngine.execute();
+            tempGeneration = evolutionEngine.execute(tempGeneration);
+        }
+
+        System.out.println("after evolution engine");
+        for (TimeTableSolution solution : tempGeneration) {
+            System.out.println(solution.getTotalFitnessScore());
         }
 //
 //        for i of numof generations-1 :

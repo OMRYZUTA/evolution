@@ -39,6 +39,10 @@ public class Flipping<S extends Solution> implements Mutation<S> {
         }
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+        if (timeTableSolution.getSolutionSize() == 0) {
+            return solution;
+        }
+
         List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
         Set<Quintet> quintetSet = new HashSet<>();
         Quintet tempQuintet;
