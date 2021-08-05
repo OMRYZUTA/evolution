@@ -87,7 +87,7 @@
 	<ETT-EvolutionEngine>
 <!--		need to change initial population to 200-->
 		<ETT-InitialPopulation size="25"/>
-		<ETT-Selection type="Truncation" configuration="TopPercent=10"/>
+		<ETT-Selection type="Truncation" configuration="TopPercent=100"/>
 		<ETT-Crossover name="DayTimeOriented" cutting-points="2"/>
 		<ETT-Mutations>
 			<ETT-Mutation name="Flipping" probability="0.3" configuration="MaxTupples=3,Component=T"/>
