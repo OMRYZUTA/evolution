@@ -53,14 +53,13 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
 
             parent2 = randomlySelectParent(selectedSolutionsAsMatrix);
             removeParentFromPoolOfParents(selectedSolutionsAsMatrix, parent2);
-            crossoverBetween2Parents(parent1, parent2);
-            //newGeneration.addAll(crossoverBetween2Parents(parent1, parent2));
+
+            newGeneration.addAll(crossoverBetween2Parents(parent1, parent2));
         }
         // if there is one parent left, need to add it to new generations
 
 
-        //return newGeneration;
-        return null;
+        return (List<S>) newGeneration;
     }
 
     private void removeParentFromPoolOfParents(List<List<List<Quintet>>> selectedSolutionsAsMatrix,
@@ -120,12 +119,11 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         return solutionMatrix;
     }
 
-    private List<S> crossoverBetween2Parents(List<List<Quintet>> parent1, List<List<Quintet>> parent2) {
+    private List<TimeTableSolution> crossoverBetween2Parents(List<List<Quintet>> parent1, List<List<Quintet>> parent2) {
         List<TimeTableSolution> twoNewSolutions = new ArrayList<>(2);
         List<List<Quintet>> child1 = new ArrayList<>();
         List<List<Quintet>> child2 = new ArrayList<>();
         Iterator<Integer> cuttingPointsItr = cuttingPoints.iterator();
-        System.out.println(cuttingPoints);
         int cuttingPoint = cuttingPointsItr.next();
         boolean parent1ToChild1 = true;
         for (int i = 0; i < days * hours; i++) {
@@ -144,23 +142,27 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
                 child1.add(parent2.get(i));
             }
         }
-        for (int i = 0; i < cuttingPoints.get(0); i++) {
-            System.out.println("parent 1");
-            System.out.println(parent1.get(i));
-            System.out.println("child 1");
-            System.out.println(child1.get(i));
-        }
-        for (int i = cuttingPoints.get(0); i < cuttingPoints.get(1); i++) {
-            System.out.println("parent 2");
-            System.out.println(parent2.get(i));
-            System.out.println("child 1");
-            System.out.println(child1.get(i));
-        }
-        //flattening-back from the hierarchy of solutionMatrix to List<Quintets> field in TimeTablesolution
-        //List<Quintet> quintets = selectedSolutionsAsMatrix.get(0).stream().flatMap(Collection::stream).collect(Collectors.toList());
-        //newGeneration.add(new TimeTableSolution(quintets));
 
-        return null;
+        //flattening-back from the hierarchy of solutionMatrix to List<Quintets> field in TimeTablesolution
+        List<Quintet> quintets = flattenSolutionMatrix(child1);
+        TimeTableSolution tempSolution = new TimeTableSolution(quintets);
+        twoNewSolutions.add(tempSolution);
+        quintets = flattenSolutionMatrix(child2);
+        tempSolution = new TimeTableSolution(quintets);
+        twoNewSolutions.add(tempSolution);
+
+        return twoNewSolutions;
+    }
+
+    @NotNull
+    private List<Quintet> flattenSolutionMatrix(List<List<Quintet>> child1) {
+        List<Quintet> quintets = new ArrayList<>();
+        for (List<Quintet> quintetCollection : child1) {
+            if (quintetCollection != null) {
+                quintets.addAll(quintetCollection);
+            }
+        }
+        return quintets;
     }
 
     private void setNumOfCuttingPoints(int numOfCuttingPoints) throws Exception {

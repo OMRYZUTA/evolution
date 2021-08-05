@@ -26,11 +26,12 @@ public class TimeTableSolution implements Solution {
         randomlyGenerateSolutionQuintets();
     }
 
-    public TimeTableSolution(List<Quintet> solution) {
+    public TimeTableSolution(List<Quintet> quintets) {
         fitnessScorePerRule = new HashMap<>();
-        solutionSize = solution.size();
+        solutionSize = quintets.size();
         totalFitnessScore = 0;
-        this.solution.addAll(solution);
+        solution = new ArrayList<>();
+        this.solution.addAll(quintets);
     }
 
     //#region getters
