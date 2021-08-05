@@ -11,6 +11,8 @@ import java.time.DayOfWeek;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static il.ac.mta.zuli.evolution.engine.utils.generateRandomNum;
+
 public class TimeTableSolution implements Solution {
     private List<Quintet> solution;
     private final int solutionSize; //number of quintets
@@ -77,18 +79,7 @@ public class TimeTableSolution implements Solution {
         solution.addAll(solutionSet);
     }
 
-    private int generateRandomNum(int min, int max) {
-        int result;
 
-        if (max - min == 0) {
-            result = 1;
-        } else {
-            Random random = new Random();
-            result = random.nextInt(max - min) + min;
-        }
-
-        return result;
-    }
 
     private Set<Quintet> generateQuintets(int num) {
         Set<Quintet> newSet = new HashSet<>();

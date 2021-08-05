@@ -60,11 +60,11 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
 
         // if there is one parent left, need to add it to new generations
         if (selectedSolutionsAsMatrix.size() == 1) {
-            //flattenSolutionMatrix
-            //newGeneration.add();
-            //TODO continue from here
+            List<Quintet> quintets = flattenSolutionMatrix(selectedSolutionsAsMatrix.get(0));
+            newGeneration.add(new TimeTableSolution(quintets));
         }
 
+        //why do we need to cast down?
         return (List<S>) newGeneration;
     }
 
@@ -132,6 +132,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         Iterator<Integer> cuttingPointsItr = cuttingPoints.iterator();
         int cuttingPoint = cuttingPointsItr.next();
         boolean parent1ToChild1 = true;
+
         for (int i = 0; i < days * hours; i++) {
             if (i == cuttingPoint) {
                 // switch between parents and children

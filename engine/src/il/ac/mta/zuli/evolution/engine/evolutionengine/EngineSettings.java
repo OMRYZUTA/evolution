@@ -7,6 +7,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Flipping;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Truncation;
+import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTCrossover;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTEvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTMutation;
@@ -23,11 +24,11 @@ public class EngineSettings<T extends Solution> {
     private Crossover<T> crossover;
     private List<Mutation<T>> mutations;
 
-    public EngineSettings(@NotNull ETTEvolutionEngine ee, int days, int hours) throws Exception {
+    public EngineSettings(@NotNull ETTEvolutionEngine ee, TimeTable timeTable) throws Exception {
         setInitialPopulationSize(ee.getETTInitialPopulation().getSize());
         setSelection(ee.getETTSelection());
-        setCrossover(ee.getETTCrossover(), days, hours);
-        setMutations(ee.getETTMutations().getETTMutation());
+        setCrossover(ee.getETTCrossover(), timeTable.getDays(), timeTable.getHours());
+        setMutations(ee.getETTMutations().getETTMutation(), timeTable);
     }
 
     //TODO make sure all setters are private
@@ -63,7 +64,7 @@ public class EngineSettings<T extends Solution> {
         //TODO factory methods
     }
 
-    private void setMutations(List<ETTMutation> ettMutations) throws Exception {
+    private void setMutations(List<ETTMutation> ettMutations, TimeTable timeTable) throws Exception {
         mutations = new ArrayList<>();
 
         for (ETTMutation ettMutation : ettMutations) {
@@ -75,7 +76,7 @@ public class EngineSettings<T extends Solution> {
                 int componentIndex = (ettMutation.getConfiguration()).indexOf("Component=") + "Component=".length();
                 String componentStr = (ettMutation.getConfiguration()).substring(componentIndex, componentIndex + 1);
                 ComponentName component = ComponentName.valueOf(componentStr.toUpperCase());
-                mutations.add(new Flipping(ettMutation.getProbability(), maxTupples, component));
+                mutations.add(new Flipping(ettMutation.getProbability(), maxTupples, component, timeTable));
             } else throw new Exception("invalid mutation name (for ex 1)");
         }
     }

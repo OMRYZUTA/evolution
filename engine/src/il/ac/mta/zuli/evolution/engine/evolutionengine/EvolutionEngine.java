@@ -26,9 +26,10 @@ public class EvolutionEngine<T extends Solution> {
         List<T> parents = (engineSettings.getSelection()).select(generation);
 
         // C. crossover to create next generation
-        engineSettings.getCrossover().crossover(parents);
+        List<T> newGeneration = engineSettings.getCrossover().crossover(parents);
 
         // B. mutate certain quintets
+        //go throw list of mutations
         //TODO - very important we need to make sure the solution does not contain duplicate quintets after the mutation phase
         // a solution is like a set of quintets - can use quintets equals() for the check
     }
