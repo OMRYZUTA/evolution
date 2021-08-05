@@ -31,18 +31,11 @@ public class TeacherIsHuman extends Rule {
             DHT = String.format("%s_%d_%d", quintet.getDay(), quintet.getHour(), teacherID);
             //if the set already contains the element, the call leaves the set unchanged and returns false.
             if (!teacherDayHourSet.add(DHT)) {
-                if (isHardRule()) {
-                    score = HARDRULEFAILURE;
-                    break;
-                } else {
-                    collisions++;
-                }
+                collisions++;
             }
         }
 
-        if (score != HARDRULEFAILURE) {
-            score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
-        }
+        score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
 
         timeTableSolution.addScoreToRule(this, score);
     }

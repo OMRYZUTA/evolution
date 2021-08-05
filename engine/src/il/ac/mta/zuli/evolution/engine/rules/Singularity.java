@@ -30,18 +30,11 @@ public class Singularity extends Rule {
             DHC = String.format("%s_%d_%d", quintet.getDay(), quintet.getHour(), classID);
             //if the set already contains the element, the call leaves the set unchanged and returns false.
             if (!classDayHourSet.add(DHC)) {
-                if (isHardRule()) {
-                    score = HARDRULEFAILURE;
-                    break;
-                } else {
-                    collisions++;
-                }
+                collisions++;
             }
         }
 
-        if (score != HARDRULEFAILURE) {
-            score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
-        }
+        score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
 
         timeTableSolution.addScoreToRule(this, score);
     }
