@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine.crossover;
 import il.ac.mta.zuli.evolution.engine.Quintet;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -10,13 +11,15 @@ import java.util.*;
 public class DayTimeOriented<S extends Solution> implements Crossover<S> {
     private final int days;
     private final int hours;
+    private final TimeTable timeTable;
     private int numOfCuttingPoints;
     private List<Integer> cuttingPoints; //indices for cutting points in solution
 
-    public DayTimeOriented(int numOfCuttingPoints, int days, int hours) throws Exception {
+    public DayTimeOriented(int numOfCuttingPoints, TimeTable timeTable) throws Exception {
         // no need to check validity for days and hours, since they come from timetable
-        this.days = days;
-        this.hours = hours;
+        this.timeTable = timeTable;
+        this.days = timeTable.getDays();
+        this.hours = timeTable.getHours();
         setNumOfCuttingPoints(numOfCuttingPoints);
     }
 
@@ -61,7 +64,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         // if there is one parent left, need to add it to new generations
         if (selectedSolutionsAsMatrix.size() == 1) {
             List<Quintet> quintets = flattenSolutionMatrix(selectedSolutionsAsMatrix.get(0));
-            newGeneration.add(new TimeTableSolution(quintets));
+            newGeneration.add(new TimeTableSolution(quintets, timeTable));
         }
 
         //why do we need to cast down?
@@ -152,10 +155,10 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
 
         //flattening-back from the hierarchy of solutionMatrix to List<Quintets> field in TimeTablesolution
         List<Quintet> quintets = flattenSolutionMatrix(child1);
-        TimeTableSolution tempSolution = new TimeTableSolution(quintets);
+        TimeTableSolution tempSolution = new TimeTableSolution(quintets, timeTable);
         twoNewSolutions.add(tempSolution);
         quintets = flattenSolutionMatrix(child2);
-        tempSolution = new TimeTableSolution(quintets);
+        tempSolution = new TimeTableSolution(quintets, timeTable);
         twoNewSolutions.add(tempSolution);
 
         return twoNewSolutions;

@@ -21,6 +21,7 @@ public class XMLParser {
 
         } catch (JAXBException e) {
             e.printStackTrace();
+            System.out.println(e);
             return null;
         }
     }

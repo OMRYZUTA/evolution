@@ -55,7 +55,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
             quintetSet.add(tempQuintet);
         }
 
-        return (S) new TimeTableSolution(new ArrayList<>(quintetSet));
+        return (S) new TimeTableSolution(new ArrayList<>(quintetSet), timeTable);
     }
 
     private Quintet mutateComponent(Quintet quintet) {
