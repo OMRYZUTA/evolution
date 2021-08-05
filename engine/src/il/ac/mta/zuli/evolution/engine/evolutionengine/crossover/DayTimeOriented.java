@@ -22,22 +22,63 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
 
     @Override
     public List<S> crossover(List<S> selectedParents) {
+        if (selectedParents.size() == 0) {
+            throw new RuntimeException("parent-generation is empty");
+        }
+        if (selectedParents.size() == 1) {
+            return selectedParents;
+        }
+
         // A. randomly generate numOfCuttingPoints cutting points
         randomlyGenerateCuttingPoints();
 
         // B. organize each solution as 2-dimension array D*H
+        List<List<List<Quintet>>> selectedSolutionsAsMatrix = new ArrayList<>();
 
         for (S solution : selectedParents) {
-            List<List<Quintet>> solutionMatrix = convertSolutionToMatrixDH(solution);
+            selectedSolutionsAsMatrix.add(convertSolutionToMatrixDH(solution));
         }
 
         // C. randomly select 2 parents to "mate" and remove them from the pool of parents
         // for every 2-parents-couple apply crossoverBetween2Parents()
         // add the 2 returned babies to the baby-collection - return baby collection
-        List<S> newGeneration = new ArrayList<>();
-        //TODO continue from here
+        List<TimeTableSolution> newGeneration = new ArrayList<>();
+        //flattening-back from the hierarchy of solutionMatrix to List<Quintets> field in TimeTablesolution
+        //List<Quintet> quintets = selectedSolutionsAsMatrix.get(0).stream().flatMap(Collection::stream).collect(Collectors.toList());
+        //newGeneration.add(new TimeTableSolution(quintets));
+        List<List<Quintet>> parent1 = null;
+        List<List<Quintet>> parent2 = null;
+        int randomIndex;
 
-        return newGeneration;
+        while (selectedSolutionsAsMatrix.size() >= 2) {
+            parent1 = randomlySelectParent(selectedSolutionsAsMatrix);
+            removeParentFromPoolOfParents(selectedSolutionsAsMatrix, parent1);
+
+            parent2 = randomlySelectParent(selectedSolutionsAsMatrix);
+            removeParentFromPoolOfParents(selectedSolutionsAsMatrix, parent2);
+
+            //crossoverBetween2Parents(parent1, parent2);
+        }
+
+        //return newGeneration;
+        return null;
+    }
+
+    private void removeParentFromPoolOfParents(List<List<List<Quintet>>> selectedSolutionsAsMatrix,
+                                               List<List<Quintet>> parent) {
+        Iterator<List<List<Quintet>>> itr = selectedSolutionsAsMatrix.iterator();
+        while (itr.hasNext()) {
+            List<List<Quintet>> inner = itr.next();
+            if (inner.equals(parent)) {
+                itr.remove();
+            }
+        }
+    }
+
+    private List<List<Quintet>> randomlySelectParent(List<List<List<Quintet>>> selectedSolutionsAsMatrix) {
+        int randomIndex = new Random().nextInt(selectedSolutionsAsMatrix.size());
+
+        return selectedSolutionsAsMatrix.get(randomIndex);
     }
 
     private List<List<Quintet>> convertSolutionToMatrixDH(S solution) {

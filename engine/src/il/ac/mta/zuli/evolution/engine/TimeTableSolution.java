@@ -23,7 +23,14 @@ public class TimeTableSolution implements Solution {
         this.timeTable = timeTable;
         solutionSize = generateRandomNum(1, calculateTotalRequiredHours());
         totalFitnessScore = 0;
-        setSolutionQuintets();
+        randomlyGenerateSolutionQuintets();
+    }
+
+    public TimeTableSolution(List<Quintet> solution) {
+        fitnessScorePerRule = new HashMap<>();
+        solutionSize = solution.size();
+        totalFitnessScore = 0;
+        this.solution.addAll(solution);
     }
 
     //#region getters
@@ -63,7 +70,7 @@ public class TimeTableSolution implements Solution {
     //#endregion
 
     //#region setters and quintet-generation methods
-    private void setSolutionQuintets() {
+    private void randomlyGenerateSolutionQuintets() {
         Set<Quintet> solutionSet = generateQuintets(solutionSize);
         solution = new ArrayList<Quintet>(solutionSet.size());
         solution.addAll(solutionSet);
