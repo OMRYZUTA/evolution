@@ -4,10 +4,13 @@ import java.util.Map;
 import java.util.Set;
 
 public class TimeTableDTO {
+    private int days;
+    private int hours;
     Map<Integer, SubjectDTO> subjects;
     Map<Integer, TeacherDTO> teachers;
     Map<Integer, SchoolClassDTO> schoolClasses;
     Set<RuleDTO> rules;
+
     public TimeTableDTO(Map<Integer, SubjectDTO> subjects,
                         Map<Integer, TeacherDTO> teachers,
                         Map<Integer, SchoolClassDTO> schoolClasses,
@@ -30,7 +33,17 @@ public class TimeTableDTO {
         return schoolClasses;
     }
 
-    public Set<RuleDTO> getRules() { return rules; }
+    public Set<RuleDTO> getRules() {
+        return rules;
+    }
+
+    public int getDays() {
+        return days;
+    }
+
+    public int getHours() {
+        return hours;
+    }
 }
 
 
