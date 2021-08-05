@@ -57,11 +57,15 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
             int hourIndex = quintet.getHour();
             int dayIndex = quintet.getDay().getValue() - 1;
             int i = hourIndex * days + dayIndex;
+            if (solutionMatrix.get(i) == null) {
+                solutionMatrix.set(i, new ArrayList<>());
+            }
             (solutionMatrix.get(i)).add(quintet);
         }
 
         return solutionMatrix;
     }
+
 
     @NotNull
     private List<List<Quintet>> createEmptyDHMatrix() {
@@ -70,7 +74,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         List<List<Quintet>> solutionMatrix = new ArrayList<>(days * hours);
 
         for (int i = 0; i < days * hours; i++) {
-            solutionMatrix.add(new ArrayList<>());
+            solutionMatrix.add(null);
         }
 
         return solutionMatrix;
