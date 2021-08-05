@@ -28,10 +28,11 @@ public class Satisfactory extends Rule {
         }
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+
         double score = INVALIDSCORE;
 
         if (timeTableSolution.getSolutionSize() > 0) {
-            double[] classScores = new double[schoolClasses.size()]; //classID will be used as index (sort of a bucket)
+            double[] classScores = new double[schoolClasses.size()]; //classID will be used as index (a sort of bucket)
 
             for (SchoolClass schoolClass : schoolClasses.values()) {
                 int classID = schoolClass.getId();
@@ -45,16 +46,18 @@ public class Satisfactory extends Rule {
     }
 
     private double classFitnessEvaluation(int classID, List<Quintet> subSolutionForClass) {
-        List<Requirement> classRequirements = schoolClasses.get(classID).getRequirements();
-        int numOfRequiredSubjects = classRequirements.size();
+        double score = INVALIDSCORE;
 
-        Map<Integer, Integer> hoursPerSubjectCounter = initializeCounterMap(classRequirements);
+        if (subSolutionForClass.size() > 0) {
+            List<Requirement> classRequirements = schoolClasses.get(classID).getRequirements();
+            int numOfRequiredSubjects = classRequirements.size();
+            Map<Integer, Integer> hoursPerSubjectCounter = initializeCounterMap(classRequirements);
+            countHoursInSubSolution(subSolutionForClass, hoursPerSubjectCounter);
+            int satisfactorySubjects = countSatisfactorySubjects(classRequirements, hoursPerSubjectCounter);
+            score = (100 * satisfactorySubjects) / (double) numOfRequiredSubjects;
+        }
 
-        countHoursInSubSolution(subSolutionForClass, hoursPerSubjectCounter);
-
-        int satisfactorySubjects = countSatisfactorySubjects(classRequirements, hoursPerSubjectCounter);
-
-        return (100 * satisfactorySubjects) / (double) numOfRequiredSubjects;
+        return score;
     }
 
     private int countSatisfactorySubjects(List<Requirement> classRequirements, Map<Integer, Integer> hoursPerSubjectCounter) {

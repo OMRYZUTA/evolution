@@ -18,6 +18,7 @@ public class Singularity extends Rule {
         }
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+
         int numOfQuintets = timeTableSolution.getSolutionSize();
         double score = INVALIDSCORE;
 

@@ -11,7 +11,6 @@ public class TeacherIsHuman extends Rule {
         super(ruleType);
     }
 
-    //returns score 0-100
     @Override
     public void fitnessEvaluation(Solution solution) {
         if (!(solution instanceof TimeTableSolution)) {
@@ -19,10 +18,11 @@ public class TeacherIsHuman extends Rule {
         }
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+
         int numOfQuintets = timeTableSolution.getSolutionSize();
         double score = INVALIDSCORE;
+
         if (numOfQuintets > 0) {
-            HashSet<String> classDayHourSet = new HashSet<>();
             HashSet<String> teacherDayHourSet = new HashSet<>();
             int collisions = 0;
             String DHT;
@@ -39,6 +39,7 @@ public class TeacherIsHuman extends Rule {
 
             score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
         }
+
         timeTableSolution.addScoreToRule(this, score);
     }
 }
