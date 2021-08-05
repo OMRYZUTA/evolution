@@ -41,12 +41,13 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
 
         // C. randomly select 2 parents to "mate" and remove them from the pool of parents
         // for every 2-parents-couple apply crossoverBetween2Parents()
-        // add the 2 returned babies to the baby-collection - return baby collection
+        // add the 2 children to the new generation
         List<TimeTableSolution> newGeneration = new ArrayList<>();
 
         List<List<Quintet>> parent1 = null;
         List<List<Quintet>> parent2 = null;
         int randomIndex;
+
         while (selectedSolutionsAsMatrix.size() >= 2) {
             parent1 = randomlySelectParent(selectedSolutionsAsMatrix);
             removeParentFromPoolOfParents(selectedSolutionsAsMatrix, parent1);
@@ -56,8 +57,13 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
 
             newGeneration.addAll(crossoverBetween2Parents(parent1, parent2));
         }
-        // if there is one parent left, need to add it to new generations
 
+        // if there is one parent left, need to add it to new generations
+        if (selectedSolutionsAsMatrix.size() == 1) {
+            //flattenSolutionMatrix
+            //newGeneration.add();
+            //TODO continue from here
+        }
 
         return (List<S>) newGeneration;
     }
