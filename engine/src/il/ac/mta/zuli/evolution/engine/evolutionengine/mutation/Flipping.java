@@ -103,7 +103,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
         }
     }
 
-    public int getMaxTupples() {
+    public int getMaxTuples() {
         return maxTuples;
     }
 
@@ -115,7 +115,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
     public String toString() {
         return "Mutation: " + this.getClass().getSimpleName() +
                 "probability=" + probability +
-                ", maxTupples=" + maxTuples +
+                ", maxTuples=" + maxTuples +
                 ", component=" + component;
     }
 

@@ -31,18 +31,10 @@ public class EngineSettings<T extends Solution> {
         setMutations(ee.getETTMutations().getETTMutation(), timeTable);
     }
 
-    //TODO make sure all setters are private
+    //#region setters
     private void setInitialPopulationSize(int size) {
         //TODO validate size
         this.initialPopulationSize = size;
-    }
-
-    public int getInitialPopulationSize() {
-        return initialPopulationSize;
-    }
-
-    public Selection<T> getSelection() {
-        return selection;
     }
 
     private void setSelection(@NotNull ETTSelection ettSelection) throws Exception {
@@ -69,16 +61,26 @@ public class EngineSettings<T extends Solution> {
 
         for (ETTMutation ettMutation : ettMutations) {
             if (ettMutation.getName().equalsIgnoreCase("flipping")) {
-                int maxTupplesIndex = (ettMutation.getConfiguration()).indexOf("MaxTupples=") + "MaxTupples=".length();
-                int commaIndex = ettMutation.getConfiguration().indexOf(",");
-                String maxTupplesStr = (ettMutation.getConfiguration()).substring(maxTupplesIndex, commaIndex);
-                int maxTupples = Integer.parseInt(maxTupplesStr);
-                int componentIndex = (ettMutation.getConfiguration()).indexOf("Component=") + "Component=".length();
-                String componentStr = (ettMutation.getConfiguration()).substring(componentIndex, componentIndex + 1);
-                ComponentName component = ComponentName.valueOf(componentStr.toUpperCase());
-                mutations.add(new Flipping(ettMutation.getProbability(), maxTupples, component, timeTable));
-            } else throw new Exception("invalid mutation name (for ex 1)");
+                int maxTuples = extractMaxTuplesFromString(ettMutation);
+                if (maxTuples < 0) {
+                    throw new RuntimeException("max tuples must be >=0");
+                }
+                ComponentName component = extractComponentNameFromString(ettMutation);
+                mutations.add(new Flipping(ettMutation.getProbability(), maxTuples, component, timeTable));
+            } else {
+                throw new Exception("invalid mutation name (for ex 1)");
+            }
         }
+    }
+    //#endregion
+
+    //#region getters
+    public int getInitialPopulationSize() {
+        return initialPopulationSize;
+    }
+
+    public Selection<T> getSelection() {
+        return selection;
     }
 
     public Crossover<T> getCrossover() {
@@ -87,6 +89,24 @@ public class EngineSettings<T extends Solution> {
 
     public List<Mutation<T>> getMutations() {
         return Collections.unmodifiableList(mutations);
+    }
+    //#endregion
+
+
+    @NotNull
+    private ComponentName extractComponentNameFromString(ETTMutation ettMutation) {
+        int componentIndex = (ettMutation.getConfiguration()).indexOf("Component=") + "Component=".length();
+        String componentStr = (ettMutation.getConfiguration()).substring(componentIndex, componentIndex + 1);
+        return ComponentName.valueOf(componentStr.toUpperCase());
+    }
+
+    private int extractMaxTuplesFromString(ETTMutation ettMutation) {
+        //this is how it's spelled in the xml: MaxTupples=3
+        int maxTuplesIndex = (ettMutation.getConfiguration()).indexOf("MaxTupples=") + "MaxTupples=".length();
+        int commaIndex = ettMutation.getConfiguration().indexOf(",");
+        String maxTuplesStr = (ettMutation.getConfiguration()).substring(maxTuplesIndex, commaIndex);
+
+        return Integer.parseInt(maxTuplesStr);
     }
 
     @Override

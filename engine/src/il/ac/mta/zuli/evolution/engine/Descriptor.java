@@ -23,6 +23,7 @@ public class Descriptor {
             this.timeTable = tempTimeTable;
             this.engineSettings = tempEngineSetting;
         } catch (Exception e) {
+            System.out.println(e);
             //did we previously have a valid file loaded or was Descriptor empty - loadXML method will handle this
             //TODO throw exception
             throw e;

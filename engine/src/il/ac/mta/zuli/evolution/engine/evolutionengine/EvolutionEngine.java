@@ -16,7 +16,7 @@ public class EvolutionEngine<T extends Solution> {
         this.rules = rules;
     }
 
-    public List<T> execute(List<T> generation) {
+    public List<T> execute(List<T> generation, boolean finalGenerationFlag) {
         // A. calculate fitness for every solution in generation and save score to solution
         for (T solution : generation) {
             fitnessEvaluationPerSolution(solution);
@@ -39,6 +39,12 @@ public class EvolutionEngine<T extends Solution> {
             }
             newGenerationAfterMutation.add(tempSolution);
         }
+
+        /*if (finalGenerationFlag) {
+            for (T solution : newGenerationAfterMutation) {
+                fitnessEvaluationPerSolution(solution);
+            }
+        }*/
 
         return newGenerationAfterMutation;
     }

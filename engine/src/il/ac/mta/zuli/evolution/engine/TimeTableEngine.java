@@ -41,6 +41,7 @@ public class TimeTableEngine implements Engine {
             }
         } catch (Exception e) {
             //TODO handle exception
+            System.out.println(e);
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -66,16 +67,20 @@ public class TimeTableEngine implements Engine {
         System.out.println("num of generations " + numOfGenerations);
 
         List<TimeTableSolution> tempGeneration = initialPopulation;
+        boolean finalGenerationFlag = false;
 
-        for (int i = 0; i < numOfGenerations - 1; i++) {
-            tempGeneration = evolutionEngine.execute(tempGeneration);
+        for (int i = 0; i < numOfGenerations; i++) {
+            if (i == numOfGenerations - 1) {
+                finalGenerationFlag = true;
+            }
+
+            tempGeneration = evolutionEngine.execute(tempGeneration, finalGenerationFlag);
         }
 
         System.out.println("after evolution engine");
         for (TimeTableSolution solution : tempGeneration) {
             System.out.println(solution.getTotalFitnessScore());
         }
-//
 //        for i of numof generations-1 :
 //              evolution.execute()
 //              if i% stride == 0{
