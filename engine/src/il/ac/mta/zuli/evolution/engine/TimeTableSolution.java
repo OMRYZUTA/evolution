@@ -29,7 +29,7 @@ public class TimeTableSolution implements Solution {
     }
 
     public TimeTableSolution(List<Quintet> quintets, TimeTable timeTable) {
-        this.timeTable =timeTable;
+        this.timeTable = timeTable;
         fitnessScorePerRule = new HashMap<>();
         solutionSize = quintets.size();
         totalFitnessScore = 0;
@@ -80,11 +80,8 @@ public class TimeTableSolution implements Solution {
         solution.addAll(solutionSet);
     }
 
-
-
     private Set<Quintet> generateQuintets(int num) {
-        Set<Quintet> newSet = new HashSet<>();
-        //initially creating the solution in order to prevent duplicate quintets
+        Set<Quintet> newSet = new HashSet<>(); //initially creating the solution as set in order to prevent duplicate quintets
 
         while (newSet.size() < num) {
             newSet.add(generateRandomQuintet());

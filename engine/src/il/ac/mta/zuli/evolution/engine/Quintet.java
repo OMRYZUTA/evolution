@@ -27,24 +27,12 @@ public class Quintet {
         return day;
     }
 
-    public void setDay(DayOfWeek day) {
-        this.day = day;
-    }
-
     public int getHour() {
         return hour;
     }
 
-    public void setHour(int hour) {
-        this.hour = hour;
-    }
-
     public Teacher getTeacher() {
         return teacher;
-    }
-
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
     }
 
     public SchoolClass getSchoolClass() {
@@ -55,16 +43,41 @@ public class Quintet {
         return schoolClass.getId();
     }
 
-    public void setSchoolClass(SchoolClass schoolClass) {
-        this.schoolClass = schoolClass;
-    }
-
     public Subject getSubject() {
         return subject;
     }
 
-    public void setSubject(Subject subject) {
+    private void setDay(DayOfWeek day) {
+        this.day = day;
+    }
+
+    private void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    private void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+
+    public void setSchoolClass(SchoolClass schoolClass) {
+        this.schoolClass = schoolClass;
+    }
+
+    private void setSubject(Subject subject) {
         this.subject = subject;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Quintet quintet = (Quintet) o;
+        return hour == quintet.hour && day == quintet.day && teacher.equals(quintet.teacher) && schoolClass.equals(quintet.schoolClass) && subject.equals(quintet.subject);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(day, hour, teacher, schoolClass, subject);
     }
 
     @Override
@@ -79,18 +92,5 @@ public class Quintet {
         } else {
             return "invalid quintet: teacheer/class/subject are null";
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Quintet quintet = (Quintet) o;
-        return hour == quintet.hour && day == quintet.day && teacher.equals(quintet.teacher) && schoolClass.equals(quintet.schoolClass) && subject.equals(quintet.subject);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(day, hour, teacher, schoolClass, subject);
     }
 }

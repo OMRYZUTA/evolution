@@ -23,21 +23,22 @@ public class Knowledgeable extends Rule {
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
         double score = INVALIDSCORE;
-        int qualifiedQuintets = 0;
-        List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
-        Map<Integer, Subject> subjectsTeaches;
 
-        for (Quintet quintet : solutionQuintets) {
-            subjectsTeaches = (quintet.getTeacher()).getSubjects();
+        if (timeTableSolution.getSolutionSize() > 0) {
+            int qualifiedQuintets = 0;
+            List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
+            Map<Integer, Subject> subjectsTeaches;
 
-            if (subjectsTeaches.containsKey(quintet.getSubject().getId())) {
-                qualifiedQuintets++;
+            for (Quintet quintet : solutionQuintets) {
+                subjectsTeaches = (quintet.getTeacher()).getSubjects();
+
+                if (subjectsTeaches.containsKey(quintet.getSubject().getId())) {
+                    qualifiedQuintets++;
+                }
             }
+
+            score = (100 * qualifiedQuintets) / (double) (timeTableSolution.getSolutionSize());
         }
-
-
-        score = (100 * qualifiedQuintets) / (double) (timeTableSolution.getSolutionSize());
-
 
         timeTableSolution.addScoreToRule(this, score);
     }

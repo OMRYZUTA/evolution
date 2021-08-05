@@ -19,22 +19,25 @@ public class Singularity extends Rule {
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
         int numOfQuintets = timeTableSolution.getSolutionSize();
-        HashSet<String> classDayHourSet = new HashSet<>();
         double score = INVALIDSCORE;
-        int collisions = 0;
-        String DHC;
-        int classID;
 
-        for (Quintet quintet : timeTableSolution.getSolutionQuintets()) {
-            classID = (quintet.getSchoolClass()).getId();
-            DHC = String.format("%s_%d_%d", quintet.getDay(), quintet.getHour(), classID);
-            //if the set already contains the element, the call leaves the set unchanged and returns false.
-            if (!classDayHourSet.add(DHC)) {
-                collisions++;
+        if (numOfQuintets > 0) {
+            HashSet<String> classDayHourSet = new HashSet<>();
+            int collisions = 0;
+            String DHC;
+            int classID;
+
+            for (Quintet quintet : timeTableSolution.getSolutionQuintets()) {
+                classID = (quintet.getSchoolClass()).getId();
+                DHC = String.format("%s_%d_%d", quintet.getDay(), quintet.getHour(), classID);
+                //if the set already contains the element, the call leaves the set unchanged and returns false.
+                if (!classDayHourSet.add(DHC)) {
+                    collisions++;
+                }
             }
-        }
 
-        score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
+            score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
+        }
 
         timeTableSolution.addScoreToRule(this, score);
     }

@@ -20,23 +20,25 @@ public class TeacherIsHuman extends Rule {
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
         int numOfQuintets = timeTableSolution.getSolutionSize();
-        HashSet<String> teacherDayHourSet = new HashSet<>();
         double score = INVALIDSCORE;
-        int collisions = 0;
-        String DHT;
-        int teacherID;
+        if (numOfQuintets > 0) {
+            HashSet<String> classDayHourSet = new HashSet<>();
+            HashSet<String> teacherDayHourSet = new HashSet<>();
+            int collisions = 0;
+            String DHT;
+            int teacherID;
 
-        for (Quintet quintet : timeTableSolution.getSolutionQuintets()) {
-            teacherID = (quintet.getTeacher()).getId();
-            DHT = String.format("%s_%d_%d", quintet.getDay(), quintet.getHour(), teacherID);
-            //if the set already contains the element, the call leaves the set unchanged and returns false.
-            if (!teacherDayHourSet.add(DHT)) {
-                collisions++;
+            for (Quintet quintet : timeTableSolution.getSolutionQuintets()) {
+                teacherID = (quintet.getTeacher()).getId();
+                DHT = String.format("%s_%d_%d", quintet.getDay(), quintet.getHour(), teacherID);
+                //if the set already contains the element, the call leaves the set unchanged and returns false.
+                if (!teacherDayHourSet.add(DHT)) {
+                    collisions++;
+                }
             }
+
+            score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
         }
-
-        score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
-
         timeTableSolution.addScoreToRule(this, score);
     }
 }

@@ -28,18 +28,20 @@ public class Satisfactory extends Rule {
         }
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+        double score = INVALIDSCORE;
 
-        double[] classScores = new double[schoolClasses.size()]; //classID will be used as index (sort of a bucket)
+        if (timeTableSolution.getSolutionSize() > 0) {
+            double[] classScores = new double[schoolClasses.size()]; //classID will be used as index (sort of a bucket)
 
-        for (SchoolClass schoolClass : schoolClasses.values()) {
-            int classID = schoolClass.getId();
-            classScores[classID - 1] = classFitnessEvaluation(classID, timeTableSolution.getSubSolutionForClass(classID));
+            for (SchoolClass schoolClass : schoolClasses.values()) {
+                int classID = schoolClass.getId();
+                classScores[classID - 1] = classFitnessEvaluation(classID, timeTableSolution.getSubSolutionForClass(classID));
+            }
+
+            score = Arrays.stream(classScores).average().getAsDouble();
         }
 
-        double score = Arrays.stream(classScores).average().getAsDouble();
-
         timeTableSolution.addScoreToRule(this, score);
-
     }
 
     private double classFitnessEvaluation(int classID, List<Quintet> subSolutionForClass) {

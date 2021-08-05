@@ -20,6 +20,8 @@ public class EvolutionEngine<T extends Solution> {
         // A. calculate fitness for every solution in generation and save score to solution
         for (T solution : generation) {
             fitnessEvaluationPerSolution(solution);
+            System.out.println("in beginning of execute");
+            System.out.println(solution.getTotalFitnessScore());
         }
 
         // B. select topPercent of solutions, according to fitness, in order to create next generation
@@ -44,8 +46,11 @@ public class EvolutionEngine<T extends Solution> {
             for (T solution : newGenerationAfterMutation) {
                 fitnessEvaluationPerSolution(solution);
             }
+        }
+        System.out.println("in execute(): ");
+        for (T solution : newGenerationAfterMutation) {
+            System.out.println(solution.getTotalFitnessScore());
         }*/
-
         return newGenerationAfterMutation;
     }
 
