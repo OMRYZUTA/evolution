@@ -81,11 +81,11 @@ public class EngineSettings<T extends Solution> {
         }
     }
 
-    public Crossover getCrossover() {
+    public Crossover<T> getCrossover() {
         return crossover;
     }
 
-    public List<Mutation> getMutations() {
+    public List<Mutation<T>> getMutations() {
         return Collections.unmodifiableList(mutations);
     }
 

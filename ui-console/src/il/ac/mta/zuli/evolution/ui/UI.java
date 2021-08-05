@@ -16,7 +16,7 @@ public class UI implements ActionListener {
             engine = new TimeTableEngine();
             engine.addHandler(this);
             engine.loadXML("engine/src/resources/EX1-small.xml");
-            showSystemDetails();
+            //showSystemDetails();
 
             //TODO get parameters for evolution algorithm (and validate in engine)
             engine.executeEvolutionAlgorithm(10, 1);

@@ -3,11 +3,13 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine.mutation;
 import il.ac.mta.zuli.evolution.engine.Quintet;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
+import il.ac.mta.zuli.evolution.engine.timetable.Subject;
+import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 
 import java.time.DayOfWeek;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static il.ac.mta.zuli.evolution.engine.utils.generateRandomNum;
 
@@ -27,6 +29,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
     @Override
     public S mutate(S solution) {
         double randomProbability = Math.random();
+
         if (randomProbability > probability) {
             return solution;
         }
@@ -37,39 +40,49 @@ public class Flipping<S extends Solution> implements Mutation<S> {
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
         List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
+        Set<Quintet> quintetSet = new HashSet<>();
+        Quintet tempQuintet;
 
         int numOfQuintetsToMutate = new Random().nextInt(maxTuples);
 
-
         for (int i = 0; i < numOfQuintetsToMutate; i++) {
             int randomIndexToMutate = new Random().nextInt(solutionQuintets.size());
-            mutateComponent(solutionQuintets.get(randomIndexToMutate));
+            tempQuintet = mutateComponent(solutionQuintets.get(randomIndexToMutate));
+            quintetSet.add(tempQuintet);
         }
 
-        return (S) new TimeTableSolution(solutionQuintets);
+        return (S) new TimeTableSolution(new ArrayList<>(quintetSet));
     }
 
-    private void mutateComponent(Quintet quintet) {
+    private Quintet mutateComponent(Quintet quintet) {
+        DayOfWeek day = quintet.getDay();
+        int hour = quintet.getHour();
+        SchoolClass schoolClass = quintet.getSchoolClass();
+        Teacher teacher = quintet.getTeacher();
+        Subject subject = quintet.getSubject();
+
         switch (component) {
             case D:
-                quintet.setDay(generateRandomDay());
+                day = generateRandomDay();
                 break;
             case H:
-                quintet.setHour(new Random().nextInt(timeTable.getHours()));
+                hour = new Random().nextInt(timeTable.getHours());
                 break;
             case C:
                 int randomClassID = generateRandomNum(1, timeTable.getSchoolClasses().size());
-                quintet.setSchoolClass(timeTable.getSchoolClasses().get(randomClassID));
+                schoolClass = timeTable.getSchoolClasses().get(randomClassID);
                 break;
             case T:
                 int randomTeacherID = generateRandomNum(1, timeTable.getTeachers().size());
-                quintet.setTeacher(timeTable.getTeachers().get(randomTeacherID));
+                teacher = timeTable.getTeachers().get(randomTeacherID);
                 break;
             case S:
-                int subjectID = generateRandomNum(1, timeTable.getSubjects().size());
-                quintet.setSubject(timeTable.getSubjects().get(subjectID));
+                int randomSubjectID = generateRandomNum(1, timeTable.getSubjects().size());
+                subject = timeTable.getSubjects().get(randomSubjectID);
                 break;
         }
+
+        return new Quintet(day, hour, teacher, schoolClass, subject);
     }
 
     private DayOfWeek generateRandomDay() {
