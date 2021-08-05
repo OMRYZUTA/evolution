@@ -78,6 +78,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
             List<List<Quintet>> inner = itr.next();
             if (inner.equals(parent)) {
                 itr.remove();
+                break;
             }
         }
     }
