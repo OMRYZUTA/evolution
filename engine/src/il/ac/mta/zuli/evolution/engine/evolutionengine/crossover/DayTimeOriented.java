@@ -59,7 +59,6 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         // if there is one parent left, need to add it to new generations
 
 
-
         //return newGeneration;
         return null;
     }
@@ -127,18 +126,36 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         List<List<Quintet>> child2 = new ArrayList<>();
         Iterator<Integer> cuttingPointsItr = cuttingPoints.iterator();
         System.out.println(cuttingPoints);
-        int cuttingPoint =cuttingPointsItr.next();
-        for (int i = 0; i < days*hours; i++) {
-            System.out.println("i is "+i+ "and cutting point is "+cuttingPoint);
-            if(i == cuttingPoint){
-                // assign values in children
-                if(cuttingPointsItr.hasNext()) {
+        int cuttingPoint = cuttingPointsItr.next();
+        boolean parent1ToChild1 = true;
+        for (int i = 0; i < days * hours; i++) {
+            if (i == cuttingPoint) {
+                // switch between parents and children
+                parent1ToChild1 = !parent1ToChild1;
+                if (cuttingPointsItr.hasNext()) {
                     cuttingPoint = cuttingPointsItr.next();
                 }
             }
-
+            if (parent1ToChild1) {
+                child1.add(parent1.get(i));
+                child2.add(parent2.get(i));
+            } else {
+                child2.add(parent1.get(i));
+                child1.add(parent2.get(i));
+            }
         }
-        System.out.println();
+        for (int i = 0; i < cuttingPoints.get(0); i++) {
+            System.out.println("parent 1");
+            System.out.println(parent1.get(i));
+            System.out.println("child 1");
+            System.out.println(child1.get(i));
+        }
+        for (int i = cuttingPoints.get(0); i < cuttingPoints.get(1); i++) {
+            System.out.println("parent 2");
+            System.out.println(parent2.get(i));
+            System.out.println("child 1");
+            System.out.println(child1.get(i));
+        }
         //flattening-back from the hierarchy of solutionMatrix to List<Quintets> field in TimeTablesolution
         //List<Quintet> quintets = selectedSolutionsAsMatrix.get(0).stream().flatMap(Collection::stream).collect(Collectors.toList());
         //newGeneration.add(new TimeTableSolution(quintets));
