@@ -4,25 +4,18 @@ import il.ac.mta.zuli.evolution.engine.Descriptor;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTDescriptor;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 
 public class XMLParser {
     public Descriptor unmarshall(String path) throws Exception {
-        try {
-            File file = new File(path);
 
-            JAXBContext jaxbContext = JAXBContext.newInstance(ETTDescriptor.class);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            ETTDescriptor d = (ETTDescriptor) jaxbUnmarshaller.unmarshal(file);
+        File file = new File(path);
 
-            return new Descriptor(d);
+        JAXBContext jaxbContext = JAXBContext.newInstance(ETTDescriptor.class);
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        ETTDescriptor d = (ETTDescriptor) jaxbUnmarshaller.unmarshal(file);
 
-        } catch (JAXBException e) {
-            e.printStackTrace();
-            System.out.println(e);
-            return null;
-        }
+        return new Descriptor(d);
     }
 }

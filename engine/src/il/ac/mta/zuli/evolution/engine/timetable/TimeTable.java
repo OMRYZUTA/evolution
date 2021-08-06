@@ -17,7 +17,6 @@ public class TimeTable {
     private int hardRulesWeight;
 
     public TimeTable(@NotNull ETTTimeTable tt) {
-        //TODO throw exception
         setHardRulesWeight(tt.getETTRules().getHardRulesWeight());
         setDays(tt.getDays());
         setHours(tt.getHours());
@@ -73,56 +72,65 @@ public class TimeTable {
     private void setDays(int days) {
         if (days > 0) {
             this.days = days;
-        } else {//TODO throw exception
+        } else {
+            throw new ValidationException("The number of TimeTable days must be positive");
         }
     }
 
     private void setHours(int hours) {
         if (hours > 0) {
             this.hours = hours;
-        } else {//TODO throw exception
+        } else {
+            throw new ValidationException("The number of TimeTable hours must be positive");
         }
     }
 
     private void setTeachers(@NotNull ETTTeachers ettTeachers) {
         this.teachers = new HashMap<>();
-
         List<ETTTeacher> teacherList = ettTeachers.getETTTeacher();
-        //sorting in order to check the IDs of subjects in file cover numbers 1-numOfSubjects
-        teacherList.sort(Comparator.comparingInt(ETTTeacher::getId));
+        teacherList.sort(Comparator.comparingInt(ETTTeacher::getId)); //sorting in order to check the IDs of subjects in file cover numbers 1-numOfSubjects
         ETTTeacher t;
 
         for (int i = 0; i < teacherList.size(); i++) {
             t = teacherList.get(i);
 
             if (i + 1 != t.getId()) {
-                throw new RuntimeException("UI report error: teacher ID " + t.getId() + " not according to required count");//throw exception - need to think about it
+                throw new ValidationException("Teacher ID not according to required count" + t.getId() + t.getETTName());
             }
-            this.teachers.put(t.getId(), new Teacher(t, this.subjects));
+
+            try {
+                Teacher teacher = new Teacher(t, this.subjects);
+                this.teachers.put(t.getId(), teacher);
+            } catch (ValidationException e) {
+                throw new ValidationException("Failed creating teacher " + t.getId() + t.getETTName(), e);
+            }
         }
     }
 
     private void setSubjects(@NotNull ETTSubjects ettSubjects) {
         this.subjects = new HashMap<>();
-
         List<ETTSubject> subjectList = ettSubjects.getETTSubject();
-        //sorting in order to check the IDs of subjects in file cover numbers 1-numOfSubjects
-        subjectList.sort(Comparator.comparingInt(ETTSubject::getId));
+        subjectList.sort(Comparator.comparingInt(ETTSubject::getId)); //sorting in order to check the IDs of subjects in file cover numbers 1-numOfSubjects
         ETTSubject s;
 
         for (int i = 0; i < subjectList.size(); i++) {
             s = subjectList.get(i);
 
             if (i + 1 != s.getId()) {
-                throw new RuntimeException("UI report error: subject ID " + s.getId() + " not according to required count");//throw exception - need to think about it
+                throw new ValidationException("Subject ID not according to required count" + s.getId() + s.getName());
             }
-            this.subjects.put(s.getId(), new Subject(s)); //no need for putIfAbsent because we're checking IDs here
+
+            try {
+                Subject subject = new Subject(s);
+                this.subjects.put(s.getId(), subject);
+            } catch (ValidationException e) {
+                throw new ValidationException("Failed creating subject " + s.getId() + s.getName(), e);
+            }
         }
     }
 
     private void setSchoolClasses(@NotNull ETTClasses ettClasses) {
         this.schoolClasses = new HashMap<>();
-
         List<ETTClass> classList = ettClasses.getETTClass();
         //sorting in order to check the IDs of classes in file cover numbers 1-numOfClasses
         classList.sort(Comparator.comparingInt(ETTClass::getId));
@@ -132,13 +140,14 @@ public class TimeTable {
             c = classList.get(i);
 
             if (i + 1 != c.getId()) {
-                throw new ValidationException("UI report error: schoolClass ID " + c.getId() + " not according to required count");//throw exception - need to think about it
+                throw new ValidationException("Class ID not according to required count " + c.getId() + c.getETTName());
             }
+
             try {
-                SchoolClass schoolClass =new SchoolClass(c, this.subjects, (this.hours * this.days));
-                this.schoolClasses.put(c.getId(),schoolClass);
-            }catch (ValidationException e){
-                throw new ValidationException("failed creating school class "+c.getId()+c.getETTName(), e );
+                SchoolClass schoolClass = new SchoolClass(c, this.subjects, (this.hours * this.days));
+                this.schoolClasses.put(c.getId(), schoolClass);
+            } catch (ValidationException e) {
+                throw new ValidationException("Failed creating school class " + c.getId() + c.getETTName(), e);
             }
         }
     }
@@ -148,33 +157,37 @@ public class TimeTable {
         List<ETTRule> ruleList = ettRules.getETTRule();
         Rule ruleToAdd;
 
-        //TODO toLower()?
         for (ETTRule r : ruleList) {
-            switch (r.getETTRuleId()) {
-                case "TeacherIsHuman":
+            switch (r.getETTRuleId().toLowerCase()) {
+                case "teacherishuman":
                     ruleToAdd = new TeacherIsHuman(r.getType());
                     break;
-                case "Singularity":
+                case "singularity":
                     ruleToAdd = new Singularity(r.getType());
                     break;
-                case "Knowledgeable":
+                case "knowledgeable":
                     ruleToAdd = new Knowledgeable(r.getType());
                     break;
-                case "Satisfactory":
+                case "satisfactory":
                     ruleToAdd = new Satisfactory(r.getType(), this.schoolClasses);
                     break;
                 default:
-                    //TODO throw exception?
-                    throw new IllegalStateException("Unexpected value: " + r.getETTRuleId());
+                    throw new ValidationException("Invalid rule for ex.1: " + r.getETTRuleId());
             }
 
-            //TODO check for duplicate rules
-            this.rules.add(ruleToAdd);
+            //add returns false if element already exists in set
+            if (!this.rules.add(ruleToAdd)) {
+                throw new ValidationException("Failed to add rule " + r.getETTRuleId() + ". Duplicate rules are not permitted");
+            }
         }
     }
 
     private void setHardRulesWeight(int hardRulesWeight) {
-        this.hardRulesWeight = hardRulesWeight;
+        if (0 <= hardRulesWeight && hardRulesWeight <= 100) {
+            this.hardRulesWeight = hardRulesWeight;
+        } else {
+            throw new ValidationException("Invalid Hard-Rules Weight: " + hardRulesWeight + ". Weight must be integer in the range 0-100");
+        }
     }
     //#endregion
 

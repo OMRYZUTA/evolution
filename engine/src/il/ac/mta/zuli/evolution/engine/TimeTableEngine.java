@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class TimeTableEngine implements Engine {
-    private boolean isXMLLoaded = false;
+    private final boolean isXMLLoaded = false;
     private Descriptor descriptor;
     private final XMLParser xmlParser = new XMLParser();
     private EvolutionEngine evolutionEngine;
@@ -33,17 +33,21 @@ public class TimeTableEngine implements Engine {
     //#region ui-parallel methods
     @Override
     public void loadXML(String path) {
+        //TODO validatePath() maybe check if unmarshall will return ;
         try {
-            //TODO validatePath()
             descriptor = xmlParser.unmarshall(path);
-            fireEvent("in loadXml in TTengine: file is loaded");
-            if (descriptor != null) {
-                isXMLLoaded = true;
-            }
+            //TODO: fire "loaded" event (maybe with details?)
+            fireEvent("xml File was loaded");
+//            if (descriptor != null) {
+//                isXMLLoaded = true;
+//            }
         } catch (Exception e) {
-            //TODO handle exception
-            System.out.println(e);
-            throw new RuntimeException(e.getMessage());
+            //TODO: fire "error" event (must include details)
+            if (descriptor == null) {
+                fireEvent("Failed loading initial file" + e.getMessage());
+            } else {
+                fireEvent("Failed loading subsequent file, previous file remains loaded" + e.getMessage());
+            }
         }
     }
 
