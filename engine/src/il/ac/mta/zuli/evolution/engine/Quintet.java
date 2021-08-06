@@ -6,6 +6,7 @@ import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 
 import java.time.DayOfWeek;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class Quintet {
@@ -14,6 +15,14 @@ public class Quintet {
     private Teacher teacher;
     private SchoolClass schoolClass;
     private Subject subject;
+    ////first name comparator
+    //Comparator<Employee> compareByFirstName = Comparator.comparing( Employee::getFirstName );
+    private Comparator<Quintet> compareByDay = Comparator.comparing(Quintet::getDay);
+    private Comparator<Quintet> compareByHour = Comparator.comparing(Quintet::getHour);
+    private Comparator<Quintet> compareByTeacher = Comparator.comparing(Quintet::getTeacherID);
+    private Comparator<Quintet> compareBySchoolClass = Comparator.comparing(Quintet::getSchoolClassID);
+    private Comparator<Quintet> compareBySubject = Comparator.comparing(Quintet::getSubjectID);
+
 
     public Quintet(DayOfWeek day, int hour, Teacher teacher, SchoolClass schoolClass, Subject subject) {
         this.day = day;
@@ -22,7 +31,16 @@ public class Quintet {
         this.schoolClass = schoolClass;
         this.subject = subject;
     }
+    public Comparator<Quintet> getRawComparator(){
+        Comparator<Quintet> rawComparator =compareByDay
+                .thenComparing(compareByHour)
+                .thenComparing(compareBySchoolClass)
+                .thenComparing(compareByTeacher)
+                .thenComparing(compareBySubject);
 
+        return rawComparator;
+
+    }
     public DayOfWeek getDay() {
         return day;
     }
@@ -34,6 +52,7 @@ public class Quintet {
     public Teacher getTeacher() {
         return teacher;
     }
+    public int getTeacherID(){return teacher.getId();}
 
     public SchoolClass getSchoolClass() {
         return schoolClass;
@@ -46,6 +65,7 @@ public class Quintet {
     public Subject getSubject() {
         return subject;
     }
+    public int getSubjectID(){return subject.getId();};
 
     private void setDay(DayOfWeek day) {
         this.day = day;
@@ -93,4 +113,5 @@ public class Quintet {
             return "invalid quintet: teacheer/class/subject are null";
         }
     }
+
 }

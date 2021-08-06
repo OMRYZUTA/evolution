@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
+import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 
 import java.awt.event.ActionListener;
 
@@ -13,6 +14,10 @@ public interface Engine {
     void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride);
 
     void showBestSolution();
+    TimeTableSolutionDTO getBestSolutionRaw();
+    TimeTableSolutionDTO getBestSolutionTeacherOriented();
+    TimeTableSolutionDTO getBestSoutionClassOriented();
+
 
     void showEvolutionProcess();
 

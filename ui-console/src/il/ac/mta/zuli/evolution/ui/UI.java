@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.ui;
 import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
+import il.ac.mta.zuli.evolution.engine.events.OnStrideEvent;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +21,7 @@ public class UI implements ActionListener {
 
             //TODO get parameters for evolution algorithm (and validate in engine)
             engine.executeEvolutionAlgorithm(200, 4);
+            engine.getBestSolutionRaw();
         } catch (Exception e) {
             System.out.println(e);
             System.out.println(e.getMessage() + e.getStackTrace());
@@ -79,7 +81,21 @@ public class UI implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(e.getActionCommand());
+        switch (e.getID()){
+            case 1:
+                System.out.println(e.getActionCommand());
+                break;
+            case 3:
+                GenerationStrideScoreDTO generationStrideScoreDTO = ((OnStrideEvent) e).getGenerationStrideScoreDTO();
+                showStrideProgress(generationStrideScoreDTO);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + e.getID());
+        }
+    }
+
+    private void showStrideProgress(GenerationStrideScoreDTO generationStrideScoreDTO) {
+        System.out.println("current generation: "+ generationStrideScoreDTO.getGenerationNum()+ " best score: "+generationStrideScoreDTO.getBestScore());
     }
 
     /**

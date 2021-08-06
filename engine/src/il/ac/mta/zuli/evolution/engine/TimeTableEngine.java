@@ -1,15 +1,13 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.dto.*;
+import il.ac.mta.zuli.evolution.engine.events.OnStrideEvent;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
-import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
-import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
-import il.ac.mta.zuli.evolution.engine.timetable.Subject;
-import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
+import il.ac.mta.zuli.evolution.engine.timetable.*;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +21,7 @@ public class TimeTableEngine implements Engine {
     private Descriptor descriptor;
     private final XMLParser xmlParser = new XMLParser();
     private EvolutionEngine evolutionEngine;
-    private Map<Integer, TimeTableSolution> bestSolutionsInGeneration;
+    private Map<Integer, TimeTableSolution> bestSolutionsInGeneration; // generation , solution
     private List<ActionListener> handlers = new ArrayList<>();
 
     public TimeTableEngine() {
@@ -63,19 +61,19 @@ public class TimeTableEngine implements Engine {
         EvolutionEngine evolutionEngine = new EvolutionEngine(this.descriptor.getEngineSettings(),
                 this.descriptor.getTimeTable().getRules());
 
-        System.out.println("num of generations " + numOfGenerations);
-
         List<TimeTableSolution> prevGeneration = initialPopulation;
         List<TimeTableSolution> currGeneration = new ArrayList<>();
 
         for (int i = 0; i < numOfGenerations; i++) {
             currGeneration = evolutionEngine.execute(prevGeneration);
 
-
-            TimeTableSolution bestSolution = currGeneration.stream().
-                    sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
-            bestSolutionsInGeneration.put(i, bestSolution);
-
+            if(i % generationsStride ==0) {
+                TimeTableSolution bestSolution = currGeneration.stream().
+                        sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
+                bestSolutionsInGeneration.put(i, bestSolution);
+                GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i,bestSolution.getTotalFitnessScore());
+                fireEvent2(strideScoreDTO);
+            }
             prevGeneration = currGeneration;
         }
 
@@ -116,6 +114,31 @@ public class TimeTableEngine implements Engine {
     }
 
     @Override
+    public TimeTableSolutionDTO getBestSolutionRaw() {
+//        •	גולמי (RAW) – המשתמש יקבל את אוסף החמישיות המגדיר את הפתרון.
+//        המבנה של כל חמישיה הוא <D,H,C,T,S>. החמישיות יוצגו כרשימה אנכית ויהיו מסודרות על פי היום, שעה, שכבה, מורה.
+        TimeTableSolution solution = getBestSolution();
+        List<Quintet> quintets =solution.getSolutionQuintets();
+        Comparator<Quintet> rawComparator =quintets.get(0).getRawComparator();
+        List<Quintet> sortedQuintet = quintets.stream().sorted(rawComparator).collect(Collectors.toList());
+        for (Quintet q: sortedQuintet) {
+            System.out.println(q);
+        }
+
+        return null;
+    }
+
+    @Override
+    public TimeTableSolutionDTO getBestSolutionTeacherOriented() {
+        return null;
+    }
+
+    @Override
+    public TimeTableSolutionDTO getBestSoutionClassOriented() {
+        return null;
+    }
+
+    @Override
     public void showEvolutionProcess() {
 
     }
@@ -127,6 +150,11 @@ public class TimeTableEngine implements Engine {
     //#endregion
 
     //#region auxiliary methods
+    private TimeTableSolution getBestSolution(){
+        return bestSolutionsInGeneration.values().stream()
+                .sorted(Collections.reverseOrder())
+                .limit(1).collect(Collectors.toList()).get(0);
+    }
     @NotNull
     private List<TimeTableSolution> getInitialGeneration() {
         int initialPopulationSize = descriptor.getEngineSettings().getInitialPopulationSize();
@@ -276,10 +304,17 @@ public class TimeTableEngine implements Engine {
     }
 
     private void fireEvent(String message) {
-        ActionEvent myEvent = new ActionEvent(this, 3, message);
+        ActionEvent myEvent = new ActionEvent(this, 1, message);
         List<ActionListener> handlersToInvoke = new ArrayList<>(handlers);
         for (ActionListener handler : handlersToInvoke) {
             handler.actionPerformed(myEvent);
+        }
+    }
+    private void fireEvent2(GenerationStrideScoreDTO generationStrideScoreDTO) {
+        OnStrideEvent onStrideEvent = new OnStrideEvent(this, 3, "generationStride",generationStrideScoreDTO);
+        List<ActionListener> handlersToInvoke = new ArrayList<>(handlers);
+        for (ActionListener handler : handlersToInvoke) {
+            handler.actionPerformed(onStrideEvent);
         }
     }
     //#endregion
