@@ -90,32 +90,19 @@ public class TimeTableEngine implements Engine {
 
     @Override
     public void showBestSolution() {
-        TimeTableSolution solution;
-        //TODO implement properly
-
-        //Option1: RAW with Quintets with this specific order: <D,H,C,T,S>
 
         // Option2: solution per teacher
-        List<Integer> teacherIDs = (((descriptor.getTimeTable()).getTeachers()).keySet()).stream()
-                .sorted().collect(Collectors.toList());
 
-        for (Integer teacherID : teacherIDs) {
-            //solution.getSubSolutionForTeacher(teacherID);
-        }
 
         // Option2: solution per class
-        List<Integer> classIDs = (((descriptor.getTimeTable()).getSchoolClasses()).keySet()).stream()
-                .sorted().collect(Collectors.toList());
 
-        for (Integer classID : classIDs) {
-            //solution.getSubSolutionForTeacher(teacherID);
-        }
 
     }
 
     @Override
     public TimeTableSolutionDTO getBestSolutionRaw() {
-        TimeTableSolution sortedSolution = getBestSolution().sortQuintetsInSolution(Quintet.getRawComparator());
+        TimeTableSolution bestSolution = getBestSolution();
+        TimeTableSolution sortedSolution = bestSolution.sortQuintetsInSolution(Quintet.getRawComparator());
 
         return createTimeTableSolutionDTO(sortedSolution);
     }
@@ -123,12 +110,18 @@ public class TimeTableEngine implements Engine {
 
     @Override
     public TimeTableSolutionDTO getBestSolutionTeacherOriented() {
-        return null;
+        TimeTableSolution bestSolution = getBestSolution();
+        TimeTableSolution sortedSolution = bestSolution.sortQuintetsInSolution(Quintet.getTeacherComparator());
+
+        return createTimeTableSolutionDTO(sortedSolution);
     }
 
     @Override
     public TimeTableSolutionDTO getBestSolutionClassOriented() {
-        return null;
+        TimeTableSolution bestSolution = getBestSolution();
+        TimeTableSolution sortedSolution = bestSolution.sortQuintetsInSolution(Quintet.getSchoolClassComparator());
+
+        return createTimeTableSolutionDTO(sortedSolution);
     }
 
     @Override

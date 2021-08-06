@@ -39,6 +39,26 @@ public class Quintet {
         return rawComparator;
     }
 
+    public static Comparator<Quintet> getTeacherComparator() {
+        Comparator<Quintet> teacherComparator = compareByTeacher
+                .thenComparing(compareByDay)
+                .thenComparing(compareByHour)
+                .thenComparing(compareBySchoolClass)
+                .thenComparing(compareBySubject);
+
+        return teacherComparator;
+    }
+
+    public static Comparator<Quintet> getSchoolClassComparator() {
+        Comparator<Quintet> schoolClassComparator = compareBySchoolClass
+                .thenComparing(compareByDay)
+                .thenComparing(compareByHour)
+                .thenComparing(compareByTeacher)
+                .thenComparing(compareBySubject);
+
+        return schoolClassComparator;
+    }
+
     public DayOfWeek getDay() {
         return day;
     }

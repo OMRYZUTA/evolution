@@ -21,7 +21,23 @@ public class UI implements ActionListener {
 
             //TODO get parameters for evolution algorithm (and validate in engine)
             engine.executeEvolutionAlgorithm(200, 4);
-            engine.getBestSolutionRaw();
+
+            TimeTableSolutionDTO solution = engine.getBestSolutionRaw();
+            //printSolution(solution.getSolutionQuintets());
+            /*for (QuintetDTO q : solution.getSolutionQuintets()) {
+                System.out.println(q.getDay() + " " + q.getHour());
+            }*/
+
+            /*solution = engine.getBestSolutionTeacherOriented();
+            for (QuintetDTO q : solution.getSolutionQuintets()) {
+                System.out.println(q.getTeacher().getId() + " " + q.getDay() + " " + q.getHour());
+            }*/
+
+            solution = engine.getBestSolutionClassOriented();
+            for (QuintetDTO q : solution.getSolutionQuintets()) {
+                System.out.println(q.getSchoolClass().getId() + " " + q.getDay() + " " + q.getHour());
+            }
+
         } catch (Exception e) {
             System.out.println(e);
             System.out.println(e.getMessage() + e.getStackTrace());
@@ -81,13 +97,13 @@ public class UI implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch (e.getID()){
+        switch (e.getID()) {
             case 1:
                 System.out.println(e.getActionCommand());
                 break;
             case 3:
                 GenerationStrideScoreDTO generationStrideScoreDTO = ((OnStrideEvent) e).getGenerationStrideScoreDTO();
-                showStrideProgress(generationStrideScoreDTO);
+                //showStrideProgress(generationStrideScoreDTO);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + e.getID());
@@ -95,7 +111,7 @@ public class UI implements ActionListener {
     }
 
     private void showStrideProgress(GenerationStrideScoreDTO generationStrideScoreDTO) {
-        System.out.println("current generation: "+ generationStrideScoreDTO.getGenerationNum()+ " best score: "+generationStrideScoreDTO.getBestScore());
+        System.out.println("current generation: " + generationStrideScoreDTO.getGenerationNum() + " best score: " + generationStrideScoreDTO.getBestScore());
     }
 
     /**

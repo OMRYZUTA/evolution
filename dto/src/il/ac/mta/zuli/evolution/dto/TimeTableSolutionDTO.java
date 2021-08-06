@@ -20,7 +20,7 @@ public class TimeTableSolutionDTO {
         this.timeTable = timeTable;
     }
 
-    public List<QuintetDTO> getSolution() {
+    public List<QuintetDTO> getSolutionQuintets() {
         return solution;
     }
 
