@@ -71,12 +71,6 @@ public class TimeTableEngine implements Engine {
         for (int i = 0; i < numOfGenerations; i++) {
             currGeneration = evolutionEngine.execute(prevGeneration);
 
-            /*System.out.println("generation " + i);
-
-            for (TimeTableSolution solution : currGeneration.stream().sorted().collect(Collectors.toList())) {
-                System.out.println(solution.getTotalFitnessScore());
-            }
-            System.out.println("****");*/
 
             TimeTableSolution bestSolution = currGeneration.stream().
                     sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
@@ -85,17 +79,12 @@ public class TimeTableEngine implements Engine {
             prevGeneration = currGeneration;
         }
 
-        System.out.println("****best in generation****");
-        //private Map<Integer, TimeTableSolution> bestSolutionsInGeneration;
-        for (Map.Entry<Integer, TimeTableSolution> entry : bestSolutionsInGeneration.entrySet()) {
-            System.out.println(entry.getKey() + ". " + entry.getValue().getTotalFitnessScore());
-        }
+//        System.out.println("****best in generation****");
+//        //private Map<Integer, TimeTableSolution> bestSolutionsInGeneration;
+//        for (Map.Entry<Integer, TimeTableSolution> entry : bestSolutionsInGeneration.entrySet()) {
+//            System.out.println(entry.getKey() + ". " + entry.getValue().getTotalFitnessScore());
+//        }
 
-//        for i of numof generations-1 :
-//              evolution.execute()
-//              if i% stride == 0{
-//                    evolution.getBestSolution() TODO: decide whether to get the best ones before or after the execution.
-//
 
     }
 

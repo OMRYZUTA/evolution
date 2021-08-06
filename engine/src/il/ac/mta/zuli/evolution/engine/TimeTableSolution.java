@@ -98,11 +98,17 @@ public class TimeTableSolution implements Solution {
         int randomClassID = generateRandomNum(1, timeTable.getSchoolClasses().size());
         SchoolClass randomSchoolClass = timeTable.getSchoolClasses().get(randomClassID);
 
+
+//        int randomSubjectID = generateRandomNum(1, timeTable.getSubjects().size());
+//        Subject randomSubject = timeTable.getSubjects().get(randomSubjectID);
         //randomly generate subject - randomly but only from class-subjects
         List<Integer> classRequiredSubjectsIDs = randomSchoolClass.getRequiredSubjectsIDs();
         int randomIndex = new Random().nextInt(classRequiredSubjectsIDs.size());
         Subject randomSubject = timeTable.getSubjects().get(classRequiredSubjectsIDs.get(randomIndex));
 
+
+//        int randomTeacherID = generateRandomNum(1, timeTable.getTeachers().size());
+//        Teacher randomTeacher = timeTable.getTeachers().get(randomTeacherID);
         //randomly generate teacher - randomly but only from teachers that teach the random subject
         List<Integer> TeachersIDs = timeTable.getTeachersThatTeachSubject(randomSubject.getId());
         int randomTeachersIndex = new Random().nextInt(TeachersIDs.size());
