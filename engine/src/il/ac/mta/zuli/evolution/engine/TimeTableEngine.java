@@ -212,7 +212,9 @@ public class TimeTableEngine implements Engine {
         Map<Integer, TeacherDTO> teachersDTO = createSortedTeacherDTOCollection();
         Map<Integer, SchoolClassDTO> schoolClassesDTO = createSortedClassesDTOCollection();
         Set<RuleDTO> rulesDTO = createRulesDTOSet();
-        TimeTableDTO timeTableDTO = new TimeTableDTO(subjectsDTO, teachersDTO, schoolClassesDTO, rulesDTO);
+        TimeTableDTO timeTableDTO = new TimeTableDTO(descriptor.getTimeTable().getDays(),
+                descriptor.getTimeTable().getHours(),
+                subjectsDTO, teachersDTO, schoolClassesDTO, rulesDTO);
 
         return timeTableDTO;
     }

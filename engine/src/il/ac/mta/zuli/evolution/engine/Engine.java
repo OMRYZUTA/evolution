@@ -8,8 +8,9 @@ import java.awt.event.ActionListener;
 public interface Engine {
     void loadXML(String path); //in impl of method - use other method to check if a valid file is already loaded
      void removeHandler(ActionListener handler);
-     void addHandler (ActionListener handler);
-    DescriptorDTO getSystemDetails(); //TODO change return value to descriptorDTO
+     void addHandler(ActionListener handler);
+
+    DescriptorDTO getSystemDetails();
 
     void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride);
 

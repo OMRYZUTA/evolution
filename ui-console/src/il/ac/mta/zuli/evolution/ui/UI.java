@@ -22,7 +22,7 @@ public class UI implements ActionListener {
             //TODO get parameters for evolution algorithm (and validate in engine)
             engine.executeEvolutionAlgorithm(100, 20);
             TimeTableSolutionDTO solution = engine.getBestSolutionRaw();
-
+            printSolution(solution.getSolutionQuintets());
 
 
 //            printSolution(solution.getSolutionQuintets());
@@ -35,11 +35,11 @@ public class UI implements ActionListener {
                 System.out.println(q.getTeacher().getId() + " " + q.getDay() + " " + q.getHour());
             }*/
 
-            solution = engine.getBestSolutionClassOriented();
+            /*solution = engine.getBestSolutionClassOriented();
             for (QuintetDTO q : solution.getSolutionQuintets()) {
                 System.out.println(q.getSchoolClass().getId() + " " + q.getDay() + " " + q.getHour() + "subject: "+q.getSubject().getId());
             }
-            System.out.println("best best score: "+ solution.getTotalFitnessScore());
+            System.out.println("best best score: "+ solution.getTotalFitnessScore());*/
         } catch (Exception e) {
             System.out.println(e);
             System.out.println(e.getMessage() + e.getStackTrace());
@@ -113,7 +113,8 @@ public class UI implements ActionListener {
     }
 
     private void showStrideProgress(GenerationStrideScoreDTO generationStrideScoreDTO) {
-        System.out.println("current generation: " + generationStrideScoreDTO.getGenerationNum() + " best score: " + generationStrideScoreDTO.getBestScore());
+        //TODO bring back
+        //System.out.println("current generation: " + generationStrideScoreDTO.getGenerationNum() + " best score: " + generationStrideScoreDTO.getBestScore());
     }
 
     /**
