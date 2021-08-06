@@ -19,7 +19,7 @@ public class UI implements ActionListener {
             //showSystemDetails();
 
             //TODO get parameters for evolution algorithm (and validate in engine)
-            engine.executeEvolutionAlgorithm(10, 1);
+            engine.executeEvolutionAlgorithm(50, 1);
         } catch (Exception e) {
             System.out.println(e);
             System.out.println(e.getMessage() + e.getStackTrace());

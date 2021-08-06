@@ -43,6 +43,8 @@ public class Flipping<S extends Solution> implements Mutation<S> {
             return solution;
         }
 
+        //System.out.println("in mutation, probability "+randomProbability);
+
         List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
         Set<Quintet> quintetSet = new HashSet<>();
         Quintet tempQuintet;
@@ -77,12 +79,14 @@ public class Flipping<S extends Solution> implements Mutation<S> {
                 schoolClass = timeTable.getSchoolClasses().get(randomClassID);
                 break;
             case T:
-                int randomTeacherID = generateRandomNum(1, timeTable.getTeachers().size());
-                teacher = timeTable.getTeachers().get(randomTeacherID);
+                List<Integer> TeachersIDs = timeTable.getTeachersThatTeachSubject(subject.getId());
+                int randomTeachersIndex = new Random().nextInt(TeachersIDs.size());
+                teacher = timeTable.getTeachers().get(TeachersIDs.get(randomTeachersIndex));
                 break;
             case S:
-                int randomSubjectID = generateRandomNum(1, timeTable.getSubjects().size());
-                subject = timeTable.getSubjects().get(randomSubjectID);
+                List<Integer> classRequiredSubjectsIDs = schoolClass.getRequiredSubjectsIDs();
+                int randomIndex = new Random().nextInt(classRequiredSubjectsIDs.size());
+                subject = timeTable.getSubjects().get(classRequiredSubjectsIDs.get(randomIndex));
                 break;
         }
 

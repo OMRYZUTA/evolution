@@ -23,7 +23,7 @@ public class TimeTableEngine implements Engine {
     private Descriptor descriptor;
     private final XMLParser xmlParser = new XMLParser();
     private EvolutionEngine evolutionEngine;
-    private List<TimeTableSolution> bestSolutionsInHistory;
+    private Map<Integer, TimeTableSolution> bestSolutionsInGeneration;
     private List<ActionListener> handlers = new ArrayList<>();
 
     public TimeTableEngine() {
@@ -57,13 +57,12 @@ public class TimeTableEngine implements Engine {
 
     @Override
     public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
-
+        bestSolutionsInGeneration = new HashMap<>(numOfGenerations);
         List<TimeTableSolution> initialPopulation = getInitialGeneration();
 
         EvolutionEngine evolutionEngine = new EvolutionEngine(this.descriptor.getEngineSettings(),
                 this.descriptor.getTimeTable().getRules());
 
-        //numOfGenerations-1?
         System.out.println("num of generations " + numOfGenerations);
 
         List<TimeTableSolution> prevGeneration = initialPopulation;
@@ -72,14 +71,24 @@ public class TimeTableEngine implements Engine {
         for (int i = 0; i < numOfGenerations; i++) {
             currGeneration = evolutionEngine.execute(prevGeneration);
 
-            System.out.println("generation " + i);
-            int k = 1;
-            for (TimeTableSolution solution : currGeneration) {
-                System.out.println(k + ". " + solution.getTotalFitnessScore());
-                k++;
+            /*System.out.println("generation " + i);
+
+            for (TimeTableSolution solution : currGeneration.stream().sorted().collect(Collectors.toList())) {
+                System.out.println(solution.getTotalFitnessScore());
             }
+            System.out.println("****");*/
+
+            TimeTableSolution bestSolution = currGeneration.stream().
+                    sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
+            bestSolutionsInGeneration.put(i, bestSolution);
 
             prevGeneration = currGeneration;
+        }
+
+        System.out.println("****best in generation****");
+        //private Map<Integer, TimeTableSolution> bestSolutionsInGeneration;
+        for (Map.Entry<Integer, TimeTableSolution> entry : bestSolutionsInGeneration.entrySet()) {
+            System.out.println(entry.getKey() + ". " + entry.getValue().getTotalFitnessScore());
         }
 
 //        for i of numof generations-1 :

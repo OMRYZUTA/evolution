@@ -5,6 +5,7 @@ import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,7 +27,6 @@ public class EvolutionEngine<T extends Solution> {
 
         // B. select topPercent of solutions, according to fitness, in order to create next generation
         List<T> parents = (engineSettings.getSelection()).select(generation);
-        System.out.println("selected parents " + parents.size());
 
         // C. crossover to create next generation (repeat crossover until we receive generation big enough)
         List<T> newGeneration = new ArrayList<>();
@@ -52,7 +52,6 @@ public class EvolutionEngine<T extends Solution> {
             newGenerationAfterMutation.add(tempSolution);
         }
 
-
         //final fitnessEvaluation for new generation
         for (T solution : newGenerationAfterMutation) {
             fitnessEvaluationPerSolution(solution);
@@ -67,9 +66,9 @@ public class EvolutionEngine<T extends Solution> {
             fitnessEvaluationPerSolution(solution);
         }
 
-        //timetableSolution compareTo based on totalFitness
+        //timetableSolution compareTo based on totalFitness (ascending)
         newGeneration = newGeneration.stream()
-                .sorted().limit(populationSize).collect(Collectors.toList());
+                .sorted(Collections.reverseOrder()).limit(populationSize).collect(Collectors.toList());
 
         return newGeneration;
     }
