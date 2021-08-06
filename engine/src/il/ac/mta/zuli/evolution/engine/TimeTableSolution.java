@@ -137,8 +137,16 @@ public class TimeTableSolution implements Solution {
             }
         }
 
-        double softRuleAvg = softRuleSum / numOfSoftRules;
-        double hardRuleAvg = hardRuleSum / numOfHardRules;
+        double softRuleAvg = 0;
+        double hardRuleAvg = 0;
+
+        if (numOfSoftRules != 0) {
+            softRuleAvg = softRuleSum / numOfSoftRules;
+        }
+        if (numOfHardRules != 0) {
+            hardRuleAvg = hardRuleSum / numOfHardRules;
+        }
+
         double hardRuleWeightedScore = (hardRuleAvg * timeTable.getHardRulesWeight()) / 100;
         double softRuleWeightedScore = (softRuleAvg * (100 - timeTable.getHardRulesWeight())) / 100;
 

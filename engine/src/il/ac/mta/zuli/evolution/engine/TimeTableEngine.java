@@ -68,26 +68,20 @@ public class TimeTableEngine implements Engine {
 
         List<TimeTableSolution> prevGeneration = initialPopulation;
         List<TimeTableSolution> currGeneration = new ArrayList<>();
-        boolean finalGenerationFlag = false;
 
         for (int i = 0; i < numOfGenerations; i++) {
+            currGeneration = evolutionEngine.execute(prevGeneration);
 
-            if (i == numOfGenerations - 1) {
-                finalGenerationFlag = true;
+            System.out.println("generation " + i);
+            int k = 1;
+            for (TimeTableSolution solution : currGeneration) {
+                System.out.println(k + ". " + solution.getTotalFitnessScore());
+                k++;
             }
 
-            currGeneration = evolutionEngine.execute(prevGeneration, finalGenerationFlag);
-            //System.out.println("generation " + i);
-            /*for (TimeTableSolution solution : currGeneration) {
-                System.out.println(solution.getTotalFitnessScore());
-            }*/
             prevGeneration = currGeneration;
         }
 
-        System.out.println("after evolution engine");
-        for (TimeTableSolution solution : currGeneration) {
-            System.out.println(solution.getTotalFitnessScore());
-        }
 //        for i of numof generations-1 :
 //              evolution.execute()
 //              if i% stride == 0{

@@ -22,7 +22,7 @@ public class Knowledgeable extends Rule {
         }
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
-        double score = INVALIDSCORE;
+        double score = 0;
 
         if (timeTableSolution.getSolutionSize() > 0) {
             int qualifiedQuintets = 0;

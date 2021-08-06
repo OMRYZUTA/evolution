@@ -29,7 +29,7 @@ public class Satisfactory extends Rule {
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
 
-        double score = INVALIDSCORE;
+        double score = 0;
 
         if (timeTableSolution.getSolutionSize() > 0) {
             double[] classScores = new double[schoolClasses.size()]; //classID will be used as index (a sort of bucket)
@@ -46,7 +46,7 @@ public class Satisfactory extends Rule {
     }
 
     private double classFitnessEvaluation(int classID, List<Quintet> subSolutionForClass) {
-        double score = INVALIDSCORE;
+        double score = 0;
 
         if (subSolutionForClass.size() > 0) {
             List<Requirement> classRequirements = schoolClasses.get(classID).getRequirements();
