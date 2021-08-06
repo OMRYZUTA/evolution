@@ -16,7 +16,8 @@ public interface Engine {
     void showBestSolution();
     TimeTableSolutionDTO getBestSolutionRaw();
     TimeTableSolutionDTO getBestSolutionTeacherOriented();
-    TimeTableSolutionDTO getBestSoutionClassOriented();
+
+    TimeTableSolutionDTO getBestSolutionClassOriented();
 
 
     void showEvolutionProcess();

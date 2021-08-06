@@ -7,7 +7,10 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
-import il.ac.mta.zuli.evolution.engine.timetable.*;
+import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
+import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
+import il.ac.mta.zuli.evolution.engine.timetable.Subject;
+import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,18 +65,19 @@ public class TimeTableEngine implements Engine {
                 this.descriptor.getTimeTable().getRules());
 
         List<TimeTableSolution> prevGeneration = initialPopulation;
-        List<TimeTableSolution> currGeneration = new ArrayList<>();
+        List<TimeTableSolution> currGeneration;
 
         for (int i = 0; i < numOfGenerations; i++) {
             currGeneration = evolutionEngine.execute(prevGeneration);
 
-            if(i % generationsStride ==0) {
+            if (i % generationsStride == 0) {
                 TimeTableSolution bestSolution = currGeneration.stream().
                         sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
                 bestSolutionsInGeneration.put(i, bestSolution);
-                GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i,bestSolution.getTotalFitnessScore());
+                GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i, bestSolution.getTotalFitnessScore());
                 fireEvent2(strideScoreDTO);
             }
+
             prevGeneration = currGeneration;
         }
 
@@ -82,18 +86,14 @@ public class TimeTableEngine implements Engine {
 //        for (Map.Entry<Integer, TimeTableSolution> entry : bestSolutionsInGeneration.entrySet()) {
 //            System.out.println(entry.getKey() + ". " + entry.getValue().getTotalFitnessScore());
 //        }
-
-
     }
 
     @Override
     public void showBestSolution() {
         TimeTableSolution solution;
         //TODO implement properly
-        // where will we get this solution from?
 
         //Option1: RAW with Quintets with this specific order: <D,H,C,T,S>
-
 
         // Option2: solution per teacher
         List<Integer> teacherIDs = (((descriptor.getTimeTable()).getTeachers()).keySet()).stream()
@@ -115,18 +115,11 @@ public class TimeTableEngine implements Engine {
 
     @Override
     public TimeTableSolutionDTO getBestSolutionRaw() {
-//        •	גולמי (RAW) – המשתמש יקבל את אוסף החמישיות המגדיר את הפתרון.
-//        המבנה של כל חמישיה הוא <D,H,C,T,S>. החמישיות יוצגו כרשימה אנכית ויהיו מסודרות על פי היום, שעה, שכבה, מורה.
-        TimeTableSolution solution = getBestSolution();
-        List<Quintet> quintets =solution.getSolutionQuintets();
-        Comparator<Quintet> rawComparator =quintets.get(0).getRawComparator();
-        List<Quintet> sortedQuintet = quintets.stream().sorted(rawComparator).collect(Collectors.toList());
-        for (Quintet q: sortedQuintet) {
-            System.out.println(q);
-        }
+        TimeTableSolution sortedSolution = getBestSolution().sortQuintetsInSolution(Quintet.getRawComparator());
 
-        return null;
+        return createTimeTableSolutionDTO(sortedSolution);
     }
+
 
     @Override
     public TimeTableSolutionDTO getBestSolutionTeacherOriented() {
@@ -134,7 +127,7 @@ public class TimeTableEngine implements Engine {
     }
 
     @Override
-    public TimeTableSolutionDTO getBestSoutionClassOriented() {
+    public TimeTableSolutionDTO getBestSolutionClassOriented() {
         return null;
     }
 
@@ -150,11 +143,12 @@ public class TimeTableEngine implements Engine {
     //#endregion
 
     //#region auxiliary methods
-    private TimeTableSolution getBestSolution(){
+    private TimeTableSolution getBestSolution() {
         return bestSolutionsInGeneration.values().stream()
                 .sorted(Collections.reverseOrder())
                 .limit(1).collect(Collectors.toList()).get(0);
     }
+
     @NotNull
     private List<TimeTableSolution> getInitialGeneration() {
         int initialPopulationSize = descriptor.getEngineSettings().getInitialPopulationSize();
@@ -175,7 +169,6 @@ public class TimeTableEngine implements Engine {
 //#endregion
 
     //#region DTO-related methods
-
     private EngineSettingsDTO createEngineSettingsDTO() {
         int initialSize = descriptor.getEngineSettings().getInitialPopulationSize();
         SelectionDTO selectionDTO = createSelectionDTO();
@@ -248,16 +241,59 @@ public class TimeTableEngine implements Engine {
         return subjectDTOS; //in sorted order because of TreeMap
     }
 
+    private QuintetDTO createQuintetDTO(Quintet quintet) {
+        TeacherDTO teacherDTO = createTeacherDTO(quintet.getTeacher());
+        SchoolClassDTO schoolClassDTO = createSchoolClassDTO(quintet.getSchoolClass());
+        SubjectDTO subjectDTO = new SubjectDTO(quintet.getSubjectID(), quintet.getSubject().getName());
+
+        return new QuintetDTO(quintet.getDay(), quintet.getHour(), teacherDTO, schoolClassDTO, subjectDTO);
+    }
+
+    private List<QuintetDTO> createQuintetDTOList(List<Quintet> quintets) {
+        List<QuintetDTO> quintetDTOList = new ArrayList<>();
+
+        for (Quintet quintet : quintets) {
+            quintetDTOList.add(createQuintetDTO(quintet));
+        }
+
+        return quintetDTOList;
+    }
+
+    private TimeTableSolutionDTO createTimeTableSolutionDTO(TimeTableSolution solution) {
+        List<QuintetDTO> quintets = createQuintetDTOList(solution.getSolutionQuintets());
+        Map<RuleDTO, Double> fitnessScorePerRuleDTO = new HashMap<>();
+
+        for (Map.Entry<Rule, Double> entry : solution.getFitnessScorePerRule().entrySet()) {
+            Rule rule = entry.getKey();
+            fitnessScorePerRuleDTO.put(new RuleDTO(rule.getClass().getSimpleName(), rule.getRuleType().toString()),
+                    entry.getValue());
+        }
+
+        return new TimeTableSolutionDTO(quintets, solution.getSolutionSize(), solution.getTotalFitnessScore(),
+                fitnessScorePerRuleDTO, createTimeTableDTO());
+    }
+
+    private TeacherDTO createTeacherDTO(Teacher teacher) {
+        Map<Integer, SubjectDTO> subjectsDTO = createSortedSubjectDTOCollection(teacher.getSubjects());
+
+        return new TeacherDTO(teacher.getId(), teacher.getName(), subjectsDTO);
+    }
+
     private Map<Integer, TeacherDTO> createSortedTeacherDTOCollection() {
         Map<Integer, TeacherDTO> teacherDTOs = new TreeMap<>();
         Map<Integer, Teacher> teachers = descriptor.getTimeTable().getTeachers();
 
         for (Teacher teacher : teachers.values()) {
-            Map<Integer, SubjectDTO> subjectsDTO = createSortedSubjectDTOCollection(teacher.getSubjects());
-            teacherDTOs.put(teacher.getId(), new TeacherDTO(teacher.getId(), teacher.getName(), subjectsDTO));
+            teacherDTOs.put(teacher.getId(), createTeacherDTO(teacher));
         }
 
         return teacherDTOs; //in sorted order because of TreeMap
+    }
+
+    private SchoolClassDTO createSchoolClassDTO(SchoolClass schoolClass) {
+        List<RequirementDTO> requirementsDTO = createRequirementsDTOList(schoolClass.getRequirements());
+
+        return new SchoolClassDTO(schoolClass.getId(), schoolClass.getName(), requirementsDTO);
     }
 
     private Map<Integer, SchoolClassDTO> createSortedClassesDTOCollection() {
@@ -266,9 +302,7 @@ public class TimeTableEngine implements Engine {
 
         for (SchoolClass schoolClass : SchoolClass.values()) {
             List<RequirementDTO> requirementsDTO = createRequirementsDTOList(schoolClass.getRequirements());
-            SchoolClassDTOs.put(schoolClass.getId(),
-                    new SchoolClassDTO(schoolClass.getId(),
-                            schoolClass.getName(), requirementsDTO));
+            SchoolClassDTOs.put(schoolClass.getId(), createSchoolClassDTO(schoolClass));
         }
 
         return SchoolClassDTOs; //in sorted order because of TreeMap
@@ -310,8 +344,9 @@ public class TimeTableEngine implements Engine {
             handler.actionPerformed(myEvent);
         }
     }
+
     private void fireEvent2(GenerationStrideScoreDTO generationStrideScoreDTO) {
-        OnStrideEvent onStrideEvent = new OnStrideEvent(this, 3, "generationStride",generationStrideScoreDTO);
+        OnStrideEvent onStrideEvent = new OnStrideEvent(this, 3, "generationStride", generationStrideScoreDTO);
         List<ActionListener> handlersToInvoke = new ArrayList<>(handlers);
         for (ActionListener handler : handlersToInvoke) {
             handler.actionPerformed(onStrideEvent);

@@ -13,7 +13,6 @@ public class TimeTableSolutionDTO {
     public TimeTableSolutionDTO(List<QuintetDTO> solution, int solutionSize,
                                 double totalFitnessScore, Map<RuleDTO, Double> fitnessScorePerRule,
                                 TimeTableDTO timeTable) {
-        //TODO - copy quintet-list and rule map properly
         this.solution = solution;
         this.solutionSize = solutionSize;
         this.totalFitnessScore = totalFitnessScore;

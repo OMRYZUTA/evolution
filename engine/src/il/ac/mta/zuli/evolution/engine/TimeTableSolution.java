@@ -124,6 +124,14 @@ public class TimeTableSolution implements Solution {
     }
     //#endregion
 
+    //not in place - creates new TimeTableSolution
+    public TimeTableSolution sortQuintetsInSolution(Comparator<Quintet> quintetComparator) {
+        List<Quintet> quintets = this.getSolutionQuintets();
+        List<Quintet> sortedQuintets = quintets.stream().sorted(quintetComparator).collect(Collectors.toList());
+
+        return new TimeTableSolution(sortedQuintets, this.timeTable);
+    }
+
     public void addScoreToRule(Rule rule, double score) {
         fitnessScorePerRule.put(rule, score);
     }
