@@ -19,9 +19,6 @@ public class RequirementDTO {
 
     @Override
     public String toString() {
-        return "RequirementDTO{" +
-                "hours=" + hours +
-                ", subject=" + subject +
-                '}';
+        return subject + "-" + hours + " hours";
     }
 }

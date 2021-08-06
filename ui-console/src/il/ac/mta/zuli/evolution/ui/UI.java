@@ -12,34 +12,25 @@ import java.util.*;
 public class UI implements ActionListener {
     Engine engine;
 
+    public void printInitialMenuOptions() {
+        System.out.println("Please enter the option number to select from the menu:" + System.lineSeparator() +
+                "1. Load xml file" + System.lineSeparator() +
+                "2.");
+        //TODO continue
+    }
+
     public void operateMenu() {
         try {
             engine = new TimeTableEngine();
             engine.addHandler(this);
             engine.loadXML("engine/src/resources/EX1-small.xml");
-            //showSystemDetails();
+
+            showSystemDetails();
 
             //TODO get parameters for evolution algorithm (and validate in engine)
             engine.executeEvolutionAlgorithm(100, 20);
             TimeTableSolutionDTO solution = engine.getBestSolutionRaw();
             printSolution(solution.getSolutionQuintets());
-
-
-//            printSolution(solution.getSolutionQuintets());
-            /*for (QuintetDTO q : solution.getSolutionQuintets()) {
-                System.out.println(q.getDay() + " " + q.getHour());
-            }*/
-
-            /*solution = engine.getBestSolutionTeacherOriented();
-            for (QuintetDTO q : solution.getSolutionQuintets()) {
-                System.out.println(q.getTeacher().getId() + " " + q.getDay() + " " + q.getHour());
-            }*/
-
-            /*solution = engine.getBestSolutionClassOriented();
-            for (QuintetDTO q : solution.getSolutionQuintets()) {
-                System.out.println(q.getSchoolClass().getId() + " " + q.getDay() + " " + q.getHour() + "subject: "+q.getSubject().getId());
-            }
-            System.out.println("best best score: "+ solution.getTotalFitnessScore());*/
         } catch (Exception e) {
             System.out.println(e);
             System.out.println(e.getMessage() + e.getStackTrace());
@@ -58,42 +49,51 @@ public class UI implements ActionListener {
     }
 
     private void printEngineSetting(EngineSettingsDTO engineSettingsDTO) {
-        System.out.println(String.format("population size : %d", engineSettingsDTO.getInitialPopulationSize()));
         SelectionDTO selectionDTO = engineSettingsDTO.getSelection();
         CrossoverDTO crossoverDTO = engineSettingsDTO.getCrossover();
         List<MutationDTO> mutationDTOList = engineSettingsDTO.getMutations();
+
+        System.out.println("*** Engine Settings ***");
+        System.out.println("Population size: " + engineSettingsDTO.getInitialPopulationSize());
         System.out.println(selectionDTO);
         System.out.println(crossoverDTO);
         printList(mutationDTOList);
     }
 
-    private void printList(List<?> values) {
-        for (Object object : values) {
-            System.out.println(object);
-        }
-    }
-
     private void printTimeTable(TimeTableDTO timeTableDTO) {
-        Map<Integer, SubjectDTO> subjects = timeTableDTO.getSubjects();
-        Map<Integer, TeacherDTO> teachers = timeTableDTO.getTeachers();
-        Map<Integer, SchoolClassDTO> schoolClasses = timeTableDTO.getSchoolClasses();
         Set<RuleDTO> rules = timeTableDTO.getRules();
-        System.out.println("in ui showsystemdetails:");
-        printMap(subjects);
-        printMap(teachers);
-        printMap(schoolClasses);
+
+        System.out.println("*** Time Table ***");
+        System.out.println("Subjects");
+        printMap(timeTableDTO.getSubjects());
+        System.out.println("Teachers");
+        printTeachers(timeTableDTO.getTeachers());
+        System.out.println("Classes");
+        printSchoolClasses(timeTableDTO.getSchoolClasses());
+        System.out.println("Rules");
         printSet(rules);
     }
 
-    private void printSet(Set<RuleDTO> rules) {
-        for (RuleDTO rule : rules) {
-            System.out.println(rule);
+    private void printTeachers(Map<Integer, TeacherDTO> teachers) {
+        for (TeacherDTO teacher : teachers.values()) {
+            System.out.print(teacher + ", teaches subjects: ");
+            for (SubjectDTO subject : teacher.getSubjects().values()) {
+                System.out.print(subject + " ");
+            }
+            System.out.println();
         }
     }
 
-    private <K, V> void printMap(Map<K, V> map) {
-        for (Map.Entry<K, V> entry : map.entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue());
+    private void printSchoolClasses(Map<Integer, SchoolClassDTO> schoolClasses) {
+
+        for (SchoolClassDTO schoolClass : schoolClasses.values()) {
+            System.out.print(schoolClass + ", requirements: ");
+
+            for (RequirementDTO requirement : schoolClass.getRequirements()) {
+                System.out.print(requirement + " ");
+            }
+
+            System.out.println();
         }
     }
 
@@ -113,8 +113,26 @@ public class UI implements ActionListener {
     }
 
     private void showStrideProgress(GenerationStrideScoreDTO generationStrideScoreDTO) {
-        //TODO bring back
-        //System.out.println("current generation: " + generationStrideScoreDTO.getGenerationNum() + " best score: " + generationStrideScoreDTO.getBestScore());
+        System.out.println("generation: " + generationStrideScoreDTO.getGenerationNum()
+                + " best score: " + generationStrideScoreDTO.getBestScore());
+    }
+
+    private void printList(List<?> values) {
+        for (Object object : values) {
+            System.out.println(object);
+        }
+    }
+
+    private void printSet(Set<RuleDTO> rules) {
+        for (RuleDTO rule : rules) {
+            System.out.println(rule);
+        }
+    }
+
+    private <K, V> void printMap(Map<K, V> map) {
+        for (V value : map.values()) {
+            System.out.println(value);
+        }
     }
 
     /**

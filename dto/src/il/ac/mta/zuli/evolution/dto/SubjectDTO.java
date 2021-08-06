@@ -19,9 +19,7 @@ public class SubjectDTO {
 
     @Override
     public String toString() {
-        return "SubjectDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return "(id " + id +
+                ") " + name;
     }
 }
