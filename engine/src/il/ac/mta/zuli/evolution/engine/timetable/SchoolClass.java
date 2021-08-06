@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.timetable;
 
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTClass;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTRequirements;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTStudy;
@@ -52,7 +53,7 @@ public class SchoolClass {
         }
 
         if (totalClassHours > totalHours) {
-            throw new RuntimeException("class " + name + " has too many hours");
+            throw new ValidationException("the class has too many required hours");
         }
     }
 

@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.timetable;
 
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTStudy;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +25,7 @@ public class Requirement {
         if (hours > 0) {
             this.hours = hours;
         } else {
-            throw new RuntimeException("invalid hours input - hours are 0 or negative");
+            throw new ValidationException("invalid hours input - hours are 0 or negative");
         }
     }
 
@@ -33,9 +34,9 @@ public class Requirement {
     }
 
     private void setSubject(int id, Map<Integer, Subject> existingSubjects) {
-
-        if ((subject = existingSubjects.get(id)) == null) {
-            throw new RuntimeException("subject ID: " + id + " does not exist in tt");
+        subject = existingSubjects.get(id);
+        if ( subject== null) {
+            throw new ValidationException("subject ID: " + id + " does not exist in time table");
         }
     }
 

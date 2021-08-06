@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.timetable;
 
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.*;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.*;
 import org.jetbrains.annotations.NotNull;
@@ -131,9 +132,14 @@ public class TimeTable {
             c = classList.get(i);
 
             if (i + 1 != c.getId()) {
-                throw new RuntimeException("UI report error: schoolClass ID " + c.getId() + " not according to required count");//throw exception - need to think about it
+                throw new ValidationException("UI report error: schoolClass ID " + c.getId() + " not according to required count");//throw exception - need to think about it
             }
-            this.schoolClasses.put(c.getId(), new SchoolClass(c, this.subjects, (this.hours * this.days)));
+            try {
+                SchoolClass schoolClass =new SchoolClass(c, this.subjects, (this.hours * this.days));
+                this.schoolClasses.put(c.getId(),schoolClass);
+            }catch (ValidationException e){
+                throw new ValidationException("failed creating school class "+c.getId()+c.getETTName(), e );
+            }
         }
     }
 
