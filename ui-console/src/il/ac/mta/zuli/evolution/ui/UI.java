@@ -20,10 +20,12 @@ public class UI implements ActionListener {
             //showSystemDetails();
 
             //TODO get parameters for evolution algorithm (and validate in engine)
-            engine.executeEvolutionAlgorithm(200, 4);
-
+            engine.executeEvolutionAlgorithm(100, 20);
             TimeTableSolutionDTO solution = engine.getBestSolutionRaw();
-            //printSolution(solution.getSolutionQuintets());
+
+
+
+//            printSolution(solution.getSolutionQuintets());
             /*for (QuintetDTO q : solution.getSolutionQuintets()) {
                 System.out.println(q.getDay() + " " + q.getHour());
             }*/
@@ -35,9 +37,9 @@ public class UI implements ActionListener {
 
             solution = engine.getBestSolutionClassOriented();
             for (QuintetDTO q : solution.getSolutionQuintets()) {
-                System.out.println(q.getSchoolClass().getId() + " " + q.getDay() + " " + q.getHour());
+                System.out.println(q.getSchoolClass().getId() + " " + q.getDay() + " " + q.getHour() + "subject: "+q.getSubject().getId());
             }
-
+            System.out.println("best best score: "+ solution.getTotalFitnessScore());
         } catch (Exception e) {
             System.out.println(e);
             System.out.println(e.getMessage() + e.getStackTrace());
@@ -103,7 +105,7 @@ public class UI implements ActionListener {
                 break;
             case 3:
                 GenerationStrideScoreDTO generationStrideScoreDTO = ((OnStrideEvent) e).getGenerationStrideScoreDTO();
-                //showStrideProgress(generationStrideScoreDTO);
+                showStrideProgress(generationStrideScoreDTO);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + e.getID());

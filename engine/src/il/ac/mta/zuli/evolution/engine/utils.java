@@ -14,7 +14,7 @@ public class utils {
             result = 1;
         } else {
             Random random = new Random();
-            result = random.nextInt(max - min) + min;
+            result = random.nextInt(max+1 - min) + min;
         }
 
         return result;

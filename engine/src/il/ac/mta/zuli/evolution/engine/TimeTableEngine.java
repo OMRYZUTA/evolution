@@ -102,26 +102,26 @@ public class TimeTableEngine implements Engine {
     @Override
     public TimeTableSolutionDTO getBestSolutionRaw() {
         TimeTableSolution bestSolution = getBestSolution();
-        TimeTableSolution sortedSolution = bestSolution.sortQuintetsInSolution(Quintet.getRawComparator());
+        bestSolution.sortQuintetsInSolution(Quintet.getRawComparator());
 
-        return createTimeTableSolutionDTO(sortedSolution);
+        return createTimeTableSolutionDTO(bestSolution);
     }
 
 
     @Override
     public TimeTableSolutionDTO getBestSolutionTeacherOriented() {
         TimeTableSolution bestSolution = getBestSolution();
-        TimeTableSolution sortedSolution = bestSolution.sortQuintetsInSolution(Quintet.getTeacherComparator());
+        bestSolution.sortQuintetsInSolution(Quintet.getTeacherComparator());
 
-        return createTimeTableSolutionDTO(sortedSolution);
+        return createTimeTableSolutionDTO(bestSolution);
     }
 
     @Override
     public TimeTableSolutionDTO getBestSolutionClassOriented() {
         TimeTableSolution bestSolution = getBestSolution();
-        TimeTableSolution sortedSolution = bestSolution.sortQuintetsInSolution(Quintet.getSchoolClassComparator());
+        bestSolution.sortQuintetsInSolution(Quintet.getSchoolClassComparator());
 
-        return createTimeTableSolutionDTO(sortedSolution);
+        return createTimeTableSolutionDTO(bestSolution);
     }
 
     @Override

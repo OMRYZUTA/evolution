@@ -49,7 +49,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
         Set<Quintet> quintetSet = new HashSet<>();
         Quintet tempQuintet;
 
-        int numOfQuintetsToMutate = new Random().nextInt(maxTuples);
+        int numOfQuintetsToMutate = new Random().nextInt(maxTuples+1);
 
         for (int i = 0; i < numOfQuintetsToMutate; i++) {
             int randomIndexToMutate = new Random().nextInt(solutionQuintets.size());
@@ -95,7 +95,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
 
     private DayOfWeek generateRandomDay() {
         DayOfWeek[] enumValues = DayOfWeek.values();
-        int randIndex = new Random().nextInt(timeTable.getDays());
+        int randIndex = new Random().nextInt(timeTable.getDays()+1);
         return enumValues[randIndex];
     }
 

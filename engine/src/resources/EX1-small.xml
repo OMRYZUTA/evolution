@@ -85,7 +85,7 @@
 		</ETT-Rules>
 	</ETT-TimeTable>
 	<ETT-EvolutionEngine>
-		<ETT-InitialPopulation size="200"/>
+		<ETT-InitialPopulation size="1000"/>
 		<ETT-Selection type="Truncation" configuration="TopPercent=10"/>
 		<ETT-Crossover name="DayTimeOriented" cutting-points="2"/>
 		<ETT-Mutations>
