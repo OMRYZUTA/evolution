@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.dto;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SchoolClassDTO {
     private final int id;
@@ -23,6 +24,19 @@ public class SchoolClassDTO {
 
     public List<RequirementDTO> getRequirements() {
         return requirements;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SchoolClassDTO that = (SchoolClassDTO) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override

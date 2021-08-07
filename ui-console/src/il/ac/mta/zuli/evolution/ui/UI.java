@@ -8,12 +8,13 @@ import il.ac.mta.zuli.evolution.engine.events.LoadedEvent;
 import il.ac.mta.zuli.evolution.engine.events.OnStrideEvent;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class UI {
     private final Engine engine;
     private final Scanner scanner;
     private boolean fileLoaded;
-    private final boolean evolutionAlgorithmCompleted;
+    private boolean evolutionAlgorithmCompleted;
 
     public UI() {
         engine = new TimeTableEngine();
@@ -25,14 +26,21 @@ public class UI {
             UI.this.fileLoaded = true;
             LoadedEvent loadedEvent = (LoadedEvent) e;
             System.out.println("file was successfully loaded from " + loadedEvent.getPath());
+            System.out.println("***");
         });
         engine.addListener("error", e -> {
             ErrorEvent errorEvent = (ErrorEvent) e;
             System.out.println("failed loading file: " + errorEvent.getError().getMessage());
+            System.out.println("***");
         });
         engine.addListener("stride", e -> {
             OnStrideEvent strideEvent = (OnStrideEvent) e;
             UI.this.showStrideProgress(strideEvent.getGenerationStrideScoreDTO());
+        });
+        engine.addListener("completed", e -> {
+            UI.this.evolutionAlgorithmCompleted = true;
+            System.out.println(e.getMessage());
+            System.out.println("***");
         });
     }
 
@@ -52,6 +60,7 @@ public class UI {
                         showDetails();
                     } else {
                         System.out.println("Option unavailable until a file is loaded to the system");
+                        System.out.println("***");
                     }
                     break;
                 case RunAlgorithm:
@@ -59,6 +68,7 @@ public class UI {
                         runAlgorithm();
                     } else {
                         System.out.println("Option unavailable until a file is loaded to the system");
+                        System.out.println("***");
                     }
                     break;
                 case ShowSolution:
@@ -66,6 +76,7 @@ public class UI {
                         showSolution();
                     } else {
                         System.out.println("Option unavailable until a file is loaded to the system, and algorithm completed running");
+                        System.out.println("***");
                     }
                     break;
                 case ShowProgress:
@@ -73,6 +84,7 @@ public class UI {
                         showProgress();
                     } else {
                         System.out.println("Option unavailable until a file is loaded to the system, and algorithm completed running");
+                        System.out.println("***");
                     }
                     break;
                 case Exit:
@@ -80,29 +92,30 @@ public class UI {
                     break;
                 case None:
                 default:
-                    System.out.println("Invalid option, try again");
+                    System.out.println("Invalid option entered, please try again");
+                    System.out.println("***");
                     break;
             }
         }
     }
 
     private void printMainMenu() {
-        String noFileLoaded = fileLoaded ? "" : " <Unavailable - no file loaded>";
-        String algoIncomplete = evolutionAlgorithmCompleted ? "" : " <Unavailable - algorithm run was not completed>";
-        System.out.println("Please enter the option number to select from the menu:");
+        /*String noFileLoaded = fileLoaded ? "" : " <Unavailable - no file loaded>";
+        String algoIncomplete = evolutionAlgorithmCompleted ? "" : " <Unavailable - algorithm run was not completed>";*/
+        System.out.println("To select from the menu, please enter the option number:");
         System.out.println(MenuOptions.LoadFile.ordinal() + ". Load xml file");
-        System.out.println(MenuOptions.ShowDetails.ordinal() + ". Show system and algorithm details" + noFileLoaded);
-        System.out.println(MenuOptions.RunAlgorithm.ordinal() + ". Run evolution algorithm" + noFileLoaded);
-        System.out.println(MenuOptions.ShowSolution.ordinal() + ". Show best solution" + algoIncomplete);
-        System.out.println(MenuOptions.ShowProgress.ordinal() + ". Show algorithm progress per stride" + algoIncomplete);
+        System.out.println(MenuOptions.ShowDetails.ordinal() + ". Show timetable and algorithm settings");// + noFileLoaded);
+        System.out.println(MenuOptions.RunAlgorithm.ordinal() + ". Run evolution algorithm");// + noFileLoaded);
+        System.out.println(MenuOptions.ShowSolution.ordinal() + ". Show best solution");// + algoIncomplete);
+        System.out.println(MenuOptions.ShowProgress.ordinal() + ". Show algorithm progress per stride");// + algoIncomplete);
         System.out.println(MenuOptions.Exit.ordinal() + ". Exit system");
     }
 
     private void printShowSolutionMenu() {
         System.out.println("Enter an option number for your preferred display of the best solution:");
         System.out.println("1. A sorted list of the solution quintets <D,H,C,T,S>");
-        System.out.println("2. A separate D*H timetable for each teacher");
-        System.out.println("3. A separate D*H timetable for each class");
+        System.out.println("2. A separate D*H timetable for every teacher");
+        System.out.println("3. A separate D*H timetable for every class");
     }
 
     private MenuOptions getSelectedOption(String input) {
@@ -118,14 +131,16 @@ public class UI {
     }
 
     private void loadFile() {
-        System.out.println("Enter XML absolute file path:");
-        String path = scanner.nextLine();
+        System.out.println(System.lineSeparator() + "To load XML file, enter absolute file path:");
+        //TODO: restore later
+        String path = "C:\\Users\\fifil\\source\\repos\\evolution\\engine\\src\\resources\\EX1-small.xml"; //scanner.nextLine();
         if (!checkExtension(path, ".xml")) {
             System.out.println("Invalid file path. Must be an xml file");
+            System.out.println("***");
             return;
         }
 
-        engine.loadXML(path);
+        engine.loadXML(path); //C:\Users\fifil\source\repos\evolution\engine\src\resources\EX1-small.xml
     }
 
     private boolean checkExtension(String path, String expectedExt) {
@@ -141,40 +156,107 @@ public class UI {
         DescriptorDTO descriptorDTO = engine.getSystemDetails();
         TimeTableDTO timeTableDTO = descriptorDTO.getTimeTable();
         EngineSettingsDTO engineSettingsDTO = descriptorDTO.getEngineSettings();
-
+        System.out.println("Showing timetable and algorithm settings");
         printTimeTable(timeTableDTO);
         printEngineSetting(engineSettingsDTO);
 
-        System.out.println("*********************************");
+        System.out.println("***");
     }
 
     private void runAlgorithm() {
         //TODO get parameters for evolution algorithm (and validate in engine)
-        engine.executeEvolutionAlgorithm(1000, 50);
+        engine.executeEvolutionAlgorithm(100, 50);
     }
 
-
     private void showSolution() {
-        //while
-//        printShowSolutionMenu();
-//        int displayOption = Integer.parseInt(scanner.nextLine(), 10);
-//        TimeTableSolutionDTO bestSolution = null;
-//
-//        switch (displayOption) {
-//            case 1:
-//                bestSolution = engine.getBestSolutionRaw();
-//                for (QuintetDTO quintet : bestSolution.getSolutionQuintets()) {
-//                    System.out.println(quintet);
-//                }
-//
-//            case 2:
-//                break;
-//            case 3:
-//                break;
-//            defualt
-//        }
+        printShowSolutionMenu();
+
+        int displayOption = 0;
+        try {
+            displayOption = Integer.parseInt(scanner.nextLine(), 10);
+        } catch (Exception e) {
+            //swallow exception
+        }
+
+        TimeTableSolutionDTO bestSolution = null;
+
+        switch (displayOption) {
+            case 1:
+                bestSolution = engine.getBestSolutionRaw();
+                printRawQuintets(bestSolution.getSolutionQuintets());
+                System.out.println("***");
+                break;
+            case 2:
+                bestSolution = engine.getBestSolutionTeacherOriented();
+                printTeacherDHMatrix(bestSolution);
+                break;
+            case 3:
+                bestSolution = engine.getBestSolutionTeacherOriented();
+                printClassDHMatrix(bestSolution);
+                break;
+            case 0:
+            default:
+                System.out.println("Invalid option entered");
+        }
 
 
+    }
+
+    private void printRawQuintets(List<QuintetDTO> quintets) {
+        for (QuintetDTO q : quintets) {
+            System.out.printf("<%d, %d, %d, %d, %d>%n",
+                    q.getDay().getValue(),
+                    q.getHour(),
+                    q.getSchoolClass().getId(),
+                    q.getTeacher().getId(),
+                    q.getSubject().getId());
+        }
+    }
+
+    // Optional for raw print in #4
+    private void printMinQuintets(List<QuintetDTO> quintets) {
+        for (QuintetDTO q : quintets) {
+            System.out.printf("<%s, %d, %s, %s, %s>%n",
+                    q.getDay(),
+                    q.getHour(),
+                    q.getSchoolClass().getName(),
+                    q.getTeacher().getName(),
+                    q.getSubject().getName());
+        }
+    }
+
+    private void printTeacherDHMatrix(TimeTableSolutionDTO solution) {
+        Map<TeacherDTO, List<QuintetDTO>> teacherSolutions = solution.getSolutionQuintets().stream()
+                .collect(Collectors.groupingBy(QuintetDTO::getTeacher));
+
+        List<TeacherDTO> sortedTeachers = teacherSolutions.keySet().stream()
+                .sorted(Comparator.comparingInt(TeacherDTO::getId))
+                .collect(Collectors.toList());
+
+        for (TeacherDTO t : sortedTeachers) {
+            System.out.println(t.getName());
+            for (QuintetDTO q : teacherSolutions.get(t)) {
+                System.out.println(q);
+            }
+            System.out.println("***");
+        }
+    }
+
+    private void printClassDHMatrix(TimeTableSolutionDTO solution) {
+        Map<SchoolClassDTO, List<QuintetDTO>> classSolutions = solution.getSolutionQuintets().stream()
+                .collect(Collectors.groupingBy(QuintetDTO::getSchoolClass));
+
+        List<SchoolClassDTO> sortedClasses = classSolutions.keySet().stream()
+                .sorted(Comparator.comparingInt(SchoolClassDTO::getId))
+                .collect(Collectors.toList());
+
+        for (SchoolClassDTO t : sortedClasses) {
+            System.out.println(t.getName());
+            for (QuintetDTO q : classSolutions.get(t)) {
+                System.out.println(q);
+            }
+            System.out.println("***");
+        }
     }
 
     private void showProgress() {

@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.dto;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class TeacherDTO {
     private final int id;
@@ -24,6 +25,19 @@ public class TeacherDTO {
 
     public Map<Integer, SubjectDTO> getSubjects() {
         return subjects;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TeacherDTO that = (TeacherDTO) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
