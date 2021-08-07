@@ -25,12 +25,12 @@ public class UI implements ActionListener {
             engine.addHandler(this);
             engine.loadXML("engine/src/resources/EX1-small.xml");
 
-            showSystemDetails();
+           // showSystemDetails();
 
             //TODO get parameters for evolution algorithm (and validate in engine)
-            engine.executeEvolutionAlgorithm(100, 20);
+            engine.executeEvolutionAlgorithm(1000, 20);
             TimeTableSolutionDTO solution = engine.getBestSolutionRaw();
-            printSolution(solution.getSolutionQuintets());
+//            printSolution(solution.getSolutionQuintets());
         } catch (Exception e) {
             System.out.println(e);
             System.out.println(e.getMessage() + e.getStackTrace());

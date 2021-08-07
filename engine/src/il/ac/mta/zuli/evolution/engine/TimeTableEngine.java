@@ -71,6 +71,7 @@ public class TimeTableEngine implements Engine {
         List<TimeTableSolution> prevGeneration = initialPopulation;
         List<TimeTableSolution> currGeneration;
 
+
         for (int i = 0; i < numOfGenerations; i++) {
             currGeneration = evolutionEngine.execute(prevGeneration);
 
@@ -84,12 +85,6 @@ public class TimeTableEngine implements Engine {
 
             prevGeneration = currGeneration;
         }
-
-//        System.out.println("****best in generation****");
-//        //private Map<Integer, TimeTableSolution> bestSolutionsInGeneration;
-//        for (Map.Entry<Integer, TimeTableSolution> entry : bestSolutionsInGeneration.entrySet()) {
-//            System.out.println(entry.getKey() + ". " + entry.getValue().getTotalFitnessScore());
-//        }
     }
 
     @Override

@@ -124,18 +124,23 @@ public class Quintet {
         return Objects.hash(day, hour, teacher, schoolClass, subject);
     }
 
+    //    @Override
+//    public String toString() {
+//        if (teacher != null && schoolClass != null && subject != null) {
+//            return "{day=" + day +
+//                    ", hour=" + hour +
+//                    ", teacher=" + teacher.getId() +
+//                    ", schoolClass=" + schoolClass.getId() +
+//                    ", subject=" + subject.getId() +
+//                    '}';
+//        } else {
+//            return "invalid quintet: teacheer/class/subject are null";
+//        }
+//    }
     @Override
     public String toString() {
-        if (teacher != null && schoolClass != null && subject != null) {
-            return "{day=" + day +
-                    ", hour=" + hour +
-                    ", teacher=" + teacher.getId() +
-                    ", schoolClass=" + schoolClass.getId() +
-                    ", subject=" + subject.getId() +
-                    '}';
-        } else {
-            return "invalid quintet: teacheer/class/subject are null";
-        }
+        // for debugging purposes.
+        return "< " + day + ", " + hour + ", " + teacher.getId() + ", " + schoolClass.getId() + ", " + subject.getId() + ">";
     }
 
 }

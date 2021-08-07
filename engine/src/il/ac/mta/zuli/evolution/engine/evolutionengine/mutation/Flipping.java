@@ -43,21 +43,25 @@ public class Flipping<S extends Solution> implements Mutation<S> {
             return solution;
         }
 
-        //System.out.println("in mutation, probability "+randomProbability);
-
-        List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
-        Set<Quintet> quintetSet = new HashSet<>();
+        List<Quintet> solutionQuintets = new ArrayList<>(timeTableSolution.getSolutionQuintets());
+        Set<Quintet> quintetSet = new HashSet<>(solutionQuintets);
         Quintet tempQuintet;
-
-        int numOfQuintetsToMutate = new Random().nextInt(maxTuples+1);
+        int randomIndexToMutate;
+        int numOfQuintetsToMutate = generateRandomNum(1, maxTuples+1);
 
         for (int i = 0; i < numOfQuintetsToMutate; i++) {
-            int randomIndexToMutate = new Random().nextInt(solutionQuintets.size());
+            if(solutionQuintets.size()>=1) {
+                 randomIndexToMutate = new Random().nextInt(solutionQuintets.size());
+            }
+            else{
+              break;
+            }
             tempQuintet = mutateComponent(solutionQuintets.get(randomIndexToMutate));
+            solutionQuintets.set(randomIndexToMutate, tempQuintet);
             quintetSet.add(tempQuintet);
         }
 
-        return (S) new TimeTableSolution(new ArrayList<>(quintetSet), timeTable);
+        return (S)new TimeTableSolution(new ArrayList<>(quintetSet), timeTable);
     }
 
     private Quintet mutateComponent(Quintet quintet) {

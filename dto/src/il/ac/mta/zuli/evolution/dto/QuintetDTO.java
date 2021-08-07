@@ -37,14 +37,20 @@ public class QuintetDTO {
         return subject;
     }
 
+//    @Override
+//    public String toString() {
+//        return "QuintetDTO{" +
+//                "day=" + day +
+//                ", hour=" + hour +
+//                ", teacher=" + teacher +
+//                ", schoolClass=" + schoolClass +
+//                ", subject=" + subject +
+//                '}';
+//    }
+
     @Override
-    public String toString() {
-        return "QuintetDTO{" +
-                "day=" + day +
-                ", hour=" + hour +
-                ", teacher=" + teacher +
-                ", schoolClass=" + schoolClass +
-                ", subject=" + subject +
-                '}';
+    public  String toString(){
+        // for debugging purposes.
+        return "< "+ day+", "+ hour +", "+teacher.getId()+ ", "+ schoolClass.getId()+", "+subject.getId()+ ">";
     }
 }

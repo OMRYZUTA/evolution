@@ -43,12 +43,12 @@ public class EvolutionEngine<T extends Solution> {
         // D. mutate certain quintets
         List<Mutation<T>> mutationList = engineSettings.getMutations();
         List<T> newGenerationAfterMutation = new ArrayList<>();
-
         for (T solution : newGeneration) {
             T tempSolution = solution;
             for (Mutation<T> mutation : mutationList) {
                 tempSolution = mutation.mutate(tempSolution);
             }
+
             newGenerationAfterMutation.add(tempSolution);
         }
 

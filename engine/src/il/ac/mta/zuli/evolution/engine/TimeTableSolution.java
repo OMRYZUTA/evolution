@@ -182,6 +182,11 @@ public class TimeTableSolution implements Solution {
 
         return ((Double) totalFitnessScore).compareTo(other.getTotalFitnessScore());
     }
+    public void printSolutionQuintets(){
+        for (Quintet q: getSolutionQuintets()) {
+            System.out.println(q);
+        }
+    }
 
     @Override
     public String toString() {
