@@ -4,6 +4,7 @@ import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTClass;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTRequirements;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTStudy;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -12,7 +13,7 @@ public class SchoolClass {
     private String name;
     private List<Requirement> requirements; //requirement is hours per subject
 
-    public SchoolClass(ETTClass srcClass, Map<Integer, Subject> existingSubjects, int totalHours) {
+    public SchoolClass(@NotNull ETTClass srcClass,@NotNull Map<Integer, Subject> existingSubjects, int totalHours) {
         setId(srcClass.getId());
         setName(srcClass.getETTName());
         setRequirements(srcClass.getETTRequirements(), totalHours, existingSubjects);

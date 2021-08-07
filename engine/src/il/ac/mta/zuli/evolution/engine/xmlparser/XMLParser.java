@@ -2,13 +2,14 @@ package il.ac.mta.zuli.evolution.engine.xmlparser;
 
 import il.ac.mta.zuli.evolution.engine.Descriptor;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTDescriptor;
+import org.jetbrains.annotations.NotNull;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 
 public class XMLParser {
-    public Descriptor unmarshall(String path) throws Exception {
+    public Descriptor unmarshall(@NotNull String path) throws Exception {
 
         File file = new File(path);
 

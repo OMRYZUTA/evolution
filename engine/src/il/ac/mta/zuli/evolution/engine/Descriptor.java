@@ -3,12 +3,13 @@ package il.ac.mta.zuli.evolution.engine;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTDescriptor;
+import org.jetbrains.annotations.NotNull;
 
 public class Descriptor {
     private final TimeTable timeTable;
     private final EngineSettings engineSettings;
 
-    public Descriptor(ETTDescriptor d)  {
+    public Descriptor(@NotNull ETTDescriptor d)  {
         // only if received another valid file we want to overwrite the previous descriptor instance
         TimeTable tempTimeTable = null;
         EngineSettings tempEngineSetting = null;

@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.timetable;
 
+import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.*;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.*;
@@ -86,6 +87,9 @@ public class TimeTable {
     }
 
     private void setTeachers(@NotNull ETTTeachers ettTeachers) {
+        if(ettTeachers.getETTTeacher().size() ==0){
+            throw  new EmptyCollectionException("The number of teachers must be positive");
+        }
         this.teachers = new HashMap<>();
         List<ETTTeacher> teacherList = ettTeachers.getETTTeacher();
         teacherList.sort(Comparator.comparingInt(ETTTeacher::getId)); //sorting in order to check the IDs of subjects in file cover numbers 1-numOfSubjects
@@ -108,6 +112,10 @@ public class TimeTable {
     }
 
     private void setSubjects(@NotNull ETTSubjects ettSubjects) {
+
+        if(ettSubjects.getETTSubject().size() ==0){
+            throw  new EmptyCollectionException(" Empty list of subjects");
+        }
         this.subjects = new HashMap<>();
         List<ETTSubject> subjectList = ettSubjects.getETTSubject();
         subjectList.sort(Comparator.comparingInt(ETTSubject::getId)); //sorting in order to check the IDs of subjects in file cover numbers 1-numOfSubjects
@@ -130,11 +138,14 @@ public class TimeTable {
     }
 
     private void setSchoolClasses(@NotNull ETTClasses ettClasses) {
+        if(ettClasses.getETTClass().size() ==0){
+            throw  new EmptyCollectionException(" Empty list of Classes");
+        }
         this.schoolClasses = new HashMap<>();
         List<ETTClass> classList = ettClasses.getETTClass();
         //sorting in order to check the IDs of classes in file cover numbers 1-numOfClasses
         classList.sort(Comparator.comparingInt(ETTClass::getId));
-        ETTClass c = null;
+        ETTClass c;
 
         for (int i = 0; i < classList.size(); i++) {
             c = classList.get(i);

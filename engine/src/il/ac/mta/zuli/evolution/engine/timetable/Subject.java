@@ -9,7 +9,7 @@ public class Subject implements Comparable {
     private int id;
     private String name;
 
-    public Subject(ETTSubject s) {
+    public Subject(@NotNull ETTSubject s) {
         setId(s.getId());
         setName(s.getName());
     }
@@ -18,7 +18,7 @@ public class Subject implements Comparable {
         return name;
     }
 
-    private void setName(String name) {
+    private void setName(@NotNull String name) {
         this.name = name;
     }
 

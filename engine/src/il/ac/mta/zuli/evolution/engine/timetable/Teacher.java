@@ -1,5 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.timetable;
 
+import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTTeacher;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTTeaches;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +13,7 @@ public class Teacher {
     private String name;
     private Map<Integer, Subject> subjects; //the subjects the teacher teaches
 
-    public Teacher(@NotNull ETTTeacher t, Map<Integer, Subject> existingSubjects) {
+    public Teacher(@NotNull ETTTeacher t,@NotNull Map<Integer, Subject> existingSubjects) {
         setName(t.getETTName());
         setId(t.getId());
         setSubjects(t.getETTTeaching().getETTTeaches(), existingSubjects);
@@ -36,12 +38,16 @@ public class Teacher {
 
 
     private void setSubjects(@NotNull List<ETTTeaches> subjectList, Map<Integer, Subject> existingSubjects) {
+        if(existingSubjects.size() ==0){
+            throw new EmptyCollectionException("teacher got zero existing subjects");
+        }
+
         this.subjects = new HashMap<>();
         Subject subjectToAdd;
 
         for (ETTTeaches s : subjectList) {
             if ((subjectToAdd = existingSubjects.get(s.getSubjectId())) == null) {
-                throw new RuntimeException("Teacher " + id + "has subject that doesn't exist in the timetable");
+                throw new ValidationException("Teacher " + id + "has subject that doesn't exist in the timetable");
             }
             this.subjects.put(subjectToAdd.getId(), subjectToAdd);
         }
