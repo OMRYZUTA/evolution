@@ -14,10 +14,8 @@ public interface Engine {
 
     void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride);
 
-    void showBestSolution();
     TimeTableSolutionDTO getBestSolutionRaw();
     TimeTableSolutionDTO getBestSolutionTeacherOriented();
-
     TimeTableSolutionDTO getBestSolutionClassOriented();
 
 

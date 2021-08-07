@@ -25,12 +25,13 @@ public class UI implements ActionListener {
             engine.addHandler(this);
             engine.loadXML("engine/src/resources/EX1-small.xml");
 
-           // showSystemDetails();
+            // showSystemDetails();
 
             //TODO get parameters for evolution algorithm (and validate in engine)
-            engine.executeEvolutionAlgorithm(1000, 20);
+            engine.executeEvolutionAlgorithm(1000, 50);
             TimeTableSolutionDTO solution = engine.getBestSolutionRaw();
-//            printSolution(solution.getSolutionQuintets());
+            System.out.println("score: " + solution.getTotalFitnessScore());
+            printSolutionQuintets(solution.getSolutionQuintets());
         } catch (Exception e) {
             System.out.println(e);
             System.out.println(e.getMessage() + e.getStackTrace());
@@ -142,7 +143,7 @@ public class UI implements ActionListener {
      *
      * @param solution a list of Quintets to be printed
      */
-    protected void printSolution(List<QuintetDTO> solution) {
+    protected void printSolutionQuintets(List<QuintetDTO> solution) {
         int timeTableHours = engine.getSystemDetails().getTimeTable().getHours();
         int timeTableDays = engine.getSystemDetails().getTimeTable().getDays();
 

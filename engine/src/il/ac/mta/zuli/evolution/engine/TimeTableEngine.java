@@ -24,7 +24,8 @@ public class TimeTableEngine implements Engine {
     private Descriptor descriptor;
     private final XMLParser xmlParser = new XMLParser();
     private EvolutionEngine evolutionEngine;
-    private Map<Integer, TimeTableSolution> bestSolutionsInGeneration; // generation , solution
+    private TimeTableSolution bestSolutionEver = null;
+    private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride; // generation , solution
     private List<ActionListener> handlers = new ArrayList<>();
 
     public TimeTableEngine() {
@@ -62,40 +63,46 @@ public class TimeTableEngine implements Engine {
 
     @Override
     public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
-        bestSolutionsInGeneration = new HashMap<>(numOfGenerations);
+        bestSolutionsInGenerationPerStride = new HashMap<>(numOfGenerations);
         List<TimeTableSolution> initialPopulation = getInitialGeneration();
 
-        EvolutionEngine evolutionEngine = new EvolutionEngine(this.descriptor.getEngineSettings(),
+        evolutionEngine = new EvolutionEngine(this.descriptor.getEngineSettings(),
                 this.descriptor.getTimeTable().getRules());
 
         List<TimeTableSolution> prevGeneration = initialPopulation;
-        List<TimeTableSolution> currGeneration;
-
+        List<TimeTableSolution> currGeneration = null;
+        double bestSolutionFitnessScore = 0;
 
         for (int i = 0; i < numOfGenerations; i++) {
             currGeneration = evolutionEngine.execute(prevGeneration);
+            TimeTableSolution currBestSolution = currGeneration.stream().
+                    sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
 
+            if (bestSolutionFitnessScore < currBestSolution.getTotalFitnessScore()) {
+                bestSolutionEver = currBestSolution;
+                bestSolutionFitnessScore = bestSolutionEver.getTotalFitnessScore();
+            }
+
+            //stride for purposes of info-display and to save a stride-generation history
             if (i % generationsStride == 0) {
-                TimeTableSolution bestSolution = currGeneration.stream().
-                        sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
-                bestSolutionsInGeneration.put(i, bestSolution);
-                GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i, bestSolution.getTotalFitnessScore());
+                bestSolutionsInGenerationPerStride.put(i, currBestSolution);
+                GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i, currBestSolution.getTotalFitnessScore());
                 fireEvent2(strideScoreDTO);
             }
 
             prevGeneration = currGeneration;
         }
-    }
 
-    @Override
-    public void showBestSolution() {
-
-        // Option2: solution per teacher
-
-
-        // Option2: solution per class
-
-
+        //for debugging purposes
+        /*TimeTableSolution bestSolutionLastGeneration = currGeneration.stream().
+                sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);*/
+        //TimeTableSolution prevSolution = bestSolutionsInGeneration.get(0);
+        /*for (Map.Entry<Integer, TimeTableSolution> entry : bestSolutionsInGeneration.entrySet()) {
+            if (!prevSolution.getSolutionQuintets().equals(entry.getValue().getSolutionQuintets())) {
+                System.out.println("different solution in generation " + entry.getKey());
+            }
+            prevSolution = entry.getValue();
+        }*/
     }
 
     @Override
@@ -136,9 +143,7 @@ public class TimeTableEngine implements Engine {
 
     //#region auxiliary methods
     private TimeTableSolution getBestSolution() {
-        return bestSolutionsInGeneration.values().stream()
-                .sorted(Collections.reverseOrder())
-                .limit(1).collect(Collectors.toList()).get(0);
+        return bestSolutionEver;
     }
 
     @NotNull
