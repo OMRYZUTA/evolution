@@ -19,4 +19,7 @@ public class utils {
 
         return result;
     }
+    public  static int generateRandomNumZeroBase(int num){
+        return new Random().nextInt(num);
+    }
 }

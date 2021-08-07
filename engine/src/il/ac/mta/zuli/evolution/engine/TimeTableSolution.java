@@ -1,17 +1,20 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.DayOfWeek;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static il.ac.mta.zuli.evolution.engine.utils.generateRandomNum;
+import static il.ac.mta.zuli.evolution.engine.utils.generateRandomNumZeroBase;
 
 public class TimeTableSolution implements Solution {
     private List<Quintet> solution;
@@ -20,7 +23,7 @@ public class TimeTableSolution implements Solution {
     private final Map<Rule, Double> fitnessScorePerRule;
     TimeTable timeTable;
 
-    public TimeTableSolution(TimeTable timeTable) {
+    public TimeTableSolution(@NotNull TimeTable timeTable) {
         fitnessScorePerRule = new HashMap<>();
         this.timeTable = timeTable;
         solutionSize = generateRandomNum(1, calculateTotalRequiredHours());
@@ -28,7 +31,7 @@ public class TimeTableSolution implements Solution {
         randomlyGenerateSolutionQuintets();
     }
 
-    public TimeTableSolution(List<Quintet> quintets, TimeTable timeTable) {
+    public TimeTableSolution(@NotNull List<Quintet> quintets,@NotNull  TimeTable timeTable) {
         this.timeTable = timeTable;
         fitnessScorePerRule = new HashMap<>();
         solutionSize = quintets.size();
@@ -92,30 +95,40 @@ public class TimeTableSolution implements Solution {
 
     private Quintet generateRandomQuintet() {
         DayOfWeek randomDay = generateRandomDay();
-        int randomHour = new Random().nextInt(timeTable.getHours());
+        int randomHour = generateRandomNumZeroBase(timeTable.getHours());
 
-        //randomly generate class
-        int randomClassID = generateRandomNum(1, timeTable.getSchoolClasses().size());
-        SchoolClass randomSchoolClass = timeTable.getSchoolClasses().get(randomClassID);
+        SchoolClass randomSchoolClass = generateRandomClass();
 
-
-//        int randomSubjectID = generateRandomNum(1, timeTable.getSubjects().size());
-//        Subject randomSubject = timeTable.getSubjects().get(randomSubjectID);
-        //randomly generate subject - randomly but only from class-subjects
-        List<Integer> classRequiredSubjectsIDs = randomSchoolClass.getRequiredSubjectsIDs();
-        int randomIndex = new Random().nextInt(classRequiredSubjectsIDs.size());
-        Subject randomSubject = timeTable.getSubjects().get(classRequiredSubjectsIDs.get(randomIndex));
+        Subject randomSubject = generateRandomSubject(randomSchoolClass);
 
 
-//        int randomTeacherID = generateRandomNum(1, timeTable.getTeachers().size());
-//        Teacher randomTeacher = timeTable.getTeachers().get(randomTeacherID);
-        //randomly generate teacher - randomly but only from teachers that teach the random subject
-        List<Integer> TeachersIDs = timeTable.getTeachersThatTeachSubject(randomSubject.getId());
-        int randomTeachersIndex = new Random().nextInt(TeachersIDs.size());
-        Teacher randomTeacher = timeTable.getTeachers().get(TeachersIDs.get(randomTeachersIndex));
+        Teacher randomTeacher = generateRandomTeacher(randomSubject);
 
         return new Quintet(randomDay, randomHour, randomTeacher, randomSchoolClass, randomSubject);
     }
+
+    private Teacher generateRandomTeacher(Subject randomSubject) {
+        //randomly generate teacher - randomly but only from teachers that teach the random subject
+        List<Integer> TeachersIDs = timeTable.getTeachersThatTeachSubject(randomSubject.getId());
+        int randomTeachersIndex = generateRandomNumZeroBase(TeachersIDs.size());
+        Teacher randomTeacher = timeTable.getTeachers().get(TeachersIDs.get(randomTeachersIndex));
+        return randomTeacher;
+    }
+
+    private Subject generateRandomSubject(SchoolClass randomSchoolClass) {
+        //randomly generate subject - randomly but only from class-subjects
+        List<Integer> classRequiredSubjectsIDs = randomSchoolClass.getRequiredSubjectsIDs();
+        int randomIndex = generateRandomNumZeroBase(classRequiredSubjectsIDs.size());
+        Subject randomSubject = timeTable.getSubjects().get(classRequiredSubjectsIDs.get(randomIndex));
+        return randomSubject;
+    }
+
+    private SchoolClass generateRandomClass() {
+        int randomClassID = generateRandomNum(1, timeTable.getSchoolClasses().size());
+        SchoolClass randomSchoolClass = timeTable.getSchoolClasses().get(randomClassID);
+        return randomSchoolClass;
+    }
+
 
     private DayOfWeek generateRandomDay() {
         DayOfWeek[] enumValues = DayOfWeek.values();
@@ -125,13 +138,16 @@ public class TimeTableSolution implements Solution {
     //#endregion
 
     //not in place - creates new TimeTableSolution
-    public void sortQuintetsInSolution(Comparator<Quintet> quintetComparator) {
+    public void sortQuintetsInSolution(@NotNull Comparator<Quintet> quintetComparator) {
         List<Quintet> quintets = this.getSolutionQuintets();
         List<Quintet> sortedQuintets = quintets.stream().sorted(quintetComparator).collect(Collectors.toList());
         this.solution =sortedQuintets;
     }
 
-    public void addScoreToRule(Rule rule, double score) {
+    public void addScoreToRule(@NotNull Rule rule, double score) {
+        if(score<0){
+            throw new ValidationException("score can't be negative number");
+        }
         fitnessScorePerRule.put(rule, score);
     }
 

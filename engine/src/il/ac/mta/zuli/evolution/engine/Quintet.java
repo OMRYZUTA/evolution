@@ -4,6 +4,7 @@ package il.ac.mta.zuli.evolution.engine;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.DayOfWeek;
 import java.util.Comparator;
@@ -21,7 +22,7 @@ public class Quintet {
     private final static Comparator<Quintet> compareBySchoolClass = Comparator.comparing(Quintet::getSchoolClassID);
     private final static Comparator<Quintet> compareBySubject = Comparator.comparing(Quintet::getSubjectID);
 
-    public Quintet(DayOfWeek day, int hour, Teacher teacher, SchoolClass schoolClass, Subject subject) {
+    public Quintet(DayOfWeek day, int hour, @NotNull Teacher teacher,@NotNull SchoolClass schoolClass,@NotNull Subject subject) {
         this.day = day;
         this.hour = hour;
         this.teacher = teacher;
@@ -103,7 +104,7 @@ public class Quintet {
         this.teacher = teacher;
     }
 
-    public void setSchoolClass(SchoolClass schoolClass) {
+    public void setSchoolClass(@NotNull SchoolClass schoolClass) {
         this.schoolClass = schoolClass;
     }
 
@@ -112,7 +113,7 @@ public class Quintet {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@NotNull Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Quintet quintet = (Quintet) o;
