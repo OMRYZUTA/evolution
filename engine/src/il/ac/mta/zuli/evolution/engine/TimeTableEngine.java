@@ -3,7 +3,6 @@ package il.ac.mta.zuli.evolution.engine;
 import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.events.ErrorEvent;
 import il.ac.mta.zuli.evolution.engine.events.EventsEmitter;
-import il.ac.mta.zuli.evolution.engine.events.LoadedEvent;
 import il.ac.mta.zuli.evolution.engine.events.OnStrideEvent;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
@@ -38,7 +37,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         try {
             XMLParser xmlParser = new XMLParser();
             descriptor = xmlParser.unmarshall(path);
-            fireEvent("loaded", new LoadedEvent("file was loaded", path));
+//            fireEvent("loaded", new LoadedEvent("file was loaded", path));
             if (descriptor != null) {
                 isXMLLoaded = true;
             }

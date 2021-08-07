@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine.crossover;
 import il.ac.mta.zuli.evolution.engine.Quintet;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import org.jetbrains.annotations.NotNull;
@@ -16,8 +17,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
     private int numOfCuttingPoints;
     private List<Integer> cuttingPointsIndices;
 
-    public DayTimeOriented(int numOfCuttingPoints, TimeTable timeTable)  {
-        // no need to check validity for days and hours, since they come from timetable
+    public DayTimeOriented(int numOfCuttingPoints,@NotNull TimeTable timeTable)  {
         this.timeTable = timeTable;
         this.days = timeTable.getDays();
         this.hours = timeTable.getHours();
@@ -27,7 +27,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
     @Override
     public List<S> crossover(List<S> selectedParents) {
         if (selectedParents.size() == 0) {
-            throw new RuntimeException("parent-generation is empty");
+            throw new EmptyCollectionException("parent-generation is empty");
         }
         if (selectedParents.size() == 1) {
             return selectedParents;
