@@ -10,36 +10,114 @@ import java.awt.event.ActionListener;
 import java.util.*;
 
 public class UI implements ActionListener {
-    Engine engine;
+    private final Engine engine;
+    private final Scanner scanner;
+    private final boolean fileLoaded;
+    private final boolean evolutionAlgorithmCompleted;
 
-    public void printInitialMenuOptions() {
-        System.out.println("Please enter the option number to select from the menu:" + System.lineSeparator() +
-                "1. Load xml file" + System.lineSeparator() +
-                "2.");
-        //TODO continue
+    public UI() {
+        engine = new TimeTableEngine();
+        engine.addHandler(this);
+        scanner = new Scanner(System.in);
+        fileLoaded = false;
+        evolutionAlgorithmCompleted = false;
     }
 
     public void operateMenu() {
-        try {
-            engine = new TimeTableEngine();
-            engine.addHandler(this);
-            engine.loadXML("engine/src/resources/EX1-small.xml");
+        boolean stayInSystem = true;
 
-            // showSystemDetails();
-
-            //TODO get parameters for evolution algorithm (and validate in engine)
-            engine.executeEvolutionAlgorithm(1000, 50);
-            TimeTableSolutionDTO solution = engine.getBestSolutionRaw();
-            System.out.println("score: " + solution.getTotalFitnessScore());
-            printSolutionQuintets(solution.getSolutionQuintets());
-        } catch (Exception e) {
-            System.out.println(e);
-            System.out.println(e.getMessage() + e.getStackTrace());
-            //TODO handleException
+        // TODO: make sure engine never throws exceptions. It should catch them, and raise an "error" event
+        while (stayInSystem) {
+            printMenu();
+            MenuOptions selectedOption = getSelectedOption(scanner.nextLine());
+            switch (selectedOption) {
+                case LoadFile:
+                    loadFile();
+                    break;
+                case ShowDetails:
+                    if (fileLoaded) {
+                        showDetails();
+                    } else {
+                        System.out.println("Option unavailable until a file is loaded to the system");
+                    }
+                    break;
+                case RunAlgorithm:
+                    if (fileLoaded) {
+                        runAlgorithm();
+                    } else {
+                        System.out.println("Option unavailable until a file is loaded to the system");
+                    }
+                    break;
+                case ShowSolution:
+                    if (evolutionAlgorithmCompleted) {
+                        showSolution();
+                    } else {
+                        System.out.println("Option unavailable until a file is loaded to the system, and algorithm completed running");
+                    }
+                    break;
+                case ShowProgress:
+                    if (evolutionAlgorithmCompleted) {
+                        showProgress();
+                    } else {
+                        System.out.println("Option unavailable until a file is loaded to the system, and algorithm completed running");
+                    }
+                    break;
+                case Exit:
+                    stayInSystem = false;
+                    break;
+                case None:
+                default:
+                    System.out.println("Invalid option, try again");
+                    break;
+            }
         }
     }
 
-    private void showSystemDetails() {
+    public void printMenu() {
+        String noFileLoaded = fileLoaded ? "" : " <Unavailable - no file loaded>";
+        String algoIncomplete = evolutionAlgorithmCompleted ? "" : " <Unavailable - algorithm run was not completed>";
+        System.out.println("Please enter the option number to select from the menu:");
+        System.out.println(MenuOptions.LoadFile.ordinal() + ". Load xml file");
+        System.out.println(MenuOptions.ShowDetails.ordinal() + ". Show system and algorithm details" + noFileLoaded);
+        System.out.println(MenuOptions.RunAlgorithm.ordinal() + ". Run evolution algorithm" + noFileLoaded);
+        System.out.println(MenuOptions.ShowSolution.ordinal() + ". Show best solution" + algoIncomplete);
+        System.out.println(MenuOptions.ShowProgress.ordinal() + ". Show algorithm progress per stride" + algoIncomplete);
+        System.out.println(MenuOptions.Exit.ordinal() + ". Exit system");
+    }
+
+    private MenuOptions getSelectedOption(String input) {
+        MenuOptions result = MenuOptions.None;
+        try {
+            int intInput = Integer.parseInt(input, 10);
+            result = MenuOptions.values()[intInput];
+        } catch (Exception e) {
+            // swallow parsing exceptions
+        }
+
+        return result;
+    }
+
+    private void loadFile() {
+        System.out.println("Enter XML absolute file path:");
+        String path = scanner.nextLine();
+        if (!checkExtension(path, ".xml")) {
+            System.out.println("Invalid file path. Must be an xml file");
+            return;
+        }
+
+        engine.loadXML(path);
+    }
+
+    private boolean checkExtension(String path, String expectedExt) {
+        if (!path.contains(".")) {
+            return false;
+        }
+
+        String ext = path.substring(path.lastIndexOf("."));
+        return expectedExt.equalsIgnoreCase(ext);
+    }
+
+    private void showDetails() {
         DescriptorDTO descriptorDTO = engine.getSystemDetails();
         TimeTableDTO timeTableDTO = descriptorDTO.getTimeTable();
         EngineSettingsDTO engineSettingsDTO = descriptorDTO.getEngineSettings();
@@ -47,6 +125,17 @@ public class UI implements ActionListener {
         printTimeTable(timeTableDTO);
         printEngineSetting(engineSettingsDTO);
         System.out.println("*********************************");
+    }
+
+    private void runAlgorithm() {
+        //TODO get parameters for evolution algorithm (and validate in engine)
+        engine.executeEvolutionAlgorithm(1000, 50);
+    }
+
+    private void showSolution() {
+    }
+
+    private void showProgress() {
     }
 
     private void printEngineSetting(EngineSettingsDTO engineSettingsDTO) {
@@ -87,7 +176,6 @@ public class UI implements ActionListener {
     }
 
     private void printSchoolClasses(Map<Integer, SchoolClassDTO> schoolClasses) {
-
         for (SchoolClassDTO schoolClass : schoolClasses.values()) {
             System.out.print(schoolClass + ", requirements: ");
 

@@ -45,9 +45,9 @@ public class TimeTableEngine implements Engine {
         } catch (Exception e) {
             //TODO: fire "error" event (must include details)
             if (descriptor == null) {
-                fireEvent("Failed loading initial file" + e.getMessage());
+                fireEvent("Failed loading initial file");
             } else {
-                fireEvent("Failed loading subsequent file, previous file remains loaded" + e.getMessage());
+                fireEvent("Failed loading subsequent file, previous file remains loaded");
             }
         }
     }
@@ -142,7 +142,7 @@ public class TimeTableEngine implements Engine {
     //#endregion
 
     //#region auxiliary methods
-    private TimeTableSolution getBestSolution() {
+    public TimeTableSolution getBestSolution() {
         return bestSolutionEver;
     }
 
