@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -140,7 +141,25 @@ class EngineTest {
 //
 //    Teacher randomTeacher = generateRandomTeacher(randomSubject);
 //
-//        return new Quintet(randomDay, randomHour, randomTeacher, randomSchoolClass, randomSubject);
+@Test
+void knowledgeableGiveSolutionZeroScore(){
+    List<Quintet> quintets = new ArrayList<>();
+    int dayIndex = 1;
+    DayOfWeek day =DayOfWeek.of(dayIndex);
+    int hour = 0;
+    SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
+    Requirement requirement = schoolClass.getRequirements().get(0);
+    int teachingHours =requirement.getHours();
+    Subject subject = requirement.getSubject();
+    Teacher teacher = descriptor.getTimeTable().getTeachers().
+            get(descriptor.getTimeTable().getTeachersThatTeachSubject(subject.getId()).get(0));
+    TimeTableSolution solution = new TimeTableSolution(quintets, 0, descriptor.getTimeTable());
+    Knowledgeable knowledgeable = new Knowledgeable("soft");
+    knowledgeable.fitnessEvaluation(solution);
+    solution.calculateTotalScore();
+    assertEquals(0.0,solution.getFitnessScorePerRule().get(knowledgeable));
+    assertTrue(solution.getTotalFitnessScore()==0.0);
+}
 
     @Test
     void knowledgeableGiveSolutionFullScore(){
@@ -165,7 +184,35 @@ class EngineTest {
         TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
         Knowledgeable knowledgeable = new Knowledgeable("soft");
         knowledgeable.fitnessEvaluation(solution);
-
+        solution.calculateTotalScore();
         assertEquals(solution.getFitnessScorePerRule().get(knowledgeable),100.0);
+        assertTrue(solution.getTotalFitnessScore()>0.0);
     }
+    @Test
+    void satisfactoryGivesSolutionFullScore(){
+        List<Quintet> quintets = new ArrayList<>();
+        int dayIndex = 1;
+        DayOfWeek day =DayOfWeek.of(dayIndex);
+        int hour = 0;
+        SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
+
+            for (Requirement requirement: schoolClass.getRequirements()) {
+                for (int i = 0; i < requirement.getHours(); i++) {
+                    Subject subject = requirement.getSubject();
+                    Teacher teacher = descriptor.getTimeTable()
+                            .getTeachers().get(descriptor.getTimeTable().getTeachersThatTeachSubject(subject.getId()).get(0));
+                    quintets.add(new Quintet(day,hour,teacher,schoolClass,subject));
+                }
+            }
+
+        Map <Integer,SchoolClass> schoolClasses = new HashMap<>();
+            schoolClasses.put(1,schoolClass);
+        TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
+        Satisfactory satisfactory = new Satisfactory("soft",schoolClasses);
+        satisfactory.fitnessEvaluation(solution);
+        solution.calculateTotalScore();
+        assertEquals(solution.getFitnessScorePerRule().get(satisfactory),100.0);
+        assertTrue(solution.getTotalFitnessScore()>0.0);
+    }
+
 }
