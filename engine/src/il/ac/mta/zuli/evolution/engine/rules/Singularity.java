@@ -21,7 +21,7 @@ public class Singularity extends Rule {
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
 
         int numOfQuintets = timeTableSolution.getSolutionSize();
-        double score = 0;
+        double score = 100;
 
         if (numOfQuintets > 0) {
             HashSet<String> classDayHourSet = new HashSet<>();

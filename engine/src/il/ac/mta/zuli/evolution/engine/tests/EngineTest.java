@@ -9,6 +9,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.rules.Knowledgeable;
 import il.ac.mta.zuli.evolution.engine.rules.Satisfactory;
+import il.ac.mta.zuli.evolution.engine.rules.Singularity;
 import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
@@ -203,6 +204,7 @@ void knowledgeableGiveSolutionZeroScore(){
         int dayIndex = 1;
         DayOfWeek day =DayOfWeek.of(dayIndex);
         int hour = 0;
+
         SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
 
             for (Requirement requirement: schoolClass.getRequirements()) {
@@ -226,6 +228,39 @@ void knowledgeableGiveSolutionZeroScore(){
     @Test
     void satisfactoryGivesSolutionZeroScore(){
         List<Quintet> quintets = new ArrayList<>();
+        SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
+        Map <Integer,SchoolClass> schoolClasses = new HashMap<>();
+
+        schoolClasses.put(1,schoolClass);
+        TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
+        Satisfactory satisfactory = new Satisfactory("soft",schoolClasses);
+        satisfactory.fitnessEvaluation(solution);
+        solution.calculateTotalScore();
+        assertEquals(0.0, solution.getFitnessScorePerRule().get(satisfactory));
+        assertTrue(solution.getTotalFitnessScore()==0.0);
+    }
+    @Test
+    void singularityGivesSolutionZeroScore(){
+        List<Quintet> quintets = new ArrayList<>();
+        int dayIndex = 1;
+        DayOfWeek day =DayOfWeek.of(dayIndex);
+        int hour = 0;
+        SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
+        Subject subject = descriptor.getTimeTable().getSubjects().get(1);
+        Teacher teacher = descriptor.getTimeTable().getTeachers().
+                get(descriptor.getTimeTable().getTeachersThatTeachSubject(subject.getId()).get(0));
+        quintets.add(new Quintet(day,hour,teacher,schoolClass,subject));
+        quintets.add(new Quintet(day,hour,teacher,schoolClass,subject));
+        TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
+        Singularity singularity = new Singularity("soft");
+        singularity.fitnessEvaluation(solution);
+        solution.calculateTotalScore();
+        assertEquals(50.0, solution.getFitnessScorePerRule().get(singularity));
+        assertTrue(solution.getTotalFitnessScore()>0.0);
+    }
+    @Test
+    void singularityGivesSolutionFullScore(){
+        List<Quintet> quintets = new ArrayList<>();
         int dayIndex = 1;
         DayOfWeek day =DayOfWeek.of(dayIndex);
         int hour = 0;
@@ -236,11 +271,11 @@ void knowledgeableGiveSolutionZeroScore(){
         Map <Integer,SchoolClass> schoolClasses = new HashMap<>();
         schoolClasses.put(1,schoolClass);
         TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
-        Satisfactory satisfactory = new Satisfactory("soft",schoolClasses);
-        satisfactory.fitnessEvaluation(solution);
+        Singularity singularity = new Singularity("soft");
+        singularity.fitnessEvaluation(solution);
         solution.calculateTotalScore();
-        assertEquals(0.0, solution.getFitnessScorePerRule().get(satisfactory));
-        assertTrue(solution.getTotalFitnessScore()==0.0);
+        assertEquals(100.0, solution.getFitnessScorePerRule().get(singularity));
+        assertTrue(solution.getTotalFitnessScore()>0.0);
     }
     //#endregion rules
     @Test
