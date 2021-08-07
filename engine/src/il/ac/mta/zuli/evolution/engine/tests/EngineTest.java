@@ -37,7 +37,7 @@ class EngineTest {
     @BeforeEach
     void setUp() {
         try {
-            descriptor = xmlParser.unmarshall("src/resources/EX1-small.xml");
+            descriptor = xmlParser.unmarshall("src/resources/EX1-big.xml");
             satisfactoryRule = new Satisfactory("soft", descriptor.getTimeTable().getSchoolClasses());
             initialPopulation = new ArrayList<>();
             int initialPopulationSize = descriptor.getEngineSettings().getInitialPopulationSize();
@@ -51,27 +51,53 @@ class EngineTest {
         }
     }
 
+    //#region engine
     @Test
-    void load() {
+    void loadBig() {
+        engine = new TimeTableEngine();
+        engine.loadXML("src/resources/EX1-big.xml");
+
+        assertTrue(engine.isXMLLoaded());
+    }
+    @Test
+    void loadSmall() {
         engine = new TimeTableEngine();
         engine.loadXML("src/resources/EX1-small.xml");
 
         assertTrue(engine.isXMLLoaded());
     }
-
     @Test
-    void timeTableSolutionQuintetsNumIsDayMultipliedByHours() {
-        TimeTableSolution timeTableSolution = new TimeTableSolution(descriptor.getTimeTable());
-        int totalRequiredHours = 0;
-        Map<Integer, SchoolClass> classes = descriptor.getTimeTable().getSchoolClasses();
-        for (SchoolClass c : classes.values()) {
-            totalRequiredHours += c.getTotalRequiredHours();
-        }
-        int quintetNum = timeTableSolution.getSolutionSize();
-        assertTrue(quintetNum <= totalRequiredHours);
+    void loadError3Dot2XMLFILE() {
+        engine = new TimeTableEngine();
+        engine.loadXML("src/resources/EX1-error-3.2.xml");
 
+        assertFalse(engine.isXMLLoaded());
+    }
+    @Test
+    void loadError3Dot4XMLFILE() {
+        engine = new TimeTableEngine();
+        engine.loadXML("src/resources/EX1-error-3.4.xml");
+
+        assertFalse(engine.isXMLLoaded());
+    }
+    @Test
+    void loadError3Dot6XMLFILE() {
+        engine = new TimeTableEngine();
+        engine.loadXML("src/resources/EX1-error-3.6.xml");
+
+        assertFalse(engine.isXMLLoaded());
+    }
+    @Test
+    void getEvolutionProgressReturnListWithTheRightSize(){
+        engine.loadXML("src/resources/EX1-small.xml");
+        engine.executeEvolutionAlgorithm(10,1);
+        List<GenerationProgressDTO> progressDTOS = engine.getEvolutionProgress();
+        assertEquals(10,progressDTOS.size());
     }
 
+    //#endregion engine
+
+//#region evolution
     @Test
     void selectReturnsLessSolutions() {
         Selection<TimeTableSolution> selection = descriptor.getEngineSettings().getSelection();
@@ -116,32 +142,14 @@ class EngineTest {
         assertEquals(solutionsAfterMutations.size(),initialPopulation.size());
     }
     @Test
-    void engineSettingsConstructorNotAcceptingNulls(){
-        try {
-            EngineSettings engineSettings = new EngineSettings(null, null);
-        }catch(IllegalArgumentException e){
-            assertTrue(e.getMessage().length()>5);
-        }
-    }
-
-    @Test
-    void evolutionEngineExecuteReturnsDifferentPopulation(){
-        assertNotEquals(initialPopulation,evolutionEngine.execute(initialPopulation));
-    }
-    @Test
     void evolutionEngineExecuteReturnsSameSizeOfPopulation(){
         assertEquals(initialPopulation.size(),evolutionEngine.execute(initialPopulation).size());
     }
-//    DayOfWeek randomDay = generateRandomDay();
-//    int randomHour = generateRandomNumZeroBase(timeTable.getHours());
-//
-//    SchoolClass randomSchoolClass = generateRandomClass();
-//
-//    Subject randomSubject = generateRandomSubject(randomSchoolClass);
-//
-//
-//    Teacher randomTeacher = generateRandomTeacher(randomSubject);
-//
+
+    //#endregion evolution
+
+
+//#region rules
 @Test
 void knowledgeableGiveSolutionZeroScore(){
     List<Quintet> quintets = new ArrayList<>();
@@ -234,14 +242,32 @@ void knowledgeableGiveSolutionZeroScore(){
         assertEquals(0.0, solution.getFitnessScorePerRule().get(satisfactory));
         assertTrue(solution.getTotalFitnessScore()==0.0);
     }
-
+    //#endregion rules
     @Test
-    void getEvolutionProgressReturnListWithTheRightSize(){
-        engine.loadXML("src/resources/EX1-small.xml");
-        engine.executeEvolutionAlgorithm(10,1);
-        List<GenerationProgressDTO> progressDTOS = engine.getEvolutionProgress();
-        assertEquals(10,progressDTOS.size());
+    void engineSettingsConstructorNotAcceptingNulls(){
+        try {
+            EngineSettings engineSettings = new EngineSettings(null, null);
+        }catch(IllegalArgumentException e){
+            assertTrue(e.getMessage().length()>5);
+        }
     }
 
+    @Test
+    void evolutionEngineExecuteReturnsDifferentPopulation(){
+        assertNotEquals(initialPopulation,evolutionEngine.execute(initialPopulation));
+    }
+
+    @Test
+    void timeTableSolutionQuintetsNumIsLessThanTotalRequiredHours() {
+        TimeTableSolution timeTableSolution = new TimeTableSolution(descriptor.getTimeTable());
+        int totalRequiredHours = 0;
+        Map<Integer, SchoolClass> classes = descriptor.getTimeTable().getSchoolClasses();
+        for (SchoolClass c : classes.values()) {
+            totalRequiredHours += c.getTotalRequiredHours();
+        }
+        int quintetNum = timeTableSolution.getSolutionSize();
+        assertTrue(quintetNum <= totalRequiredHours);
+
+    }
 
 }
