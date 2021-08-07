@@ -1,10 +1,7 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.dto.*;
-import il.ac.mta.zuli.evolution.engine.events.ErrorEvent;
-import il.ac.mta.zuli.evolution.engine.events.EventsEmitter;
-import il.ac.mta.zuli.evolution.engine.events.LoadedEvent;
-import il.ac.mta.zuli.evolution.engine.events.OnStrideEvent;
+import il.ac.mta.zuli.evolution.engine.events.*;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
@@ -78,6 +75,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         List<TimeTableSolution> currGeneration = null;
         double bestSolutionFitnessScore = 0;
 
+        //try catch - fire ErrorEvent
         for (int i = 1; i <= numOfGenerations; i++) {
             currGeneration = evolutionEngine.execute(prevGeneration);
             TimeTableSolution currBestSolution = currGeneration.stream().
@@ -108,6 +106,8 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
             }
             prevSolution = entry.getValue();
         }*/
+
+        fireEvent("completed", new Event("Evolution algorithm finished running."));
     }
 
     @Override
