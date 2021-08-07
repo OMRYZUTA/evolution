@@ -4,6 +4,7 @@ import il.ac.mta.zuli.evolution.engine.Quintet;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -11,15 +12,12 @@ import java.util.Map;
 
 //rule meaning: teachers only teach subjects from their subject-collection
 public class Knowledgeable extends Rule {
-    public Knowledgeable(String ruleType) {
+    public Knowledgeable(@NotNull String ruleType) {
         super(ruleType);
     }
 
     @Override
-    public void fitnessEvaluation(Solution solution) {
-        if (!(solution instanceof TimeTableSolution)) {
-            throw new RuntimeException("solution must be TimeTableSolution");
-        }
+    public void fitnessEvaluation(@NotNull Solution solution) {
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
         double score = 0;
