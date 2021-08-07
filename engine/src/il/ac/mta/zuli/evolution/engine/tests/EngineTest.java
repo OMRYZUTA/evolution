@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.tests;
 
+import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
 import il.ac.mta.zuli.evolution.engine.*;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
@@ -213,6 +214,33 @@ void knowledgeableGiveSolutionZeroScore(){
         solution.calculateTotalScore();
         assertEquals(solution.getFitnessScorePerRule().get(satisfactory),100.0);
         assertTrue(solution.getTotalFitnessScore()>0.0);
+    }
+    @Test
+    void satisfactoryGivesSolutionZeroScore(){
+        List<Quintet> quintets = new ArrayList<>();
+        int dayIndex = 1;
+        DayOfWeek day =DayOfWeek.of(dayIndex);
+        int hour = 0;
+        SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
+
+
+
+        Map <Integer,SchoolClass> schoolClasses = new HashMap<>();
+        schoolClasses.put(1,schoolClass);
+        TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
+        Satisfactory satisfactory = new Satisfactory("soft",schoolClasses);
+        satisfactory.fitnessEvaluation(solution);
+        solution.calculateTotalScore();
+        assertEquals(0.0, solution.getFitnessScorePerRule().get(satisfactory));
+        assertTrue(solution.getTotalFitnessScore()==0.0);
+    }
+
+    @Test
+    void getEvolutionProgressReturnListWithTheRightSize(){
+        engine.loadXML("src/resources/EX1-small.xml");
+        engine.executeEvolutionAlgorithm(10,1);
+        List<GenerationProgressDTO> progressDTOS = engine.getEvolutionProgress();
+        assertEquals(10,progressDTOS.size());
     }
 
 }

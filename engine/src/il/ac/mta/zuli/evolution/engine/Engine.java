@@ -1,8 +1,11 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
+import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.events.EventListener;
+
+import java.util.List;
 
 public interface Engine {
     void loadXML(String path); //in impl of method - use other method to check if a valid file is already loaded
@@ -19,7 +22,7 @@ public interface Engine {
 
     TimeTableSolutionDTO getBestSolutionClassOriented();
 
-    void showEvolutionProcess();
+    List<GenerationProgressDTO> getEvolutionProgress();
 
     void leaveSystem();
 

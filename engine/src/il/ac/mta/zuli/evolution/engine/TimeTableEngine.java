@@ -9,6 +9,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
+import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
@@ -28,6 +29,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride; // generation , solution
 
     public TimeTableEngine() {
+        bestSolutionsInGenerationPerStride = new HashMap<>();
     }
 
     //#region ui-parallel methods
@@ -45,6 +47,9 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     @Override
     public DescriptorDTO getSystemDetails() {
+        if(!isXMLLoaded()){
+            throw new InvalidOperationException("can't get system details, file is not loaded");
+        }
         //DTO: list of subjects, list of teachers, list of SchoolClasses, list of rules
         TimeTableDTO timeTableDTO = createTimeTableDTO();
         EngineSettingsDTO engineSettingsDTO = createEngineSettingsDTO();
@@ -54,6 +59,9 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     @Override
     public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
+        if(!isXMLLoaded()){
+            throw new InvalidOperationException("can't get system details, file is not loaded");
+        }
         if(numOfGenerations<0){
             throw new ValidationException(numOfGenerations+" is invalid number for generations, must be positive number");
         }
@@ -70,7 +78,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         List<TimeTableSolution> currGeneration = null;
         double bestSolutionFitnessScore = 0;
 
-        for (int i = 0; i < numOfGenerations; i++) {
+        for (int i = 1; i <= numOfGenerations; i++) {
             currGeneration = evolutionEngine.execute(prevGeneration);
             TimeTableSolution currBestSolution = currGeneration.stream().
                     sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
@@ -104,6 +112,9 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     @Override
     public TimeTableSolutionDTO getBestSolutionRaw() {
+        if(!isXMLLoaded()){
+            throw new InvalidOperationException("can't get system details, file is not loaded");
+        }
         TimeTableSolution bestSolution = getBestSolution();
         bestSolution.sortQuintetsInSolution(Quintet.getRawComparator());
 
@@ -113,6 +124,9 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     @Override
     public TimeTableSolutionDTO getBestSolutionTeacherOriented() {
+        if(!isXMLLoaded()){
+            throw new InvalidOperationException("can't get system details, file is not loaded");
+        }
         TimeTableSolution bestSolution = getBestSolution();
         bestSolution.sortQuintetsInSolution(Quintet.getTeacherComparator());
 
@@ -121,6 +135,9 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     @Override
     public TimeTableSolutionDTO getBestSolutionClassOriented() {
+        if(!isXMLLoaded()){
+            throw new InvalidOperationException("can't get system details, file is not loaded");
+        }
         TimeTableSolution bestSolution = getBestSolution();
         bestSolution.sortQuintetsInSolution(Quintet.getSchoolClassComparator());
 
@@ -128,8 +145,24 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     }
 
     @Override
-    public void showEvolutionProcess() {
-
+    public List<GenerationProgressDTO> getEvolutionProgress() {
+        if(! isXMLLoaded()){
+            throw new InvalidOperationException("can't show evolution progress, file is not loaded");
+        }
+        if(bestSolutionsInGenerationPerStride.size()==0){
+            throw new InvalidOperationException("can't show evolution progress, evolution algorithm has not been executed");
+        }
+        List<GenerationProgressDTO> Progress= new ArrayList<>();
+        double previousScore =bestSolutionsInGenerationPerStride.get(1).getTotalFitnessScore();
+        double delta;
+        int generation;
+        for (Map.Entry<Integer,TimeTableSolution> entry :bestSolutionsInGenerationPerStride.entrySet()) {
+            TimeTableSolutionDTO solutionDTO = createTimeTableSolutionDTO(entry.getValue());
+             generation =entry.getKey();
+            delta = entry.getValue().getTotalFitnessScore() -previousScore;
+            Progress.add(new GenerationProgressDTO(generation,solutionDTO,delta));
+        }
+        return Progress;
     }
 
     @Override
