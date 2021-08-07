@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.tests;
 
 import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
+import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.*;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
@@ -95,7 +96,14 @@ class EngineTest {
         List<GenerationProgressDTO> progressDTOS = engine.getEvolutionProgress();
         assertEquals(10,progressDTOS.size());
     }
-
+@Test
+void getBestSolutionReturnsSolutionBetterThan50(){
+    engine.loadXML("src/resources/EX1-small.xml");
+        engine.executeEvolutionAlgorithm(50,10);
+    TimeTableSolutionDTO solutionDTO = engine.getBestSolutionRaw();
+    System.out.println(solutionDTO.getTotalFitnessScore());
+    assertTrue(solutionDTO.getTotalFitnessScore()>50.0);
+}
     //#endregion engine
 
 //#region evolution

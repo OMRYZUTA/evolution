@@ -57,7 +57,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     @Override
     public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
         if(!isXMLLoaded()){
-            throw new InvalidOperationException("can't get system details, file is not loaded");
+            throw new InvalidOperationException("can't execute Evolution algorithm, file is not loaded");
         }
         if(numOfGenerations<0){
             throw new ValidationException(numOfGenerations+" is invalid number for generations, must be positive number");
