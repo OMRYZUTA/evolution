@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-			<ETT-Teacher id="1">
-				<ETT-Name>Asi Mon</ETT-Name>
-				<ETT-Teaching>
-					<ETT-Teaches subject-id="1"/>
-					<ETT-Teaches subject-id="2"/>
-				</ETT-Teaching>
-			</ETT-Teacher>

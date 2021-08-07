@@ -1,20 +1,22 @@
 package il.ac.mta.zuli.evolution.engine.tests;
 
-import il.ac.mta.zuli.evolution.engine.Descriptor;
-import il.ac.mta.zuli.evolution.engine.Engine;
-import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
+import il.ac.mta.zuli.evolution.engine.*;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
+import il.ac.mta.zuli.evolution.engine.rules.Knowledgeable;
 import il.ac.mta.zuli.evolution.engine.rules.Satisfactory;
+import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
+import il.ac.mta.zuli.evolution.engine.timetable.Subject;
+import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -127,5 +129,43 @@ class EngineTest {
     @Test
     void evolutionEngineExecuteReturnsSameSizeOfPopulation(){
         assertEquals(initialPopulation.size(),evolutionEngine.execute(initialPopulation).size());
+    }
+//    DayOfWeek randomDay = generateRandomDay();
+//    int randomHour = generateRandomNumZeroBase(timeTable.getHours());
+//
+//    SchoolClass randomSchoolClass = generateRandomClass();
+//
+//    Subject randomSubject = generateRandomSubject(randomSchoolClass);
+//
+//
+//    Teacher randomTeacher = generateRandomTeacher(randomSubject);
+//
+//        return new Quintet(randomDay, randomHour, randomTeacher, randomSchoolClass, randomSubject);
+
+    @Test
+    void knowledgeableGiveSolutionFullScore(){
+        List<Quintet> quintets = new ArrayList<>();
+            int dayIndex = 1;
+            DayOfWeek day =DayOfWeek.of(dayIndex);
+            int hour = 0;
+            SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
+            Requirement requirement = schoolClass.getRequirements().get(0);
+            int teachingHours =requirement.getHours();
+            Subject subject = requirement.getSubject();
+        Teacher teacher = descriptor.getTimeTable().getTeachers().
+                get(descriptor.getTimeTable().getTeachersThatTeachSubject(subject.getId()).get(0));
+        for (int i = 0; i < teachingHours; i++) {
+            if(hour>=descriptor.getTimeTable().getHours()){
+                hour=0;
+                dayIndex++;
+                day = DayOfWeek.of(dayIndex);
+            }
+            quintets.add(new Quintet(day,hour,teacher,schoolClass,subject));
+        }
+        TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
+        Knowledgeable knowledgeable = new Knowledgeable("soft");
+        knowledgeable.fitnessEvaluation(solution);
+
+        assertEquals(solution.getFitnessScorePerRule().get(knowledgeable),100.0);
     }
 }
