@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine.crossover;
 import il.ac.mta.zuli.evolution.engine.Quintet;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import org.jetbrains.annotations.NotNull;
 
@@ -176,12 +177,13 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         return quintets;
     }
 
-    private void setNumOfCuttingPoints(int numOfCuttingPoints) throws Exception {
-        if (numOfCuttingPoints >= 0) {
+    private void setNumOfCuttingPoints(int numOfCuttingPoints) {
+        if (numOfCuttingPoints > 0 && numOfCuttingPoints < days*hours) {
             this.numOfCuttingPoints = numOfCuttingPoints;
         } else {
-            throw new Exception("number of cutting points must be a positive integer");
+            throw new ValidationException("invalid number of cutting points, must be between 1 -"+days*hours);
         }
+
     }
 
     public int getNumOfCuttingPoints() {
