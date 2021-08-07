@@ -2,15 +2,12 @@ package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
-
-import java.awt.event.ActionListener;
+import il.ac.mta.zuli.evolution.engine.events.EventListener;
 
 public interface Engine {
     void loadXML(String path); //in impl of method - use other method to check if a valid file is already loaded
 
-    void removeHandler(ActionListener handler);
-
-    void addHandler(ActionListener handler);
+    void addListener(String name, EventListener listener);
 
     DescriptorDTO getSystemDetails();
 

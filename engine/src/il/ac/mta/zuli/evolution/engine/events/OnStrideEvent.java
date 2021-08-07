@@ -2,28 +2,21 @@ package il.ac.mta.zuli.evolution.engine.events;
 
 import il.ac.mta.zuli.evolution.dto.GenerationStrideScoreDTO;
 
-import java.awt.event.ActionEvent;
+public class OnStrideEvent extends Event {
+    private final int generation;
+    private final GenerationStrideScoreDTO generationStrideScoreDTO;
 
-public class OnStrideEvent extends ActionEvent {
-
-
-    private GenerationStrideScoreDTO generationStrideScoreDTO;
-    public OnStrideEvent(Object source, int id, String command, GenerationStrideScoreDTO generationStrideScoreDTO){
-        super(source, id, command);
-        this.generationStrideScoreDTO =generationStrideScoreDTO;
-    }
-    public OnStrideEvent(Object source, int id, String command) {
-        super(source, id, command);
+    public OnStrideEvent(String message, int generation, GenerationStrideScoreDTO generationStrideScoreDTO) {
+        super(message);
+        this.generation = generation;
+        this.generationStrideScoreDTO = generationStrideScoreDTO;
     }
 
-    public OnStrideEvent(Object source, int id, String command, int modifiers) {
-        super(source, id, command, modifiers);
+    public int getGeneration() {
+        return generation;
     }
+
     public GenerationStrideScoreDTO getGenerationStrideScoreDTO() {
         return generationStrideScoreDTO;
-    }
-
-    public OnStrideEvent(Object source, int id, String command, long when, int modifiers) {
-        super(source, id, command, when, modifiers);
     }
 }

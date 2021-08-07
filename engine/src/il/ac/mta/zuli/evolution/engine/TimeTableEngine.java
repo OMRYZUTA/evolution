@@ -1,6 +1,9 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.dto.*;
+import il.ac.mta.zuli.evolution.engine.events.ErrorEvent;
+import il.ac.mta.zuli.evolution.engine.events.EventsEmitter;
+import il.ac.mta.zuli.evolution.engine.events.LoadedEvent;
 import il.ac.mta.zuli.evolution.engine.events.OnStrideEvent;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
@@ -14,19 +17,15 @@ import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TimeTableEngine implements Engine {
+public class TimeTableEngine extends EventsEmitter implements Engine {
     private boolean isXMLLoaded = false;
     private Descriptor descriptor;
-    private final XMLParser xmlParser = new XMLParser();
     private EvolutionEngine evolutionEngine;
     private TimeTableSolution bestSolutionEver = null;
     private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride; // generation , solution
-    private List<ActionListener> handlers = new ArrayList<>();
 
     public TimeTableEngine() {
     }
@@ -36,19 +35,14 @@ public class TimeTableEngine implements Engine {
     public void loadXML(String path) {
         //TODO validatePath() maybe check if unmarshall will return ;
         try {
+            XMLParser xmlParser = new XMLParser();
             descriptor = xmlParser.unmarshall(path);
-            //TODO: fire "loaded" event (maybe with details?)
-            fireEvent("xml File was loaded");
+            fireEvent("loaded", new LoadedEvent("file was loaded", path));
             if (descriptor != null) {
                 isXMLLoaded = true;
             }
         } catch (Exception e) {
-            //TODO: fire "error" event (must include details)
-            if (descriptor == null) {
-                fireEvent("Failed loading initial file");
-            } else {
-                fireEvent("Failed loading subsequent file, previous file remains loaded");
-            }
+            fireEvent("error", new ErrorEvent("failed reading file", e));
         }
     }
 
@@ -87,7 +81,7 @@ public class TimeTableEngine implements Engine {
             if (i % generationsStride == 0) {
                 bestSolutionsInGenerationPerStride.put(i, currBestSolution);
                 GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i, currBestSolution.getTotalFitnessScore());
-                fireEvent2(strideScoreDTO);
+                fireEvent("stride", new OnStrideEvent("generationStride", i, strideScoreDTO));
             }
 
             prevGeneration = currGeneration;
@@ -321,35 +315,35 @@ public class TimeTableEngine implements Engine {
 
     //#endregion
 
-    //#region event-related methods
-    public void EventsGeneratorComponent() {
-        handlers = new ArrayList<>();
-    }
-
-    public void addHandler(ActionListener handler) {
-        if (handler != null && !handlers.contains(handler)) {
-            handlers.add(handler);
-        }
-    }
-
-    public void removeHandler(ActionListener handler) {
-        handlers.remove(handler);
-    }
-
-    private void fireEvent(String message) {
-        ActionEvent myEvent = new ActionEvent(this, 1, message);
-        List<ActionListener> handlersToInvoke = new ArrayList<>(handlers);
-        for (ActionListener handler : handlersToInvoke) {
-            handler.actionPerformed(myEvent);
-        }
-    }
-
-    private void fireEvent2(GenerationStrideScoreDTO generationStrideScoreDTO) {
-        OnStrideEvent onStrideEvent = new OnStrideEvent(this, 3, "generationStride", generationStrideScoreDTO);
-        List<ActionListener> handlersToInvoke = new ArrayList<>(handlers);
-        for (ActionListener handler : handlersToInvoke) {
-            handler.actionPerformed(onStrideEvent);
-        }
-    }
-    //#endregion
+//    //#region event-related methods
+//    public void EventsGeneratorComponent() {
+//        handlers = new ArrayList<>();
+//    }
+//
+//    public void addHandler(ActionListener handler) {
+//        if (handler != null && !handlers.contains(handler)) {
+//            handlers.add(handler);
+//        }
+//    }
+//
+//    public void removeHandler(ActionListener handler) {
+//        handlers.remove(handler);
+//    }
+//
+//    private void fireEvent(String message) {
+//        ActionEvent myEvent = new ActionEvent(this, 1, message);
+//        List<ActionListener> handlersToInvoke = new ArrayList<>(handlers);
+//        for (ActionListener handler : handlersToInvoke) {
+//            handler.actionPerformed(myEvent);
+//        }
+//    }
+//
+//    private void fireEvent2(GenerationStrideScoreDTO generationStrideScoreDTO) {
+//        OnStrideEvent onStrideEvent = new OnStrideEvent(this, 3, "generationStride", generationStrideScoreDTO);
+//        List<ActionListener> handlersToInvoke = new ArrayList<>(handlers);
+//        for (ActionListener handler : handlersToInvoke) {
+//            handler.actionPerformed(onStrideEvent);
+//        }
+//    }
+//    //#endregion
 }

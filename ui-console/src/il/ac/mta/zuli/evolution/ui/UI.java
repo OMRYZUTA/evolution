@@ -3,24 +3,37 @@ package il.ac.mta.zuli.evolution.ui;
 import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
+import il.ac.mta.zuli.evolution.engine.events.ErrorEvent;
+import il.ac.mta.zuli.evolution.engine.events.LoadedEvent;
 import il.ac.mta.zuli.evolution.engine.events.OnStrideEvent;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 
-public class UI implements ActionListener {
+public class UI {
     private final Engine engine;
     private final Scanner scanner;
-    private final boolean fileLoaded;
+    private boolean fileLoaded;
     private final boolean evolutionAlgorithmCompleted;
 
     public UI() {
         engine = new TimeTableEngine();
-        engine.addHandler(this);
         scanner = new Scanner(System.in);
         fileLoaded = false;
         evolutionAlgorithmCompleted = false;
+
+        engine.addListener("loaded", e -> {
+            UI.this.fileLoaded = true;
+            LoadedEvent loadedEvent = (LoadedEvent) e;
+            System.out.println("file was successfully loaded from " + loadedEvent.getPath());
+        });
+        engine.addListener("error", e -> {
+            ErrorEvent errorEvent = (ErrorEvent) e;
+            System.out.println("failed loading file: " + errorEvent.getError().getMessage());
+        });
+        engine.addListener("stride", e -> {
+            OnStrideEvent strideEvent = (OnStrideEvent) e;
+            UI.this.showStrideProgress(strideEvent.getGenerationStrideScoreDTO());
+        });
     }
 
     public void operateMenu() {
@@ -28,7 +41,7 @@ public class UI implements ActionListener {
 
         // TODO: make sure engine never throws exceptions. It should catch them, and raise an "error" event
         while (stayInSystem) {
-            printMenu();
+            printMainMenu();
             MenuOptions selectedOption = getSelectedOption(scanner.nextLine());
             switch (selectedOption) {
                 case LoadFile:
@@ -73,7 +86,7 @@ public class UI implements ActionListener {
         }
     }
 
-    public void printMenu() {
+    private void printMainMenu() {
         String noFileLoaded = fileLoaded ? "" : " <Unavailable - no file loaded>";
         String algoIncomplete = evolutionAlgorithmCompleted ? "" : " <Unavailable - algorithm run was not completed>";
         System.out.println("Please enter the option number to select from the menu:");
@@ -83,6 +96,13 @@ public class UI implements ActionListener {
         System.out.println(MenuOptions.ShowSolution.ordinal() + ". Show best solution" + algoIncomplete);
         System.out.println(MenuOptions.ShowProgress.ordinal() + ". Show algorithm progress per stride" + algoIncomplete);
         System.out.println(MenuOptions.Exit.ordinal() + ". Exit system");
+    }
+
+    private void printShowSolutionMenu() {
+        System.out.println("Enter an option number for your preferred display of the best solution:");
+        System.out.println("1. A sorted list of the solution quintets <D,H,C,T,S>");
+        System.out.println("2. A separate D*H timetable for each teacher");
+        System.out.println("3. A separate D*H timetable for each class");
     }
 
     private MenuOptions getSelectedOption(String input) {
@@ -124,6 +144,7 @@ public class UI implements ActionListener {
 
         printTimeTable(timeTableDTO);
         printEngineSetting(engineSettingsDTO);
+
         System.out.println("*********************************");
     }
 
@@ -132,7 +153,28 @@ public class UI implements ActionListener {
         engine.executeEvolutionAlgorithm(1000, 50);
     }
 
+
     private void showSolution() {
+        //while
+//        printShowSolutionMenu();
+//        int displayOption = Integer.parseInt(scanner.nextLine(), 10);
+//        TimeTableSolutionDTO bestSolution = null;
+//
+//        switch (displayOption) {
+//            case 1:
+//                bestSolution = engine.getBestSolutionRaw();
+//                for (QuintetDTO quintet : bestSolution.getSolutionQuintets()) {
+//                    System.out.println(quintet);
+//                }
+//
+//            case 2:
+//                break;
+//            case 3:
+//                break;
+//            defualt
+//        }
+
+
     }
 
     private void showProgress() {
@@ -187,20 +229,20 @@ public class UI implements ActionListener {
         }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getID()) {
-            case 1:
-                System.out.println(e.getActionCommand());
-                break;
-            case 3:
-                GenerationStrideScoreDTO generationStrideScoreDTO = ((OnStrideEvent) e).getGenerationStrideScoreDTO();
-                showStrideProgress(generationStrideScoreDTO);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + e.getID());
-        }
-    }
+//    @Override
+//    public void actionPerformed(ActionEvent e) {
+//        switch (e.getID()) {
+//            case 1:
+//                System.out.println(e.getActionCommand());
+//                break;
+//            case 3:
+//                GenerationStrideScoreDTO generationStrideScoreDTO = ((OnStrideEvent) e).getGenerationStrideScoreDTO();
+//                showStrideProgress(generationStrideScoreDTO);
+//                break;
+//            default:
+//                throw new IllegalStateException("Unexpected value: " + e.getID());
+//        }
+//    }
 
     private void showStrideProgress(GenerationStrideScoreDTO generationStrideScoreDTO) {
         System.out.println("generation: " + generationStrideScoreDTO.getGenerationNum()
