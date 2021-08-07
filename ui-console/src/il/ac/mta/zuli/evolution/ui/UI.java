@@ -49,6 +49,7 @@ public class UI implements ActionListener {
     }
 
     private void printEngineSetting(EngineSettingsDTO engineSettingsDTO) {
+        System.out.println(String.format("population size : %d", engineSettingsDTO.getInitialPopulationSize()));
         SelectionDTO selectionDTO = engineSettingsDTO.getSelection();
         CrossoverDTO crossoverDTO = engineSettingsDTO.getCrossover();
         List<MutationDTO> mutationDTOList = engineSettingsDTO.getMutations();
