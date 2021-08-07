@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine.mutation;
 import il.ac.mta.zuli.evolution.engine.Quintet;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
@@ -19,7 +20,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
     ComponentName component;
     TimeTable timeTable;
 
-    public Flipping(double probability, int maxTuples, ComponentName component, TimeTable timeTable) throws Exception {
+    public Flipping(double probability, int maxTuples, ComponentName component, TimeTable timeTable)  {
         setProbability(probability);
         this.maxTuples = maxTuples;
         this.component = component;
@@ -103,21 +104,14 @@ public class Flipping<S extends Solution> implements Mutation<S> {
         return enumValues[randIndex];
     }
 
-    private void setProbability(double probability) throws Exception {
+    private void setProbability(double probability) {
         if (0 <= probability && probability <= 1) {
             this.probability = probability;
         } else {
-            throw new Exception("invalid probability");
+            throw new ValidationException("invalid probability, should be between 0 -1 but got"+probability);
         }
     }
 
-    public int getMaxTuples() {
-        return maxTuples;
-    }
-
-    public ComponentName getComponent() {
-        return component;
-    }
 
     @Override
     public String toString() {

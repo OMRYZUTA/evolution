@@ -14,9 +14,9 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
     private final int hours;
     private final TimeTable timeTable;
     private int numOfCuttingPoints;
-    private List<Integer> cuttingPoints; //indices for cutting points in solution
+    private List<Integer> cuttingPointsIndices;
 
-    public DayTimeOriented(int numOfCuttingPoints, TimeTable timeTable) throws Exception {
+    public DayTimeOriented(int numOfCuttingPoints, TimeTable timeTable)  {
         // no need to check validity for days and hours, since they come from timetable
         this.timeTable = timeTable;
         this.days = timeTable.getDays();
@@ -33,24 +33,26 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
             return selectedParents;
         }
 
-        // A. randomly generate numOfCuttingPoints cutting points
         randomlyGenerateCuttingPoints();
 
-        // B. organize each solution as 2-dimension array D*H
-        List<List<List<Quintet>>> selectedSolutionsAsMatrix = new ArrayList<>();
+        List<List<List<Quintet>>> selectedSolutionsAsMatrix = organizeSolutionsAsDayHoursArray(selectedParents);
 
-        for (S solution : selectedParents) {
-            selectedSolutionsAsMatrix.add(convertSolutionToMatrixDH(solution));
-        }
+        List<TimeTableSolution> newGeneration = createNewGenerationFromParents(selectedSolutionsAsMatrix);
 
-        // C. randomly select 2 parents to "mate" and remove them from the pool of parents
+
+        //why do we need to cast down?
+        return (List<S>) newGeneration;
+    }
+
+    @NotNull
+    private List<TimeTableSolution> createNewGenerationFromParents(List<List<List<Quintet>>> selectedSolutionsAsMatrix) {
+        //  randomly select 2 parents to "mate" and remove them from the pool of parents
         // for every 2-parents-couple apply crossoverBetween2Parents()
         // add the 2 children to the new generation
         List<TimeTableSolution> newGeneration = new ArrayList<>();
 
-        List<List<Quintet>> parent1 = null;
-        List<List<Quintet>> parent2 = null;
-        int randomIndex;
+        List<List<Quintet>> parent1;
+        List<List<Quintet>> parent2;
 
         while (selectedSolutionsAsMatrix.size() >= 2) {
             parent1 = randomlySelectParent(selectedSolutionsAsMatrix);
@@ -68,8 +70,17 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
             newGeneration.add(new TimeTableSolution(quintets, timeTable));
         }
 
-        //why do we need to cast down?
-        return (List<S>) newGeneration;
+        return newGeneration;
+    }
+
+    @NotNull
+    private List<List<List<Quintet>>> organizeSolutionsAsDayHoursArray(List<S> selectedParents) {
+        List<List<List<Quintet>>> selectedSolutionsAsMatrix = new ArrayList<>();
+
+        for (S solution : selectedParents) {
+            selectedSolutionsAsMatrix.add(convertSolutionToMatrixDH(solution));
+        }
+        return selectedSolutionsAsMatrix;
     }
 
     private void removeParentFromPoolOfParents(List<List<List<Quintet>>> selectedSolutionsAsMatrix,
@@ -101,6 +112,13 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
 
         // Array D*H length (instead of matrix) the index is: (hour * DAYS) + day (zero based)
         // each element in the array is a collection of quintets
+        List<List<Quintet>> solutionMatrix = fillQuintetsToMatrix(solutionQuintets);
+
+        return solutionMatrix;
+    }
+
+    @NotNull
+    private List<List<Quintet>> fillQuintetsToMatrix(List<Quintet> solutionQuintets) {
         List<List<Quintet>> solutionMatrix = createEmptyDHMatrix();
 
         for (Quintet quintet : solutionQuintets) {
@@ -112,7 +130,6 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
             }
             (solutionMatrix.get(i)).add(quintet);
         }
-
         return solutionMatrix;
     }
 
@@ -134,7 +151,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         List<TimeTableSolution> twoNewSolutions = new ArrayList<>(2);
         List<List<Quintet>> child1 = new ArrayList<>();
         List<List<Quintet>> child2 = new ArrayList<>();
-        Iterator<Integer> cuttingPointsItr = cuttingPoints.iterator();
+        Iterator<Integer> cuttingPointsItr = cuttingPointsIndices.iterator();
         int cuttingPoint = cuttingPointsItr.next();
         boolean parent1ToChild1 = true;
 
@@ -156,14 +173,18 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         }
 
         //flattening-back from the hierarchy of solutionMatrix to List<Quintets> field in TimeTablesolution
+        converMatrixesToSolutions(twoNewSolutions, child1, child2);
+
+        return twoNewSolutions;
+    }
+
+    private void converMatrixesToSolutions(List<TimeTableSolution> twoNewSolutions, List<List<Quintet>> child1, List<List<Quintet>> child2) {
         List<Quintet> quintets = flattenSolutionMatrix(child1);
         TimeTableSolution tempSolution = new TimeTableSolution(quintets, timeTable);
         twoNewSolutions.add(tempSolution);
         quintets = flattenSolutionMatrix(child2);
         tempSolution = new TimeTableSolution(quintets, timeTable);
         twoNewSolutions.add(tempSolution);
-
-        return twoNewSolutions;
     }
 
     @NotNull
@@ -190,9 +211,6 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         return numOfCuttingPoints;
     }
 
-    public List<Integer> getCuttingPoints() {
-        return Collections.unmodifiableList(cuttingPoints);
-    }
 
     private void randomlyGenerateCuttingPoints() {
         Set<Integer> tempSetOfPoints = new HashSet<>();
@@ -206,8 +224,8 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
             }
         }
 
-        cuttingPoints = new ArrayList<>(tempSetOfPoints);
-        Collections.sort(cuttingPoints);
+        cuttingPointsIndices = new ArrayList<>(tempSetOfPoints);
+        Collections.sort(cuttingPointsIndices);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.selection;
 
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTSelection;
 
 public class SelectionFactory {
@@ -10,7 +11,7 @@ public class SelectionFactory {
             case "truncation":
                 return new Truncation(ettSelection);
             default:
-                throw new RuntimeException("invalid selection type (for ex. 1)");
+                throw new ValidationException("invalid selection type (for ex. 1)");
         }
     }
 }

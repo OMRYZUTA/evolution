@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class TimeTableEngine implements Engine {
-    private final boolean isXMLLoaded = false;
+    private boolean isXMLLoaded = false;
     private Descriptor descriptor;
     private final XMLParser xmlParser = new XMLParser();
     private EvolutionEngine evolutionEngine;
@@ -39,9 +39,9 @@ public class TimeTableEngine implements Engine {
             descriptor = xmlParser.unmarshall(path);
             //TODO: fire "loaded" event (maybe with details?)
             fireEvent("xml File was loaded");
-//            if (descriptor != null) {
-//                isXMLLoaded = true;
-//            }
+            if (descriptor != null) {
+                isXMLLoaded = true;
+            }
         } catch (Exception e) {
             //TODO: fire "error" event (must include details)
             if (descriptor == null) {

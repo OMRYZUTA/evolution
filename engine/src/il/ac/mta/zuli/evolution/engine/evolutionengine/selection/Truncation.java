@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.selection;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTSelection;
 
 import java.util.Collections;
@@ -11,8 +12,18 @@ public class Truncation<S extends Solution> implements Selection<S> {
     private int topPercent;
 
     public Truncation(ETTSelection ettSelection) {
+        parseConfiguration(ettSelection);
+    }
+
+    private void parseConfiguration(ETTSelection ettSelection) {
         String configuration = ettSelection.getConfiguration();
+        if(configuration.length()==0){
+            throw new ValidationException("empty configuartion ");
+        }
         int index = configuration.indexOf('=');
+        if(index ==-1){
+            throw new ValidationException("missing \'=\' ");
+        }
         int num = Integer.parseInt(configuration.substring(index + 1));
         setTopPercent(num);
     }
@@ -27,9 +38,6 @@ public class Truncation<S extends Solution> implements Selection<S> {
         return solutions.stream().limit(topFitnessSolutions).collect(Collectors.toList());
     }
 
-    public int getTopPercent() {
-        return topPercent;
-    }
 
     public String getConfiguration() {
         return String.format("TopPercent = %d", topPercent);
@@ -45,7 +53,7 @@ public class Truncation<S extends Solution> implements Selection<S> {
         if (topPercent >= 1 && topPercent <= 100) {
             this.topPercent = topPercent;
         } else {
-            throw new RuntimeException("invalid top percent value");
+            throw new RuntimeException("invalid top percent value :"+topPercent+"need to be between 1 - 100");
         }
     }
 }
