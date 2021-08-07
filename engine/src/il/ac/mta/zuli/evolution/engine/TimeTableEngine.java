@@ -9,6 +9,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
@@ -32,7 +33,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     //#region ui-parallel methods
     @Override
-    public void loadXML(String path) {
+    public void loadXML(@NotNull String path) {
         //TODO validatePath() maybe check if unmarshall will return ;
         try {
             XMLParser xmlParser = new XMLParser();
@@ -57,6 +58,12 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     @Override
     public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
+        if(numOfGenerations<0){
+            throw new ValidationException(numOfGenerations+" is invalid number for generations, must be positive number");
+        }
+        if(generationsStride<0 ||generationsStride>numOfGenerations){
+            throw new ValidationException(numOfGenerations+" is invalid number for generation strides, must be between 1 - "+numOfGenerations);
+        }
         bestSolutionsInGenerationPerStride = new HashMap<>(numOfGenerations);
         List<TimeTableSolution> initialPopulation = getInitialGeneration();
 
