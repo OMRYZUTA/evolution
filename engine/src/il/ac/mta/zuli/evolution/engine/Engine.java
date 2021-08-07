@@ -16,15 +16,15 @@ public interface Engine {
 
     void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride);
 
-    TimeTableSolutionDTO getBestSolutionRaw();
+    TimeTableSolutionDTO getBestSolution();
 
-    TimeTableSolutionDTO getBestSolutionTeacherOriented();
+    //TimeTableSolutionDTO getBestSolutionRaw();
 
-    TimeTableSolutionDTO getBestSolutionClassOriented();
+//    TimeTableSolutionDTO getBestSolutionTeacherOriented();
+//
+//    TimeTableSolutionDTO getBestSolutionClassOriented();
 
     List<GenerationProgressDTO> getEvolutionProgress();
-
-    void leaveSystem();
 
     boolean isXMLLoaded();
 }

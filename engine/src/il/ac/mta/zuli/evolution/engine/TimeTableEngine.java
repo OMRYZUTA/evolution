@@ -44,7 +44,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     @Override
     public DescriptorDTO getSystemDetails() {
-        if(!isXMLLoaded()){
+        if (!isXMLLoaded()) {
             throw new InvalidOperationException("can't get system details, file is not loaded");
         }
         //DTO: list of subjects, list of teachers, list of SchoolClasses, list of rules
@@ -56,14 +56,14 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     @Override
     public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
-        if(!isXMLLoaded()){
+        if (!isXMLLoaded()) {
             throw new InvalidOperationException("can't execute Evolution algorithm, file is not loaded");
         }
-        if(numOfGenerations<0){
-            throw new ValidationException(numOfGenerations+" is invalid number for generations, must be positive number");
+        if (numOfGenerations < 0) {
+            throw new ValidationException(numOfGenerations + " is invalid number for generations, must be positive number");
         }
-        if(generationsStride<0 ||generationsStride>numOfGenerations){
-            throw new ValidationException(numOfGenerations+" is invalid number for generation strides, must be between 1 - "+numOfGenerations);
+        if (generationsStride < 0 || generationsStride > numOfGenerations) {
+            throw new ValidationException(numOfGenerations + " is invalid number for generation strides, must be between 1 - " + numOfGenerations);
         }
         bestSolutionsInGenerationPerStride = new HashMap<>(numOfGenerations);
         List<TimeTableSolution> initialPopulation = getInitialGeneration();
@@ -111,71 +111,33 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     }
 
     @Override
-    public TimeTableSolutionDTO getBestSolutionRaw() {
-        if(!isXMLLoaded()){
-            throw new InvalidOperationException("can't get system details, file is not loaded");
-        }
-        TimeTableSolution bestSolution = getBestSolution();
-        bestSolution.sortQuintetsInSolution(Quintet.getRawComparator());
-
-        return createTimeTableSolutionDTO(bestSolution);
-    }
-
-
-    @Override
-    public TimeTableSolutionDTO getBestSolutionTeacherOriented() {
-        if(!isXMLLoaded()){
-            throw new InvalidOperationException("can't get system details, file is not loaded");
-        }
-        TimeTableSolution bestSolution = getBestSolution();
-        bestSolution.sortQuintetsInSolution(Quintet.getTeacherComparator());
-
-        return createTimeTableSolutionDTO(bestSolution);
-    }
-
-    @Override
-    public TimeTableSolutionDTO getBestSolutionClassOriented() {
-        if(!isXMLLoaded()){
-            throw new InvalidOperationException("can't get system details, file is not loaded");
-        }
-        TimeTableSolution bestSolution = getBestSolution();
-        bestSolution.sortQuintetsInSolution(Quintet.getSchoolClassComparator());
-
-        return createTimeTableSolutionDTO(bestSolution);
+    public TimeTableSolutionDTO getBestSolution() {
+        return createTimeTableSolutionDTO(bestSolutionEver);
     }
 
     @Override
     public List<GenerationProgressDTO> getEvolutionProgress() {
-        if(! isXMLLoaded()){
+        if (!isXMLLoaded()) {
             throw new InvalidOperationException("can't show evolution progress, file is not loaded");
         }
-        if(bestSolutionsInGenerationPerStride.size()==0){
+        if (bestSolutionsInGenerationPerStride.size() == 0) {
             throw new InvalidOperationException("can't show evolution progress, evolution algorithm has not been executed");
         }
-        List<GenerationProgressDTO> Progress= new ArrayList<>();
-        double previousScore =bestSolutionsInGenerationPerStride.get(1).getTotalFitnessScore();
+        List<GenerationProgressDTO> Progress = new ArrayList<>();
+        double previousScore = bestSolutionsInGenerationPerStride.get(1).getTotalFitnessScore();
         double delta;
         int generation;
-        for (Map.Entry<Integer,TimeTableSolution> entry :bestSolutionsInGenerationPerStride.entrySet()) {
+        for (Map.Entry<Integer, TimeTableSolution> entry : bestSolutionsInGenerationPerStride.entrySet()) {
             TimeTableSolutionDTO solutionDTO = createTimeTableSolutionDTO(entry.getValue());
-             generation =entry.getKey();
-            delta = entry.getValue().getTotalFitnessScore() -previousScore;
-            Progress.add(new GenerationProgressDTO(generation,solutionDTO,delta));
+            generation = entry.getKey();
+            delta = entry.getValue().getTotalFitnessScore() - previousScore;
+            Progress.add(new GenerationProgressDTO(generation, solutionDTO, delta));
         }
         return Progress;
     }
-
-    @Override
-    public void leaveSystem() {
-    }
-
     //#endregion
 
     //#region auxiliary methods
-    public TimeTableSolution getBestSolution() {
-        return bestSolutionEver;
-    }
-
     @NotNull
     private List<TimeTableSolution> getInitialGeneration() {
         int initialPopulationSize = descriptor.getEngineSettings().getInitialPopulationSize();
@@ -192,7 +154,6 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     public boolean isXMLLoaded() {
         return descriptor != null;
     }
-
 //#endregion
 
     //#region DTO-related methods
@@ -382,4 +343,32 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 //        }
 //    }
 //    //#endregion
+
+    public TimeTableSolutionDTO getBestSolutionRaw() {
+        if (!isXMLLoaded()) {
+            throw new InvalidOperationException("can't get system details, file is not loaded");
+        }
+        bestSolutionEver.sortQuintetsInSolution(Quintet.getRawComparator());
+
+        return createTimeTableSolutionDTO(bestSolutionEver);
+    }
+
+    public TimeTableSolutionDTO getBestSolutionTeacherOriented() {
+        if (!isXMLLoaded()) {
+            throw new InvalidOperationException("can't get system details, file is not loaded");
+        }
+
+        bestSolutionEver.sortQuintetsInSolution(Quintet.getTeacherComparator());
+
+        return createTimeTableSolutionDTO(bestSolutionEver);
+    }
+
+    public TimeTableSolutionDTO getBestSolutionClassOriented() {
+        if (!isXMLLoaded()) {
+            throw new InvalidOperationException("can't get system details, file is not loaded");
+        }
+        bestSolutionEver.sortQuintetsInSolution(Quintet.getSchoolClassComparator());
+
+        return createTimeTableSolutionDTO(bestSolutionEver);
+    }
 }
