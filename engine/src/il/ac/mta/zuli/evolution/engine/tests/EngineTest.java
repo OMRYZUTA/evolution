@@ -4,6 +4,7 @@ import il.ac.mta.zuli.evolution.engine.Descriptor;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
@@ -90,6 +91,16 @@ class EngineTest {
             }
         }
         assertFalse(solutionsAfterMutations.equals(initialPopulation));
+    }
+
+    @Test
+    void engineSettingsConstructorNotAcceptingNulls(){
+        try {
+            EngineSettings engineSettings = new EngineSettings(null, null);
+        }catch(IllegalArgumentException e){
+            assertTrue(e.getMessage().length()>5);
+        }
+
     }
 
 }

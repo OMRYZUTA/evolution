@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
+import il.ac.mta.zuli.evolution.engine.exceptions.NotEmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,35 +12,50 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EvolutionEngine<T extends Solution> {
-    private final EngineSettings<T> engineSettings;
-    private final Set<Rule> rules;
+    private  EngineSettings<T> engineSettings;
 
-    public EvolutionEngine(EngineSettings<T> engineSettings, Set<Rule> rules) {
-        this.engineSettings = engineSettings;
+
+
+    public void setRules(Set<Rule> rules) {
+        if(rules.size()==0){
+            throw  new NotEmptyCollectionException("invalid rules list in evolution engine");
+        }
         this.rules = rules;
     }
 
-    public List<T> execute(List<T> generation) {
-        // A. calculate fitness for every solution in generation and save score to solution
-        for (T solution : generation) {
-            fitnessEvaluationPerSolution(solution);
-        }
+    private  Set<Rule> rules;
 
-        // B. select topPercent of solutions, according to fitness, in order to create next generation
+
+    public EvolutionEngine(@NotNull EngineSettings<T> engineSettings,@NotNull Set<Rule> rules) {
+        this.engineSettings = engineSettings;
+        setRules(rules);
+    }
+
+    public List<T> execute(@NotNull List<T> generation) {
+        if(generation.size()==0){
+            throw  new NotEmptyCollectionException("solution generation is empty. in evolution engine");
+        }
+        evaluateSolutions((List<T>) generation);
+
+        List<T> parents = selectParentsFrom(generation);
+
+        List<T> newGeneration = CrossoverNewGeneration(parents);
+
+        List<T> newGenerationAfterMutation = mutateGeneration(newGeneration);
+
+        //final fitnessEvaluation for new generation
+        evaluateSolutions(newGenerationAfterMutation);
+
+        return newGenerationAfterMutation;
+    }
+
+    private List<T> selectParentsFrom(@NotNull List<T> generation) {
         List<T> parents = (engineSettings.getSelection()).select(generation);
+        return parents;
+    }
 
-        // C. crossover to create next generation (repeat crossover until we receive generation big enough)
-        List<T> newGeneration = new ArrayList<>();
-        int populationSize = engineSettings.getInitialPopulationSize();
-
-        while (newGeneration.size() < populationSize) {
-            newGeneration.addAll(engineSettings.getCrossover().crossover(parents));
-        }
-
-        if (newGeneration.size() > populationSize) {
-            newGeneration = removeExtraSolutionsFromGeneration(newGeneration, populationSize);
-        }
-
+    @NotNull
+    private List<T> mutateGeneration(List<T> newGeneration) {
         // D. mutate certain quintets
         List<Mutation<T>> mutationList = engineSettings.getMutations();
         List<T> newGenerationAfterMutation = new ArrayList<>();
@@ -51,20 +67,35 @@ public class EvolutionEngine<T extends Solution> {
 
             newGenerationAfterMutation.add(tempSolution);
         }
-
-        //final fitnessEvaluation for new generation
-        for (T solution : newGenerationAfterMutation) {
-            fitnessEvaluationPerSolution(solution);
-        }
-
         return newGenerationAfterMutation;
     }
 
     @NotNull
-    private List<T> removeExtraSolutionsFromGeneration(List<T> newGeneration, int populationSize) {
-        for (T solution : newGeneration) {
+    private List<T> CrossoverNewGeneration(List<T> parents) {
+        // crossover to create next generation (repeat crossover until we receive generation big enough)
+        List<T> newGeneration = new ArrayList<>();
+        int populationSize = engineSettings.getInitialPopulationSize();
+
+        while (newGeneration.size() < populationSize) {
+            newGeneration.addAll(engineSettings.getCrossover().crossover(parents));
+        }
+
+        if (newGeneration.size() > populationSize) {
+            newGeneration = removeExtraSolutionsFromGeneration(newGeneration, populationSize);
+        }
+        return newGeneration;
+    }
+
+    private void evaluateSolutions(@NotNull List<T> generation) {
+        // calculate fitness for every solution in generation and save score to solution
+        for (T solution : generation) {
             fitnessEvaluationPerSolution(solution);
         }
+    }
+
+    @NotNull
+    private List<T> removeExtraSolutionsFromGeneration(List<T> newGeneration, int populationSize) {
+        evaluateSolutions(newGeneration);
 
         //timetableSolution compareTo based on totalFitness (ascending)
         newGeneration = newGeneration.stream()

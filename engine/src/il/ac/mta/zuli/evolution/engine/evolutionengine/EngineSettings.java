@@ -2,12 +2,10 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverFactory;
-import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.ComponentName;
-import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Flipping;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.MutationFactory;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.SelectionFactory;
-import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTCrossover;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTEvolutionEngine;
@@ -25,7 +23,8 @@ public class EngineSettings<T extends Solution> {
     private Crossover<T> crossover;
     private List<Mutation<T>> mutations;
 
-    public EngineSettings(@NotNull ETTEvolutionEngine ee, TimeTable timeTable)  {
+
+    public EngineSettings(@NotNull ETTEvolutionEngine ee,@NotNull TimeTable timeTable)  {
         setInitialPopulationSize(ee.getETTInitialPopulation().getSize());
         setSelection(ee.getETTSelection());
         setCrossover(ee.getETTCrossover(), timeTable);
@@ -42,7 +41,6 @@ public class EngineSettings<T extends Solution> {
 
             this.selection = SelectionFactory.createSelection(ettSelection);
 
-        //TODO factory methods
         //TODO different kind of Exception Classes
     }
 
@@ -54,16 +52,7 @@ public class EngineSettings<T extends Solution> {
         mutations = new ArrayList<>();
 
         for (ETTMutation ettMutation : ettMutations) {
-            if (ettMutation.getName().equalsIgnoreCase("flipping")) {
-                int maxTuples = extractMaxTuplesFromString(ettMutation);
-                if (maxTuples < 0) {
-                    throw new RuntimeException("max tuples must be >=0");
-                }
-                ComponentName component = extractComponentNameFromString(ettMutation);
-                mutations.add(new Flipping(ettMutation.getProbability(), maxTuples, component, timeTable));
-            } else {
-                throw new ValidationException("invalid mutation name (for ex 1)");
-            }
+            mutations.add(MutationFactory.createMutation(ettMutation,timeTable));
         }
     }
     //#endregion
@@ -87,21 +76,7 @@ public class EngineSettings<T extends Solution> {
     //#endregion
 
 
-    @NotNull
-    private ComponentName extractComponentNameFromString(ETTMutation ettMutation) {
-        int componentIndex = (ettMutation.getConfiguration()).indexOf("Component=") + "Component=".length();
-        String componentStr = (ettMutation.getConfiguration()).substring(componentIndex, componentIndex + 1);
-        return ComponentName.valueOf(componentStr.toUpperCase());
-    }
 
-    private int extractMaxTuplesFromString(ETTMutation ettMutation) {
-        //this is how it's spelled in the xml: MaxTupples=3
-        int maxTuplesIndex = (ettMutation.getConfiguration()).indexOf("MaxTupples=") + "MaxTupples=".length();
-        int commaIndex = ettMutation.getConfiguration().indexOf(",");
-        String maxTuplesStr = (ettMutation.getConfiguration()).substring(maxTuplesIndex, commaIndex);
-
-        return Integer.parseInt(maxTuplesStr);
-    }
 
     @Override
     public String toString() {
