@@ -8,7 +8,7 @@ public class Descriptor {
     private final TimeTable timeTable;
     private final EngineSettings engineSettings;
 
-    public Descriptor(ETTDescriptor d) throws Exception {
+    public Descriptor(ETTDescriptor d)  {
         // only if received another valid file we want to overwrite the previous descriptor instance
         TimeTable tempTimeTable = null;
         EngineSettings tempEngineSetting = null;

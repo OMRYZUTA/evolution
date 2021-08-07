@@ -1,12 +1,13 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
-import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.DayTimeOriented;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverFactory;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.ComponentName;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Flipping;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
-import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Truncation;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.SelectionFactory;
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTCrossover;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTEvolutionEngine;
@@ -24,7 +25,7 @@ public class EngineSettings<T extends Solution> {
     private Crossover<T> crossover;
     private List<Mutation<T>> mutations;
 
-    public EngineSettings(@NotNull ETTEvolutionEngine ee, TimeTable timeTable) throws Exception {
+    public EngineSettings(@NotNull ETTEvolutionEngine ee, TimeTable timeTable)  {
         setInitialPopulationSize(ee.getETTInitialPopulation().getSize());
         setSelection(ee.getETTSelection());
         setCrossover(ee.getETTCrossover(), timeTable);
@@ -37,26 +38,19 @@ public class EngineSettings<T extends Solution> {
         this.initialPopulationSize = size;
     }
 
-    private void setSelection(@NotNull ETTSelection ettSelection) throws Exception {
-        if ((ettSelection.getType()).equalsIgnoreCase("truncation")) {
-            this.selection = new Truncation(ettSelection);
-        } else {
-            throw new Exception("invalid selection type (for ex. 1)");
-        }
+    private void setSelection(@NotNull ETTSelection ettSelection)   {
+
+            this.selection = SelectionFactory.createSelection(ettSelection);
+
         //TODO factory methods
         //TODO different kind of Exception Classes
     }
 
-    private void setCrossover(@NotNull ETTCrossover ettCrossover, TimeTable timeTable) throws Exception {
-        if ((ettCrossover.getName()).equalsIgnoreCase("daytimeoriented")) {
-            this.crossover = new DayTimeOriented(ettCrossover.getCuttingPoints(), timeTable);
-        } else {
-            throw new Exception("invalid crossover type (for ex. 1)");
-        }
-        //TODO factory methods
+    private void setCrossover(@NotNull ETTCrossover ettCrossover, TimeTable timeTable)  {
+        this.crossover = CrossoverFactory.createCrossover( ettCrossover,  timeTable);
     }
 
-    private void setMutations(List<ETTMutation> ettMutations, TimeTable timeTable) throws Exception {
+    private void setMutations(List<ETTMutation> ettMutations, TimeTable timeTable)  {
         mutations = new ArrayList<>();
 
         for (ETTMutation ettMutation : ettMutations) {
@@ -68,7 +62,7 @@ public class EngineSettings<T extends Solution> {
                 ComponentName component = extractComponentNameFromString(ettMutation);
                 mutations.add(new Flipping(ettMutation.getProbability(), maxTuples, component, timeTable));
             } else {
-                throw new Exception("invalid mutation name (for ex 1)");
+                throw new ValidationException("invalid mutation name (for ex 1)");
             }
         }
     }
