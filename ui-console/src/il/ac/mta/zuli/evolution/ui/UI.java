@@ -153,7 +153,6 @@ public class UI {
 
         try {
             numOfGenerations = Integer.parseInt(scanner.nextLine());
-            result = true;
         } catch (Exception E) {
             // swallow parsing exceptions
         }
@@ -161,6 +160,8 @@ public class UI {
         if (numOfGenerations < 100) {
             numOfGenerations = 0;
             System.out.println("Invalid number of generations entered, must be an integer greater than 100");
+        } else {
+            result = true;
         }
 
         return result;
@@ -172,7 +173,6 @@ public class UI {
 
         try {
             stride = Integer.parseInt(scanner.nextLine());
-            result = true;
         } catch (Exception E) {
             // swallow parsing exceptions
         }
@@ -180,6 +180,8 @@ public class UI {
         if (stride <= 0) {
             stride = 0;
             System.out.println("Invalid stride value entered, the value must be a positive integer");
+        } else {
+            result = true;
         }
 
         return result;

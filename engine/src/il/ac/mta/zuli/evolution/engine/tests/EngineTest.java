@@ -100,7 +100,7 @@ class EngineTest {
 void getBestSolutionReturnsSolutionBetterThan50(){
     engine.loadXML("src/resources/EX1-small.xml");
         engine.executeEvolutionAlgorithm(50,10);
-    TimeTableSolutionDTO solutionDTO = engine.getBestSolutionRaw();
+    TimeTableSolutionDTO solutionDTO = engine.getBestSolution();
     System.out.println(solutionDTO.getTotalFitnessScore());
     assertTrue(solutionDTO.getTotalFitnessScore()>50.0);
 }
