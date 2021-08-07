@@ -16,7 +16,7 @@ public class EvolutionEngine<T extends Solution> {
 
 
 
-    public void setRules(Set<Rule> rules) {
+    public void setRules(@NotNull Set<Rule> rules) {
         if(rules.size()==0){
             throw  new EmptyCollectionException("invalid rules list in evolution engine");
         }

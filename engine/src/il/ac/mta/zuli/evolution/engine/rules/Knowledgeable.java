@@ -25,21 +25,27 @@ public class Knowledgeable extends Rule {
         double score = 0;
 
         if (timeTableSolution.getSolutionSize() > 0) {
-            int qualifiedQuintets = 0;
-            List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
-            Map<Integer, Subject> subjectsTeaches;
-
-            for (Quintet quintet : solutionQuintets) {
-                subjectsTeaches = (quintet.getTeacher()).getSubjects();
-
-                if (subjectsTeaches.containsKey(quintet.getSubject().getId())) {
-                    qualifiedQuintets++;
-                }
-            }
-
-            score = (100 * qualifiedQuintets) / (double) (timeTableSolution.getSolutionSize());
+            score = calculateScoreBySubjectsFitToTeachers(timeTableSolution);
         }
 
         timeTableSolution.addScoreToRule(this, score);
+    }
+
+    private double calculateScoreBySubjectsFitToTeachers(TimeTableSolution timeTableSolution) {
+        double score;
+        int qualifiedQuintets = 0;
+        List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
+        Map<Integer, Subject> subjectsTeaches;
+
+        for (Quintet quintet : solutionQuintets) {
+            subjectsTeaches = (quintet.getTeacher()).getSubjects();
+
+            if (subjectsTeaches.containsKey(quintet.getSubject().getId())) {
+                qualifiedQuintets++;
+            }
+        }
+
+        score = (100 * qualifiedQuintets) / (double) (timeTableSolution.getSolutionSize());
+        return score;
     }
 }

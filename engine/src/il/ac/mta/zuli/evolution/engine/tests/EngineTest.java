@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class EngineTest {
@@ -80,19 +79,38 @@ class EngineTest {
         Crossover<TimeTableSolution> crossover = descriptor.getEngineSettings().getCrossover();
         assertFalse(crossover.crossover(initialPopulation).equals(initialPopulation));
     }
+    @Test
+    void crossOverReturnsSameSizeOfPopulation() {
+        Crossover<TimeTableSolution> crossover = descriptor.getEngineSettings().getCrossover();
+        assertEquals(crossover.crossover(initialPopulation).size(),initialPopulation.size());
+    }
 
     @Test
     void mutateReturnsDifferentPopulation() {
         List<Mutation<TimeTableSolution>> mutations = descriptor.getEngineSettings().getMutations();
         List<TimeTableSolution> solutionsAfterMutations = new ArrayList<>();
         for (TimeTableSolution solution : initialPopulation) {
+            TimeTableSolution tempSolution =solution;
             for (Mutation<TimeTableSolution> mutaiton : mutations) {
-                mutaiton.mutate(solution);
+                tempSolution =mutaiton.mutate(tempSolution);
             }
+            solutionsAfterMutations.add(tempSolution);
         }
         assertFalse(solutionsAfterMutations.equals(initialPopulation));
     }
-
+    @Test
+    void mutateReturnsSameAmountOfPopulation() {
+        List<Mutation<TimeTableSolution>> mutations = descriptor.getEngineSettings().getMutations();
+        List<TimeTableSolution> solutionsAfterMutations = new ArrayList<>();
+        for (TimeTableSolution solution : initialPopulation) {
+            TimeTableSolution tempSolution =solution;
+            for (Mutation<TimeTableSolution> mutaiton : mutations) {
+                 tempSolution =mutaiton.mutate(tempSolution);
+            }
+            solutionsAfterMutations.add(tempSolution);
+        }
+        assertEquals(solutionsAfterMutations.size(),initialPopulation.size());
+    }
     @Test
     void engineSettingsConstructorNotAcceptingNulls(){
         try {
@@ -102,5 +120,12 @@ class EngineTest {
         }
     }
 
-
+    @Test
+    void evolutionEngineExecuteReturnsDifferentPopulation(){
+        assertNotEquals(initialPopulation,evolutionEngine.execute(initialPopulation));
+    }
+    @Test
+    void evolutionEngineExecuteReturnsSameSizeOfPopulation(){
+        assertEquals(initialPopulation.size(),evolutionEngine.execute(initialPopulation).size());
+    }
 }
