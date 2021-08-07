@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.engine;
 import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.events.ErrorEvent;
 import il.ac.mta.zuli.evolution.engine.events.EventsEmitter;
+import il.ac.mta.zuli.evolution.engine.events.LoadedEvent;
 import il.ac.mta.zuli.evolution.engine.events.OnStrideEvent;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
@@ -21,7 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class TimeTableEngine extends EventsEmitter implements Engine {
-    private boolean isXMLLoaded = false;
     private Descriptor descriptor;
     private EvolutionEngine evolutionEngine;
     private TimeTableSolution bestSolutionEver = null;
@@ -37,10 +37,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         try {
             XMLParser xmlParser = new XMLParser();
             descriptor = xmlParser.unmarshall(path);
-//            fireEvent("loaded", new LoadedEvent("file was loaded", path));
-            if (descriptor != null) {
-                isXMLLoaded = true;
-            }
+            fireEvent("loaded", new LoadedEvent("file was loaded", path));
         } catch (Exception e) {
             fireEvent("error", new ErrorEvent("failed reading file", e));
         }
@@ -160,7 +157,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     @Override
     public boolean isXMLLoaded() {
-        return isXMLLoaded;
+        return descriptor != null;
     }
 
 //#endregion

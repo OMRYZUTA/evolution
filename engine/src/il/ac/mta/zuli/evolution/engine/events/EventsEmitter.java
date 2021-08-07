@@ -33,6 +33,10 @@ public class EventsEmitter {
     }
 
     public void fireEvent(@NotNull String name, @NotNull Event event) {
+        if (!listeners.containsKey(name)) {
+            return;
+        }
+
         for (EventListener listener : listeners.get(name)) {
             listener.actionPerformed(event);
         }
