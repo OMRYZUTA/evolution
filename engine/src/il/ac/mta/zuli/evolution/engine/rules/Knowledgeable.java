@@ -18,7 +18,9 @@ public class Knowledgeable extends Rule {
 
     @Override
     public void fitnessEvaluation(@NotNull Solution solution) {
-
+        if (!(solution instanceof TimeTableSolution)) {
+            throw new RuntimeException("solution must be TimeTableSolution");
+        }
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
         double score = 0;
 

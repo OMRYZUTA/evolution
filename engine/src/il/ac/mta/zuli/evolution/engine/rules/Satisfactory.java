@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.engine.rules;
 import il.ac.mta.zuli.evolution.engine.Quintet;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import org.jetbrains.annotations.NotNull;
@@ -16,17 +17,24 @@ public class Satisfactory extends Rule {
     //satisfactory rule - each class gets the exact number of hours-per-subject (the class' requirements are met)
     Map<Integer, SchoolClass> schoolClasses;
 
-    public Satisfactory(String ruleType, Map<Integer, SchoolClass> schoolClasses) { //TODO return not null
+    public Satisfactory(@NotNull String ruleType,@NotNull Map<Integer, SchoolClass> schoolClasses) { //TODO return not null
         super(ruleType);
+        setSchoolClasses(schoolClasses);
+    }
+
+    private void setSchoolClasses(Map<Integer, SchoolClass> schoolClasses) {
+        if(schoolClasses.size()==0)
+        {
+            throw new EmptyCollectionException("empty school classes in satisfactory rule");
+        }
         this.schoolClasses = schoolClasses;
     }
 
     @Override
-    public void fitnessEvaluation(Solution solution) {
+    public void fitnessEvaluation(@NotNull Solution solution) {
         if (!(solution instanceof TimeTableSolution)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
-
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
 
         double score = 0;

@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.timetable;
 
+import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTStudy;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +13,7 @@ public class Requirement {
     private int hours;
     private Subject subject;
 
-    public Requirement(@NotNull ETTStudy ettRequirement, Map<Integer, Subject> existingSubjects) {
+    public Requirement(@NotNull ETTStudy ettRequirement,@NotNull Map<Integer, Subject> existingSubjects) {
         setHours(ettRequirement.getHours());
         setSubject(ettRequirement.getSubjectId(), existingSubjects);
     }
@@ -34,6 +35,9 @@ public class Requirement {
     }
 
     private void setSubject(int id, Map<Integer, Subject> existingSubjects) {
+        if(existingSubjects.size()==0){
+            throw new EmptyCollectionException("requirement got empty collection");
+        }
         subject = existingSubjects.get(id);
         if ( subject== null) {
             throw new ValidationException("subject ID: " + id + " does not exist in time table");

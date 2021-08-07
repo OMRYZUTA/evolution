@@ -3,16 +3,17 @@ package il.ac.mta.zuli.evolution.engine.rules;
 import il.ac.mta.zuli.evolution.engine.Quintet;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 
 public class Singularity extends Rule {
-    public Singularity(String ruleType) {
+    public Singularity(@NotNull String ruleType) {
         super(ruleType);
     }
 
     @Override
-    public void fitnessEvaluation(Solution solution) {
+    public void fitnessEvaluation(@NotNull Solution solution) {
         if (!(solution instanceof TimeTableSolution)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }

@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
-import il.ac.mta.zuli.evolution.engine.exceptions.NotEmptyCollectionException;
+import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ public class EvolutionEngine<T extends Solution> {
 
     public void setRules(Set<Rule> rules) {
         if(rules.size()==0){
-            throw  new NotEmptyCollectionException("invalid rules list in evolution engine");
+            throw  new EmptyCollectionException("invalid rules list in evolution engine");
         }
         this.rules = rules;
     }
@@ -33,7 +33,7 @@ public class EvolutionEngine<T extends Solution> {
 
     public List<T> execute(@NotNull List<T> generation) {
         if(generation.size()==0){
-            throw  new NotEmptyCollectionException("solution generation is empty. in evolution engine");
+            throw  new EmptyCollectionException("solution generation is empty. in evolution engine");
         }
         evaluateSolutions((List<T>) generation);
 
