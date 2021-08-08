@@ -22,7 +22,7 @@ public class Knowledgeable extends Rule {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
-        double score = 0;
+        double score = 100;
 
         if (timeTableSolution.getSolutionSize() > 0) {
             score = calculateScoreBySubjectsFitToTeachers(timeTableSolution);

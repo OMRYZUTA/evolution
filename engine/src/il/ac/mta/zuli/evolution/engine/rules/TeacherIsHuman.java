@@ -21,7 +21,7 @@ public class TeacherIsHuman extends Rule {
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
 
         int numOfQuintets = timeTableSolution.getSolutionSize();
-        double score = 0;
+        double score = 100;
 
         if (numOfQuintets > 0) {
             HashSet<String> teacherDayHourSet = new HashSet<>();
