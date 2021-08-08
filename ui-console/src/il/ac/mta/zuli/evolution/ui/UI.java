@@ -133,7 +133,7 @@ public class UI {
 
     private void runAlgorithm() {
         System.out.println("To run the evolution algorithm");
-        int numOfGenerations = 0;
+        numOfGenerations = 0;
 
         if (!getNumOfGenerationsInput()) {
             return;
