@@ -15,6 +15,7 @@ public interface Engine {
     DescriptorDTO getSystemDetails();
 
     void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride);
+    void executeEvolutionAlgorithmWithFittnessStop(int numOfGenerations, int generationsStride, double fittnessStop);
 
     TimeTableSolutionDTO getBestSolution();
 

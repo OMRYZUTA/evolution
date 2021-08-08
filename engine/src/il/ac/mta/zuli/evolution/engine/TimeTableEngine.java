@@ -64,22 +64,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     @Override
     public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
-        if (!isXMLLoaded()) {
-            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
-                    new InvalidOperationException("can't execute Evolution algorithm, file is not loaded"));
-            fireEvent("error", e);
-        }
-
-        if (numOfGenerations < 0) {
-            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
-                    new ValidationException(numOfGenerations + " is invalid number for generations, must be positive number"));
-            fireEvent("error", e);
-        }
-        if (generationsStride < 0 || generationsStride > numOfGenerations) {
-            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
-                    new ValidationException(numOfGenerations + " is invalid number for generation strides, must be between 1 - " + numOfGenerations));
-            fireEvent("error", e);
-        }
+        checkForErrorsBeforeExecutingAlgorithms(numOfGenerations, generationsStride);
         try {
             bestSolutionsInGenerationPerStride = new HashMap<>(numOfGenerations);
             List<TimeTableSolution> initialPopulation = getInitialGeneration();
@@ -103,11 +88,74 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
                 //stride for purposes of info-display and to save a stride-generation history
                 if (i % generationsStride == 0) {
-                    bestSolutionsInGenerationPerStride.put(i, currBestSolution);
-                    GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i, currBestSolution.getTotalFitnessScore());
-                    fireEvent("stride", new OnStrideEvent("generationStride", i, strideScoreDTO));
+                    fireStrideDetails(i, currBestSolution);
                 }
 
+                prevGeneration = currGeneration;
+            }
+
+            fireEvent("completed", new Event("Evolution algorithm finished running."));
+        } catch (Throwable e) {
+            fireEvent("error", new ErrorEvent("Failed running evolution algorithm", e));
+        }
+    }
+
+    private void fireStrideDetails(int i, TimeTableSolution currBestSolution) {
+        bestSolutionsInGenerationPerStride.put(i, currBestSolution);
+        GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i, currBestSolution.getTotalFitnessScore());
+        fireEvent("stride", new OnStrideEvent("generationStride", i, strideScoreDTO));
+    }
+
+    private void checkForErrorsBeforeExecutingAlgorithms(int numOfGenerations, int generationsStride) {
+        if (!isXMLLoaded()) {
+            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
+                    new InvalidOperationException("can't execute Evolution algorithm, file is not loaded"));
+            fireEvent("error", e);
+        }
+
+        if (numOfGenerations < 0) {
+            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
+                    new ValidationException(numOfGenerations + " is invalid number for generations, must be positive number"));
+            fireEvent("error", e);
+        }
+        if (generationsStride < 0 || generationsStride > numOfGenerations) {
+            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
+                    new ValidationException(numOfGenerations + " is invalid number for generation strides, must be between 1 - " + numOfGenerations));
+            fireEvent("error", e);
+        }
+    }
+
+    @Override
+    public void executeEvolutionAlgorithmWithFittnessStop(int numOfGenerations, int generationsStride, double fitnessStop) {
+        checkForErrorsBeforeExecutingAlgorithms(numOfGenerations, generationsStride);
+        try {
+            bestSolutionsInGenerationPerStride = new HashMap<>(numOfGenerations);
+            List<TimeTableSolution> initialPopulation = getInitialGeneration();
+
+            evolutionEngine = new EvolutionEngine(this.descriptor.getEngineSettings(),
+                    this.descriptor.getTimeTable().getRules());
+
+            List<TimeTableSolution> prevGeneration = initialPopulation;
+            List<TimeTableSolution> currGeneration = null;
+            double bestSolutionFitnessScore = 0;
+
+            for (int i = 1; i <= numOfGenerations; i++) {
+                currGeneration = evolutionEngine.execute(prevGeneration);
+                TimeTableSolution currBestSolution = currGeneration.stream().
+                        sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
+
+                if (bestSolutionFitnessScore < currBestSolution.getTotalFitnessScore()) {
+                    bestSolutionEver = currBestSolution;
+                    bestSolutionFitnessScore = bestSolutionEver.getTotalFitnessScore();
+                }
+
+                //stride for purposes of info-display and to save a stride-generation history
+                if (i % generationsStride == 0) {
+                    fireStrideDetails(i, currBestSolution);
+                }
+                if(bestSolutionFitnessScore>=fitnessStop){
+                    break;
+                }
                 prevGeneration = currGeneration;
             }
 

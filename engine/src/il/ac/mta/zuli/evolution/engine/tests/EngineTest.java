@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.engine.tests;
 import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.*;
+import il.ac.mta.zuli.evolution.engine.events.OnStrideEvent;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
@@ -30,12 +31,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class EngineTest {
+    boolean evolutionAlgorithmCompleted =false;
     Engine engine = new TimeTableEngine();
     Satisfactory satisfactoryRule;
     XMLParser xmlParser = new XMLParser();
     Descriptor descriptor;
     EvolutionEngine evolutionEngine;
     List<TimeTableSolution> initialPopulation;
+    private int generationCounter=0;
 
     @BeforeEach
     void setUp() {
@@ -56,7 +59,7 @@ class EngineTest {
         }
     }
 
-    //#region engine
+    //#region TimeTable engine
     @Test
     void loadBig() {
         engine = new TimeTableEngine();
@@ -106,6 +109,22 @@ void getBestSolutionReturnsSolutionBetterThan50(){
     TimeTableSolutionDTO solutionDTO = engine.getBestSolution();
     System.out.println(solutionDTO.getTotalFitnessScore());
     assertTrue(solutionDTO.getTotalFitnessScore()>50.0);
+}
+@Test
+void stopOnFittnes(){
+    engine.addListener("completed", e -> {
+        this.evolutionAlgorithmCompleted = true;
+    });
+    engine.addListener("stride", e -> {
+        OnStrideEvent strideEvent = (OnStrideEvent) e;
+        this.generationCounter++;
+    });
+        engine.loadXML("src/resources/EX1-small.xml");
+        engine.executeEvolutionAlgorithmWithFittnessStop(120,1,80);
+        TimeTableSolutionDTO solutionDTO =engine.getBestSolution();
+        assertTrue(solutionDTO.getTotalFitnessScore()>80);
+        assertTrue(evolutionAlgorithmCompleted);
+        assertTrue(generationCounter<120);
 }
     //#endregion engine
 
