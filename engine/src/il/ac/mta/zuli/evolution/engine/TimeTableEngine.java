@@ -37,27 +37,25 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
             descriptor = xmlParser.unmarshall(path);
             fireEvent("loaded", new LoadedEvent("file was loaded", path));
         } catch (Throwable e) {
-            fireEvent("error", new ErrorEvent("failed reading file", e));
+            fireEvent("error", new ErrorEvent("failed reading file", ErrorType.LoadError, e));
         }
     }
 
     @Override
     public DescriptorDTO getSystemDetails() {
         if (!isXMLLoaded()) {
-            ErrorEvent e = new ErrorEvent("failed getting the system settings", new InvalidOperationException("can't get system details, file is not loaded"));
+            ErrorEvent e = new ErrorEvent("failed getting the system settings", ErrorType.DetailsError, new InvalidOperationException("can't get system details, file is not loaded"));
             fireEvent("error", e);
-
             return null;
         }
+
         try {
             //DTO: list of subjects, list of teachers, list of SchoolClasses, list of rules
             TimeTableDTO timeTableDTO = createTimeTableDTO();
             EngineSettingsDTO engineSettingsDTO = createEngineSettingsDTO();
-
             return new DescriptorDTO(timeTableDTO, engineSettingsDTO);
         } catch (Throwable e) {
-            fireEvent("error", new ErrorEvent("failed reading file", e));
-
+            fireEvent("error", new ErrorEvent("failed getting system details", ErrorType.DetailsError, e));
             return null;
         }
     }
@@ -96,7 +94,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
             fireEvent("completed", new Event("Evolution algorithm finished running."));
         } catch (Throwable e) {
-            fireEvent("error", new ErrorEvent("Failed running evolution algorithm", e));
+            fireEvent("error", new ErrorEvent("Failed running evolution algorithm", ErrorType.RunError, e));
         }
     }
 
@@ -109,17 +107,20 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     private void checkForErrorsBeforeExecutingAlgorithms(int numOfGenerations, int generationsStride) {
         if (!isXMLLoaded()) {
             ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
+                    ErrorType.RunError,
                     new InvalidOperationException("can't execute Evolution algorithm, file is not loaded"));
             fireEvent("error", e);
         }
 
         if (numOfGenerations < 0) {
             ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
+                    ErrorType.RunError,
                     new ValidationException(numOfGenerations + " is invalid number for generations, must be positive number"));
             fireEvent("error", e);
         }
         if (generationsStride < 0 || generationsStride > numOfGenerations) {
             ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
+                    ErrorType.RunError,
                     new ValidationException(numOfGenerations + " is invalid number for generation strides, must be between 1 - " + numOfGenerations));
             fireEvent("error", e);
         }
@@ -153,7 +154,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                 if (i % generationsStride == 0) {
                     fireStrideDetails(i, currBestSolution);
                 }
-                if(bestSolutionFitnessScore>=fitnessStop){
+                if (bestSolutionFitnessScore >= fitnessStop) {
                     break;
                 }
                 prevGeneration = currGeneration;
@@ -161,7 +162,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
             fireEvent("completed", new Event("Evolution algorithm finished running."));
         } catch (Throwable e) {
-            fireEvent("error", new ErrorEvent("Failed running evolution algorithm", e));
+            fireEvent("error", new ErrorEvent("Failed running evolution algorithm", ErrorType.RunError, e));
         }
     }
 
@@ -178,16 +179,19 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         if (bestSolutionsInGenerationPerStride.size() == 0) {
             throw new InvalidOperationException("can't show evolution progress, evolution algorithm has not been executed");
         }
+
         List<GenerationProgressDTO> Progress = new ArrayList<>();
         double previousScore = bestSolutionsInGenerationPerStride.get(1).getTotalFitnessScore();
         double delta;
         int generation;
+
         for (Map.Entry<Integer, TimeTableSolution> entry : bestSolutionsInGenerationPerStride.entrySet()) {
             TimeTableSolutionDTO solutionDTO = createTimeTableSolutionDTO(entry.getValue());
             generation = entry.getKey();
             delta = entry.getValue().getTotalFitnessScore() - previousScore;
             Progress.add(new GenerationProgressDTO(generation, solutionDTO, delta));
         }
+
         return Progress;
     }
     //#endregion

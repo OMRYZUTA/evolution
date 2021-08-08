@@ -68,7 +68,8 @@ public class QuintetDTO {
                 '}';
     }
 
-    public static Comparator<QuintetDTO> getDHComparator() {
+    public static Comparator<QuintetDTO> getRawComparator() {
+        //sort by day,hour,class,teacher,subject
         Comparator<QuintetDTO> dhComparator = compareByDay
                 .thenComparing(compareByHour)
                 .thenComparing(compareBySchoolClass)

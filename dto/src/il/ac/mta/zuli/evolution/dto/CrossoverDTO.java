@@ -19,7 +19,7 @@ public class CrossoverDTO {
 
     @Override
     public String toString() {
-        return "Crossover:" + name +
-                ", number of cutting points='" + cuttingPoints;
+        return "Crossover: " + name +
+                ", number of cutting points " + cuttingPoints;
     }
 }

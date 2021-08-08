@@ -26,7 +26,7 @@ public class MutationDTO {
     @Override
     public String toString() {
         return "Mutation: " + name +
-                ", probability=" + probability +
-                ", configuration: '" + configuration;
+                ", probability " + probability +
+                ", configuration: " + configuration;
     }
 }

@@ -4,6 +4,7 @@ import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.events.ErrorEvent;
+import il.ac.mta.zuli.evolution.engine.events.ErrorType;
 import il.ac.mta.zuli.evolution.engine.events.LoadedEvent;
 import il.ac.mta.zuli.evolution.engine.events.OnStrideEvent;
 
@@ -67,7 +68,7 @@ public class UI {
                     break;
                 case ShowProgress:
                     if (evolutionAlgorithmCompleted) {
-                        showProgress();
+                        showProgressHistory();
                     } else {
                         System.out.println("Option unavailable until a file is loaded to the system, and algorithm completed running");
                         System.out.println("***");
@@ -85,20 +86,8 @@ public class UI {
         }
     }
 
-    private MenuOptions getSelectedOption(String input) {
-        MenuOptions result = MenuOptions.None;
-        try {
-            int intInput = Integer.parseInt(input, 10);
-            result = MenuOptions.values()[intInput];
-        } catch (Exception e) {
-            // swallow parsing exceptions
-        }
-
-        return result;
-    }
-
     private void loadFile() {
-        System.out.println(System.lineSeparator() + "To load XML file, enter absolute file path:");
+        System.out.println("To load XML file, enter file path:");
 
         String path = scanner.nextLine();
         //String path = "C:\\Users\\fifil\\source\\repos\\evolution\\engine\\src\\resources\\EX1-small.xml"; //scanner.nextLine();
@@ -109,15 +98,7 @@ public class UI {
         }
 
         engine.loadXML(path); //C:\Users\fifil\source\repos\evolution\engine\src\resources\EX1-small.xml
-    }
-
-    private boolean checkExtension(String path, String expectedExt) {
-        if (!path.contains(".")) {
-            return false;
-        }
-
-        String ext = path.substring(path.lastIndexOf("."));
-        return expectedExt.equalsIgnoreCase(ext);
+        //TODO - it matters if a file was previously loaded or not
     }
 
     private void showDetails() {
@@ -132,8 +113,17 @@ public class UI {
     }
 
     private void runAlgorithm() {
+        if (evolutionAlgorithmCompleted) {
+            System.out.println("The evolution-algorithm has already completed its course. " + System.lineSeparator() +
+                    "If you choose to re-run it, the information from the previous run will be lost." + System.lineSeparator() +
+                    "Would you like to re-run the algorithm? (Enter Y/N)");
+            String answer = scanner.nextLine();
+            if (!answer.equalsIgnoreCase("y")) {
+                return;
+            }
+        }
+
         System.out.println("To run the evolution algorithm");
-        numOfGenerations = 0;
 
         if (!getNumOfGenerationsInput()) {
             return;
@@ -144,6 +134,100 @@ public class UI {
         }
 
         engine.executeEvolutionAlgorithm(numOfGenerations, stride);
+    }
+
+    private void showBestSolution() {
+        printShowSolutionMenu();
+
+        int displayOption = 0;
+        try {
+            displayOption = Integer.parseInt(scanner.nextLine(), 10);
+        } catch (Exception e) {
+            //swallow exception
+        }
+
+        TimeTableSolutionDTO bestSolution = engine.getBestSolution();
+
+        switch (displayOption) {
+            case 1:
+                printRawQuintets(bestSolution);
+                break;
+            case 2:
+                printTeacherDHMatrix(bestSolution);
+                break;
+            case 3:
+                printClassDHMatrix(bestSolution);
+                break;
+            case 0:
+            default:
+                System.out.println("Invalid option entered");
+                return;
+        }
+
+        printSolutionExtraDetails(bestSolution);
+    }
+
+    private void showProgressHistory() {
+        List<GenerationProgressDTO> list = engine.getEvolutionProgress();
+
+        //TODO - from first generation to last?
+
+        for (GenerationProgressDTO gp : list) {
+            System.out.println(gp);
+        }
+    }
+
+    private void addListenersToEngineEvents() {
+        engine.addListener("loaded", e -> {
+            UI.this.fileLoaded = true;
+            LoadedEvent loadedEvent = (LoadedEvent) e;
+            System.out.println("File was successfully loaded from " + loadedEvent.getPath());
+            System.out.println("***");
+        });
+        engine.addListener("error", e -> {
+            ErrorEvent errorEvent = (ErrorEvent) e;
+            System.out.println(e.getMessage() + ". " + errorEvent.getError().getMessage());
+
+            if (errorEvent.getType() == ErrorType.LoadError) {
+                if (UI.this.fileLoaded) {
+                    System.out.println("Reverted to previous file");
+                } else {
+                    System.out.println("File is not loaded");
+                }
+            }
+
+            System.out.println("***");
+        });
+        engine.addListener("stride", e -> {
+            OnStrideEvent strideEvent = (OnStrideEvent) e;
+            UI.this.showStrideProgressDuringRun(strideEvent.getGenerationStrideScoreDTO());
+        });
+        engine.addListener("completed", e -> {
+            UI.this.evolutionAlgorithmCompleted = true;
+            System.out.println(e.getMessage());
+            System.out.println("***");
+        });
+    }
+
+    private MenuOptions getSelectedOption(String input) {
+        MenuOptions result = MenuOptions.None;
+        try {
+            int intInput = Integer.parseInt(input, 10);
+            result = MenuOptions.values()[intInput];
+        } catch (Exception e) {
+            // swallow parsing exceptions
+        }
+
+        return result;
+    }
+
+    private boolean checkExtension(String path, String expectedExt) {
+        if (!path.contains(".")) {
+            return false;
+        }
+
+        String ext = path.substring(path.lastIndexOf("."));
+        return expectedExt.equalsIgnoreCase(ext);
     }
 
     private boolean getNumOfGenerationsInput() {
@@ -186,52 +270,28 @@ public class UI {
         return result;
     }
 
-    private void showBestSolution() {
-        printShowSolutionMenu();
-
-        int displayOption = 0;
-        try {
-            displayOption = Integer.parseInt(scanner.nextLine(), 10);
-        } catch (Exception e) {
-            //swallow exception
-        }
-
-        TimeTableSolutionDTO bestSolution = engine.getBestSolution();
-
-        switch (displayOption) {
-            case 1:
-                printRawQuintets(bestSolution);
-                break;
-            case 2:
-                printTeacherDHMatrix(bestSolution);
-                break;
-            case 3:
-                printClassDHMatrix(bestSolution);
-                break;
-            case 0:
-            default:
-                System.out.println("Invalid option entered");
-                return;
-        }
-
-        printSolutionExtraDetails(bestSolution);
+    private void showStrideProgressDuringRun(GenerationStrideScoreDTO generationStrideScoreDTO) {
+        System.out.println("generation: " + generationStrideScoreDTO.getGenerationNum()
+                + ", top score: " + generationStrideScoreDTO.getBestScore());
     }
 
     private void printSolutionExtraDetails(TimeTableSolutionDTO solution) {
         System.out.println("Score: " + solution.getTotalFitnessScore());
         System.out.printf("Hard rules average score: %.1f %n", solution.getHardRulesAvg());
         System.out.printf("Soft rules average score: %.1f %n", solution.getSoftRulesAvg());
-        System.out.println("The different rules and the fitness score evaluated for this solution:");
+        System.out.println("The rules applied and the fitness score evaluated for this solution:");
         Map<RuleDTO, Double> fitnessScorePerRule = solution.getFitnessScorePerRule();
         for (Map.Entry<RuleDTO, Double> entry : fitnessScorePerRule.entrySet()) {
             RuleDTO rule = entry.getKey();
             System.out.println(rule.getName() + "," + rule.getType() + ", " + entry.getValue());
         }
+
+        System.out.println("***");
     }
 
     private void printRawQuintets(TimeTableSolutionDTO solution) {
         List<QuintetDTO> sortedQuintets = solution.getSolutionQuintets().stream()
-                .sorted(QuintetDTO.getDHComparator())
+                .sorted(QuintetDTO.getRawComparator())
                 .collect(Collectors.toList());
 
         for (QuintetDTO q : sortedQuintets) {
@@ -253,7 +313,7 @@ public class UI {
                 .collect(Collectors.toList());
 
         for (TeacherDTO t : sortedTeachers) {
-            System.out.println(t.getName());
+            System.out.println(t.getId() + " " + t.getName());
             printMatrix(teacherSolutions.get(t),
                     q -> String.format("%2s, %2s", q.getSchoolClass().getId(), q.getSubject().getId()));
             System.out.println("***");
@@ -269,7 +329,7 @@ public class UI {
                 .collect(Collectors.toList());
 
         for (SchoolClassDTO t : sortedClasses) {
-            System.out.println(t.getName());
+            System.out.println(t.getId() + " " + t.getName());
             printMatrix(classSolutions.get(t),
                     q -> String.format("%2s, %2s", q.getTeacher().getId(), q.getSubject().getId()));
             System.out.println("***");
@@ -332,7 +392,40 @@ public class UI {
         return matrix;
     }
 
-    private void showProgress() {
+    private void printHeaderLine(int days) {
+        StringBuilder sb = new StringBuilder("    "); //4 spaces
+        Formatter formatter = new Formatter(sb);
+        for (int d = 0; d < days; d++) {
+            DayOfWeek day = DayOfWeek.of(d + 1);
+
+            // 2 spaces [SHORT is 3 letters per day] 3 spaces
+            formatter.format("|  %s   ", day.getDisplayName(TextStyle.SHORT, Locale.getDefault()));
+        }
+
+        sb.append("|");
+        System.out.println(sb);
+    }
+
+    private void printSeparatorLine(int days) {
+        System.out.println(String.join("", Collections.nCopies(5 + 9 * days, "-")));
+    }
+
+    private void printList(List<?> values) {
+        for (Object object : values) {
+            System.out.println(object);
+        }
+    }
+
+    private void printSet(Set<RuleDTO> rules) {
+        for (RuleDTO rule : rules) {
+            System.out.println(rule);
+        }
+    }
+
+    private <K, V> void printMap(Map<K, V> map) {
+        for (V value : map.values()) {
+            System.out.println(value);
+        }
     }
 
     private void printEngineSetting(EngineSettingsDTO engineSettingsDTO) {
@@ -384,83 +477,6 @@ public class UI {
         }
     }
 
-    private void addListenersToEngineEvents() {
-        engine.addListener("loaded", e -> {
-            UI.this.fileLoaded = true;
-            LoadedEvent loadedEvent = (LoadedEvent) e;
-            System.out.println("file was successfully loaded from " + loadedEvent.getPath());
-            System.out.println("***");
-        });
-        //fireEvent("error", new ErrorEvent("Failed running evolution algorithm", e));
-        engine.addListener("error", e -> {
-            ErrorEvent errorEvent = (ErrorEvent) e;
-            System.out.println(e.getMessage() + ". " + errorEvent.getError().getMessage());
-            System.out.println("***");
-        });
-        engine.addListener("stride", e -> {
-            OnStrideEvent strideEvent = (OnStrideEvent) e;
-            UI.this.showStrideProgress(strideEvent.getGenerationStrideScoreDTO());
-        });
-        engine.addListener("completed", e -> {
-            UI.this.evolutionAlgorithmCompleted = true;
-            System.out.println(e.getMessage());
-            System.out.println("***");
-        });
-    }
-
-    private void showStrideProgress(GenerationStrideScoreDTO generationStrideScoreDTO) {
-        System.out.println("generation: " + generationStrideScoreDTO.getGenerationNum()
-                + " best score: " + generationStrideScoreDTO.getBestScore());
-    }
-
-    private void printHeaderLine(int days) {
-        StringBuilder sb = new StringBuilder("    "); //4 spaces
-        Formatter formatter = new Formatter(sb);
-        for (int d = 0; d < days; d++) {
-            DayOfWeek day = DayOfWeek.of(d + 1);
-
-            // 2 spaces [SHORT is 3 letters per day] 3 spaces
-            formatter.format("|  %s   ", day.getDisplayName(TextStyle.SHORT, Locale.getDefault()));
-        }
-
-        sb.append("|");
-        System.out.println(sb);
-    }
-
-    private void printSeparatorLine(int days) {
-        System.out.println(String.join("", Collections.nCopies(5 + 9 * days, "-")));
-    }
-
-    private void printList(List<?> values) {
-        for (Object object : values) {
-            System.out.println(object);
-        }
-    }
-
-    private void printSet(Set<RuleDTO> rules) {
-        for (RuleDTO rule : rules) {
-            System.out.println(rule);
-        }
-    }
-
-    private <K, V> void printMap(Map<K, V> map) {
-        for (V value : map.values()) {
-            System.out.println(value);
-        }
-    }
-
-    // Optional for raw print in #4
-    private void printMinQuintets(List<QuintetDTO> quintets) {
-        for (QuintetDTO q : quintets) {
-            System.out.printf("<%s, %d, %s, %s, %s>%n",
-                    q.getDay(),
-                    q.getHour(),
-                    q.getSchoolClass().getName(),
-                    q.getTeacher().getName(),
-                    q.getSubject().getName());
-        }
-    }
-
     private void printMainMenu() {
         /*String noFileLoaded = fileLoaded ? "" : " <Unavailable - no file loaded>";
         String algoIncomplete = evolutionAlgorithmCompleted ? "" : " <Unavailable - algorithm run was not completed>";*/
@@ -475,23 +491,20 @@ public class UI {
 
     private void printShowSolutionMenu() {
         System.out.println("Enter an option number for your preferred display of the best solution:");
-        System.out.println("1. A sorted list of the solution quintets <D,H,C,T,S>");
-        System.out.println("2. A separate D*H timetable for every teacher");
-        System.out.println("3. A separate D*H timetable for every class");
+        System.out.println("1. A sorted list of the solution quintets <D,H,C,T,S> (raw)");
+        System.out.println("2. A separate D*H timetable for every teacher (showing <C,S>)");
+        System.out.println("3. A separate D*H timetable for every class (showing <T,S>)");
     }
 
-    //    @Override
-//    public void actionPerformed(ActionEvent e) {
-//        switch (e.getID()) {
-//            case 1:
-//                System.out.println(e.getActionCommand());
-//                break;
-//            case 3:
-//                GenerationStrideScoreDTO generationStrideScoreDTO = ((OnStrideEvent) e).getGenerationStrideScoreDTO();
-//                showStrideProgress(generationStrideScoreDTO);
-//                break;
-//            default:
-//                throw new IllegalStateException("Unexpected value: " + e.getID());
-//        }
-//    }
+    // Optional for raw print in #4
+    private void printMinQuintets(List<QuintetDTO> quintets) {
+        for (QuintetDTO q : quintets) {
+            System.out.printf("<%s, %d, %s, %s, %s>%n",
+                    q.getDay(),
+                    q.getHour(),
+                    q.getSchoolClass().getName(),
+                    q.getTeacher().getName(),
+                    q.getSubject().getName());
+        }
+    }
 }
