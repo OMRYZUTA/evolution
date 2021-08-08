@@ -53,7 +53,7 @@ public class TimeTableSolution implements Solution {
 
     //#region getters
     public List<Quintet> getSolutionQuintets() {
-        return Collections.unmodifiableList(solutionQuintets);
+        return solutionQuintets;
     }
 
     public int getSolutionSize() {

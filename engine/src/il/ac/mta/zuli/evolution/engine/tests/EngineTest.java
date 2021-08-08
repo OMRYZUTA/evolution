@@ -8,6 +8,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Sizer;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.rules.Knowledgeable;
 import il.ac.mta.zuli.evolution.engine.rules.Satisfactory;
@@ -177,6 +178,16 @@ void stopOnFittnes(){
         assertEquals(initialPopulation.size(),evolutionEngine.execute(initialPopulation).size());
     }
 
+    @Test
+    void sizerAddQuintetsFromSolution() throws Throwable {
+        descriptor = xmlParser.unmarshall("src/resources/EX1-smallForSizer.xml");
+        List<Mutation<TimeTableSolution>> mutations = descriptor.getEngineSettings().getMutations();
+        Sizer mutation =(Sizer) mutations.get(0);
+        TimeTableSolution solution = new TimeTableSolution(descriptor.getTimeTable());
+        TimeTableSolution mutatedSolution= (TimeTableSolution) mutation.mutate(solution);
+        assertTrue(solution.getSolutionSize()<mutatedSolution.getSolutionSize());
+
+    }
     //#endregion evolution
 
 

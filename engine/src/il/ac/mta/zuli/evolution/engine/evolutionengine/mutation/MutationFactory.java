@@ -9,20 +9,21 @@ public class MutationFactory {
     public static Mutation createMutation(ETTMutation ettMutation, TimeTable timeTable) {
         Mutation mutation;
         switch (ettMutation.getName().toLowerCase()) {
+            case "sizer":
+                mutation = createSizerMutation(ettMutation, timeTable);
+                break;
             case "flipping":
                 mutation = creatFlippingMutation(ettMutation, timeTable);
                 break;
-            case "sizer":
-                mutation = createSizerMutation(ettMutation, timeTable);
+
             default:
-                throw new ValidationException(ettMutation.getName()+"is invalid mutation name ");
+                throw new ValidationException(ettMutation.getName()+" is invalid mutation name ");
 
         }
         return  mutation;
     }
     @NotNull
     private static Mutation createSizerMutation(ETTMutation ettMutation, TimeTable timeTable) {
-        Mutation mutation;
 //        <ETT-Mutation name="Sizer" probability="0.3" configuration="TotalTupples=7,Component=D"/>
         int totalTupples = extractTotalTupplesFromString(ettMutation);
         if (totalTupples > timeTable.getHours()*timeTable.getDays()) {
@@ -31,7 +32,7 @@ public class MutationFactory {
         if (totalTupples <(-1)* timeTable.getHours()*timeTable.getDays()) {
             throw new ValidationException("negative total tuples must be > -(days * hours) got " +totalTupples);
         }
-        return null;
+        return new Sizer(ettMutation.getProbability(),totalTupples,timeTable);
     }
 
     @NotNull

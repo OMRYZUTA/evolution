@@ -1,10 +1,14 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.mutation;
 
 
+import il.ac.mta.zuli.evolution.engine.Quintet;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static il.ac.mta.zuli.evolution.engine.utils.generateRandomNum;
 import static il.ac.mta.zuli.evolution.engine.utils.generateRandomNumZeroBase;
@@ -18,6 +22,10 @@ public class Sizer<S extends Solution> implements Mutation<S> {
         setProbability(probability);
         this.totalTuple = totalTuple;
         this.timeTable = timeTable;
+    }
+
+    public int getTotalTuple() {
+        return totalTuple;
     }
 
     @Override
@@ -56,14 +64,18 @@ public class Sizer<S extends Solution> implements Mutation<S> {
     }
 
     private S addQuintetsToSolution(TimeTableSolution solution) {
-        int quintetsToAdd = generateRandomNum(1, totalTuple);
+        int numOfQuintetsToAdd = generateRandomNum(1, totalTuple);
         S result = null;
-        if (solution.getSolutionSize() + quintetsToAdd < timeTable.getHours() * timeTable.getDays()) {
+        if (solution.getSolutionSize() + numOfQuintetsToAdd < timeTable.getHours() * timeTable.getDays()) {
             result = (S) solution;
         }
-        for (int i = 0; i < quintetsToAdd; i++) {
-            solution.getSolutionQuintets().add(solution.generateRandomQuintet());
-            result = (S) solution;
+        else {
+            List<Quintet> quintetsToAdd = new ArrayList<>();
+            for (int i = 0; i < numOfQuintetsToAdd; i++) {
+                quintetsToAdd.add(solution.generateRandomQuintet());
+            }
+            quintetsToAdd.addAll(solution.getSolutionQuintets());
+            result = (S) new TimeTableSolution(quintetsToAdd,quintetsToAdd.size(),timeTable);
         }
         return result;
     }
