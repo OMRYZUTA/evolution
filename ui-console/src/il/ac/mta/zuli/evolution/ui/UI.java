@@ -143,8 +143,7 @@ public class UI {
             return;
         }
 
-        //TODO later change from hardcoded
-        engine.executeEvolutionAlgorithm(100, 50);
+        engine.executeEvolutionAlgorithm(numOfGenerations, stride);
     }
 
     private boolean getNumOfGenerationsInput() {
@@ -392,9 +391,10 @@ public class UI {
             System.out.println("file was successfully loaded from " + loadedEvent.getPath());
             System.out.println("***");
         });
+        //fireEvent("error", new ErrorEvent("Failed running evolution algorithm", e));
         engine.addListener("error", e -> {
             ErrorEvent errorEvent = (ErrorEvent) e;
-            System.out.println("failed loading file: " + errorEvent.getError().getMessage());
+            System.out.println(e.getMessage() + ". " + errorEvent.getError().getMessage());
             System.out.println("***");
         });
         engine.addListener("stride", e -> {

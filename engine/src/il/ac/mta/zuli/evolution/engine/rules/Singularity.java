@@ -21,11 +21,11 @@ public class Singularity extends Rule {
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
 
         int numOfQuintets = timeTableSolution.getSolutionSize();
-        double score = 100;
+        int collisions = 0;
+        double score = 0;
 
         if (numOfQuintets > 0) {
             HashSet<String> classDayHourSet = new HashSet<>();
-            int collisions = 0;
             String DHC;
             int classID;
 
@@ -35,10 +35,17 @@ public class Singularity extends Rule {
                 //if the set already contains the element, the call leaves the set unchanged and returns false.
                 if (!classDayHourSet.add(DHC)) {
                     collisions++;
+                    if (this.isHardRule()) {
+                        break;
+                    }
                 }
             }
 
             score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
+        }
+
+        if (this.isHardRule() && collisions > 0) {
+            score = 0;
         }
 
         timeTableSolution.addScoreToRule(this, score);

@@ -20,7 +20,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
     ComponentName component;
     TimeTable timeTable;
 
-    public Flipping(double probability, int maxTuples, ComponentName component, TimeTable timeTable)  {
+    public Flipping(double probability, int maxTuples, ComponentName component, TimeTable timeTable) {
         setProbability(probability);
         this.maxTuples = maxTuples;
         this.component = component;
@@ -48,21 +48,20 @@ public class Flipping<S extends Solution> implements Mutation<S> {
         Set<Quintet> quintetSet = new HashSet<>(solutionQuintets);
         Quintet tempQuintet;
         int randomIndexToMutate;
-        int numOfQuintetsToMutate = generateRandomNum(1, maxTuples+1);
+        int numOfQuintetsToMutate = generateRandomNum(1, maxTuples + 1);
 
         for (int i = 0; i < numOfQuintetsToMutate; i++) {
-            if(solutionQuintets.size()>=1) {
-                 randomIndexToMutate = new Random().nextInt(solutionQuintets.size());
-            }
-            else{
-              break;
+            if (solutionQuintets.size() >= 1) {
+                randomIndexToMutate = new Random().nextInt(solutionQuintets.size());
+            } else {
+                break;
             }
             tempQuintet = mutateComponent(solutionQuintets.get(randomIndexToMutate));
             solutionQuintets.set(randomIndexToMutate, tempQuintet);
             quintetSet.add(tempQuintet);
         }
 
-        return (S)new TimeTableSolution(new ArrayList<>(quintetSet), timeTable);
+        return (S) new TimeTableSolution(new ArrayList<>(quintetSet), timeTable);
     }
 
     private Quintet mutateComponent(Quintet quintet) {
@@ -100,7 +99,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
 
     private DayOfWeek generateRandomDay() {
         DayOfWeek[] enumValues = DayOfWeek.values();
-        int randIndex = new Random().nextInt(timeTable.getDays()+1);
+        int randIndex = new Random().nextInt(timeTable.getDays());
         return enumValues[randIndex];
     }
 
@@ -108,7 +107,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
         if (0 <= probability && probability <= 1) {
             this.probability = probability;
         } else {
-            throw new ValidationException("invalid probability, should be between 0 -1 but got"+probability);
+            throw new ValidationException("invalid probability, should be between 0 -1 but got" + probability);
         }
     }
 

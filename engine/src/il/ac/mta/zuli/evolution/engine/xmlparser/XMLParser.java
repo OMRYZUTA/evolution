@@ -21,7 +21,6 @@ public class XMLParser {
             return new Descriptor(d);
         } catch (UnmarshalException e) {
             throw e.getLinkedException();
-//            throw new ValidationException(e.getMessage(), e.getLinkedException());
         }
     }
 }

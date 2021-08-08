@@ -21,11 +21,11 @@ public class TeacherIsHuman extends Rule {
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
 
         int numOfQuintets = timeTableSolution.getSolutionSize();
-        double score = 100;
+        int collisions = 0;
+        double score = 0; //if it's an empty solution
 
         if (numOfQuintets > 0) {
             HashSet<String> teacherDayHourSet = new HashSet<>();
-            int collisions = 0;
             String DHT;
             int teacherID;
 
@@ -35,10 +35,18 @@ public class TeacherIsHuman extends Rule {
                 //if the set already contains the element, the call leaves the set unchanged and returns false.
                 if (!teacherDayHourSet.add(DHT)) {
                     collisions++;
+
+                    if (this.isHardRule()) {
+                        break;
+                    }
                 }
             }
 
             score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
+        }
+
+        if (this.isHardRule() && collisions > 0) {
+            score = 0;
         }
 
         timeTableSolution.addScoreToRule(this, score);

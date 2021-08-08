@@ -17,14 +17,13 @@ public class Satisfactory extends Rule {
     //satisfactory rule - each class gets the exact number of hours-per-subject (the class' requirements are met)
     Map<Integer, SchoolClass> schoolClasses;
 
-    public Satisfactory(@NotNull String ruleType,@NotNull Map<Integer, SchoolClass> schoolClasses) { //TODO return not null
+    public Satisfactory(@NotNull String ruleType, @NotNull Map<Integer, SchoolClass> schoolClasses) { //TODO return not null
         super(ruleType);
         setSchoolClasses(schoolClasses);
     }
 
     private void setSchoolClasses(Map<Integer, SchoolClass> schoolClasses) {
-        if(schoolClasses.size()==0)
-        {
+        if (schoolClasses.size() == 0) {
             throw new EmptyCollectionException("empty school classes in satisfactory rule");
         }
         this.schoolClasses = schoolClasses;
@@ -38,16 +37,19 @@ public class Satisfactory extends Rule {
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
 
         double score = 0;
+        double[] classScores = new double[schoolClasses.size()]; //classID will be used as index (a sort of bucket)
 
         if (timeTableSolution.getSolutionSize() > 0) {
-            double[] classScores = new double[schoolClasses.size()]; //classID will be used as index (a sort of bucket)
-
             for (SchoolClass schoolClass : schoolClasses.values()) {
                 int classID = schoolClass.getId();
                 classScores[classID - 1] = classFitnessEvaluation(classID, timeTableSolution.getSubSolutionForClass(classID));
             }
 
             score = Arrays.stream(classScores).average().getAsDouble();
+        }
+
+        if (this.isHardRule() && Arrays.stream(classScores).anyMatch(n -> n == 0)) {
+            score = 0;
         }
 
         timeTableSolution.addScoreToRule(this, score);
@@ -63,6 +65,10 @@ public class Satisfactory extends Rule {
             countHoursInSubSolution(subSolutionForClass, hoursPerSubjectCounter);
             int satisfactorySubjects = countSatisfactorySubjects(classRequirements, hoursPerSubjectCounter);
             score = (100 * satisfactorySubjects) / (double) numOfRequiredSubjects;
+
+            if (this.isHardRule() && satisfactorySubjects < numOfRequiredSubjects) {
+                score = 0;
+            }
         }
 
         return score;

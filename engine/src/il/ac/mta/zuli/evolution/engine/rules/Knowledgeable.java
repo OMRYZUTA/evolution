@@ -21,8 +21,9 @@ public class Knowledgeable extends Rule {
         if (!(solution instanceof TimeTableSolution)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
+
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
-        double score = 100;
+        double score = 0;
 
         if (timeTableSolution.getSolutionSize() > 0) {
             score = calculateScoreBySubjectsFitToTeachers(timeTableSolution);
@@ -42,10 +43,17 @@ public class Knowledgeable extends Rule {
 
             if (subjectsTeaches.containsKey(quintet.getSubject().getId())) {
                 qualifiedQuintets++;
+            } else {
+                break;
             }
         }
+        int numOfQuintets = timeTableSolution.getSolutionSize();
+        score = (100 * qualifiedQuintets) / (double) numOfQuintets;
 
-        score = (100 * qualifiedQuintets) / (double) (timeTableSolution.getSolutionSize());
+        if (this.isHardRule() && qualifiedQuintets < numOfQuintets) {
+            score = 0;
+        }
+
         return score;
     }
 }

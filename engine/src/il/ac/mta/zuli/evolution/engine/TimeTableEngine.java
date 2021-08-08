@@ -91,7 +91,6 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
             List<TimeTableSolution> currGeneration = null;
             double bestSolutionFitnessScore = 0;
 
-            //try catch - fire ErrorEvent
             for (int i = 1; i <= numOfGenerations; i++) {
                 currGeneration = evolutionEngine.execute(prevGeneration);
                 TimeTableSolution currBestSolution = currGeneration.stream().
