@@ -104,7 +104,7 @@ public class TimeTableSolution implements Solution {
         return newSet;
     }
 
-    private Quintet generateRandomQuintet() {
+    public Quintet generateRandomQuintet() {
         DayOfWeek randomDay = generateRandomDay();
         int randomHour = generateRandomNumZeroBase(timeTable.getHours());
 
