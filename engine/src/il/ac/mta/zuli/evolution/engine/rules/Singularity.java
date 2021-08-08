@@ -40,12 +40,16 @@ public class Singularity extends Rule {
                     }
                 }
             }
+            if (this.isHardRule() && 0 < collisions) {
+                score = 0;
+            }
 
             score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
         }
 
         if (this.isHardRule() && collisions > 0) {
-            score = 0;
+//            score = 0;
+            score /= 2;
         }
 
         timeTableSolution.addScoreToRule(this, score);

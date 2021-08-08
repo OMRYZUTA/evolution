@@ -178,8 +178,8 @@ void knowledgeableGivesEmptySolutionFullScore(){
     Knowledgeable knowledgeable = new Knowledgeable("soft");
     knowledgeable.fitnessEvaluation(solution);
     solution.calculateTotalScore();
-    assertEquals(100,solution.getFitnessScorePerRule().get(knowledgeable));
-    assertTrue(solution.getTotalFitnessScore()>0.0);
+    assertEquals(0.0,solution.getFitnessScorePerRule().get(knowledgeable));
+    assertTrue(solution.getTotalFitnessScore()==0.0);
 }
 
     @Test
@@ -272,9 +272,7 @@ void knowledgeableGivesEmptySolutionFullScore(){
     @Test
     void singularityGivesSolutionFullScore(){
         List<Quintet> quintets = new ArrayList<>();
-        int dayIndex = 1;
-        DayOfWeek day =DayOfWeek.of(dayIndex);
-        int hour = 0;
+
         SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
 
 
@@ -285,8 +283,8 @@ void knowledgeableGivesEmptySolutionFullScore(){
         Singularity singularity = new Singularity("soft");
         singularity.fitnessEvaluation(solution);
         solution.calculateTotalScore();
-        assertEquals(100.0, solution.getFitnessScorePerRule().get(singularity));
-        assertTrue(solution.getTotalFitnessScore()>0.0);
+        assertEquals(0.0, solution.getFitnessScorePerRule().get(singularity));
+        assertTrue(solution.getTotalFitnessScore()==0.0);
     }
     @Test
     void teacherIsHumanGivesSolutionFullScore(){
@@ -303,8 +301,8 @@ void knowledgeableGivesEmptySolutionFullScore(){
         TeacherIsHuman teacherIsHuman = new TeacherIsHuman("soft");
         teacherIsHuman.fitnessEvaluation(solution);
         solution.calculateTotalScore();
-        assertEquals(100.0, solution.getFitnessScorePerRule().get(teacherIsHuman));
-        assertTrue(solution.getTotalFitnessScore() > 0.0);
+        assertEquals(0.0, solution.getFitnessScorePerRule().get(teacherIsHuman));
+        assertTrue(solution.getTotalFitnessScore() == 0.0);
     }
 
     @Test

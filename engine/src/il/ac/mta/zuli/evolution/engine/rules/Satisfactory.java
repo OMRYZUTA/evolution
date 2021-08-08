@@ -49,7 +49,8 @@ public class Satisfactory extends Rule {
         }
 
         if (this.isHardRule() && Arrays.stream(classScores).anyMatch(n -> n == 0)) {
-            score = 0;
+//            score = 0;
+            score *= 0.9;
         }
 
         timeTableSolution.addScoreToRule(this, score);
@@ -64,11 +65,8 @@ public class Satisfactory extends Rule {
             Map<Integer, Integer> hoursPerSubjectCounter = initializeCounterMap(classRequirements);
             countHoursInSubSolution(subSolutionForClass, hoursPerSubjectCounter);
             int satisfactorySubjects = countSatisfactorySubjects(classRequirements, hoursPerSubjectCounter);
-            score = (100 * satisfactorySubjects) / (double) numOfRequiredSubjects;
+            score = (100 * satisfactorySubjects) / (double) numOfRequiredSubjects ;
 
-            if (this.isHardRule() && satisfactorySubjects < numOfRequiredSubjects) {
-                score = 0;
-            }
         }
 
         return score;

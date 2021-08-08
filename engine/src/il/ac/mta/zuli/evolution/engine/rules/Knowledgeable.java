@@ -33,7 +33,7 @@ public class Knowledgeable extends Rule {
     }
 
     private double calculateScoreBySubjectsFitToTeachers(TimeTableSolution timeTableSolution) {
-        double score;
+        double score=100;
         int qualifiedQuintets = 0;
         List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
         Map<Integer, Subject> subjectsTeaches;
@@ -43,7 +43,8 @@ public class Knowledgeable extends Rule {
 
             if (subjectsTeaches.containsKey(quintet.getSubject().getId())) {
                 qualifiedQuintets++;
-            } else {
+            }
+            else {
                 break;
             }
         }
