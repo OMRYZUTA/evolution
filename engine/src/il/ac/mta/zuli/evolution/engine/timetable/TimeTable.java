@@ -87,8 +87,8 @@ public class TimeTable {
     }
 
     private void setTeachers(@NotNull ETTTeachers ettTeachers) {
-        if(ettTeachers.getETTTeacher().size() ==0){
-            throw  new EmptyCollectionException("The number of teachers must be positive");
+        if (ettTeachers.getETTTeacher().size() == 0) {
+            throw new EmptyCollectionException("The number of teachers must be positive");
         }
         this.teachers = new HashMap<>();
         List<ETTTeacher> teacherList = ettTeachers.getETTTeacher();
@@ -99,22 +99,23 @@ public class TimeTable {
             t = teacherList.get(i);
 
             if (i + 1 != t.getId()) {
-                throw new ValidationException("Teacher ID not according to required count" + t.getId() + t.getETTName());
+                throw new ValidationException("Teacher ID not according to required count: "
+                        + t.getId() + ", " + t.getETTName());
             }
 
             try {
                 Teacher teacher = new Teacher(t, this.subjects);
                 this.teachers.put(t.getId(), teacher);
             } catch (ValidationException e) {
-                throw new ValidationException("Failed creating teacher " + t.getId() + t.getETTName(), e);
+                throw new ValidationException("Failed creating teacher " + t.getId() + ", " + t.getETTName(), e);
             }
         }
     }
 
     private void setSubjects(@NotNull ETTSubjects ettSubjects) {
 
-        if(ettSubjects.getETTSubject().size() ==0){
-            throw  new EmptyCollectionException(" Empty list of subjects");
+        if (ettSubjects.getETTSubject().size() == 0) {
+            throw new EmptyCollectionException(" Empty list of subjects");
         }
         this.subjects = new HashMap<>();
         List<ETTSubject> subjectList = ettSubjects.getETTSubject();
@@ -138,8 +139,8 @@ public class TimeTable {
     }
 
     private void setSchoolClasses(@NotNull ETTClasses ettClasses) {
-        if(ettClasses.getETTClass().size() ==0){
-            throw  new EmptyCollectionException(" Empty list of Classes");
+        if (ettClasses.getETTClass().size() == 0) {
+            throw new EmptyCollectionException(" Empty list of Classes");
         }
         this.schoolClasses = new HashMap<>();
         List<ETTClass> classList = ettClasses.getETTClass();

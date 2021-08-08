@@ -51,6 +51,8 @@ class EngineTest {
         } catch (Exception e) {
             System.out.println(e);
             e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 
@@ -295,28 +297,27 @@ void knowledgeableGivesEmptySolutionFullScore(){
         SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
 
 
-
-        Map <Integer,SchoolClass> schoolClasses = new HashMap<>();
-        schoolClasses.put(1,schoolClass);
+        Map<Integer, SchoolClass> schoolClasses = new HashMap<>();
+        schoolClasses.put(1, schoolClass);
         TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
         TeacherIsHuman teacherIsHuman = new TeacherIsHuman("soft");
         teacherIsHuman.fitnessEvaluation(solution);
         solution.calculateTotalScore();
         assertEquals(100.0, solution.getFitnessScorePerRule().get(teacherIsHuman));
-        assertTrue(solution.getTotalFitnessScore()>0.0);
+        assertTrue(solution.getTotalFitnessScore() > 0.0);
     }
-    @Test
-    void allRulesGiveSolutionFullScore() throws Exception {
 
-        descriptor =xmlParser.unmarshall("src/resources/EX1-smaller2.xml");
+    @Test
+    void allRulesGiveSolutionFullScore() throws Throwable {
+        descriptor = xmlParser.unmarshall("src/resources/EX1-smaller2.xml");
         List<Quintet> quintets = new ArrayList<>();
         int dayIndex = 1;
-        DayOfWeek day =DayOfWeek.of(dayIndex);
+        DayOfWeek day = DayOfWeek.of(dayIndex);
         int hour = 0;
-        Map <Integer,SchoolClass> schoolClasses = new HashMap<>();
+        Map<Integer, SchoolClass> schoolClasses = new HashMap<>();
         SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
 
-        for (Requirement requirement: schoolClass.getRequirements()) {
+        for (Requirement requirement : schoolClass.getRequirements()) {
             for (int i = 0; i < requirement.getHours(); i++) {
                 Subject subject = requirement.getSubject();
                 Teacher teacher = descriptor.getTimeTable()

@@ -37,7 +37,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
             XMLParser xmlParser = new XMLParser();
             descriptor = xmlParser.unmarshall(path);
             fireEvent("loaded", new LoadedEvent("file was loaded", path));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             fireEvent("error", new ErrorEvent("failed reading file", e));
         }
     }
@@ -138,6 +138,14 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     //#endregion
 
     //#region auxiliary methods
+    public int getTimeTableHours() {
+        return descriptor.getTimeTableHours();
+    }
+
+    public int getTimeTableDays() {
+        return descriptor.getTimeTableDays();
+    }
+
     @NotNull
     private List<TimeTableSolution> getInitialGeneration() {
         int initialPopulationSize = descriptor.getEngineSettings().getInitialPopulationSize();

@@ -21,6 +21,14 @@ public class Descriptor {
         this.engineSettings = tempEngineSetting;
     }
 
+    public int getTimeTableHours() {
+        return timeTable.getHours();
+    }
+
+    public int getTimeTableDays() {
+        return timeTable.getDays();
+    }
+
     @Override
     public String toString() {
         return "Descriptor{" +
