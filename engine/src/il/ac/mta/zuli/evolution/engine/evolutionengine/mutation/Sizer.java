@@ -40,7 +40,7 @@ public class Sizer<S extends Solution> implements Mutation<S> {
         if (totalTuple < 0) {
             mutatedSolution = removeQuintetsFromSolution(timeTableSolution);
         } else {
-            mutatedSolution = addQuintetsToSolution(timeTableSolution)si;
+            mutatedSolution = addQuintetsToSolution(timeTableSolution);
         }
         return mutatedSolution;
     }
