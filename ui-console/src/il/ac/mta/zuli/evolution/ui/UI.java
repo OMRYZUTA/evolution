@@ -99,8 +99,9 @@ public class UI {
 
     private void loadFile() {
         System.out.println(System.lineSeparator() + "To load XML file, enter absolute file path:");
-        //TODO: restore later
-        String path = "C:\\Users\\fifil\\source\\repos\\evolution\\engine\\src\\resources\\EX1-small.xml"; //scanner.nextLine();
+
+        String path = scanner.nextLine();
+        //String path = "C:\\Users\\fifil\\source\\repos\\evolution\\engine\\src\\resources\\EX1-small.xml"; //scanner.nextLine();
         if (!checkExtension(path, ".xml")) {
             System.out.println("Invalid file path. Must be an xml file");
             System.out.println("***");
@@ -134,7 +135,6 @@ public class UI {
         System.out.println("To run the evolution algorithm");
         int numOfGenerations = 0;
 
-        //TODO continue from here - doesn't work well
         if (!getNumOfGenerationsInput()) {
             return;
         }
@@ -216,7 +216,11 @@ public class UI {
     }
 
     private void printRawQuintets(TimeTableSolutionDTO solution) {
-        for (QuintetDTO q : solution.getSolutionQuintets()) {
+        List<QuintetDTO> sortedQuintets = solution.getSolutionQuintets().stream()
+                .sorted(QuintetDTO.getDHComparator())
+                .collect(Collectors.toList());
+
+        for (QuintetDTO q : sortedQuintets) {
             System.out.printf("<%d, %d, %d, %d, %d>%n",
                     q.getDay().getValue(),
                     q.getHour(),

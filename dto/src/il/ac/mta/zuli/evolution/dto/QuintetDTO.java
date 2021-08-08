@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.dto;
 
 import java.time.DayOfWeek;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class QuintetDTO {
@@ -9,6 +10,11 @@ public class QuintetDTO {
     private final TeacherDTO teacher;
     private final SchoolClassDTO schoolClass;
     private final SubjectDTO subject;
+    private final static Comparator<QuintetDTO> compareByDay = Comparator.comparing(QuintetDTO::getDay);
+    private final static Comparator<QuintetDTO> compareByHour = Comparator.comparing(QuintetDTO::getHour);
+    private final static Comparator<QuintetDTO> compareByTeacher = Comparator.comparing(QuintetDTO::getTeacherID);
+    private final static Comparator<QuintetDTO> compareBySchoolClass = Comparator.comparing(QuintetDTO::getSchoolClassID);
+    private final static Comparator<QuintetDTO> compareBySubject = Comparator.comparing(QuintetDTO::getSubjectID);
 
     public QuintetDTO(DayOfWeek day, int hour, TeacherDTO teacher, SchoolClassDTO schoolClass, SubjectDTO subject) {
         this.day = day;
@@ -61,6 +67,29 @@ public class QuintetDTO {
                 ", subject=" + subject +
                 '}';
     }
+
+    public static Comparator<QuintetDTO> getDHComparator() {
+        Comparator<QuintetDTO> dhComparator = compareByDay
+                .thenComparing(compareByHour)
+                .thenComparing(compareBySchoolClass)
+                .thenComparing(compareByTeacher)
+                .thenComparing(compareBySubject);
+
+        return dhComparator;
+    }
+
+    public int getTeacherID() {
+        return teacher.getId();
+    }
+
+    public int getSchoolClassID() {
+        return schoolClass.getId();
+    }
+
+    public int getSubjectID() {
+        return subject.getId();
+    }
+
 
     /*@Override
     public  String toString(){
