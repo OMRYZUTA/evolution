@@ -19,8 +19,7 @@ public class SelectionDTO {
 
     @Override
     public String toString() {
-        return "Selection:" +
-                "type:" + type +
-                ", configuration:" + configuration;
+        return "Selection: " + type +
+                ", configuration: " + configuration;
     }
 }

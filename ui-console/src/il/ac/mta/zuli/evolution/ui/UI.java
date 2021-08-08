@@ -98,7 +98,6 @@ public class UI {
         }
 
         engine.loadXML(path); //C:\Users\fifil\source\repos\evolution\engine\src\resources\EX1-small.xml
-        //TODO - it matters if a file was previously loaded or not
     }
 
     private void showDetails() {
@@ -170,11 +169,12 @@ public class UI {
     private void showProgressHistory() {
         List<GenerationProgressDTO> list = engine.getEvolutionProgress();
 
-        //TODO - from first generation to last?
-
-        for (GenerationProgressDTO gp : list) {
-            System.out.println(gp);
+        if (list.size() > 0) {
+            for (GenerationProgressDTO gp : list) {
+                System.out.println(gp);
+            }
         }
+
     }
 
     private void addListenersToEngineEvents() {
@@ -314,8 +314,13 @@ public class UI {
 
         for (TeacherDTO t : sortedTeachers) {
             System.out.println(t.getId() + " " + t.getName());
-            printMatrix(teacherSolutions.get(t),
-                    q -> String.format("%2s, %2s", q.getSchoolClass().getId(), q.getSubject().getId()));
+            if (teacherSolutions.get(t).size() > 0) {
+                printMatrix(teacherSolutions.get(t),
+                        q -> String.format("%2s, %2s", q.getSchoolClass().getId(), q.getSubject().getId()));
+            } else {
+                System.out.println(t.getName() + " is not scheduled in the timetable.");
+            }
+
             System.out.println("***");
         }
     }
@@ -330,8 +335,13 @@ public class UI {
 
         for (SchoolClassDTO t : sortedClasses) {
             System.out.println(t.getId() + " " + t.getName());
-            printMatrix(classSolutions.get(t),
-                    q -> String.format("%2s, %2s", q.getTeacher().getId(), q.getSubject().getId()));
+
+            if (classSolutions.get(t).size() > 0) {
+                printMatrix(classSolutions.get(t),
+                        q -> String.format("%2s, %2s", q.getTeacher().getId(), q.getSubject().getId()));
+            } else {
+                System.out.println(t.getName() + " is not scheduled in the timetable.");
+            }
             System.out.println("***");
         }
     }
@@ -429,7 +439,6 @@ public class UI {
     }
 
     private void printEngineSetting(EngineSettingsDTO engineSettingsDTO) {
-        System.out.println(String.format("population size : %d", engineSettingsDTO.getInitialPopulationSize()));
         SelectionDTO selectionDTO = engineSettingsDTO.getSelection();
         CrossoverDTO crossoverDTO = engineSettingsDTO.getCrossover();
         List<MutationDTO> mutationDTOList = engineSettingsDTO.getMutations();

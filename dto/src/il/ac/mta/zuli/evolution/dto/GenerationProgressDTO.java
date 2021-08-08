@@ -26,7 +26,7 @@ public class GenerationProgressDTO {
     @Override
     public String toString() {
         return "generation " + generationNum +
-                ", score" + bestSolutionDTO.getTotalFitnessScore() +
+                ", score " + bestSolutionDTO.getTotalFitnessScore() +
                 ", delta " + deltaFromPreviousBestSolution;
     }
 }

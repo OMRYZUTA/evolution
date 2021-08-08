@@ -44,7 +44,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     @Override
     public DescriptorDTO getSystemDetails() {
         if (!isXMLLoaded()) {
-            ErrorEvent e = new ErrorEvent("failed getting the system settings", ErrorType.DetailsError, new InvalidOperationException("can't get system details, file is not loaded"));
+            ErrorEvent e = new ErrorEvent("Failed getting the system settings", ErrorType.DetailsError, new InvalidOperationException("can't get system details, file is not loaded"));
             fireEvent("error", e);
             return null;
         }
@@ -71,7 +71,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                     this.descriptor.getTimeTable().getRules());
 
             List<TimeTableSolution> prevGeneration = initialPopulation;
-            List<TimeTableSolution> currGeneration = null;
+            List<TimeTableSolution> currGeneration;
             double bestSolutionFitnessScore = 0;
 
             for (int i = 1; i <= numOfGenerations; i++) {
@@ -85,7 +85,9 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                 }
 
                 //stride for purposes of info-display and to save a stride-generation history
-                if (i % generationsStride == 0) {
+                //with addition of first and last generation
+                if (i == 1 || (i % generationsStride == 0) || (i == numOfGenerations - 1)) {
+                    bestSolutionsInGenerationPerStride.put(i, currBestSolution);
                     fireStrideDetails(i, currBestSolution);
                 }
 
@@ -99,16 +101,15 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     }
 
     private void fireStrideDetails(int i, TimeTableSolution currBestSolution) {
-        bestSolutionsInGenerationPerStride.put(i, currBestSolution);
         GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i, currBestSolution.getTotalFitnessScore());
-        fireEvent("stride", new OnStrideEvent("generationStride", i, strideScoreDTO));
+        fireEvent("stride", new OnStrideEvent("generation ", i, strideScoreDTO));
     }
 
     private void checkForErrorsBeforeExecutingAlgorithms(int numOfGenerations, int generationsStride) {
         if (!isXMLLoaded()) {
             ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
                     ErrorType.RunError,
-                    new InvalidOperationException("can't execute Evolution algorithm, file is not loaded"));
+                    new InvalidOperationException("Can't execute Evolution algorithm, file is not loaded"));
             fireEvent("error", e);
         }
 
@@ -137,7 +138,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                     this.descriptor.getTimeTable().getRules());
 
             List<TimeTableSolution> prevGeneration = initialPopulation;
-            List<TimeTableSolution> currGeneration = null;
+            List<TimeTableSolution> currGeneration;
             double bestSolutionFitnessScore = 0;
 
             for (int i = 1; i <= numOfGenerations; i++) {
@@ -174,25 +175,43 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     @Override
     public List<GenerationProgressDTO> getEvolutionProgress() {
         if (!isXMLLoaded()) {
-            throw new InvalidOperationException("can't show evolution progress, file is not loaded");
+            ErrorEvent e = new ErrorEvent("Failed getting progress history",
+                    ErrorType.ProgressHistoryError,
+                    new InvalidOperationException("Can't show evolution progress, file is not loaded"));
+            fireEvent("error", e);
+            return null;
         }
+
         if (bestSolutionsInGenerationPerStride.size() == 0) {
-            throw new InvalidOperationException("can't show evolution progress, evolution algorithm has not been executed");
+            ErrorEvent e = new ErrorEvent("Failed getting evolution-progress history",
+                    ErrorType.ProgressHistoryError,
+                    new InvalidOperationException("Can't show evolution progress, evolution algorithm has not been executed"));
+            fireEvent("error", e);
+            return null;
         }
 
-        List<GenerationProgressDTO> Progress = new ArrayList<>();
-        double previousScore = bestSolutionsInGenerationPerStride.get(1).getTotalFitnessScore();
-        double delta;
-        int generation;
+        try {
+            List<GenerationProgressDTO> progress = new ArrayList<>();
+            //we know generation # 1 is the first in the map
+            double previousScore = bestSolutionsInGenerationPerStride.get(1).getTotalFitnessScore();
+            double delta;
+            int generation;
 
-        for (Map.Entry<Integer, TimeTableSolution> entry : bestSolutionsInGenerationPerStride.entrySet()) {
-            TimeTableSolutionDTO solutionDTO = createTimeTableSolutionDTO(entry.getValue());
-            generation = entry.getKey();
-            delta = entry.getValue().getTotalFitnessScore() - previousScore;
-            Progress.add(new GenerationProgressDTO(generation, solutionDTO, delta));
+            for (Map.Entry<Integer, TimeTableSolution> entry : bestSolutionsInGenerationPerStride.entrySet()) {
+                TimeTableSolutionDTO solutionDTO = createTimeTableSolutionDTO(entry.getValue());
+                generation = entry.getKey();
+                double currScore = entry.getValue().getTotalFitnessScore();
+                delta = currScore - previousScore;
+                previousScore = currScore;
+                progress.add(new GenerationProgressDTO(generation, solutionDTO, delta));
+            }
+
+            return progress;
+        } catch (Throwable e) {
+            fireEvent("error", new ErrorEvent("Failed getting evolution-progress history",
+                    ErrorType.ProgressHistoryError, e));
+            return null;
         }
-
-        return Progress;
     }
     //#endregion
 
@@ -251,17 +270,15 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     @NotNull
     private CrossoverDTO createCrossoverDTO() {
         Crossover<TimeTableSolution> crossover = descriptor.getEngineSettings().getCrossover();
-        CrossoverDTO crossoverDTO = new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getNumOfCuttingPoints());
 
-        return crossoverDTO;
+        return new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getNumOfCuttingPoints());
     }
 
     @NotNull
     private SelectionDTO createSelectionDTO() {
         Selection<TimeTableSolution> selection = descriptor.getEngineSettings().getSelection();
-        SelectionDTO selectionDTO = new SelectionDTO(selection.getClass().getSimpleName(), selection.getConfiguration());
 
-        return selectionDTO;
+        return new SelectionDTO(selection.getClass().getSimpleName(), selection.getConfiguration());
     }
 
     @NotNull
@@ -358,7 +375,6 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         Map<Integer, SchoolClass> SchoolClass = descriptor.getTimeTable().getSchoolClasses();
 
         for (SchoolClass schoolClass : SchoolClass.values()) {
-            List<RequirementDTO> requirementsDTO = createRequirementsDTOList(schoolClass.getRequirements());
             SchoolClassDTOs.put(schoolClass.getId(), createSchoolClassDTO(schoolClass));
         }
 
