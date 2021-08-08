@@ -193,6 +193,7 @@ public class TimeTableSolution implements Solution {
         totalFitnessScore = hardRuleWeightedScore + softRuleWeightedScore;
     }
 
+
     private int calculateTotalRequiredHours() {
         int totalRequiredHours = 0;
         Map<Integer, SchoolClass> classes = timeTable.getSchoolClasses();

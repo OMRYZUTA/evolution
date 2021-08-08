@@ -59,7 +59,7 @@ public class UI {
                     break;
                 case ShowSolution:
                     if (evolutionAlgorithmCompleted) {
-                        showSolution();
+                        showBestSolution();
                     } else {
                         System.out.println("Option unavailable until a file is loaded to the system, and algorithm completed running");
                         System.out.println("***");
@@ -139,7 +139,7 @@ public class UI {
             return;
         }
 
-        if (!getGenerationStride()) {
+        if (!getGenerationStrideInput()) {
             return;
         }
 
@@ -167,7 +167,7 @@ public class UI {
         return result;
     }
 
-    private boolean getGenerationStride() {
+    private boolean getGenerationStrideInput() {
         boolean result = false;
         System.out.println("Enter the generation stride you'd like to see while the algorithm runs (a positive integer)");
 
@@ -187,7 +187,7 @@ public class UI {
         return result;
     }
 
-    private void showSolution() {
+    private void showBestSolution() {
         printShowSolutionMenu();
 
         int displayOption = 0;
@@ -212,6 +212,21 @@ public class UI {
             case 0:
             default:
                 System.out.println("Invalid option entered");
+                return;
+        }
+
+        printSolutionExtraDetails(bestSolution);
+    }
+
+    private void printSolutionExtraDetails(TimeTableSolutionDTO solution) {
+        System.out.println("Score: " + solution.getTotalFitnessScore());
+        System.out.printf("Hard rules average score: %.1f %n", solution.getHardRulesAvg());
+        System.out.printf("Soft rules average score: %.1f %n", solution.getSoftRulesAvg());
+        System.out.println("The different rules and the fitness score evaluated for this solution:");
+        Map<RuleDTO, Double> fitnessScorePerRule = solution.getFitnessScorePerRule();
+        for (Map.Entry<RuleDTO, Double> entry : fitnessScorePerRule.entrySet()) {
+            RuleDTO rule = entry.getKey();
+            System.out.println(rule.getName() + "," + rule.getType() + ", " + entry.getValue());
         }
     }
 

@@ -36,4 +36,8 @@ public class RuleDTO {
     public String getType() {
         return type;
     }
+
+    public boolean isHardRule() {
+        return this.type.compareToIgnoreCase("hard") == 0;
+    }
 }

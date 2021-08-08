@@ -40,6 +40,46 @@ public class TimeTableSolutionDTO {
         return timeTable;
     }
 
+    public double getHardRulesAvg() {
+        double hardRuleSum = 0;
+        int numOfHardRules = 0;
+
+        for (Map.Entry<RuleDTO, Double> entry : fitnessScorePerRule.entrySet()) {
+            if (entry.getKey().isHardRule()) {
+                numOfHardRules++;
+                hardRuleSum += entry.getValue();
+            }
+        }
+
+        double hardRuleAvg = 0;
+
+        if (numOfHardRules != 0) {
+            hardRuleAvg = hardRuleSum / numOfHardRules;
+        }
+
+        return hardRuleAvg;
+    }
+
+    public double getSoftRulesAvg() {
+        double softRuleSum = 0;
+        int numOfSoftRules = 0;
+
+        for (Map.Entry<RuleDTO, Double> entry : fitnessScorePerRule.entrySet()) {
+            if (!entry.getKey().isHardRule()) {
+                numOfSoftRules++;
+                softRuleSum += entry.getValue();
+            }
+        }
+
+        double softRuleAvg = 0;
+
+        if (numOfSoftRules != 0) {
+            softRuleAvg = softRuleSum / numOfSoftRules;
+        }
+
+        return softRuleAvg;
+    }
+
     @Override
     public String toString() {
         return "TimeTableSolutionDTO{" +
