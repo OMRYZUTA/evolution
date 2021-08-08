@@ -6,7 +6,7 @@
 //
 
 
-package il.ac.mta.zuli.evolution.engine.xmlparser.generated;
+package il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
@@ -23,9 +23,8 @@ import java.util.List;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{}ETT-Rule" maxOccurs="unbounded"/>
+ *         &lt;element ref="{}ETT-Study" maxOccurs="unbounded"/>
  *       &lt;/sequence>
- *       &lt;attribute name="hard-rules-weight" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -35,59 +34,41 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "ettRule"
+    "ettStudy"
 })
-@XmlRootElement(name = "ETT-Rules")
-public class ETTRules {
+@XmlRootElement(name = "ETT-Requirements")
+public class ETTRequirements {
 
-    @XmlElement(name = "ETT-Rule", required = true)
-    protected List<ETTRule> ettRule;
-    @XmlAttribute(name = "hard-rules-weight", required = true)
-    protected int hardRulesWeight;
+    @XmlElement(name = "ETT-Study", required = true)
+    protected List<ETTStudy> ettStudy;
 
     /**
-     * Gets the value of the ettRule property.
+     * Gets the value of the ettStudy property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the ettRule property.
+     * This is why there is not a <CODE>set</CODE> method for the ettStudy property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getETTRule().add(newItem);
+     *    getETTStudy().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link ETTRule }
+     * {@link ETTStudy }
      * 
      * 
      */
-    public List<ETTRule> getETTRule() {
-        if (ettRule == null) {
-            ettRule = new ArrayList<ETTRule>();
+    public List<ETTStudy> getETTStudy() {
+        if (ettStudy == null) {
+            ettStudy = new ArrayList<ETTStudy>();
         }
-        return this.ettRule;
-    }
-
-    /**
-     * Gets the value of the hardRulesWeight property.
-     * 
-     */
-    public int getHardRulesWeight() {
-        return hardRulesWeight;
-    }
-
-    /**
-     * Sets the value of the hardRulesWeight property.
-     * 
-     */
-    public void setHardRulesWeight(int value) {
-        this.hardRulesWeight = value;
+        return this.ettStudy;
     }
 
 }

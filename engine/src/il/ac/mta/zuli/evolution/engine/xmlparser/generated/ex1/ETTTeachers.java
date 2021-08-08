@@ -6,7 +6,7 @@
 //
 
 
-package il.ac.mta.zuli.evolution.engine.xmlparser.generated;
+package il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{}ETT-Mutation" maxOccurs="unbounded"/>
+ *         &lt;element ref="{}ETT-Teacher" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -34,41 +34,41 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "ettMutation"
+    "ettTeacher"
 })
-@XmlRootElement(name = "ETT-Mutations")
-public class ETTMutations {
+@XmlRootElement(name = "ETT-Teachers")
+public class ETTTeachers {
 
-    @XmlElement(name = "ETT-Mutation", required = true)
-    protected List<ETTMutation> ettMutation;
+    @XmlElement(name = "ETT-Teacher", required = true)
+    protected List<ETTTeacher> ettTeacher;
 
     /**
-     * Gets the value of the ettMutation property.
+     * Gets the value of the ettTeacher property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the ettMutation property.
+     * This is why there is not a <CODE>set</CODE> method for the ettTeacher property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getETTMutation().add(newItem);
+     *    getETTTeacher().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link ETTMutation }
+     * {@link ETTTeacher }
      * 
      * 
      */
-    public List<ETTMutation> getETTMutation() {
-        if (ettMutation == null) {
-            ettMutation = new ArrayList<ETTMutation>();
+    public List<ETTTeacher> getETTTeacher() {
+        if (ettTeacher == null) {
+            ettTeacher = new ArrayList<ETTTeacher>();
         }
-        return this.ettMutation;
+        return this.ettTeacher;
     }
 
 }

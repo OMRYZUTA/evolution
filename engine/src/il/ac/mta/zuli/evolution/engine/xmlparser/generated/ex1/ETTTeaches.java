@@ -6,7 +6,7 @@
 //
 
 
-package il.ac.mta.zuli.evolution.engine.xmlparser.generated;
+package il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1;
 
 import javax.xml.bind.annotation.*;
 
@@ -21,7 +21,6 @@ import javax.xml.bind.annotation.*;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;attribute name="subject-id" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
- *       &lt;attribute name="hours" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -31,13 +30,11 @@ import javax.xml.bind.annotation.*;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
-@XmlRootElement(name = "ETT-Study")
-public class ETTStudy {
+@XmlRootElement(name = "ETT-Teaches")
+public class ETTTeaches {
 
     @XmlAttribute(name = "subject-id", required = true)
     protected int subjectId;
-    @XmlAttribute(name = "hours", required = true)
-    protected int hours;
 
     /**
      * Gets the value of the subjectId property.
@@ -53,22 +50,6 @@ public class ETTStudy {
      */
     public void setSubjectId(int value) {
         this.subjectId = value;
-    }
-
-    /**
-     * Gets the value of the hours property.
-     * 
-     */
-    public int getHours() {
-        return hours;
-    }
-
-    /**
-     * Sets the value of the hours property.
-     * 
-     */
-    public void setHours(int value) {
-        this.hours = value;
     }
 
 }

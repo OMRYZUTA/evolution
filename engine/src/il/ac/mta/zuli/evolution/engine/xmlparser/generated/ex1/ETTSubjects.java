@@ -6,7 +6,7 @@
 //
 
 
-package il.ac.mta.zuli.evolution.engine.xmlparser.generated;
+package il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;

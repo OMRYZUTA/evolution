@@ -6,7 +6,7 @@
 //
 
 
-package il.ac.mta.zuli.evolution.engine.xmlparser.generated;
+package il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{}ETT-Teaches" maxOccurs="unbounded"/>
+ *         &lt;element ref="{}ETT-Class" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -34,41 +34,41 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "ettTeaches"
+    "ettClass"
 })
-@XmlRootElement(name = "ETT-Teaching")
-public class ETTTeaching {
+@XmlRootElement(name = "ETT-Classes")
+public class ETTClasses {
 
-    @XmlElement(name = "ETT-Teaches", required = true)
-    protected List<ETTTeaches> ettTeaches;
+    @XmlElement(name = "ETT-Class", required = true)
+    protected List<ETTClass> ettClass;
 
     /**
-     * Gets the value of the ettTeaches property.
+     * Gets the value of the ettClass property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the ettTeaches property.
+     * This is why there is not a <CODE>set</CODE> method for the ettClass property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getETTTeaches().add(newItem);
+     *    getETTClass().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link ETTTeaches }
+     * {@link ETTClass }
      * 
      * 
      */
-    public List<ETTTeaches> getETTTeaches() {
-        if (ettTeaches == null) {
-            ettTeaches = new ArrayList<ETTTeaches>();
+    public List<ETTClass> getETTClass() {
+        if (ettClass == null) {
+            ettClass = new ArrayList<ETTClass>();
         }
-        return this.ettTeaches;
+        return this.ettClass;
     }
 
 }

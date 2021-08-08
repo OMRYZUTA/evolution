@@ -7,10 +7,10 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.MutationFactory;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.SelectionFactory;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTCrossover;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTEvolutionEngine;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTMutation;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ETTSelection;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1.ETTCrossover;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1.ETTEvolutionEngine;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1.ETTMutation;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1.ETTSelection;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
