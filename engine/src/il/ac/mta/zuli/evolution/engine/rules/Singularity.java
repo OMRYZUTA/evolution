@@ -54,4 +54,14 @@ public class Singularity extends Rule {
 
         timeTableSolution.addScoreToRule(this, score);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

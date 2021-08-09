@@ -8,10 +8,7 @@ import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Satisfactory extends Rule {
     //satisfactory rule - each class gets the exact number of hours-per-subject (the class' requirements are met)
@@ -105,6 +102,19 @@ public class Satisfactory extends Rule {
         }
 
         return hoursPerSubjectCounter;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Satisfactory)) return false;
+        Satisfactory that = (Satisfactory) o;
+        return Objects.equals(schoolClasses, that.schoolClasses);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(schoolClasses);
     }
 }
 

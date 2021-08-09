@@ -77,21 +77,21 @@ class EngineTest {
     @Test
     void loadError3Dot2XMLFILE() {
         engine = new TimeTableEngine();
-        engine.loadXML("src/resources/EX1-error-3.2.xml");
+        engine.loadXML("src/resources/EX1-error-teache-id-2-missing.xml");
 
         assertFalse(engine.isXMLLoaded());
     }
     @Test
     void loadError3Dot4XMLFILE() {
         engine = new TimeTableEngine();
-        engine.loadXML("src/resources/EX1-error-3.4.xml");
+        engine.loadXML("src/resources/EX1-error-non-existing-subject-in-teacher.xml");
 
         assertFalse(engine.isXMLLoaded());
     }
     @Test
     void loadError3Dot6XMLFILE() {
         engine = new TimeTableEngine();
-        engine.loadXML("src/resources/EX1-error-3.6.xml");
+        engine.loadXML("src/resources/EX1-error-to-many-hours.xml");
 
         assertFalse(engine.isXMLLoaded());
     }
