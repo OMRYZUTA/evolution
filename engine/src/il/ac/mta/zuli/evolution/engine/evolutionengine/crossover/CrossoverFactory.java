@@ -10,7 +10,7 @@ public class CrossoverFactory {
             case "daytimeoriented":
                 return new DayTimeOriented(ettCrossover.getCuttingPoints(), timeTable);
             default:
-                throw new ValidationException("invalid crossover type ");
+                throw new ValidationException("Invalid crossover type for ex. 1");
         }
     }
 }

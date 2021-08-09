@@ -34,7 +34,6 @@ public class UI {
     public void operateMenu() {
         boolean stayInSystem = true;
 
-        // TODO: make sure engine never throws exceptions. It should catch them, and raise an "error" event
         while (stayInSystem) {
             printMainMenu();
             MenuOptions selectedOption = getSelectedOption(scanner.nextLine());

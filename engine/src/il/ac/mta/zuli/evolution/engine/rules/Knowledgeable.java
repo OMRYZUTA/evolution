@@ -43,11 +43,11 @@ public class Knowledgeable extends Rule {
 
             if (subjectsTeaches.containsKey(quintet.getSubject().getId())) {
                 qualifiedQuintets++;
-            }
-            else {
+            } else {
                 break;
             }
         }
+
         int numOfQuintets = timeTableSolution.getSolutionSize();
         score = (100 * qualifiedQuintets) / (double) numOfQuintets;
 

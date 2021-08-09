@@ -13,7 +13,7 @@ public class Teacher {
     private String name;
     private Map<Integer, Subject> subjects; //the subjects the teacher teaches
 
-    public Teacher(@NotNull ETTTeacher t,@NotNull Map<Integer, Subject> existingSubjects) {
+    public Teacher(@NotNull ETTTeacher t, @NotNull Map<Integer, Subject> existingSubjects) {
         setName(t.getETTName());
         setId(t.getId());
         setSubjects(t.getETTTeaching().getETTTeaches(), existingSubjects);
@@ -36,20 +36,22 @@ public class Teacher {
         this.name = name;
     }
 
-
     private void setSubjects(@NotNull List<ETTTeaches> subjectList, Map<Integer, Subject> existingSubjects) {
-        if(existingSubjects.size() ==0){
-            throw new EmptyCollectionException("teacher got zero existing subjects");
+        if (existingSubjects.size() == 0) {
+            throw new EmptyCollectionException("There are not subjects in the timetable, so the teacher has nothing to teach. ");
         }
 
         this.subjects = new HashMap<>();
         Subject subjectToAdd;
 
-        for (ETTTeaches s : subjectList) {
-            if ((subjectToAdd = existingSubjects.get(s.getSubjectId())) == null) {
-                throw new ValidationException("Teacher " + id + "has subject that doesn't exist in the timetable");
+        if (subjectList.size() > 0) {
+            for (ETTTeaches s : subjectList) {
+                if ((subjectToAdd = existingSubjects.get(s.getSubjectId())) == null) {
+                    throw new ValidationException("Teacher " + id + "has subject that doesn't exist in the timetable");
+                }
+
+                this.subjects.put(subjectToAdd.getId(), subjectToAdd);
             }
-            this.subjects.put(subjectToAdd.getId(), subjectToAdd);
         }
     }
 

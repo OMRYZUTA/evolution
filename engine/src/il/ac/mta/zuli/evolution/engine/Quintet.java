@@ -22,7 +22,7 @@ public class Quintet {
     private final static Comparator<Quintet> compareBySchoolClass = Comparator.comparing(Quintet::getSchoolClassID);
     private final static Comparator<Quintet> compareBySubject = Comparator.comparing(Quintet::getSubjectID);
 
-    public Quintet(DayOfWeek day, int hour, @NotNull Teacher teacher,@NotNull SchoolClass schoolClass,@NotNull Subject subject) {
+    public Quintet(DayOfWeek day, int hour, @NotNull Teacher teacher, @NotNull SchoolClass schoolClass, @NotNull Subject subject) {
         this.day = day;
         this.hour = hour;
         this.teacher = teacher;
@@ -30,6 +30,7 @@ public class Quintet {
         this.subject = subject;
     }
 
+    //#region comparators
     public static Comparator<Quintet> getRawComparator() {
         Comparator<Quintet> rawComparator = compareByDay
                 .thenComparing(compareByHour)
@@ -59,7 +60,9 @@ public class Quintet {
 
         return schoolClassComparator;
     }
+//#endregion
 
+    //#region getters
     public DayOfWeek getDay() {
         return day;
     }
@@ -91,6 +94,8 @@ public class Quintet {
     public int getSubjectID() {
         return subject.getId();
     }
+
+    //#endregion
 
     private void setDay(DayOfWeek day) {
         this.day = day;

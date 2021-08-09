@@ -7,7 +7,7 @@ public class utils {
     public static int generateRandomNum(int min, int max) {
         int result;
         if(max -min < 0){
-            throw  new RuntimeException("max"+max+ "is smaller than min"+min);
+            throw new RuntimeException("Cannot generate random number since max " + max + " is smaller than min " + min);
         }
 
         if (max - min == 0) {

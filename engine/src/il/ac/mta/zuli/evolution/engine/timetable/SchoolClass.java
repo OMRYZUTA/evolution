@@ -13,7 +13,7 @@ public class SchoolClass {
     private String name;
     private List<Requirement> requirements; //requirement is hours per subject
 
-    public SchoolClass(@NotNull ETTClass srcClass,@NotNull Map<Integer, Subject> existingSubjects, int totalHours) {
+    public SchoolClass(@NotNull ETTClass srcClass, @NotNull Map<Integer, Subject> existingSubjects, int totalHours) {
         setId(srcClass.getId());
         setName(srcClass.getETTName());
         setRequirements(srcClass.getETTRequirements(), totalHours, existingSubjects);
@@ -40,21 +40,22 @@ public class SchoolClass {
         return Collections.unmodifiableList(requirements);
     }
 
-
     private void setRequirements(ETTRequirements ettRequirements, int totalHours, Map<Integer, Subject> existingSubjects) {
         this.requirements = new ArrayList<Requirement>();
         List<ETTStudy> requirementList = ettRequirements.getETTStudy();
 
         int totalClassHours = 0;
 
-        for (ETTStudy r : requirementList) {
-            Requirement newReq = new Requirement(r, existingSubjects);
-            this.requirements.add(newReq);
-            totalClassHours += newReq.getHours();
+        if (requirementList.size() > 0) {
+            for (ETTStudy r : requirementList) {
+                Requirement newReq = new Requirement(r, existingSubjects);
+                this.requirements.add(newReq);
+                totalClassHours += newReq.getHours();
+            }
         }
 
         if (totalClassHours > totalHours) {
-            throw new ValidationException("the class has too many required hours");
+            throw new ValidationException("The class has too many required hours " + totalClassHours);
         }
     }
 
@@ -69,16 +70,21 @@ public class SchoolClass {
 
     public int getTotalRequiredHours() {
         int totalRequiredHours = 0;
+
         for (Requirement requirement : requirements) {
             totalRequiredHours += requirement.getHours();
         }
+
         return totalRequiredHours;
     }
 
     public List<Integer> getRequiredSubjectsIDs() {
         List<Integer> requiredSubjects = new ArrayList<>();
-        for (Requirement r : requirements) {
-            requiredSubjects.add(r.getSubject().getId());
+
+        if (requirements.size() > 0) {
+            for (Requirement r : requirements) {
+                requiredSubjects.add(r.getSubject().getId());
+            }
         }
 
         return requiredSubjects;

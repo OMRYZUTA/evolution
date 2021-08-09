@@ -17,14 +17,19 @@ public class Truncation<S extends Solution> implements Selection<S> {
 
     private void parseConfiguration(ETTSelection ettSelection) {
         String configuration = ettSelection.getConfiguration();
-        if(configuration.length()==0){
-            throw new ValidationException("empty configuartion ");
+
+        if (configuration.length() == 0) {
+            throw new ValidationException("Empty configuration ");
         }
+
         int index = configuration.indexOf('=');
-        if(index ==-1){
-            throw new ValidationException("missing \'=\' ");
+
+        if (index == -1) {
+            throw new ValidationException("missing '=' ");
         }
+
         int num = Integer.parseInt(configuration.substring(index + 1));
+
         setTopPercent(num);
     }
 
@@ -53,7 +58,7 @@ public class Truncation<S extends Solution> implements Selection<S> {
         if (topPercent >= 1 && topPercent <= 100) {
             this.topPercent = topPercent;
         } else {
-            throw new RuntimeException("invalid top percent value :"+topPercent+"need to be between 1 - 100");
+            throw new RuntimeException("Invalid top percent value :" + topPercent + ". Must be between 1 - 100");
         }
     }
 }

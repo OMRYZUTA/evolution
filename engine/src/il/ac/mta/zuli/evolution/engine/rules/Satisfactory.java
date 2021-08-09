@@ -24,8 +24,9 @@ public class Satisfactory extends Rule {
 
     private void setSchoolClasses(Map<Integer, SchoolClass> schoolClasses) {
         if (schoolClasses.size() == 0) {
-            throw new EmptyCollectionException("empty school classes in satisfactory rule");
+            throw new EmptyCollectionException("Empty school-classes-list in satisfactory-rule");
         }
+
         this.schoolClasses = schoolClasses;
     }
 
@@ -66,8 +67,8 @@ public class Satisfactory extends Rule {
             Map<Integer, Integer> hoursPerSubjectCounter = initializeCounterMap(classRequirements);
             countHoursInSubSolution(subSolutionForClass, hoursPerSubjectCounter);
             int satisfactorySubjects = countSatisfactorySubjects(classRequirements, hoursPerSubjectCounter);
-            score = (100 * satisfactorySubjects) / (double) numOfRequiredSubjects;
 
+            score = (100 * satisfactorySubjects) / (double) numOfRequiredSubjects;
         }
 
         return score;
@@ -90,7 +91,7 @@ public class Satisfactory extends Rule {
 
     private void countHoursInSubSolution(List<Quintet> subSolutionForClass, Map<Integer, Integer> hoursPerSubjectCounter) {
         int subjectID;
-
+        //we only call this function after we check (subSolutionForClass.size() > 0)
         for (Quintet quintet : subSolutionForClass) {
             subjectID = quintet.getSubject().getId();
             hoursPerSubjectCounter.merge(subjectID, 1, Integer::sum); //hours for subject ++
@@ -102,8 +103,10 @@ public class Satisfactory extends Rule {
         //Map<subjectID, hoursInSolution>
         Map<Integer, Integer> hoursPerSubjectCounter = new HashMap<>();
 
-        for (Requirement requirement : classRequirements) {
-            hoursPerSubjectCounter.put(requirement.getSubject().getId(), 0);
+        if (classRequirements.size() > 0) {
+            for (Requirement requirement : classRequirements) {
+                hoursPerSubjectCounter.put(requirement.getSubject().getId(), 0);
+            }
         }
 
         return hoursPerSubjectCounter;

@@ -17,7 +17,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
     private int numOfCuttingPoints;
     private List<Integer> cuttingPointsIndices;
 
-    public DayTimeOriented(int numOfCuttingPoints,@NotNull TimeTable timeTable)  {
+    public DayTimeOriented(int numOfCuttingPoints, @NotNull TimeTable timeTable) {
         this.timeTable = timeTable;
         this.days = timeTable.getDays();
         this.hours = timeTable.getHours();
@@ -27,7 +27,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
     @Override
     public List<S> crossover(List<S> selectedParents) {
         if (selectedParents.size() == 0) {
-            throw new EmptyCollectionException("parent-generation is empty");
+            throw new EmptyCollectionException("Parent-generation is empty");
         }
         if (selectedParents.size() == 1) {
             return selectedParents;
@@ -35,12 +35,10 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
 
         randomlyGenerateCuttingPoints();
 
-        List<List<List<Quintet>>> selectedSolutionsAsMatrix = organizeSolutionsAsDayHoursArray(selectedParents);
+        List<List<List<Quintet>>> selectedSolutionsAsMatrix = organizeSolutionsAsDayHourMatrix(selectedParents);
 
         List<TimeTableSolution> newGeneration = createNewGenerationFromParents(selectedSolutionsAsMatrix);
 
-
-        //why do we need to cast down?
         return (List<S>) newGeneration;
     }
 
@@ -74,7 +72,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
     }
 
     @NotNull
-    private List<List<List<Quintet>>> organizeSolutionsAsDayHoursArray(List<S> selectedParents) {
+    private List<List<List<Quintet>>> organizeSolutionsAsDayHourMatrix(List<S> selectedParents) {
         List<List<List<Quintet>>> selectedSolutionsAsMatrix = new ArrayList<>();
 
         for (S solution : selectedParents) {
@@ -86,6 +84,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
     private void removeParentFromPoolOfParents(List<List<List<Quintet>>> selectedSolutionsAsMatrix,
                                                List<List<Quintet>> parent) {
         Iterator<List<List<Quintet>>> itr = selectedSolutionsAsMatrix.iterator();
+
         while (itr.hasNext()) {
             List<List<Quintet>> inner = itr.next();
             if (inner.equals(parent)) {
@@ -128,8 +127,10 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
             if (solutionMatrix.get(i) == null) {
                 solutionMatrix.set(i, new ArrayList<>());
             }
+
             (solutionMatrix.get(i)).add(quintet);
         }
+
         return solutionMatrix;
     }
 
@@ -182,6 +183,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         List<Quintet> quintets = flattenSolutionMatrix(child1);
         TimeTableSolution tempSolution = new TimeTableSolution(quintets, timeTable);
         twoNewSolutions.add(tempSolution);
+
         quintets = flattenSolutionMatrix(child2);
         tempSolution = new TimeTableSolution(quintets, timeTable);
         twoNewSolutions.add(tempSolution);
@@ -190,6 +192,7 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
     @NotNull
     private List<Quintet> flattenSolutionMatrix(List<List<Quintet>> child1) {
         List<Quintet> quintets = new ArrayList<>();
+
         for (List<Quintet> quintetCollection : child1) {
             if (quintetCollection != null) {
                 quintets.addAll(quintetCollection);
@@ -199,18 +202,16 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
     }
 
     private void setNumOfCuttingPoints(int numOfCuttingPoints) {
-        if (numOfCuttingPoints > 0 && numOfCuttingPoints < days*hours) {
+        if (numOfCuttingPoints > 0 && numOfCuttingPoints < days * hours) {
             this.numOfCuttingPoints = numOfCuttingPoints;
         } else {
-            throw new ValidationException("invalid number of cutting points, must be between 1 -"+days*hours);
+            throw new ValidationException("Invalid number of cutting points, must be between 1 -" + days * hours);
         }
-
     }
 
     public int getNumOfCuttingPoints() {
         return numOfCuttingPoints;
     }
-
 
     private void randomlyGenerateCuttingPoints() {
         Set<Integer> tempSetOfPoints = new HashSet<>();

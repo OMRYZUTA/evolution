@@ -17,33 +17,40 @@ public class MutationFactory {
                 break;
 
             default:
-                throw new ValidationException(ettMutation.getName()+" is invalid mutation name ");
-
+                throw new ValidationException(ettMutation.getName() + " is invalid mutation name ");
         }
-        return  mutation;
+
+        return mutation;
     }
+
     @NotNull
     private static Mutation createSizerMutation(ETTMutation ettMutation, TimeTable timeTable) {
 //        <ETT-Mutation name="Sizer" probability="0.3" configuration="TotalTupples=7,Component=D"/>
-        int totalTupples = extractTotalTuplesFromString(ettMutation);
-        if (totalTupples > timeTable.getHours()*timeTable.getDays()) {
-            throw new ValidationException("positive total tuples must be <days * hours got " +totalTupples);
+        int totalTuples = extractTotalTuplesFromString(ettMutation);
+
+        if (totalTuples > timeTable.getHours() * timeTable.getDays()) {
+            throw new ValidationException("positive total-tuples must be <days * hours, invalid value: " + totalTuples);
         }
-        if (totalTupples <(-1)* timeTable.getHours()*timeTable.getDays()) {
-            throw new ValidationException("negative total tuples must be > -(days * hours) got " +totalTupples);
+
+        if (totalTuples < (-1) * timeTable.getHours() * timeTable.getDays()) {
+            throw new ValidationException("negative total-tuples must be > -(days * hours), invalid value: " + totalTuples);
         }
-        return new Sizer(ettMutation.getProbability(),totalTupples,timeTable);
+
+        return new Sizer(ettMutation.getProbability(), totalTuples, timeTable);
     }
 
     @NotNull
     private static Mutation creatFlippingMutation(ETTMutation ettMutation, TimeTable timeTable) {
         Mutation mutation;
         int maxTuples = extractMaxTuplesFromString(ettMutation);
+
         if (maxTuples < 0) {
-            throw new ValidationException("max tuples must be >=0 got " +maxTuples);
+            throw new ValidationException("max tuples must be >=0, invalid value: " + maxTuples);
         }
+
         ComponentName component = extractComponentNameFromString(ettMutation);
-        mutation= new Flipping(ettMutation.getProbability(), maxTuples, component, timeTable);
+        mutation = new Flipping(ettMutation.getProbability(), maxTuples, component, timeTable);
+
         return mutation;
     }
 
@@ -51,6 +58,7 @@ public class MutationFactory {
     private static ComponentName extractComponentNameFromString(ETTMutation ettMutation) {
         int componentIndex = (ettMutation.getConfiguration()).indexOf("Component=") + "Component=".length();
         String componentStr = (ettMutation.getConfiguration()).substring(componentIndex, componentIndex + 1);
+
         return ComponentName.valueOf(componentStr.toUpperCase());
     }
 
@@ -62,6 +70,7 @@ public class MutationFactory {
 
         return Integer.parseInt(maxTuplesStr);
     }
+
     private static int extractTotalTuplesFromString(ETTMutation ettMutation) {
         //<ETT-Mutation name="Sizer" probability="0.3" configuration="TotalTupples=7"/>
         int totalTuplesIndex = (ettMutation.getConfiguration()).indexOf("TotalTupples=") + "TotalTupples=".length();

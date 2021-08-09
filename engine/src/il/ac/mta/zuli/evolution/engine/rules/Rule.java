@@ -3,11 +3,12 @@ package il.ac.mta.zuli.evolution.engine.rules;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import org.jetbrains.annotations.NotNull;
 
-//TODO - ask omry why we need a ruleInterface?
+//TODO - ask Omry why we need a ruleInterface when we have an abstract class?
+
 public abstract class Rule implements RuleInterface {
     private final RuleType ruleType; //hard or soft
 
-    protected Rule(@NotNull String ruleType) { // @NotNull return ?
+    protected Rule(@NotNull String ruleType) {
         switch (ruleType.toLowerCase()) {
             case "soft":
                 this.ruleType = RuleType.SOFT;
@@ -16,7 +17,7 @@ public abstract class Rule implements RuleInterface {
                 this.ruleType = RuleType.HARD;
                 break;
             default:
-                throw new ValidationException("invalid rule type"+ruleType);
+                throw new ValidationException("Invalid rule type: " + ruleType);
         }
     }
 

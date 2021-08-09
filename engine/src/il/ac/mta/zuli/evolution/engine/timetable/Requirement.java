@@ -13,7 +13,7 @@ public class Requirement {
     private int hours;
     private Subject subject;
 
-    public Requirement(@NotNull ETTStudy ettRequirement,@NotNull Map<Integer, Subject> existingSubjects) {
+    public Requirement(@NotNull ETTStudy ettRequirement, @NotNull Map<Integer, Subject> existingSubjects) {
         setHours(ettRequirement.getHours());
         setSubject(ettRequirement.getSubjectId(), existingSubjects);
     }
@@ -26,7 +26,7 @@ public class Requirement {
         if (hours > 0) {
             this.hours = hours;
         } else {
-            throw new ValidationException("invalid hours input - hours are 0 or negative");
+            throw new ValidationException("Invalid hours input " + hours + ". Hours must be positive integer. ");
         }
     }
 
@@ -35,11 +35,13 @@ public class Requirement {
     }
 
     private void setSubject(int id, Map<Integer, Subject> existingSubjects) {
-        if(existingSubjects.size()==0){
-            throw new EmptyCollectionException("requirement got empty collection");
+        if (existingSubjects.size() == 0) {
+            throw new EmptyCollectionException("There are not subjects in the timetable, so there can be no class-requirements.");
         }
+
         subject = existingSubjects.get(id);
-        if ( subject== null) {
+
+        if (subject == null) {
             throw new ValidationException("subject ID: " + id + " does not exist in time table");
         }
     }

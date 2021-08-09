@@ -4,7 +4,6 @@ public class GenerationStrideScoreDTO {
     int generationNum;
     double bestScore;
 
-
     public GenerationStrideScoreDTO(int generationNum, double bestScore) {
         this.generationNum = generationNum;
         this.bestScore = bestScore;

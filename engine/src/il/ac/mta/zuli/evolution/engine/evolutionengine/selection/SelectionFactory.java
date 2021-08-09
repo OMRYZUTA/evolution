@@ -4,14 +4,14 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1.ETTSelection;
 
-public  class SelectionFactory<T extends Solution> {
+public class SelectionFactory<T extends Solution> {
 
     public static Selection createSelection(ETTSelection ettSelection) {
         switch (ettSelection.getType().toLowerCase()) {
             case "truncation":
                 return new Truncation(ettSelection);
             default:
-                throw new ValidationException("invalid selection type (for ex. 1)");
+                throw new ValidationException("Invalid selection type (for ex. 1)");
         }
     }
 }

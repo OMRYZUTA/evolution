@@ -6,6 +6,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.MutationFactory;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.SelectionFactory;
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1.ETTCrossover;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1.ETTEvolutionEngine;
@@ -24,7 +25,7 @@ public class EngineSettings<T extends Solution> {
     private List<Mutation<T>> mutations;
 
 
-    public EngineSettings(@NotNull ETTEvolutionEngine ee,@NotNull TimeTable timeTable)  {
+    public EngineSettings(@NotNull ETTEvolutionEngine ee, @NotNull TimeTable timeTable) {
         setInitialPopulationSize(ee.getETTInitialPopulation().getSize());
         setSelection(ee.getETTSelection());
         setCrossover(ee.getETTCrossover(), timeTable);
@@ -33,26 +34,26 @@ public class EngineSettings<T extends Solution> {
 
     //#region setters
     private void setInitialPopulationSize(int size) {
-        //TODO validate size
-        this.initialPopulationSize = size;
+        if (size > 0) {
+            this.initialPopulationSize = size;
+        } else {
+            throw new ValidationException("Initial population size: " + size + ". Where's the fun in that?");
+        }
     }
 
-    private void setSelection(@NotNull ETTSelection ettSelection)   {
-
-            this.selection = SelectionFactory.createSelection(ettSelection);
-
-        //TODO different kind of Exception Classes
+    private void setSelection(@NotNull ETTSelection ettSelection) {
+        this.selection = SelectionFactory.createSelection(ettSelection);
     }
 
-    private void setCrossover(@NotNull ETTCrossover ettCrossover, TimeTable timeTable)  {
-        this.crossover = CrossoverFactory.createCrossover( ettCrossover,  timeTable);
+    private void setCrossover(@NotNull ETTCrossover ettCrossover, TimeTable timeTable) {
+        this.crossover = CrossoverFactory.createCrossover(ettCrossover, timeTable);
     }
 
-    private void setMutations(List<ETTMutation> ettMutations, TimeTable timeTable)  {
+    private void setMutations(List<ETTMutation> ettMutations, TimeTable timeTable) {
         mutations = new ArrayList<>();
 
         for (ETTMutation ettMutation : ettMutations) {
-            mutations.add(MutationFactory.createMutation(ettMutation,timeTable));
+            mutations.add(MutationFactory.createMutation(ettMutation, timeTable));
         }
     }
     //#endregion
@@ -74,8 +75,6 @@ public class EngineSettings<T extends Solution> {
         return Collections.unmodifiableList(mutations);
     }
     //#endregion
-
-
 
 
     @Override

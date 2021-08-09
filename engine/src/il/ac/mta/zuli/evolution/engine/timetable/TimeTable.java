@@ -88,8 +88,9 @@ public class TimeTable {
 
     private void setTeachers(@NotNull ETTTeachers ettTeachers) {
         if (ettTeachers.getETTTeacher().size() == 0) {
-            throw new EmptyCollectionException("The number of teachers must be positive");
+            throw new EmptyCollectionException("There are no teachers in the file, and there must be at least 1.");
         }
+
         this.teachers = new HashMap<>();
         List<ETTTeacher> teacherList = ettTeachers.getETTTeacher();
         teacherList.sort(Comparator.comparingInt(ETTTeacher::getId)); //sorting in order to check the IDs of subjects in file cover numbers 1-numOfSubjects
@@ -113,10 +114,10 @@ public class TimeTable {
     }
 
     private void setSubjects(@NotNull ETTSubjects ettSubjects) {
-
         if (ettSubjects.getETTSubject().size() == 0) {
-            throw new EmptyCollectionException(" Empty list of subjects");
+            throw new EmptyCollectionException("\"There are no subjects in the file, and there must be at least 1. ");
         }
+
         this.subjects = new HashMap<>();
         List<ETTSubject> subjectList = ettSubjects.getETTSubject();
         subjectList.sort(Comparator.comparingInt(ETTSubject::getId)); //sorting in order to check the IDs of subjects in file cover numbers 1-numOfSubjects
@@ -140,8 +141,9 @@ public class TimeTable {
 
     private void setSchoolClasses(@NotNull ETTClasses ettClasses) {
         if (ettClasses.getETTClass().size() == 0) {
-            throw new EmptyCollectionException(" Empty list of Classes");
+            throw new EmptyCollectionException("There are no classes in the file, and there must be at least 1. ");
         }
+
         this.schoolClasses = new HashMap<>();
         List<ETTClass> classList = ettClasses.getETTClass();
         //sorting in order to check the IDs of classes in file cover numbers 1-numOfClasses

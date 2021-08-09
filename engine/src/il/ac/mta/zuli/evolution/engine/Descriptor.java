@@ -9,7 +9,7 @@ public class Descriptor {
     private final TimeTable timeTable;
     private final EngineSettings engineSettings;
 
-    public Descriptor(@NotNull ETTDescriptor d)  {
+    public Descriptor(@NotNull ETTDescriptor d) {
         // only if received another valid file we want to overwrite the previous descriptor instance
         TimeTable tempTimeTable = null;
         EngineSettings tempEngineSetting = null;
@@ -17,6 +17,7 @@ public class Descriptor {
         tempTimeTable = new TimeTable(d.getETTTimeTable());
         tempEngineSetting = new EngineSettings(d.getETTEvolutionEngine(), tempTimeTable);
 
+        //only reaching here if TimeTable and EngineSettings ctors didn't throw exceptions
         this.timeTable = tempTimeTable;
         this.engineSettings = tempEngineSetting;
     }

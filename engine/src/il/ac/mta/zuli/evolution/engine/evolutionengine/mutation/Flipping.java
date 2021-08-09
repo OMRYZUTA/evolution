@@ -40,6 +40,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
         }
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+
         if (timeTableSolution.getSolutionSize() == 0) {
             return solution;
         }
@@ -56,6 +57,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
             } else {
                 break;
             }
+
             tempQuintet = mutateComponent(solutionQuintets.get(randomIndexToMutate));
             solutionQuintets.set(randomIndexToMutate, tempQuintet);
             quintetSet.add(tempQuintet);
@@ -100,6 +102,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
     private DayOfWeek generateRandomDay() {
         DayOfWeek[] enumValues = DayOfWeek.values();
         int randIndex = new Random().nextInt(timeTable.getDays());
+
         return enumValues[randIndex];
     }
 
@@ -107,10 +110,9 @@ public class Flipping<S extends Solution> implements Mutation<S> {
         if (0 <= probability && probability <= 1) {
             this.probability = probability;
         } else {
-            throw new ValidationException("invalid probability, should be between 0 -1 but got" + probability);
+            throw new ValidationException("probability must be between 0 -1, invalid value: " + probability);
         }
     }
-
 
     @Override
     public String toString() {

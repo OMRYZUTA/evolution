@@ -12,30 +12,29 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EvolutionEngine<T extends Solution> {
-    private  EngineSettings<T> engineSettings;
+    private final EngineSettings<T> engineSettings;
+    private Set<Rule> rules;
 
 
-
-    public void setRules(@NotNull Set<Rule> rules) {
-        if(rules.size()==0){
-            throw  new EmptyCollectionException("invalid rules list in evolution engine");
-        }
-        this.rules = rules;
-    }
-
-    private  Set<Rule> rules;
-
-
-    public EvolutionEngine(@NotNull EngineSettings<T> engineSettings,@NotNull Set<Rule> rules) {
+    public EvolutionEngine(@NotNull EngineSettings<T> engineSettings, @NotNull Set<Rule> rules) {
         this.engineSettings = engineSettings;
         setRules(rules);
     }
 
-    public List<T> execute(@NotNull List<T> generation) {
-        if(generation.size()==0){
-            throw  new EmptyCollectionException("solution generation is empty. in evolution engine");
+    public void setRules(@NotNull Set<Rule> rules) {
+        if (rules.size() == 0) {
+            throw new EmptyCollectionException("Empty rules list in evolution engine");
         }
-        evaluateSolutions((List<T>) generation);
+
+        this.rules = rules;
+    }
+
+    public List<T> execute(@NotNull List<T> generation) {
+        if (generation.size() == 0) {
+            throw new EmptyCollectionException("The generation is empty (no solutions to work with).");
+        }
+
+        evaluateSolutions(generation);
 
         List<T> parents = selectParentsFrom(generation);
 
@@ -51,22 +50,26 @@ public class EvolutionEngine<T extends Solution> {
 
     private List<T> selectParentsFrom(@NotNull List<T> generation) {
         List<T> parents = (engineSettings.getSelection()).select(generation);
+
         return parents;
     }
 
     @NotNull
     private List<T> mutateGeneration(List<T> newGeneration) {
-        // D. mutate certain quintets
+        // mutate certain quintets
         List<Mutation<T>> mutationList = engineSettings.getMutations();
         List<T> newGenerationAfterMutation = new ArrayList<>();
+
         for (T solution : newGeneration) {
-            T tempSolution = solution;
+            T tempSolution = solution; //handling solutions with 0 quintets inside mutate()
+
             for (Mutation<T> mutation : mutationList) {
                 tempSolution = mutation.mutate(tempSolution);
             }
 
             newGenerationAfterMutation.add(tempSolution);
         }
+
         return newGenerationAfterMutation;
     }
 
@@ -83,6 +86,7 @@ public class EvolutionEngine<T extends Solution> {
         if (newGeneration.size() > populationSize) {
             newGeneration = removeExtraSolutionsFromGeneration(newGeneration, populationSize);
         }
+
         return newGeneration;
     }
 
@@ -109,6 +113,7 @@ public class EvolutionEngine<T extends Solution> {
         for (Rule rule : rules) {
             rule.fitnessEvaluation(solution);
         }
+
         solution.calculateTotalScore();
     }
 
