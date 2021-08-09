@@ -26,7 +26,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride; // generation , solution
 
     public TimeTableEngine() {
-        bestSolutionsInGenerationPerStride = new HashMap<>();
+        bestSolutionsInGenerationPerStride = new TreeMap<>();
     }
 
     //#region ui-parallel methods
@@ -64,7 +64,6 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
         checkForErrorsBeforeExecutingAlgorithms(numOfGenerations, generationsStride);
         try {
-            bestSolutionsInGenerationPerStride = new HashMap<>(numOfGenerations);
             List<TimeTableSolution> initialPopulation = getInitialGeneration();
 
             evolutionEngine = new EvolutionEngine(this.descriptor.getEngineSettings(),
@@ -86,7 +85,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
                 //stride for purposes of info-display and to save a stride-generation history
                 //with addition of first and last generation
-                if (i == 1 || (i % generationsStride == 0) || (i == numOfGenerations - 1)) {
+                if (i == 1 || (i % generationsStride == 0) || (i == numOfGenerations)) {
                     bestSolutionsInGenerationPerStride.put(i, currBestSolution);
                     fireStrideDetails(i, currBestSolution);
                 }
@@ -128,7 +127,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     }
 
     @Override
-    public void executeEvolutionAlgorithmWithFittnessStop(int numOfGenerations, int generationsStride, double fitnessStop) {
+    public void executeEvolutionAlgorithmWithFitnessStop(int numOfGenerations, int generationsStride, double fitnessStop) {
         checkForErrorsBeforeExecutingAlgorithms(numOfGenerations, generationsStride);
         try {
             bestSolutionsInGenerationPerStride = new HashMap<>(numOfGenerations);
@@ -192,7 +191,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
         try {
             List<GenerationProgressDTO> progress = new ArrayList<>();
-            //we know generation # 1 is the first in the map
+            //we know generation # 1 is the first in the map because it's a treeMap
             double previousScore = bestSolutionsInGenerationPerStride.get(1).getTotalFitnessScore();
             double delta;
             int generation;

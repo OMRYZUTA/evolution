@@ -34,6 +34,7 @@ public class Satisfactory extends Rule {
         if (!(solution instanceof TimeTableSolution)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
+
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
 
         double score = 0;
@@ -48,10 +49,10 @@ public class Satisfactory extends Rule {
             score = Arrays.stream(classScores).average().getAsDouble();
         }
 
-        if (this.isHardRule() && Arrays.stream(classScores).anyMatch(n -> n == 0)) {
+//        if (this.isHardRule() && Arrays.stream(classScores).anyMatch(n -> n == 0)) {
 //            score = 0;
-            score *= 0.9;
-        }
+//            score *= 0.9;
+//        }
 
         timeTableSolution.addScoreToRule(this, score);
     }
@@ -65,7 +66,7 @@ public class Satisfactory extends Rule {
             Map<Integer, Integer> hoursPerSubjectCounter = initializeCounterMap(classRequirements);
             countHoursInSubSolution(subSolutionForClass, hoursPerSubjectCounter);
             int satisfactorySubjects = countSatisfactorySubjects(classRequirements, hoursPerSubjectCounter);
-            score = (100 * satisfactorySubjects) / (double) numOfRequiredSubjects ;
+            score = (100 * satisfactorySubjects) / (double) numOfRequiredSubjects;
 
         }
 

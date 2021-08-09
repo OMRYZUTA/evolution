@@ -173,12 +173,12 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
         }
 
         //flattening-back from the hierarchy of solutionMatrix to List<Quintets> field in TimeTablesolution
-        converMatrixesToSolutions(twoNewSolutions, child1, child2);
+        convertMatrixToSolutions(twoNewSolutions, child1, child2);
 
         return twoNewSolutions;
     }
 
-    private void converMatrixesToSolutions(List<TimeTableSolution> twoNewSolutions, List<List<Quintet>> child1, List<List<Quintet>> child2) {
+    private void convertMatrixToSolutions(List<TimeTableSolution> twoNewSolutions, List<List<Quintet>> child1, List<List<Quintet>> child2) {
         List<Quintet> quintets = flattenSolutionMatrix(child1);
         TimeTableSolution tempSolution = new TimeTableSolution(quintets, timeTable);
         twoNewSolutions.add(tempSolution);

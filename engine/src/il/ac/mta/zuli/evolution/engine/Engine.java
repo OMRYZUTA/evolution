@@ -16,7 +16,7 @@ public interface Engine {
 
     void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride);
 
-    void executeEvolutionAlgorithmWithFittnessStop(int numOfGenerations, int generationsStride, double fittnessStop);
+    void executeEvolutionAlgorithmWithFitnessStop(int numOfGenerations, int generationsStride, double fittnessStop);
 
     TimeTableSolutionDTO getBestSolution();
 

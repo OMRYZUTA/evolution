@@ -14,11 +14,13 @@ public class utils {
             result = 1;
         } else {
             Random random = new Random();
+            //+1 to include out bound max in randomization
             result = random.nextInt(max+1 - min) + min;
         }
 
         return result;
     }
+
     public  static int generateRandomNumZeroBase(int num){
         return new Random().nextInt(num);
     }

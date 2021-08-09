@@ -121,7 +121,7 @@ void stopOnFittnes(){
         this.generationCounter++;
     });
         engine.loadXML("src/resources/EX1-small.xml");
-        engine.executeEvolutionAlgorithmWithFittnessStop(120,1,80);
+    engine.executeEvolutionAlgorithmWithFitnessStop(120, 1, 80);
         TimeTableSolutionDTO solutionDTO =engine.getBestSolution();
         assertTrue(solutionDTO.getTotalFitnessScore()>80);
         assertTrue(evolutionAlgorithmCompleted);
