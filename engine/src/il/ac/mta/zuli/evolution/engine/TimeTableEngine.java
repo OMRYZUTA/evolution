@@ -21,13 +21,9 @@ import java.util.stream.Collectors;
 
 public class TimeTableEngine extends EventsEmitter implements Engine {
     private Descriptor descriptor;
-    private EvolutionEngine evolutionEngine;
+    private EvolutionEngine<TimeTableSolution> evolutionEngine;
     private TimeTableSolution bestSolutionEver = null;
     private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride; // generation , solution
-
-    public TimeTableEngine() {
-        bestSolutionsInGenerationPerStride = new TreeMap<>();
-    }
 
     //#region ui-parallel methods
     @Override
@@ -40,7 +36,6 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                 Throwable e) {
             fireEvent("error", new ErrorEvent("Failed reading file", ErrorType.LoadError, e));
         }
-
     }
 
     @Override
@@ -66,6 +61,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
         checkForErrorsBeforeExecutingAlgorithms(numOfGenerations, generationsStride);
         try {
+            bestSolutionsInGenerationPerStride = new TreeMap<>();
             List<TimeTableSolution> initialPopulation = getInitialGeneration();
 
             evolutionEngine = new EvolutionEngine(this.descriptor.getEngineSettings(),
@@ -106,6 +102,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     public void executeEvolutionAlgorithmWithFitnessStop(int numOfGenerations, int generationsStride, double fitnessStop) {
         checkForErrorsBeforeExecutingAlgorithms(numOfGenerations, generationsStride);
         try {
+            bestSolutionsInGenerationPerStride = new TreeMap<>();
             bestSolutionsInGenerationPerStride = new HashMap<>(numOfGenerations);
             List<TimeTableSolution> initialPopulation = getInitialGeneration();
 

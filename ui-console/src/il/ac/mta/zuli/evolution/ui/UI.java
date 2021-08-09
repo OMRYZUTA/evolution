@@ -144,9 +144,11 @@ public class UI {
                 System.out.println("Invalid input. Value must be number");
                 return;
             }
+            System.out.println("Running algorithm until reaching score " + stopScore +
+                    " or completing all generations" + System.lineSeparator() + "whichever comes first");
             engine.executeEvolutionAlgorithmWithFitnessStop(numOfGenerations, stride, stopScore);
         } else {
-            System.out.println("Will run algorithm until completing all generations.");
+            System.out.println("Running algorithm until completing all generations.");
             engine.executeEvolutionAlgorithm(numOfGenerations, stride);
         }
     }
@@ -163,6 +165,8 @@ public class UI {
 
         TimeTableSolutionDTO bestSolution = engine.getBestSolution();
 
+
+        System.out.println("***The best solution***");
         switch (displayOption) {
             case 1:
                 printRawQuintets(bestSolution);
@@ -184,6 +188,7 @@ public class UI {
 
     private void showProgressHistory() {
         List<GenerationProgressDTO> list = engine.getEvolutionProgress();
+        System.out.println("Best score for first to last generations with the given stride: " + stride);
 
         if (list.size() > 0) {
             for (GenerationProgressDTO gp : list) {
@@ -517,7 +522,9 @@ public class UI {
     private void printMainMenu() {
         /*String noFileLoaded = fileLoaded ? "" : " <Unavailable - no file loaded>";
         String algoIncomplete = evolutionAlgorithmCompleted ? "" : " <Unavailable - algorithm run was not completed>";*/
-        System.out.println("To select from the menu, please enter the option number:");
+        System.out.println("To select from the menu, please enter the option number: "
+                + System.lineSeparator() + "Please note, in order to select 2 or 3, you first need to select 1"
+                + System.lineSeparator() + "and in order to select 4 or 5, you first need to select 3");
         System.out.println(MenuOptions.LoadFile.ordinal() + ". Load xml file");
         System.out.println(MenuOptions.ShowDetails.ordinal() + ". Show timetable and algorithm settings");// + noFileLoaded);
         System.out.println(MenuOptions.RunAlgorithm.ordinal() + ". Run evolution algorithm");// + noFileLoaded);
