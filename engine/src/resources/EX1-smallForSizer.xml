@@ -89,7 +89,8 @@
 		<ETT-Selection type="Truncation" configuration="TopPercent=10"/>
 		<ETT-Crossover name="DayTimeOriented" cutting-points="4"/>
 		<ETT-Mutations>
-			<ETT-Mutation name="Sizer" probability="1" configuration="TotalTupples=7,Component=D"/>
+			<ETT-Mutation name="Sizer" probability="1" configuration="TotalTupples=7"/>
+			<ETT-Mutation name="Sizer" probability="1" configuration="TotalTupples=-5"/>
 		</ETT-Mutations>
 	</ETT-EvolutionEngine>
 </ETT-Descriptor>

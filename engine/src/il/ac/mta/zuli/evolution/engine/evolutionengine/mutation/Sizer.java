@@ -8,14 +8,16 @@ import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static il.ac.mta.zuli.evolution.engine.utils.generateRandomNum;
 import static il.ac.mta.zuli.evolution.engine.utils.generateRandomNumZeroBase;
 
 public class Sizer<S extends Solution> implements Mutation<S> {
     double probability;
-    int totalTuple;
+    int totalTuple; // number of tuples to add or remove
     TimeTable timeTable;
 
     public Sizer(double probability, int totalTuple, TimeTable timeTable) {
@@ -41,9 +43,6 @@ public class Sizer<S extends Solution> implements Mutation<S> {
         }
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
-        if (timeTableSolution.getSolutionSize() <= timeTable.getDays()) {
-            return solution;
-        }
         S mutatedSolution;
         if (totalTuple < 0) {
             mutatedSolution = removeQuintetsFromSolution(timeTableSolution);
@@ -66,30 +65,30 @@ public class Sizer<S extends Solution> implements Mutation<S> {
     private S addQuintetsToSolution(TimeTableSolution solution) {
         int numOfQuintetsToAdd = generateRandomNum(1, totalTuple);
         S result = null;
-        if (solution.getSolutionSize() + numOfQuintetsToAdd < timeTable.getHours() * timeTable.getDays()) {
+        if (solution.getSolutionSize() + numOfQuintetsToAdd > timeTable.getHours() * timeTable.getDays()) {
             result = (S) solution;
-        }
-        else {
-            List<Quintet> quintetsToAdd = new ArrayList<>();
-            for (int i = 0; i < numOfQuintetsToAdd; i++) {
-                quintetsToAdd.add(solution.generateRandomQuintet());
+        } else {
+            Set<Quintet> quintetsWithAddition = new HashSet<>(solution.getSolutionQuintets());
+            while(quintetsWithAddition.size() < solution.getSolutionSize()+numOfQuintetsToAdd){
+                quintetsWithAddition.add(solution.generateRandomQuintet());
             }
-            quintetsToAdd.addAll(solution.getSolutionQuintets());
-            result = (S) new TimeTableSolution(quintetsToAdd,quintetsToAdd.size(),timeTable);
+            result = (S) new TimeTableSolution(new ArrayList<>(quintetsWithAddition), timeTable);
         }
         return result;
     }
 
     private S removeQuintetsFromSolution(TimeTableSolution solution) {
-        int quintetsToRemove = generateRandomNum(1, totalTuple);
+        int quintetsToRemove = generateRandomNum(1, -totalTuple); // -total tuple because in this case total tuple will be negative
         S result = null;
         if (solution.getSolutionSize() - quintetsToRemove < timeTable.getDays()) {
             result = (S) solution;
-        }
-        for (int i = 0; i < quintetsToRemove; i++) {
-            int randomQuintetToRemove = generateRandomNumZeroBase(solution.getSolutionSize());
-            solution.getSolutionQuintets().remove(randomQuintetToRemove);
-            result = (S) solution;
+        } else {
+            List<Quintet> solutionQuintets = new ArrayList<>(solution.getSolutionQuintets());
+            for (int i = 0; i < quintetsToRemove; i++) {
+                int randomQuintetToRemove = generateRandomNumZeroBase(solutionQuintets.size());
+                solutionQuintets.remove(randomQuintetToRemove);
+            }
+            result = (S) new TimeTableSolution(solutionQuintets, timeTable);
         }
         return result;
     }

@@ -25,7 +25,7 @@ public class MutationFactory {
     @NotNull
     private static Mutation createSizerMutation(ETTMutation ettMutation, TimeTable timeTable) {
 //        <ETT-Mutation name="Sizer" probability="0.3" configuration="TotalTupples=7,Component=D"/>
-        int totalTupples = extractTotalTupplesFromString(ettMutation);
+        int totalTupples = extractTotalTuplesFromString(ettMutation);
         if (totalTupples > timeTable.getHours()*timeTable.getDays()) {
             throw new ValidationException("positive total tuples must be <days * hours got " +totalTupples);
         }
@@ -62,14 +62,12 @@ public class MutationFactory {
 
         return Integer.parseInt(maxTuplesStr);
     }
-    private static int extractTotalTupplesFromString(ETTMutation ettMutation) {
-        //<ETT-Mutation name="Sizer" probability="0.3" configuration="TotalTupples=7,Component=D"/>
-        //this is how it's spelled in the xml: TotalTupples=7
-        int toalTuplesIndex = (ettMutation.getConfiguration()).indexOf("TotalTupples=") + "TotalTupples=".length();
-        int commaIndex = ettMutation.getConfiguration().indexOf(",");
-        String maxTuplesStr = (ettMutation.getConfiguration()).substring(toalTuplesIndex, commaIndex);
+    private static int extractTotalTuplesFromString(ETTMutation ettMutation) {
+        //<ETT-Mutation name="Sizer" probability="0.3" configuration="TotalTupples=7"/>
+        int totalTuplesIndex = (ettMutation.getConfiguration()).indexOf("TotalTupples=") + "TotalTupples=".length();
+        String totalTuplesStr = (ettMutation.getConfiguration()).substring(totalTuplesIndex);
 
-        return Integer.parseInt(maxTuplesStr);
+        return Integer.parseInt(totalTuplesStr);
     }
 }
 

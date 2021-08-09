@@ -188,6 +188,16 @@ void stopOnFittnes(){
         assertTrue(solution.getSolutionSize()<mutatedSolution.getSolutionSize());
 
     }
+//    @Test
+//    void sizerAddQuintetsFromSolution() throws Throwable {
+//        descriptor = xmlParser.unmarshall("src/resources/EX1-smallForSizer.xml");
+//        List<Mutation<TimeTableSolution>> mutations = descriptor.getEngineSettings().getMutations();
+//        Sizer mutation =(Sizer) mutations.get(0);
+//        TimeTableSolution solution = new TimeTableSolution(descriptor.getTimeTable());
+//        TimeTableSolution mutatedSolution= (TimeTableSolution) mutation.mutate(solution);
+//        assertTrue(solution.getSolutionSize()<mutatedSolution.getSolutionSize());
+//
+//    }
     //#endregion evolution
 
 
