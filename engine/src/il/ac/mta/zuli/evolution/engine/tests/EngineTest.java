@@ -35,7 +35,7 @@ class EngineTest {
     boolean evolutionAlgorithmCompleted =false;
     Engine engine = new TimeTableEngine();
     Satisfactory satisfactoryRule;
-    XMLParser xmlParser = new XMLParser();
+    final XMLParser xmlParser = new XMLParser();
     Descriptor descriptor;
     EvolutionEngine evolutionEngine;
     List<TimeTableSolution> initialPopulation;
@@ -53,8 +53,7 @@ class EngineTest {
             }
             evolutionEngine = new EvolutionEngine(descriptor.getEngineSettings(), descriptor.getTimeTable().getRules());
         } catch (Exception e) {
-            System.out.println(e);
-            e.printStackTrace();
+
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -139,7 +138,7 @@ void stopOnFittnes(){
     @Test
     void crossOverReturnsDifferentPopulation() {
         Crossover<TimeTableSolution> crossover = descriptor.getEngineSettings().getCrossover();
-        assertFalse(crossover.crossover(initialPopulation).equals(initialPopulation));
+        assertNotEquals(crossover.crossover(initialPopulation), initialPopulation);
     }
     @Test
     void crossOverReturnsSameSizeOfPopulation() {
@@ -149,7 +148,7 @@ void stopOnFittnes(){
 
     @Test
     void mutateReturnsDifferentPopulation() {
-        List<Mutation<TimeTableSolution>> mutations = descriptor.getEngineSettings().getMutations();
+        List<Mutation<TimeTableSolution>> mutations = getMutations();
         List<TimeTableSolution> solutionsAfterMutations = new ArrayList<>();
         for (TimeTableSolution solution : initialPopulation) {
             TimeTableSolution tempSolution =solution;
@@ -158,11 +157,16 @@ void stopOnFittnes(){
             }
             solutionsAfterMutations.add(tempSolution);
         }
-        assertFalse(solutionsAfterMutations.equals(initialPopulation));
+        assertNotEquals(solutionsAfterMutations, initialPopulation);
     }
+
+    private List getMutations() {
+        return descriptor.getEngineSettings().getMutations();
+    }
+
     @Test
     void mutateReturnsSameAmountOfPopulation() {
-        List<Mutation<TimeTableSolution>> mutations = descriptor.getEngineSettings().getMutations();
+        List<Mutation<TimeTableSolution>> mutations = getMutations();
         List<TimeTableSolution> solutionsAfterMutations = new ArrayList<>();
         for (TimeTableSolution solution : initialPopulation) {
             TimeTableSolution tempSolution =solution;
@@ -180,13 +184,65 @@ void stopOnFittnes(){
 
     @Test
     void sizerAddQuintetsFromSolution() throws Throwable {
+        List<Quintet> quintets = new ArrayList<>();
+        int dayIndex = 1;
+        DayOfWeek day =DayOfWeek.of(dayIndex);
+        int hour = 0;
         descriptor = xmlParser.unmarshall("src/resources/EX1-smallForSizer.xml");
-        List<Mutation<TimeTableSolution>> mutations = descriptor.getEngineSettings().getMutations();
+
+        SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
+
+        for (Requirement requirement: schoolClass.getRequirements()) {
+            for (int i = 0; i < requirement.getHours(); i+=3) {
+                Subject subject = requirement.getSubject();
+                Teacher teacher = descriptor.getTimeTable()
+                        .getTeachers().get(descriptor.getTimeTable().getTeachersThatTeachSubject(subject.getId()).get(0));
+                quintets.add(new Quintet(day,hour,teacher,schoolClass,subject));
+            }
+        }
+
+        Map <Integer,SchoolClass> schoolClasses = new HashMap<>();
+        schoolClasses.put(1,schoolClass);
+        TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
+
+        List<Mutation<TimeTableSolution>> mutations = getMutations();
         Sizer mutation =(Sizer) mutations.get(0);
-        TimeTableSolution solution = new TimeTableSolution(descriptor.getTimeTable());
         TimeTableSolution mutatedSolution= (TimeTableSolution) mutation.mutate(solution);
         assertTrue(solution.getSolutionSize()<mutatedSolution.getSolutionSize());
 
+    }
+
+    @Test
+    void sizerRemoveQuintetsFromSolution() throws Throwable {
+        List<Quintet> quintets = new ArrayList<>();
+        int dayIndex = 1;
+        DayOfWeek day =DayOfWeek.of(dayIndex);
+        int hour = 0;
+        descriptor = xmlParser.unmarshall("src/resources/EX1-smallForSizer.xml");
+        SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
+
+        createQuintetList(quintets, day, hour, schoolClass);
+
+        Map <Integer,SchoolClass> schoolClasses = new HashMap<>();
+        schoolClasses.put(1,schoolClass);
+        TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
+
+        List<Mutation<TimeTableSolution>> mutations = getMutations();
+        Sizer mutation =(Sizer) mutations.get(1);
+        TimeTableSolution mutatedSolution= (TimeTableSolution) mutation.mutate(solution);
+        assertTrue(solution.getSolutionSize()>mutatedSolution.getSolutionSize());
+
+    }
+
+    private void createQuintetList(List<Quintet> quintets, DayOfWeek day, int hour, SchoolClass schoolClass) {
+        for (Requirement requirement : schoolClass.getRequirements()) {
+            for (int i = 0; i < requirement.getHours(); i++) {
+                Subject subject = requirement.getSubject();
+                Teacher teacher = descriptor.getTimeTable()
+                        .getTeachers().get(descriptor.getTimeTable().getTeachersThatTeachSubject(subject.getId()).get(0));
+                quintets.add(new Quintet(day, hour, teacher, schoolClass, subject));
+            }
+        }
     }
 //    @Test
 //    void sizerAddQuintetsFromSolution() throws Throwable {
@@ -236,7 +292,6 @@ void knowledgeableGivesEmptySolutionFullScore(){
                 get(descriptor.getTimeTable().getTeachersThatTeachSubject(subject.getId()).get(0));
         for (int i = 0; i < teachingHours; i++) {
             if(hour>=descriptor.getTimeTable().getHours()){
-                hour=0;
                 dayIndex++;
                 day = DayOfWeek.of(dayIndex);
             }
@@ -258,14 +313,7 @@ void knowledgeableGivesEmptySolutionFullScore(){
 
         SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(1);
 
-            for (Requirement requirement: schoolClass.getRequirements()) {
-                for (int i = 0; i < requirement.getHours(); i++) {
-                    Subject subject = requirement.getSubject();
-                    Teacher teacher = descriptor.getTimeTable()
-                            .getTeachers().get(descriptor.getTimeTable().getTeachersThatTeachSubject(subject.getId()).get(0));
-                    quintets.add(new Quintet(day,hour,teacher,schoolClass,subject));
-                }
-            }
+        createQuintetList(quintets, day, hour, schoolClass);
 
         Map <Integer,SchoolClass> schoolClasses = new HashMap<>();
             schoolClasses.put(1,schoolClass);
@@ -283,7 +331,7 @@ void knowledgeableGivesEmptySolutionFullScore(){
         Map <Integer,SchoolClass> schoolClasses = new HashMap<>();
 
         schoolClasses.put(1,schoolClass);
-        TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
+        TimeTableSolution solution = new TimeTableSolution(quintets, 0, descriptor.getTimeTable());
         Satisfactory satisfactory = new Satisfactory("soft",schoolClasses);
         satisfactory.fitnessEvaluation(solution);
         solution.calculateTotalScore();
@@ -319,7 +367,7 @@ void knowledgeableGivesEmptySolutionFullScore(){
 
         Map <Integer,SchoolClass> schoolClasses = new HashMap<>();
         schoolClasses.put(1,schoolClass);
-        TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
+        TimeTableSolution solution = new TimeTableSolution(quintets, 0, descriptor.getTimeTable());
         Singularity singularity = new Singularity("soft");
         singularity.fitnessEvaluation(solution);
         solution.calculateTotalScore();
@@ -337,7 +385,7 @@ void knowledgeableGivesEmptySolutionFullScore(){
 
         Map<Integer, SchoolClass> schoolClasses = new HashMap<>();
         schoolClasses.put(1, schoolClass);
-        TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
+        TimeTableSolution solution = new TimeTableSolution(quintets, 0, descriptor.getTimeTable());
         TeacherIsHuman teacherIsHuman = new TeacherIsHuman("soft");
         teacherIsHuman.fitnessEvaluation(solution);
         solution.calculateTotalScore();

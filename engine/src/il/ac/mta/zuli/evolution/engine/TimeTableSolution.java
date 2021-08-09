@@ -122,22 +122,19 @@ public class TimeTableSolution implements Solution {
         //randomly generate teacher - randomly but only from teachers that teach the random subject
         List<Integer> TeachersIDs = timeTable.getTeachersThatTeachSubject(randomSubject.getId());
         int randomTeachersIndex = generateRandomNumZeroBase(TeachersIDs.size());
-        Teacher randomTeacher = timeTable.getTeachers().get(TeachersIDs.get(randomTeachersIndex));
-        return randomTeacher;
+        return timeTable.getTeachers().get(TeachersIDs.get(randomTeachersIndex));
     }
 
     private Subject generateRandomSubject(SchoolClass randomSchoolClass) {
         //randomly generate subject - randomly but only from class-subjects
         List<Integer> classRequiredSubjectsIDs = randomSchoolClass.getRequiredSubjectsIDs();
         int randomIndex = generateRandomNumZeroBase(classRequiredSubjectsIDs.size());
-        Subject randomSubject = timeTable.getSubjects().get(classRequiredSubjectsIDs.get(randomIndex));
-        return randomSubject;
+        return timeTable.getSubjects().get(classRequiredSubjectsIDs.get(randomIndex));
     }
 
     private SchoolClass generateRandomClass() {
         int randomClassID = generateRandomNum(1, timeTable.getSchoolClasses().size());
-        SchoolClass randomSchoolClass = timeTable.getSchoolClasses().get(randomClassID);
-        return randomSchoolClass;
+        return timeTable.getSchoolClasses().get(randomClassID);
     }
 
     private DayOfWeek generateRandomDay() {
@@ -150,8 +147,7 @@ public class TimeTableSolution implements Solution {
     //not in place - creates new TimeTableSolution
     public void sortQuintetsInSolution(@NotNull Comparator<Quintet> quintetComparator) {
         List<Quintet> quintets = this.getSolutionQuintets();
-        List<Quintet> sortedQuintets = quintets.stream().sorted(quintetComparator).collect(Collectors.toList());
-        this.solutionQuintets = sortedQuintets;
+        this.solutionQuintets = quintets.stream().sorted(quintetComparator).collect(Collectors.toList());
     }
 
     public void addScoreToRule(@NotNull Rule rule, double score) {
@@ -208,11 +204,6 @@ public class TimeTableSolution implements Solution {
         return ((Double) totalFitnessScore).compareTo(other.getTotalFitnessScore());
     }
 
-//    public void printSolutionQuintets() {
-//        for (Quintet q : getSolutionQuintets()) {
-//            System.out.println(q);
-//        }
-//    }
 
     @Override
     public String toString() {

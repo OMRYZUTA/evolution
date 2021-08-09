@@ -1,8 +1,8 @@
 package il.ac.mta.zuli.evolution.dto;
 
 public class GenerationStrideScoreDTO {
-    int generationNum;
-    double bestScore;
+    final int generationNum;
+    final double bestScore;
 
     public GenerationStrideScoreDTO(int generationNum, double bestScore) {
         this.generationNum = generationNum;

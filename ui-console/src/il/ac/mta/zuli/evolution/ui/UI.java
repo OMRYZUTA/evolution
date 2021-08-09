@@ -520,8 +520,6 @@ public class UI {
     }
 
     private void printMainMenu() {
-        /*String noFileLoaded = fileLoaded ? "" : " <Unavailable - no file loaded>";
-        String algoIncomplete = evolutionAlgorithmCompleted ? "" : " <Unavailable - algorithm run was not completed>";*/
         System.out.println("To select from the menu, please enter the option number: "
                 + System.lineSeparator() + "Please note, in order to select 2 or 3, you first need to select 1"
                 + System.lineSeparator() + "and in order to select 4 or 5, you first need to select 3");

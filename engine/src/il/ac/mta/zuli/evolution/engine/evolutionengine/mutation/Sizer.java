@@ -17,8 +17,8 @@ import static il.ac.mta.zuli.evolution.engine.MyUtils.generateRandomNumZeroBase;
 
 public class Sizer<S extends Solution> implements Mutation<S> {
     double probability;
-    int totalTuple; // number of tuples to add or remove
-    TimeTable timeTable;
+    final int totalTuple; // number of tuples to add or remove
+    final TimeTable timeTable;
 
     public Sizer(double probability, int totalTuple, TimeTable timeTable) {
         setProbability(probability);

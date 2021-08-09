@@ -92,9 +92,5 @@ public class QuintetDTO {
     }
 
 
-    /*@Override
-    public  String toString(){
-        // for debugging purposes.
-        return "< "+ day+", "+ hour +", "+teacher.getId()+ ", "+ schoolClass.getId()+", "+subject.getId()+ ">";
-    }*/
+
 }

@@ -20,11 +20,6 @@ public interface Engine {
 
     TimeTableSolutionDTO getBestSolution();
 
-    //TimeTableSolutionDTO getBestSolutionRaw();
-
-//    TimeTableSolutionDTO getBestSolutionTeacherOriented();
-//
-//    TimeTableSolutionDTO getBestSolutionClassOriented();
 
     List<GenerationProgressDTO> getEvolutionProgress();
 

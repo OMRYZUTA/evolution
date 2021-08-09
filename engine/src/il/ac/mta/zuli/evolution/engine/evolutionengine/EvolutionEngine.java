@@ -49,9 +49,7 @@ public class EvolutionEngine<T extends Solution> {
     }
 
     private List<T> selectParentsFrom(@NotNull List<T> generation) {
-        List<T> parents = (engineSettings.getSelection()).select(generation);
-
-        return parents;
+        return (engineSettings.getSelection()).select(generation);
     }
 
     @NotNull

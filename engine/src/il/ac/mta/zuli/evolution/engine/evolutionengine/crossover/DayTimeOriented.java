@@ -111,9 +111,8 @@ public class DayTimeOriented<S extends Solution> implements Crossover<S> {
 
         // Array D*H length (instead of matrix) the index is: (hour * DAYS) + day (zero based)
         // each element in the array is a collection of quintets
-        List<List<Quintet>> solutionMatrix = fillQuintetsToMatrix(solutionQuintets);
 
-        return solutionMatrix;
+        return fillQuintetsToMatrix(solutionQuintets);
     }
 
     @NotNull

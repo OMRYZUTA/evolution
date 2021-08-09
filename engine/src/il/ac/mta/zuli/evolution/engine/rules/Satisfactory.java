@@ -50,11 +50,6 @@ public class Satisfactory extends Rule {
             score = Arrays.stream(classScores).average().getAsDouble();
         }
 
-//        if (this.isHardRule() && Arrays.stream(classScores).anyMatch(n -> n == 0)) {
-//            score = 0;
-//            score *= 0.9;
-//        }
-
         timeTableSolution.addScoreToRule(this, score);
     }
 
