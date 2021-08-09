@@ -12,8 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static il.ac.mta.zuli.evolution.engine.utils.generateRandomNum;
-import static il.ac.mta.zuli.evolution.engine.utils.generateRandomNumZeroBase;
+import static il.ac.mta.zuli.evolution.engine.MyUtils.generateRandomNum;
+import static il.ac.mta.zuli.evolution.engine.MyUtils.generateRandomNumZeroBase;
 
 public class Sizer<S extends Solution> implements Mutation<S> {
     double probability;

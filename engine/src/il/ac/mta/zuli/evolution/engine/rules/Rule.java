@@ -3,8 +3,6 @@ package il.ac.mta.zuli.evolution.engine.rules;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import org.jetbrains.annotations.NotNull;
 
-//TODO - ask Omry why we need a ruleInterface when we have an abstract class?
-
 public abstract class Rule implements RuleInterface {
     private final RuleType ruleType; //hard or soft
 

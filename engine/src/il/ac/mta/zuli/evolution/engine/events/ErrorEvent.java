@@ -2,7 +2,7 @@ package il.ac.mta.zuli.evolution.engine.events;
 
 public class ErrorEvent extends Event {
     private final ErrorType type;
-    private final Throwable error;
+    private Throwable error = null;
 
     public ErrorEvent(String message, ErrorType type, Throwable error) {
         super(message);

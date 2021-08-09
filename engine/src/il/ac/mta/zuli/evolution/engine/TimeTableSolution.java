@@ -13,8 +13,8 @@ import java.time.DayOfWeek;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static il.ac.mta.zuli.evolution.engine.utils.generateRandomNum;
-import static il.ac.mta.zuli.evolution.engine.utils.generateRandomNumZeroBase;
+import static il.ac.mta.zuli.evolution.engine.MyUtils.generateRandomNum;
+import static il.ac.mta.zuli.evolution.engine.MyUtils.generateRandomNumZeroBase;
 
 public class TimeTableSolution implements Solution {
     private List<Quintet> solutionQuintets;

@@ -161,7 +161,7 @@ public class TimeTable {
                 SchoolClass schoolClass = new SchoolClass(c, this.subjects, (this.hours * this.days));
                 this.schoolClasses.put(c.getId(), schoolClass);
             } catch (ValidationException e) {
-                throw new ValidationException("Failed creating school class " + c.getId() + c.getETTName(), e);
+                throw new ValidationException("Failed creating school class " + c.getId() + " " + c.getETTName(), e);
             }
         }
     }

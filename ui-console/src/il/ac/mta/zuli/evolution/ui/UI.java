@@ -2,6 +2,7 @@ package il.ac.mta.zuli.evolution.ui;
 
 import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.Engine;
+import il.ac.mta.zuli.evolution.engine.MyUtils;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.events.ErrorEvent;
 import il.ac.mta.zuli.evolution.engine.events.ErrorType;
@@ -131,7 +132,23 @@ public class UI {
             return;
         }
 
-        engine.executeEvolutionAlgorithm(numOfGenerations, stride);
+        System.out.println("Would you like to stop the algorithm before running through all generations when attaining a certain score? (enter Y/N)");
+        String answer = scanner.nextLine();
+        if (answer.equalsIgnoreCase("y")) {
+            System.out.println("Enter a score to use as stopping-point (can be Integer or floating-point number)");
+            double stopScore = 0;
+
+            try {
+                stopScore = Double.parseDouble(scanner.nextLine());
+            } catch (Throwable e) {
+                System.out.println("Invalid input. Value must be number");
+                return;
+            }
+            engine.executeEvolutionAlgorithmWithFitnessStop(numOfGenerations, stride, stopScore);
+        } else {
+            System.out.println("Will run algorithm until completing all generations.");
+            engine.executeEvolutionAlgorithm(numOfGenerations, stride);
+        }
     }
 
     private void showBestSolution() {
@@ -140,7 +157,7 @@ public class UI {
         int displayOption = 0;
         try {
             displayOption = Integer.parseInt(scanner.nextLine(), 10);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             //swallow exception
         }
 
@@ -185,13 +202,23 @@ public class UI {
         });
         engine.addListener("error", e -> {
             ErrorEvent errorEvent = (ErrorEvent) e;
-            System.out.println(e.getMessage() + ". " + errorEvent.getError().getMessage());
+            StringBuilder sb = new StringBuilder();
+            Throwable root = MyUtils.findThrowableRootCause(errorEvent.getError());
+            Throwable currError = errorEvent.getError();
+
+            while (!currError.equals(root)) {
+                sb.append(currError.getMessage() + System.lineSeparator());
+                currError = currError.getCause();
+            }
+
+            sb.append(root.getMessage());
+            System.out.println(e.getMessage() + ". " + sb);
 
             if (errorEvent.getType() == ErrorType.LoadError) {
                 if (UI.this.fileLoaded) {
-                    System.out.println("Reverted to previous file");
+                    System.out.println("Reverted to last file that was successfully loaded.");
                 } else {
-                    System.out.println("File is not loaded");
+                    System.out.println("There is no file loaded to the system.");
                 }
             }
 
@@ -213,7 +240,7 @@ public class UI {
         try {
             int intInput = Integer.parseInt(input, 10);
             result = MenuOptions.values()[intInput];
-        } catch (Exception e) {
+        } catch (Throwable e) {
             // swallow parsing exceptions
         }
 
@@ -235,8 +262,9 @@ public class UI {
 
         try {
             numOfGenerations = Integer.parseInt(scanner.nextLine());
-        } catch (Exception E) {
-            // swallow parsing exceptions
+        } catch (Throwable E) {
+            System.out.println("Invalid number of generations entered, must be an integer greater than 100");
+            return false;
         }
 
         if (numOfGenerations < 100) {
@@ -255,8 +283,9 @@ public class UI {
 
         try {
             stride = Integer.parseInt(scanner.nextLine());
-        } catch (Exception E) {
-            // swallow parsing exceptions
+        } catch (Throwable E) {
+            System.out.println("Invalid stride value entered, the value must be a positive integer");
+            return false;
         }
 
         if (stride <= 0) {

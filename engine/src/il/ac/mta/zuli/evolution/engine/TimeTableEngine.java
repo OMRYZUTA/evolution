@@ -35,10 +35,12 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         try {
             XMLParser xmlParser = new XMLParser();
             descriptor = xmlParser.unmarshall(path);
-            fireEvent("loaded", new LoadedEvent("file was loaded", path));
-        } catch (Throwable e) {
-            fireEvent("error", new ErrorEvent("failed reading file", ErrorType.LoadError, e));
+            fireEvent("loaded", new LoadedEvent("File was loaded", path));
+        } catch (
+                Throwable e) {
+            fireEvent("error", new ErrorEvent("Failed reading file", ErrorType.LoadError, e));
         }
+
     }
 
     @Override
@@ -99,33 +101,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         }
     }
 
-    private void fireStrideDetails(int i, TimeTableSolution currBestSolution) {
-        GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i, currBestSolution.getTotalFitnessScore());
-        fireEvent("stride", new OnStrideEvent("generation ", i, strideScoreDTO));
-    }
-
-    private void checkForErrorsBeforeExecutingAlgorithms(int numOfGenerations, int generationsStride) {
-        if (!isXMLLoaded()) {
-            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
-                    ErrorType.RunError,
-                    new InvalidOperationException("Can't execute Evolution algorithm, file is not loaded"));
-            fireEvent("error", e);
-        }
-
-        if (numOfGenerations < 0) {
-            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
-                    ErrorType.RunError,
-                    new ValidationException(numOfGenerations + " is invalid number for generations, must be positive number"));
-            fireEvent("error", e);
-        }
-        if (generationsStride < 0 || generationsStride > numOfGenerations) {
-            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
-                    ErrorType.RunError,
-                    new ValidationException(numOfGenerations + " is invalid number for generation strides, must be between 1 - " + numOfGenerations));
-            fireEvent("error", e);
-        }
-    }
-
+    //bonus
     @Override
     public void executeEvolutionAlgorithmWithFitnessStop(int numOfGenerations, int generationsStride, double fitnessStop) {
         checkForErrorsBeforeExecutingAlgorithms(numOfGenerations, generationsStride);
@@ -151,7 +127,8 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                 }
 
                 //stride for purposes of info-display and to save a stride-generation history
-                if (i % generationsStride == 0) {
+                if (i == 1 || (i % generationsStride == 0) || (i == numOfGenerations)) {
+                    bestSolutionsInGenerationPerStride.put(i, currBestSolution);
                     fireStrideDetails(i, currBestSolution);
                 }
                 if (bestSolutionFitnessScore >= fitnessStop) {
@@ -215,6 +192,33 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     //#endregion
 
     //#region auxiliary methods
+    private void fireStrideDetails(int i, TimeTableSolution currBestSolution) {
+        GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i, currBestSolution.getTotalFitnessScore());
+        fireEvent("stride", new OnStrideEvent("generation ", i, strideScoreDTO));
+    }
+
+    private void checkForErrorsBeforeExecutingAlgorithms(int numOfGenerations, int generationsStride) {
+        if (!isXMLLoaded()) {
+            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
+                    ErrorType.RunError,
+                    new InvalidOperationException("Can't execute Evolution algorithm, file is not loaded"));
+            fireEvent("error", e);
+        }
+
+        if (numOfGenerations < 0) {
+            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
+                    ErrorType.RunError,
+                    new ValidationException(numOfGenerations + " is invalid number for generations, must be positive number"));
+            fireEvent("error", e);
+        }
+        if (generationsStride < 0 || generationsStride > numOfGenerations) {
+            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
+                    ErrorType.RunError,
+                    new ValidationException(numOfGenerations + " is invalid number for generation strides, must be between 1 - " + numOfGenerations));
+            fireEvent("error", e);
+        }
+    }
+
     public int getTimeTableHours() {
         return descriptor.getTimeTableHours();
     }
@@ -240,6 +244,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         return descriptor != null;
     }
 //#endregion
+
 
     //#region DTO-related methods
     private EngineSettingsDTO createEngineSettingsDTO() {
