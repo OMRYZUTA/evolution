@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 //rule meaning: teachers only teach subjects from their subject-collection
@@ -60,11 +61,11 @@ public class Knowledgeable extends Rule {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(super.hashCode(),this.getClass());
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        return super.equals(obj)&&this.getClass()==obj.getClass();
     }
 }

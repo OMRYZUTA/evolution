@@ -6,6 +6,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.Objects;
 
 public class Singularity extends Rule {
     public Singularity(@NotNull String ruleType) {
@@ -57,11 +58,11 @@ public class Singularity extends Rule {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(super.hashCode(),this.getClass());
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        return super.equals(obj) && this.getClass()==obj.getClass();
     }
 }

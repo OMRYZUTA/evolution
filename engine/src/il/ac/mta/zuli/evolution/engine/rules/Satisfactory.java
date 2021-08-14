@@ -114,7 +114,7 @@ public class Satisfactory extends Rule {
 
     @Override
     public int hashCode() {
-        return Objects.hash(schoolClasses);
+        return Objects.hash(schoolClasses,this.getClass());
     }
 }
 

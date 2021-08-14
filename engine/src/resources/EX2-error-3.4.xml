@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ETT-Descriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ETT-V2.xsd">
+	<ETT-TimeTable days="4" hours="5">
+		<ETT-Teachers>
+			<ETT-Teacher id="1">
+				<ETT-Name>Asi Mon</ETT-Name>
+				<ETT-Teaching>
+					<ETT-Teaches subject-id="1"/>
+					<ETT-Teaches subject-id="2"/>
+				</ETT-Teaching>
+			</ETT-Teacher>
+			<ETT-Teacher id="3">
+				<ETT-Name>Tim Sorly</ETT-Name>
+				<ETT-Teaching>
+					<ETT-Teaches subject-id="13"/>
+				</ETT-Teaching>
+			</ETT-Teacher>			
+			<ETT-Teacher id="2">
+				<ETT-Name>Sima Zgan</ETT-Name>
+				<ETT-Teaching>
+					<ETT-Teaches subject-id="2"/>
+					<ETT-Teaches subject-id="3"/>
+				</ETT-Teaching>
+			</ETT-Teacher>						
+			<ETT-Teacher id="4">
+				<ETT-Name>Sami Po</ETT-Name>
+				<ETT-Teaching>
+					<ETT-Teaches subject-id="2"/>
+					<ETT-Teaches subject-id="4"/>
+				</ETT-Teaching>
+			</ETT-Teacher>									
+		</ETT-Teachers>
+		<ETT-Subjects>
+			<ETT-Subject id="1" name="Sifrut"/>
+			<ETT-Subject id="3" name="Tanach"/>
+			<ETT-Subject id="4" name="English"/>
+			<ETT-Subject id="2" name="Math"/>
+		</ETT-Subjects>		
+		<ETT-Classes>
+			<ETT-Class id="1">
+				<ETT-Name>Standart</ETT-Name>
+				<ETT-Requirements>
+					<ETT-Study subject-id="1" hours="3"/>
+					<ETT-Study subject-id="2" hours="4"/>
+					<ETT-Study subject-id="3" hours="2"/>
+				</ETT-Requirements>
+			</ETT-Class>
+			<ETT-Class id="2">
+				<ETT-Name>Nerds</ETT-Name>
+				<ETT-Requirements>
+					<ETT-Study subject-id="2" hours="6"/>
+					<ETT-Study subject-id="4" hours="6"/>
+				</ETT-Requirements>
+			</ETT-Class>			
+			<ETT-Class id="3">
+				<ETT-Name>Tikshoret</ETT-Name>
+				<ETT-Requirements>
+					<ETT-Study subject-id="4" hours="2"/>
+					<ETT-Study subject-id="1" hours="4"/>
+					<ETT-Study subject-id="3" hours="6"/>
+					<ETT-Study subject-id="2" hours="4"/>
+				</ETT-Requirements>
+			</ETT-Class>			
+			<ETT-Class id="4">
+				<ETT-Name>Biologit</ETT-Name>
+				<ETT-Requirements>
+					<ETT-Study subject-id="4" hours="2"/>
+					<ETT-Study subject-id="2" hours="4"/>
+				</ETT-Requirements>
+			</ETT-Class>					
+		</ETT-Classes>
+		<ETT-Rules hard-rules-weight="70">
+			<ETT-Rule type="Hard">
+				<ETT-RuleId>TeacherIsHuman</ETT-RuleId>
+			</ETT-Rule>
+			<ETT-Rule type="Hard">
+				<ETT-RuleId>Singularity</ETT-RuleId>
+			</ETT-Rule>
+			<ETT-Rule type="Soft">
+				<ETT-RuleId>Knowledgeable</ETT-RuleId>
+			</ETT-Rule>
+		</ETT-Rules>
+	</ETT-TimeTable>
+	<ETT-EvolutionEngine>
+		<ETT-InitialPopulation size="200"/>
+		<ETT-Selection type="Truncation" configuration="TopPercent=10"/>
+		<ETT-Crossover name="DayTimeOriented" cutting-points="2"/>
+		<ETT-Mutations>
+			<ETT-Mutation name="Flipping" probability="0.3" configuration="MaxTupples=3,Component=T"/>
+		</ETT-Mutations>
+	</ETT-EvolutionEngine>
+</ETT-Descriptor>

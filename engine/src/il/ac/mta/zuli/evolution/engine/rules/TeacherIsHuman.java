@@ -6,6 +6,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.Objects;
 
 public class TeacherIsHuman extends Rule {
     public TeacherIsHuman(@NotNull String ruleType) {
@@ -54,11 +55,11 @@ public class TeacherIsHuman extends Rule {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(super.hashCode());
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        return super.equals(obj)&& this.getClass()==obj.getClass();
     }
 }
