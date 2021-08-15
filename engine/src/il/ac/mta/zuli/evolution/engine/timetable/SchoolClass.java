@@ -1,9 +1,9 @@
 package il.ac.mta.zuli.evolution.engine.timetable;
 
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1.ETTClass;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1.ETTRequirements;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1.ETTStudy;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTClass;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTRequirements;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTStudy;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

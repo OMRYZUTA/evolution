@@ -2,7 +2,7 @@ package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1.ETTDescriptor;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 public class Descriptor {

@@ -2,7 +2,7 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine.mutation;
 
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex1.ETTMutation;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTMutation;
 import org.jetbrains.annotations.NotNull;
 
 public class MutationFactory {
