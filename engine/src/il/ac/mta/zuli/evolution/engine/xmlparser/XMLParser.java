@@ -1,9 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.xmlparser;
-
 import il.ac.mta.zuli.evolution.engine.Descriptor;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTDescriptor;
 import org.jetbrains.annotations.NotNull;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
