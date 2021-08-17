@@ -15,6 +15,7 @@ import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
+import il.ac.mta.zuli.evolution.ui.mainComponent.MainTTController;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,7 +25,13 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     private EvolutionEngine<TimeTableSolution> evolutionEngine;
     private TimeTableSolution bestSolutionEver = null;
     private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride; // generation , solution
+    private MainTTController controller;
+    public TimeTableEngine() {
+    }
+    public TimeTableEngine(MainTTController controller) {
+        this.controller = controller;
 
+    }
     //#region ui-parallel methods
     @Override
     public void loadXML(@NotNull String path) {
