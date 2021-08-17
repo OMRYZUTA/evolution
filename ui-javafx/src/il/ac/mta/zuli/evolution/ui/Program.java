@@ -8,7 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.fxmisc.cssfx.CSSFX;
+//import org.fxmisc.cssfx.CSSFX;
 
 import java.net.URL;
 
@@ -23,7 +23,7 @@ public class Program extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        CSSFX.start();
+//        CSSFX.start();
 
         FXMLLoader loader = new FXMLLoader();
 
@@ -37,19 +37,12 @@ public class Program extends Application {
         Engine newEngine = new TimeTableEngine(mainController);
 
         mainController.setPrimaryStage(primaryStage);
-        mainController.setBusinessLogic(newEngine);
-
-        // set stage
-        primaryStage.setTitle("HistogramS");
-        Scene scene = new Scene(root, 1050, 600);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-
-    }
-
-    public static void main(String[] args) {
-
-        launch(args);
+//        mainController.setBusinessLogic(newEngine);
+//
+//        // set stage
+//        primaryStage.setTitle("HistogramS");
+//        Scene scene = new Scene(root, 1050, 600);
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
     }
 }

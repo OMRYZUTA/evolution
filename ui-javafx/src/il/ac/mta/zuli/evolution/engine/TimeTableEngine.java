@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.engine;
 
+import com.sun.istack.internal.NotNull;
 import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.events.*;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
@@ -14,7 +15,6 @@ import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
