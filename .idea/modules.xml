@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/javaFXApplication/javaFXApplication.iml" filepath="$PROJECT_DIR$/javaFXApplication/javaFXApplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/ui-console/ui-console.iml" filepath="$PROJECT_DIR$/ui-console/ui-console.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ui-javafx/ui-javafx.iml" filepath="$PROJECT_DIR$/ui-javafx/ui-javafx.iml" />
     </modules>
   </component>
 </project>
