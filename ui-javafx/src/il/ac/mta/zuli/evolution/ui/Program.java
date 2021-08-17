@@ -1,23 +1,64 @@
 package il.ac.mta.zuli.evolution.ui;
 
+import il.ac.mta.zuli.evolution.engine.Engine;
+import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
+import il.ac.mta.zuli.evolution.ui.mainComponent.MainTTController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.fxmisc.cssfx.CSSFX;
+
+import java.net.URL;
 
 public class Program extends Application {
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Timetable");
 
-        Parent load = FXMLLoader.load(getClass().getResource("mainScene.fxml"));
-        Scene scene = new Scene(load, 600, 400);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
+//    @Override
+//    public void start(Stage primaryStage) throws Exception {
+//        primaryStage.setTitle("Timetable");
+//
+//        Parent load = FXMLLoader.load(getClass().getResource("mainComponent/mainTTScene.fxml"));
+//        Scene scene = new Scene(load, 600, 400);
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
+//    }
 
     public static void main(String[] args) {
         launch(Program.class);
+    }
+
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        CSSFX.start();
+
+        FXMLLoader loader = new FXMLLoader();
+
+        // load main fxml
+        URL mainFXML = getClass().getResource("mainComponent/mainTTScene.fxml");
+        loader.setLocation(mainFXML);
+        VBox root = loader.load();
+
+        // wire up controller
+        MainTTController mainController = loader.getController();
+        Engine newEngine = new TimeTableEngine(mainController);
+
+        mainController.setPrimaryStage(primaryStage);
+        mainController.setBusinessLogic(newEngine);
+
+        // set stage
+        primaryStage.setTitle("HistogramS");
+        Scene scene = new Scene(root, 1050, 600);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+
+    }
+
+    public static void main(String[] args) {
+
+        launch(args);
     }
 }

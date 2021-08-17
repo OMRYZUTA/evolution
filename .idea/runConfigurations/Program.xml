@@ -4,7 +4,7 @@
     <module name="ui-console" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="il.ac.mta.zuli.evolution.ui.*" />
+        <option name="PATTERN" value="il.ac.mta.zuli.evolution.ui.mainComponent.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

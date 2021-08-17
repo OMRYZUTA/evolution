@@ -22,6 +22,13 @@ public class UI {
     private boolean fileLoaded;
     private boolean evolutionAlgorithmCompleted;
 
+    // just for debugging - Types of solutions reports
+    public enum ReportType {
+        TEACHER_VIEW,
+        CLASS_VIEW,
+        FULL_VIEW
+    }
+
     public UI() {
         engine = new TimeTableEngine();
         scanner = new Scanner(System.in);
@@ -550,6 +557,143 @@ public class UI {
                     q.getSchoolClass().getName(),
                     q.getTeacher().getName(),
                     q.getSubject().getName());
+        }
+    }
+
+    /**
+     * Print a solution in the form of matrix, where the columns are days
+     * and the rows are hours.
+     * Print the report from different point of views according to the reportType parameter.
+     *
+     * @param solution - a list of Quintets to be printed
+     *                 report type - teacher view, class view or full view
+     */
+    protected void printSolutionQuintets(List<QuintetDTO> solution, ReportType reportType) {
+        int timeTableHours = engine.getSystemDetails().getTimeTable().getHours();
+        int timeTableDays = engine.getSystemDetails().getTimeTable().getDays();
+        // --- for testing ----
+        //int timeTableHours = 6; //engine.getSystemDetails().getTimeTable().getHours();
+        //int timeTableDays = 6; //engine.getSystemDetails().getTimeTable().getDays();
+        ArrayList<Integer> testArray = new ArrayList<Integer>(Arrays.asList(1, 2, 3, 4, 5));
+
+        // This array will be set according to the report type. Either teachers IDs, class IDs
+        // or just {0} for a full solution printout.
+        ArrayList<Integer> listToIterateOver = new ArrayList<Integer>();
+        listToIterateOver.add(new Integer(0));
+
+        List<QuintetDTO>[][] solutionAsMatrix;
+        solutionAsMatrix = new List[timeTableHours][timeTableDays];   // The rows are hours and the columns are days
+        // Each cell is a quintet list, because several
+        // quintets may be assigned to one hour.
+        // Preset the matrix to nulls.
+        for (int i = 0; i < timeTableHours; i++) {
+
+            for (int j = 0; j < timeTableDays; j++) {
+                solutionAsMatrix[i][j] = null;
+            }
+        }
+
+        // Insert each Quintet into its place in the matrix
+        QuintetDTO quintet = null;
+        int qhour, qday;
+        Iterator<QuintetDTO> iter = solution.iterator();
+        while (iter.hasNext()) {
+            quintet = iter.next();
+            if (quintet != null) {
+                qhour = quintet.getHour();
+                qday = quintet.getDay().getValue() - 1; // Subtract 1, because days start at 1.
+                if (qhour >= timeTableHours || qday >= timeTableDays)
+                    continue;   // Ignore quintets with hor or day out of scope
+                if (solutionAsMatrix[qhour][qday] == null)
+                    solutionAsMatrix[qhour][qday] = new ArrayList<QuintetDTO>();
+                // Add the quintet to the hour and day's list
+                solutionAsMatrix[qhour][qday].add(quintet);
+            }
+        }
+
+        // Build the listToIterateOver according to report type (it was initially set for a full solution printout).
+        String header = "--- Full TimeTable ---\n";
+        if (reportType == ReportType.TEACHER_VIEW) {
+            // -- for testing --- listToIterateOver = testArray; //new ArrayList<Integer>(engine.getSystemDetails().getTimeTable().getTeachers().keySet());
+            listToIterateOver = new ArrayList<Integer>(engine.getSystemDetails().getTimeTable().getTeachers().keySet());
+            Collections.sort(listToIterateOver);
+            header = "\n--- Teacher View for: ";
+        } else if (reportType == ReportType.CLASS_VIEW) {
+            // -- for testing --- listToIterateOver = testArray;  //new ArrayList<Integer>(engine.getSystemDetails().getTimeTable().getSchoolClasses().keySet());
+            listToIterateOver = new ArrayList<Integer>(engine.getSystemDetails().getTimeTable().getSchoolClasses().keySet());
+            Collections.sort(listToIterateOver);
+            header = "\n--- Class View for: ";
+        }
+
+        // Print a title and a header
+        System.out.println("          solution's Time Table\n" +
+                "          =====================\n");
+
+        Formatter frmt = new Formatter();
+
+        final String[] dayNames = {"Sun", "Mon", "Tue", "Wed", "Thr", "Fri"};
+        String daysLine = "    ";
+        for (int i = 0; i < timeTableDays; i++) {
+            daysLine = daysLine + frmt.format("| %-11s ", dayNames[i]);
+            frmt = new Formatter();
+        }
+        daysLine = daysLine + "|";
+        String line;
+        // Loop printing a time table for each element in the listToIterateOver.
+        for (int loop = 0; loop < listToIterateOver.size(); loop++) {
+            // Print a header
+            System.out.println(header + listToIterateOver.get(loop) + "\n");
+
+            System.out.println(daysLine);
+            // Print Separation line - repeated hyphens.
+            System.out.println(String.join("", Collections.nCopies(5 + 14 * timeTableDays, "-")));
+
+            boolean moreToPrint = true;    // True, if ,more quintet in this cell
+            int cellIterations = 0;
+            List<QuintetDTO> oneCellList = null;
+            QuintetDTO quintetToPrint = null;
+            for (int i = 0; i < timeTableHours; i++) {
+                moreToPrint = true;
+                cellIterations = 0;     // Count of items for this cell
+                while (moreToPrint) {
+                    line = "";
+                    moreToPrint = false;
+                    // Add the hour
+                    frmt = new Formatter();
+                    line = line + frmt.format(" %2d ", i);
+
+                    for (int j = 0; j < timeTableDays; j++) {
+                        oneCellList = solutionAsMatrix[i][j];
+                        // Check whether this cell is to be printed.
+                        if (oneCellList == null || oneCellList.size() <= cellIterations ||
+                                (reportType == ReportType.TEACHER_VIEW &&       // If not currently printed teacher
+                                        oneCellList.get(cellIterations).getTeacher().getId() != listToIterateOver.get(loop)) ||
+                                (reportType == ReportType.CLASS_VIEW &&     // If not currently printed class
+                                        oneCellList.get(cellIterations).getSchoolClass().getId() != listToIterateOver.get(loop))) {
+                            // Print an empty cell
+                            frmt = new Formatter();
+                            // Print an empty cell
+                            line = line + frmt.format("|      %-6s ", "-");
+                        } else {
+                            quintetToPrint = oneCellList.get(cellIterations);
+                            frmt = new Formatter();
+                            line = line + frmt.format("| %3.3s,%3.3s,%3.3s ",
+                                    quintetToPrint.getTeacher().getId(), quintetToPrint.getSubject().getId(),
+                                    quintetToPrint.getSchoolClass().getId());
+                            if (oneCellList.size() > cellIterations + 1)
+                                moreToPrint = true;     // Need to print another line,
+                            // because there are more quintets for this pair of (hour, day).
+                        }
+                    }
+                    // Add the last cell separator and end of line and print the entire line
+                    System.out.println(line + "|");
+                    if (moreToPrint)
+                        cellIterations++;   // Advance to next row
+                    else
+                        // Print Separation line - repeated hyphens.
+                        System.out.println(String.join("", Collections.nCopies(5 + 14 * timeTableDays, "-")));
+                }
+            }
         }
     }
 }
