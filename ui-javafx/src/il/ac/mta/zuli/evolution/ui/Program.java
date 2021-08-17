@@ -14,15 +14,6 @@ import java.net.URL;
 
 public class Program extends Application {
 
-//    @Override
-//    public void start(Stage primaryStage) throws Exception {
-//        primaryStage.setTitle("Timetable");
-//
-//        Parent load = FXMLLoader.load(getClass().getResource("mainComponent/mainTTScene.fxml"));
-//        Scene scene = new Scene(load, 600, 400);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//    }
 
     public static void main(String[] args) {
         launch(Program.class);
