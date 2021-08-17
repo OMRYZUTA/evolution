@@ -40,7 +40,7 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
                           </rowConstraints>
                            <children>
-                               <Button mnemonicParsing="false" onAction="#openFileButtonAction" text="Load File"
+                               <Button id="openFileButton" mnemonicParsing="false" text="Load File"
                                        GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER"
                                        GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER">
                                    <GridPane.margin>
@@ -49,17 +49,28 @@
                                </Button>
                               <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="7">
                                 <content>
-                                  <AnchorPane prefHeight="501.0" prefWidth="218.0">
-                                       <children>
-                                          <Label layoutX="97.0" layoutY="132.0" text="Label" />
-                                       </children>
+                                    <AnchorPane prefHeight="501.0" prefWidth="218.0">
+                                        <children>
+                                            <Label layoutX="97.0" layoutY="132.0" text="Label"/>
+                                        </children>
                                     </AnchorPane>
                                 </content>
                               </ScrollPane>
-                            <Button mnemonicParsing="false" text="Pause" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER" />
-                              <Button layoutX="534.0" layoutY="155.0" mnemonicParsing="false" text="Start" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER" />
-                              <Button mnemonicParsing="false" text="Info" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER" />
-                              <ProgressBar maxWidth="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="580.0" progress="0.0" GridPane.columnIndex="4" GridPane.columnSpan="7" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                               <Button mnemonicParsing="false" text="Pause" GridPane.columnIndex="6"
+                                       GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2"
+                                       GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER"/>
+                               <Button layoutX="534.0" layoutY="155.0" mnemonicParsing="false" text="Start"
+                                       GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.hgrow="NEVER"
+                                       GridPane.rowIndex="2" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER"/>
+                               <Button mnemonicParsing="false" text="Info" GridPane.columnIndex="7"
+                                       GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2"
+                                       GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER"/>
+                               <ProgressBar id="taskProgressBar" maxWidth="-Infinity" minWidth="-Infinity"
+                                            prefHeight="23.0" prefWidth="580.0" progress="0.0" GridPane.columnIndex="4"
+                                            GridPane.columnSpan="7" GridPane.halignment="CENTER" GridPane.rowIndex="3"
+                                            GridPane.valignment="CENTER"/>
+                               <Label text="File" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                               <TextField GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                            </children>
                         </GridPane>
                      </children>
