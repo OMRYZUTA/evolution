@@ -1,9 +1,9 @@
 package il.ac.mta.zuli.evolution.engine;
 
-import com.sun.istack.internal.NotNull;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTDescriptor;
+import org.jetbrains.annotations.NotNull;
 
 
 public class Descriptor {

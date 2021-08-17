@@ -1,10 +1,10 @@
 package il.ac.mta.zuli.evolution.engine.timetable;
 
-import com.sun.istack.internal.NotNull;
 import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.*;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 

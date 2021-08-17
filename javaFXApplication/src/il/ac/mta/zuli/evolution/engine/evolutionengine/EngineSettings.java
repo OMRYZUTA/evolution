@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine;
 
-import com.sun.istack.internal.NotNull;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverFactory;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
@@ -13,6 +12,7 @@ import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTCrossover;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTEvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTMutation;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTSelection;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
