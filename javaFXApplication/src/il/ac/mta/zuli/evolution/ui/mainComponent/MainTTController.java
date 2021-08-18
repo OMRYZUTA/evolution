@@ -1,10 +1,8 @@
 package il.ac.mta.zuli.evolution.ui.mainComponent;
 
 import il.ac.mta.zuli.evolution.engine.Engine;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -13,22 +11,17 @@ import java.util.Optional;
 
 public class MainTTController {
     @FXML
-    Label selectedFileName;
-    @FXML
     Button openFileButton;
 
     private Engine engine;
-    private final SimpleStringProperty selectedFileProperty;
     private Stage primaryStage;
 
 
     public MainTTController() {
-        selectedFileProperty = new SimpleStringProperty();
     }
 
     public void setEngine(Engine newEngine) {
         this.engine = newEngine;
-        newEngine.fileNameProperty().bind(selectedFileProperty);
     }
 
     public void setPrimaryStage(Stage primaryStage) {
@@ -37,7 +30,6 @@ public class MainTTController {
 
     @FXML
     private void initialize() {
-        selectedFileName.textProperty().bind(selectedFileProperty);
     }
 
     @FXML
@@ -50,10 +42,11 @@ public class MainTTController {
             return;
         }
 
-        String absolutePath = selectedFile.getAbsolutePath();
-        selectedFileProperty.set(absolutePath);
+//        String absolutePath = selectedFile.getAbsolutePath();
+//        selectedFileProperty.set(absolutePath);
 //        isFileSelected.set(true);
     }
+
 
 //    public void bindTaskToUIComponents(Task<Boolean> aTask, Runnable onFinish) {
 //        // task message
