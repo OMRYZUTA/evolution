@@ -14,7 +14,7 @@ import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
-import il.ac.mta.zuli.evolution.ui.mainComponent.MainTTController;
+import il.ac.mta.zuli.evolution.ui.maincomponent.MainTTController;
 import javafx.beans.property.SimpleStringProperty;
 import org.jetbrains.annotations.NotNull;
 

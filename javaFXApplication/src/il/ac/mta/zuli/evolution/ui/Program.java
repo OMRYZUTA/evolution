@@ -2,7 +2,7 @@ package il.ac.mta.zuli.evolution.ui;
 
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
-import il.ac.mta.zuli.evolution.ui.mainComponent.MainTTController;
+import il.ac.mta.zuli.evolution.ui.maincomponent.MainTTController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -28,7 +28,7 @@ public class Program extends Application {
         FXMLLoader loader = new FXMLLoader();
 
         // load main fxml
-        URL mainFXML = getClass().getResource("/il/ac/mta/zuli/evolution/ui/mainComponent/mainTTScene.fxml");
+        URL mainFXML = getClass().getResource("/il/ac/mta/zuli/evolution/ui/maincomponent/mainTTScene.fxml");
         loader.setLocation(mainFXML);
         VBox root = loader.load();
 
