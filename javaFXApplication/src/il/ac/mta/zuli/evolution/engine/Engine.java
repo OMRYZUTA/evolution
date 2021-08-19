@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public interface Engine {
-    void loadXML(String fileToLoad, Consumer<Boolean> isDescriptorReady, Consumer<String> selectedFileProperty, Runnable onFinish);
+    void loadXML(String fileToLoad, Consumer<Boolean> isDescriptorReady, Consumer<String> selectedFileProperty, Consumer<String> messageProperty, Runnable onFinish);
 
     void addListener(String name, EventListener listener);
 

@@ -27,7 +27,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     private TimeTableSolution bestSolutionEver = null;
     private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride; // generation , solution
     private MainTTController controller;
-    private Task<Boolean> currentRunningTask;
+    private Task<?> currentRunningTask;
 
     public TimeTableEngine() {
     }
@@ -39,20 +39,32 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     //#region ui-parallel methods
     @Override
     public void loadXML(String fileToLoad,
-                        Consumer<Boolean> isDescriptorReady,
+                        Consumer<Boolean> isCurrentLoadSucceeded,
                         Consumer<String> selectedFileProperty,
+                        Consumer<String> messageProperty,
                         Runnable onFinish) {
 
-        Consumer<Descriptor> descriptorConsumer = descriptor -> {
-            this.descriptor = descriptor;
-            //totalWordsDelegate.accept(tw);
-        };
+        if (currentRunningTask != null) {
+            return; // TODO: should not come here, we want one task at a time
+        }
+        Task<Descriptor> task = new LoadXMLTask(fileToLoad);
+        currentRunningTask = task;
 
-        currentRunningTask = new LoadXMLTask(fileToLoad, descriptorConsumer, selectedFileProperty);
+        task.setOnSucceeded(evt -> {
+            currentRunningTask = null;
+            this.descriptor = task.getValue();
+            isCurrentLoadSucceeded.accept(true);
+            selectedFileProperty.accept(fileToLoad);
+        });
+        task.setOnFailed(evt -> {
+            currentRunningTask = null;
+            isCurrentLoadSucceeded.accept(false);
+            messageProperty.accept("failed loading file: " + task.getException().getMessage());
+        });
 
-        controller.bindTaskToUIComponents(currentRunningTask, onFinish);
+        controller.bindTaskToUIComponents(task, onFinish);
 
-        new Thread(currentRunningTask).start();
+        new Thread(task).start();
     }
 
     @Override

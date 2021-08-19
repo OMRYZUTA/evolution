@@ -43,8 +43,6 @@ public class MainTTController {
     @FXML
     FlowPane ruleFlowPane;
 
-    private final SimpleBooleanProperty isDescriptorReady; //means the file was valid and passed all CTORs in the hierarchy
-    private final SimpleBooleanProperty isInitialFileLoaded;
     private final SimpleStringProperty selectedFileProperty;
 
     private Engine engine;
@@ -54,8 +52,6 @@ public class MainTTController {
 
     public MainTTController() {
         selectedFileProperty = new SimpleStringProperty("");
-        isDescriptorReady = new SimpleBooleanProperty(false);
-        isInitialFileLoaded = new SimpleBooleanProperty(false);
         ruleNameToRuleController = new HashMap<>();
     }
 
@@ -70,10 +66,11 @@ public class MainTTController {
     @FXML
     private void initialize() {
         selectedFileName.textProperty().bind(selectedFileProperty);
-        displaySettingsButton.disableProperty().bind(isDescriptorReady.not());
-        runEngineButton.disableProperty().bind(isDescriptorReady.not());
-        bestSolutionButton.disableProperty().bind(isDescriptorReady.not());
-        historyButton.disableProperty().bind(isDescriptorReady.not());
+        //TODO change binding of disable from isDescriptorReady to somethingelse
+//        displaySettingsButton.disableProperty().bind(isDescriptorReady.not());
+//        runEngineButton.disableProperty().bind(isDescriptorReady.not());
+//        bestSolutionButton.disableProperty().bind(isDescriptorReady.not());
+//        historyButton.disableProperty().bind(isDescriptorReady.not());
     }
 
     @FXML
@@ -82,29 +79,33 @@ public class MainTTController {
         fileChooser.setTitle("Select words file");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
         File selectedFile = fileChooser.showOpenDialog(primaryStage);
-
         if (selectedFile == null) {
             return;
         }
 
         String absolutePath = selectedFile.getAbsolutePath();
 
+        SimpleBooleanProperty wasCurrentLoadSuccessful = new SimpleBooleanProperty(false);
+
         engine.loadXML(absolutePath,
-                isDescriptorReady::set,
+                wasCurrentLoadSuccessful::set,
                 selectedFileProperty::set,
+                taskMessageLabel.textProperty()::set,
                 () -> {
                     toggleTaskButtons(false);
+                    if (!wasCurrentLoadSuccessful.get()) {
+
+                        //if(selectedFileProperty)
+                    }
                 }
         );
 
-        if (isDescriptorReady.get()) {
-            descriptor = engine.getSystemDetails();
-            selectedFileProperty.set(absolutePath); //only display in ui the file path after successful loading
-            //File was successfully loaded from - message that the task will convey
-        } else {
-            // if selectedFileProperty is an empty string it means a file was never initial loaded
-            // if selectedFileProperty isn't empty and we fail to load new file we revert to the file in this property
-        }
+
+        //if File was successfully loaded from - message that the task will convey
+//        } else {
+        // if selectedFileProperty is an empty string it means a file was never initial loaded
+        // if selectedFileProperty isn't empty and we fail to load new file we revert to the file in this property
+
 
         //TODO does this happen inside the task?
         //descriptor not ready, meaning invalid file
@@ -139,16 +140,16 @@ public class MainTTController {
     }
 
     //in the recording about 26 minutes in
-    public void bindTaskToUIComponents(Task<Boolean> aTask, Runnable onFinish) {
+    public void bindTaskToUIComponents(Task<?> task, Runnable onFinish) {
 //done here?
 //        taskMessageLabel.setText("");
 //        taskProgressBar.setProgress(0);
 //
         // task message
-        taskMessageLabel.textProperty().bind(aTask.messageProperty());
+        taskMessageLabel.textProperty().bind(task.messageProperty());
 
         // task progress bar
-        taskProgressBar.progressProperty().bind(aTask.progressProperty());
+        taskProgressBar.progressProperty().bind(task.progressProperty());
 
         // task percent label
 //        progressPercentLabel.textProperty().bind(
@@ -156,12 +157,12 @@ public class MainTTController {
 //                        Bindings.format(
 //                                "%.0f",
 //                                Bindings.multiply(
-//                                        aTask.progressProperty(),
+//                                        task.progressProperty(),
 //                                        100)),
 //                        " %"));
 
         // task cleanup upon finish
-        aTask.valueProperty().addListener((observable, oldValue, newValue) -> {
+        task.valueProperty().addListener((observable, oldValue, newValue) -> {
             onTaskFinished(Optional.ofNullable(onFinish));
         });
     }
