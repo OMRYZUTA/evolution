@@ -1,5 +1,6 @@
-package il.ac.mta.zuli.evolution.engine;
+package il.ac.mta.zuli.evolution.engine.tasks;
 
+import il.ac.mta.zuli.evolution.engine.Descriptor;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 import javafx.concurrent.Task;
 

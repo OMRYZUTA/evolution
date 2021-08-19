@@ -9,6 +9,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
+import il.ac.mta.zuli.evolution.engine.tasks.LoadXMLTask;
 import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
@@ -39,32 +40,31 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     //#region ui-parallel methods
     @Override
     public void loadXML(String fileToLoad,
-                        Consumer<Boolean> isCurrentLoadSucceeded,
-                        Consumer<String> selectedFileProperty,
-                        Consumer<String> messageProperty,
-                        Runnable onFinish) {
+                        Consumer<DescriptorDTO> onSuccess,
+                        Consumer<Throwable> onFailure) {
 
         if (currentRunningTask != null) {
             return; // TODO: should not come here, we want one task at a time
         }
-        Task<Descriptor> task = new LoadXMLTask(fileToLoad);
-        currentRunningTask = task;
 
-        task.setOnSucceeded(evt -> {
-            currentRunningTask = null;
-            this.descriptor = task.getValue();
-            isCurrentLoadSucceeded.accept(true);
-            selectedFileProperty.accept(fileToLoad);
-        });
-        task.setOnFailed(evt -> {
-            currentRunningTask = null;
-            isCurrentLoadSucceeded.accept(false);
-            messageProperty.accept("failed loading file: " + task.getException().getMessage());
+        currentRunningTask = new LoadXMLTask(fileToLoad);
+
+        currentRunningTask.setOnSucceeded(value -> {
+            this.descriptor = (Descriptor) currentRunningTask.getValue();
+            DescriptorDTO dto = createDescriptorDTO();
+            onSuccess.accept(dto);
+            currentRunningTask = null; // clearing task
         });
 
-        controller.bindTaskToUIComponents(task, onFinish);
+        currentRunningTask.setOnFailed(value -> {
+            //TODO figure out how to handle exceptions, with reaching the "root" error as we did in the console
+            onFailure.accept(currentRunningTask.getException());
+            currentRunningTask = null;
+        });
 
-        new Thread(task).start();
+        controller.bindTaskToUIComponents(currentRunningTask, null);
+
+        new Thread(currentRunningTask).start();
     }
 
     @Override
@@ -77,9 +77,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
         try {
             //DTO: list of subjects, list of teachers, list of SchoolClasses, list of rules
-            TimeTableDTO timeTableDTO = createTimeTableDTO();
-            EngineSettingsDTO engineSettingsDTO = createEngineSettingsDTO();
-            return new DescriptorDTO(timeTableDTO, engineSettingsDTO);
+            return createDescriptorDTO();
         } catch (Throwable e) {
             fireEvent("error", new ErrorEvent("failed getting system details", ErrorType.DetailsError, e));
             return null;
@@ -302,6 +300,13 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         Crossover<TimeTableSolution> crossover = descriptor.getEngineSettings().getCrossover();
 
         return new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getNumOfCuttingPoints());
+    }
+
+    private DescriptorDTO createDescriptorDTO() {
+        TimeTableDTO timeTableDTO = createTimeTableDTO();
+        EngineSettingsDTO engineSettingsDTO = createEngineSettingsDTO();
+
+        return new DescriptorDTO(timeTableDTO, engineSettingsDTO);
     }
 
     @NotNull

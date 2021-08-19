@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class MainTTController {
     @FXML
-    Button openFileButton;
+    Button loadFileButton;
     @FXML
     Label selectedFileName;
     @FXML
@@ -43,15 +43,19 @@ public class MainTTController {
     @FXML
     FlowPane ruleFlowPane;
 
-    private final SimpleStringProperty selectedFileProperty;
-
     private Engine engine;
     private DescriptorDTO descriptor; //the root in the xml hierarchy
     private Stage primaryStage;
+    private final SimpleStringProperty selectedFileProperty;
+    private final SimpleBooleanProperty fileLoaded;
+    private final SimpleBooleanProperty evolutionAlgorithmCompleted;
+
     private final Map<String, RuleController> ruleNameToRuleController;
 
     public MainTTController() {
         selectedFileProperty = new SimpleStringProperty("");
+        fileLoaded = new SimpleBooleanProperty(false);
+        evolutionAlgorithmCompleted = new SimpleBooleanProperty(false);
         ruleNameToRuleController = new HashMap<>();
     }
 
@@ -66,15 +70,16 @@ public class MainTTController {
     @FXML
     private void initialize() {
         selectedFileName.textProperty().bind(selectedFileProperty);
-        //TODO change binding of disable from isDescriptorReady to somethingelse
-//        displaySettingsButton.disableProperty().bind(isDescriptorReady.not());
-//        runEngineButton.disableProperty().bind(isDescriptorReady.not());
-//        bestSolutionButton.disableProperty().bind(isDescriptorReady.not());
-//        historyButton.disableProperty().bind(isDescriptorReady.not());
+        //disabling 2 of the buttons until a file is loaded to the system
+        displaySettingsButton.disableProperty().bind(fileLoaded.not());
+        runEngineButton.disableProperty().bind(fileLoaded.not());
+        //disabling the remaining buttons until the algorithm completed at least once
+        bestSolutionButton.disableProperty().bind(evolutionAlgorithmCompleted.not());
+        historyButton.disableProperty().bind(evolutionAlgorithmCompleted.not());
     }
 
     @FXML
-    public void openFileButtonAction() {
+    public void loadFileButtonAction() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select words file");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
@@ -85,35 +90,25 @@ public class MainTTController {
 
         String absolutePath = selectedFile.getAbsolutePath();
 
-        SimpleBooleanProperty wasCurrentLoadSuccessful = new SimpleBooleanProperty(false);
-
-        engine.loadXML(absolutePath,
-                wasCurrentLoadSuccessful::set,
-                selectedFileProperty::set,
-                taskMessageLabel.textProperty()::set,
-                () -> {
-                    toggleTaskButtons(false);
-                    if (!wasCurrentLoadSuccessful.get()) {
-
-                        //if(selectedFileProperty)
+        //loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
+        engine.loadXML(
+                absolutePath,
+                descriptorDTO -> {
+                    descriptor = descriptorDTO;
+                    selectedFileProperty.set(absolutePath); //so this path will now be displayed (because of the binding)
+                    fileLoaded.set(true); // because we're in the onSuccessConsumer
+                },
+                throwable -> {
+                    if (descriptor == null) {
+                        taskMessageLabel.setText("Failed loading the file." + System.lineSeparator()
+                                + throwable.getMessage() + System.lineSeparator()
+                                + "There is no file loaded to the system.");
+                    } else {
+                        taskMessageLabel.setText("Failed loading the file." + System.lineSeparator()
+                                + throwable.getMessage() + System.lineSeparator()
+                                + "Reverted to last file that was successfully loaded.");
                     }
-                }
-        );
-
-
-        //if File was successfully loaded from - message that the task will convey
-//        } else {
-        // if selectedFileProperty is an empty string it means a file was never initial loaded
-        // if selectedFileProperty isn't empty and we fail to load new file we revert to the file in this property
-
-
-        //TODO does this happen inside the task?
-        //descriptor not ready, meaning invalid file
-//            if (UI.this.fileLoaded) {
-//                System.out.println("Reverted to last file that was successfully loaded.");
-//            } else {
-//                System.out.println("There is no file loaded to the system.");
-//            }
+                });
     }
 
     @FXML
@@ -151,6 +146,8 @@ public class MainTTController {
         // task progress bar
         taskProgressBar.progressProperty().bind(task.progressProperty());
 
+        // TODO: bind to task.exceptionProperty() maybe?
+
         // task percent label
 //        progressPercentLabel.textProperty().bind(
 //                Bindings.concat(
@@ -175,6 +172,10 @@ public class MainTTController {
         this.taskProgressBar.progressProperty().unbind();
         onFinish.ifPresent(Runnable::run);
     }
+
+//TODO add UIAdaptor and use it in loadXMLTask (better for later use of task in Ex. 3)
+    ///uiAdaptor - the way in which the task reports its data back to the UI
+    // about 57 minutes into the recording!
 
 //    private void createRuleTile(String ruleName,  String ruleType) {
 //        try {

@@ -44,8 +44,8 @@
                               GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER"
                               GridPane.vgrow="NEVER">
                             <children>
-                                <Button id="openFileButton" fx:id="openFileButton" minHeight="30.0" minWidth="100.0"
-                                        mnemonicParsing="false" onAction="#openFileButtonAction" text="Load File"/>
+                                <Button id="openFileButton" fx:id="loadFileButton" minHeight="30.0" minWidth="100.0"
+                                        mnemonicParsing="false" onAction="#loadFileButtonAction" text="Load File"/>
                                 <Button id="openFileButton" fx:id="displaySettingsButton" layoutX="105.0" layoutY="10.0"
                                         minHeight="30.0" minWidth="100.0" mnemonicParsing="false"
                                         onAction="#displaySettingsAction" text="Display Settings"/>
