@@ -13,12 +13,12 @@ import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
-import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 import il.ac.mta.zuli.evolution.ui.maincomponent.MainTTController;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class TimeTableEngine extends EventsEmitter implements Engine {
@@ -27,32 +27,32 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     private TimeTableSolution bestSolutionEver = null;
     private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride; // generation , solution
     private MainTTController controller;
-    private SimpleStringProperty fileName;
+    private Task<Boolean> currentRunningTask;
 
     public TimeTableEngine() {
     }
 
     public TimeTableEngine(MainTTController controller) {
         this.controller = controller;
-
-    }
-
-    @Override
-    public SimpleStringProperty fileNameProperty() {
-        return this.fileName;
     }
 
     //#region ui-parallel methods
     @Override
-    public void loadXML(@NotNull String path) {
-        try {
-            XMLParser xmlParser = new XMLParser();
-            descriptor = xmlParser.unmarshall(path);
-            fireEvent("loaded", new LoadedEvent("File was loaded", path));
-        } catch (
-                Throwable e) {
-            fireEvent("error", new ErrorEvent("Failed reading file", ErrorType.LoadError, e));
-        }
+    public void loadXML(String fileToLoad,
+                        Consumer<Boolean> isDescriptorReady,
+                        Consumer<String> selectedFileProperty,
+                        Runnable onFinish) {
+
+        Consumer<Descriptor> descriptorConsumer = descriptor -> {
+            this.descriptor = descriptor;
+            //totalWordsDelegate.accept(tw);
+        };
+
+        currentRunningTask = new LoadXMLTask(fileToLoad, descriptorConsumer, selectedFileProperty);
+
+        controller.bindTaskToUIComponents(currentRunningTask, onFinish);
+
+        new Thread(currentRunningTask).start();
     }
 
     @Override

@@ -14,15 +14,12 @@ import java.net.URL;
 
 public class Program extends Application {
 
-
     public static void main(String[] args) {
         launch(Program.class);
     }
 
-
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         CSSFX.start();
 
         FXMLLoader loader = new FXMLLoader();
