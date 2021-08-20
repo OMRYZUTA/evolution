@@ -1,4 +1,4 @@
-package il.ac.mta.zuli.evolution.ui.maincomponent;
+package il.ac.mta.zuli.evolution.ui.app;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;

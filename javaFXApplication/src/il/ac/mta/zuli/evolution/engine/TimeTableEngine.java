@@ -14,7 +14,7 @@ import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
-import il.ac.mta.zuli.evolution.ui.maincomponent.AppController;
+import il.ac.mta.zuli.evolution.ui.header.HeaderController;
 import javafx.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,13 +27,13 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     private EvolutionEngine<TimeTableSolution> evolutionEngine;
     private TimeTableSolution bestSolutionEver = null;
     private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride; // generation , solution
-    private AppController controller;
+    private HeaderController controller;
     private Task<?> currentRunningTask;
 
     public TimeTableEngine() {
     }
 
-    public TimeTableEngine(AppController controller) {
+    public TimeTableEngine(HeaderController controller) {
         this.controller = controller;
     }
 
