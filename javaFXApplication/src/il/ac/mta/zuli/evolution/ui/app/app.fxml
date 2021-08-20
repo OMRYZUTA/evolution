@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
             minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171"
@@ -10,11 +11,13 @@
     <center>
         <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
             <children>
-                <fx:include fx:id="ttSettingsComponent" maxHeight="1.7976931348623157E308"
-                            maxWidth="1.7976931348623157E308" source="../timetablesettings/timetableSettings.fxml"
+                <fx:include fx:id="detailsComponent" source="../details/detailsComponent.fxml"
                             AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                             AnchorPane.topAnchor="0.0"/>
             </children>
+            <BorderPane.margin>
+                <Insets/>
+            </BorderPane.margin>
         </AnchorPane>
     </center>
 </BorderPane>

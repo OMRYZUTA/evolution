@@ -12,7 +12,7 @@ import javafx.scene.control.Label;
 
 public class TimetableSettingsController {
     @FXML
-    ChoiceBox<String> ttDisplayDropdown;
+    ChoiceBox<String> ttDisplayChoiceBox;
     @FXML
     Label selectedDetailsLabel;
     @FXML
@@ -35,16 +35,16 @@ public class TimetableSettingsController {
 
     public void setTimetable(TimeTableDTO timetable) {
         this.timetable = timetable;
-        displayDetails(ttDisplayDropdown.getValue());
+        displayDetails(ttDisplayChoiceBox.getValue());
         days.set(timetable.getDays());
         hours.set(timetable.getHours());
     }
 
     @FXML
     private void initialize() {
-        ttDisplayDropdown.setItems(choices);
-        ttDisplayDropdown.setValue(choices.get(0));
-        ttDisplayDropdown.getSelectionModel().selectedItemProperty()
+        ttDisplayChoiceBox.setItems(choices);
+        ttDisplayChoiceBox.setValue(choices.get(0));
+        ttDisplayChoiceBox.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     displayDetails(newValue);
                 });

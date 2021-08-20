@@ -2,13 +2,12 @@ package il.ac.mta.zuli.evolution.ui.app;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
+import il.ac.mta.zuli.evolution.ui.details.DetailsController;
 import il.ac.mta.zuli.evolution.ui.header.HeaderController;
-import il.ac.mta.zuli.evolution.ui.timetablesettings.TimetableSettingsController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class AppController {
@@ -17,12 +16,12 @@ public class AppController {
     @FXML
     private HeaderController headerComponentController;
     @FXML
-    private StackPane centerStackPane;
+    private ScrollPane detailsComponent;
     @FXML
-    private ScrollPane ttSettingsComponent;
-    @FXML
-    private TimetableSettingsController ttSettingsComponentController;
+    private DetailsController detailsComponentController;
 
+    // bound to visibility of different body components
+    // buttons change its value
     private final SimpleStringProperty currentBodyProperty;
 
     public AppController() {
@@ -43,13 +42,13 @@ public class AppController {
             headerComponentController.setAppController(this);
         }
 
-        ttSettingsComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "ttSettings"));
+        detailsComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "details"));
     }
 
-    // headerController calls this function
+    // headerController calls this function from displaySettingsAction
     public void displaySettings(DescriptorDTO descriptor) {
-        ttSettingsComponentController.setTimetable(descriptor.getTimeTable());
-        currentBodyProperty.set("ttSettings");
+        detailsComponentController.setDescriptor(descriptor);
+        currentBodyProperty.set("details");
     }
 
     public void bestSolutionAction() {
