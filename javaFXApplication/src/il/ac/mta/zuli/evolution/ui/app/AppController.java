@@ -4,6 +4,8 @@ import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.ui.header.HeaderController;
 import il.ac.mta.zuli.evolution.ui.timetablesettings.TimetableSettingsController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
@@ -21,7 +23,10 @@ public class AppController {
     @FXML
     private TimetableSettingsController ttSettingsComponentController;
 
+    private final SimpleStringProperty currentBodyProperty;
+
     public AppController() {
+        currentBodyProperty = new SimpleStringProperty("none");
     }
 
     public void setEngine(Engine newEngine) {
@@ -37,13 +42,14 @@ public class AppController {
         if (headerComponentController != null) {
             headerComponentController.setAppController(this);
         }
+
+        ttSettingsComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "ttSettings"));
     }
 
     // headerController calls this function
     public void displaySettings(DescriptorDTO descriptor) {
-        ttSettingsComponentController.setTimeTable(descriptor.getTimeTable());
-//TODO visibility
-
+        ttSettingsComponentController.setTimetable(descriptor.getTimeTable());
+        currentBodyProperty.set("ttSettings");
     }
 
     public void bestSolutionAction() {

@@ -1,6 +1,8 @@
 package il.ac.mta.zuli.evolution.ui.timetablesettings;
 
 import il.ac.mta.zuli.evolution.dto.TimeTableDTO;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,24 +11,33 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 
 public class TimetableSettingsController {
-    ObservableList<String> choices = FXCollections.observableArrayList(
-            "Subjects", "Classes", "Teachers", "Rules");
-
     @FXML
     ChoiceBox<String> ttDisplayDropdown;
     @FXML
     Label selectedDetailsLabel;
+    @FXML
+    Label hoursLabel;
+    @FXML
+    Label daysLabel;
 
     private final SimpleStringProperty selectedDetailsProperty;
-    private TimeTableDTO timeTable;
+    private final SimpleIntegerProperty days;
+    private final SimpleIntegerProperty hours;
+    private TimeTableDTO timetable;
+    private final ObservableList<String> choices = FXCollections.observableArrayList(
+            "Subjects", "Classes", "Teachers", "Rules");
 
     public TimetableSettingsController() {
         selectedDetailsProperty = new SimpleStringProperty("");
+        days = new SimpleIntegerProperty();
+        hours = new SimpleIntegerProperty();
     }
 
-    public void setTimeTable(TimeTableDTO timeTable) {
-        this.timeTable = timeTable;
+    public void setTimetable(TimeTableDTO timetable) {
+        this.timetable = timetable;
         displayDetails(ttDisplayDropdown.getValue());
+        days.set(timetable.getDays());
+        hours.set(timetable.getHours());
     }
 
     @FXML
@@ -38,6 +49,8 @@ public class TimetableSettingsController {
                     displayDetails(newValue);
                 });
         selectedDetailsLabel.textProperty().bind(selectedDetailsProperty);
+        hoursLabel.textProperty().bind(Bindings.format("%d hours", hours));
+        daysLabel.textProperty().bind(Bindings.format("%d days", days));
     }
 
     private void displayDetails(String type) {
