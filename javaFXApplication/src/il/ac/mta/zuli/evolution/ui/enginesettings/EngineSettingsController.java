@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.ui.enginesettings;
 
 import il.ac.mta.zuli.evolution.dto.EngineSettingsDTO;
+import il.ac.mta.zuli.evolution.ui.FXutils;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -48,8 +49,8 @@ public class EngineSettingsController {
         populationLabel.textProperty().bind(Bindings.format("Population: %d", population));
     }
 
-    private void displayDetails(String type) {
-        switch (type) {
+    private void displayDetails(String whatToDisplay) {
+        switch (whatToDisplay) {
             case "Selection":
                 displaySelection();
                 break;
@@ -65,14 +66,15 @@ public class EngineSettingsController {
     }
 
     private void displaySelection() {
-        selectedDetailsProperty.set("some selection");
+        selectedDetailsProperty.set((this.engineSettings.getSelection()).toString());
     }
 
     private void displayCrossover() {
-        selectedDetailsProperty.set("some crossover");
+        selectedDetailsProperty.set((this.engineSettings.getCrossover()).toString());
     }
 
     private void displayMutation() {
-        selectedDetailsProperty.set("some mutation");
+        String mutationsString = FXutils.myListToString(this.engineSettings.getMutations());
+        selectedDetailsProperty.set(mutationsString);
     }
 }
