@@ -14,7 +14,7 @@ import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
-import il.ac.mta.zuli.evolution.ui.maincomponent.MainTTController;
+import il.ac.mta.zuli.evolution.ui.maincomponent.AppController;
 import javafx.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,13 +27,13 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     private EvolutionEngine<TimeTableSolution> evolutionEngine;
     private TimeTableSolution bestSolutionEver = null;
     private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride; // generation , solution
-    private MainTTController controller;
+    private AppController controller;
     private Task<?> currentRunningTask;
 
     public TimeTableEngine() {
     }
 
-    public TimeTableEngine(MainTTController controller) {
+    public TimeTableEngine(AppController controller) {
         this.controller = controller;
     }
 
@@ -51,8 +51,8 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
         currentRunningTask.setOnSucceeded(value -> {
             this.descriptor = (Descriptor) currentRunningTask.getValue();
-            DescriptorDTO dto = createDescriptorDTO();
-            onSuccess.accept(dto);
+            DescriptorDTO descDTO = createDescriptorDTO();
+            onSuccess.accept(descDTO); //sending the descriptorDTO to the controller
             currentRunningTask = null; // clearing task
         });
 
@@ -67,22 +67,9 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         new Thread(currentRunningTask).start();
     }
 
-    @Override
-    public DescriptorDTO getSystemDetails() {
-        if (!isXMLLoaded()) {
-            ErrorEvent e = new ErrorEvent("Failed getting the system settings", ErrorType.DetailsError, new InvalidOperationException("can't get system details, file is not loaded"));
-            fireEvent("error", e);
-            return null;
-        }
-
-        try {
-            //DTO: list of subjects, list of teachers, list of SchoolClasses, list of rules
-            return createDescriptorDTO();
-        } catch (Throwable e) {
-            fireEvent("error", new ErrorEvent("failed getting system details", ErrorType.DetailsError, e));
-            return null;
-        }
-    }
+//because the loadXML returned a descriptorDTO to the controller, no need for this engine method
+    //    public DescriptorDTO getSystemDetails() {
+//    }
 
     @Override
     public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {

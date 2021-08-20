@@ -2,7 +2,7 @@ package il.ac.mta.zuli.evolution.ui;
 
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
-import il.ac.mta.zuli.evolution.ui.maincomponent.MainTTController;
+import il.ac.mta.zuli.evolution.ui.maincomponent.AppController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -30,7 +30,7 @@ public class Program extends Application {
         VBox root = loader.load();
 
         // wire up controller
-        MainTTController mainController = loader.getController();
+        AppController mainController = loader.getController();
         Engine newEngine = new TimeTableEngine(mainController);
 
         mainController.setPrimaryStage(primaryStage);
@@ -38,6 +38,7 @@ public class Program extends Application {
 
         // set stage
         primaryStage.setTitle("Timetable");
+        //TODO set side
         Scene scene = new Scene(root, 1050, 600);
         primaryStage.setScene(scene);
         primaryStage.show();

@@ -19,11 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class MainTTController {
+public class AppController {
     @FXML
     Button loadFileButton;
     @FXML
-    Label selectedFileName;
+    Label selectedFileName; //TODO add "Label" to end of name
     @FXML
     Button displaySettingsButton;
     @FXML
@@ -49,81 +49,14 @@ public class MainTTController {
     private final SimpleStringProperty selectedFileProperty;
     private final SimpleBooleanProperty fileLoaded;
     private final SimpleBooleanProperty evolutionAlgorithmCompleted;
-//    private final Property<DescriptorDTO> descriptorProp;
 
     private final Map<String, RuleController> ruleNameToRuleController;
 
-    public MainTTController() {
+    public AppController() {
         selectedFileProperty = new SimpleStringProperty("");
         fileLoaded = new SimpleBooleanProperty(false);
         evolutionAlgorithmCompleted = new SimpleBooleanProperty(false);
         ruleNameToRuleController = new HashMap<>();
-//        descriptorProp = new Property<DescriptorDTO>() {
-//            @Override
-//            public void bind(ObservableValue<? extends DescriptorDTO> observable) {
-//
-//            }
-//
-//            @Override
-//            public void unbind() {
-//
-//            }
-//
-//            @Override
-//            public boolean isBound() {
-//                return false;
-//            }
-//
-//            @Override
-//            public void bindBidirectional(Property<DescriptorDTO> other) {
-//
-//            }
-//
-//            @Override
-//            public void unbindBidirectional(Property<DescriptorDTO> other) {
-//
-//            }
-//
-//            @Override
-//            public Object getBean() {
-//                return null;
-//            }
-//
-//            @Override
-//            public String getName() {
-//                return null;
-//            }
-//
-//            @Override
-//            public void addListener(ChangeListener<? super DescriptorDTO> listener) {
-//
-//            }
-//
-//            @Override
-//            public void removeListener(ChangeListener<? super DescriptorDTO> listener) {
-//
-//            }
-//
-//            @Override
-//            public DescriptorDTO getValue() {
-//                return null;
-//            }
-//
-//            @Override
-//            public void addListener(InvalidationListener listener) {
-//
-//            }
-//
-//            @Override
-//            public void removeListener(InvalidationListener listener) {
-//
-//            }
-//
-//            @Override
-//            public void setValue(DescriptorDTO value) {
-//
-//            }
-//        }
     }
 
     public void setEngine(Engine newEngine) {
@@ -157,7 +90,7 @@ public class MainTTController {
 
         String absolutePath = selectedFile.getAbsolutePath();
 
-        //loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
+        // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(
                 absolutePath,
                 descriptorDTO -> {
@@ -166,7 +99,7 @@ public class MainTTController {
                     fileLoaded.set(true); // because we're in the onSuccessConsumer
                 },
                 throwable -> {
-                    if (descriptor == null) {
+                    if (!fileLoaded.get()) {
                         taskMessageLabel.setText("Failed loading the file." + System.lineSeparator()
                                 + throwable.getMessage() + System.lineSeparator()
                                 + "There is no file loaded to the system.");
@@ -184,6 +117,7 @@ public class MainTTController {
 
     @FXML
     public void bestSolutionAction() {
+        //only here display rules applied, not before
     }
 
     @FXML
@@ -195,7 +129,7 @@ public class MainTTController {
     }
 
     //in the recording ~20min. this is the "old-fashioned" way, better to do it with property
-    //TODO change to property implementation - no need for method
+    //TODO change to property implementation - no need for method (buttons only abled when running algorithm?)
     private void toggleTaskButtons(boolean isActive) {
         pauseResumeButton.setDisable(!isActive);
         stopTaskButton.setDisable(!isActive);

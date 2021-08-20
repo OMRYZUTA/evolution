@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.mta.zuli.evolution.ui.maincomponent.MainTTController">
+<VBox prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="il.ac.mta.zuli.evolution.ui.maincomponent.AppController">
     <children>
         <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
             <children>
@@ -65,42 +66,34 @@
                                 <Insets/>
                             </GridPane.margin>
                         </HBox>
-                        <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="2">
-                            <children>
-                                <Label alignment="TOP_LEFT" text="File: " textFill="#6e2f24"/>
-                                <Label fx:id="selectedFileName" layoutX="10.0" layoutY="10.0" text="selectedFileName"/>
-                            </children>
-                            <GridPane.margin>
-                                <Insets/>
-                            </GridPane.margin>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                            </padding>
-                        </HBox>
-                        <ProgressBar id="taskProgressBar" fx:id="taskProgressBar" maxWidth="-Infinity"
-                                     minWidth="-Infinity" prefHeight="23.0" prefWidth="509.0" progress="0.0"
-                                     GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.halignment="LEFT"
-                                     GridPane.rowIndex="3" GridPane.valignment="CENTER"/>
-                        <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1"
-                                    GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="7">
+                        <Label alignment="TOP_LEFT" text="File: " textFill="#6e2f24" GridPane.columnIndex="1"
+                               GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP"/>
+                        <Label fx:id="selectedFileName" text="selectedFileName" GridPane.columnIndex="2"
+                               GridPane.columnSpan="8" GridPane.halignment="LEFT" GridPane.rowIndex="2"
+                               GridPane.valignment="TOP"/>
+                        <Label fx:id="taskMessageLabel" maxHeight="1.7976931348623157E308"
+                               maxWidth="1.7976931348623157E308" styleClass="information-label" text="Task message"
+                               GridPane.columnIndex="1" GridPane.columnSpan="9" GridPane.halignment="LEFT"
+                               GridPane.rowIndex="9"/>
+                        <ProgressBar id="taskProgressBar" fx:id="taskProgressBar" maxWidth="1.7976931348623157E308"
+                                     progress="0.0" GridPane.columnIndex="1" GridPane.columnSpan="6"
+                                     GridPane.halignment="LEFT" GridPane.rowIndex="10" GridPane.valignment="BOTTOM"/>
+                        <ScrollPane prefHeight="333.0" prefWidth="618.0" GridPane.columnIndex="1"
+                                    GridPane.columnSpan="9" GridPane.rowIndex="3" GridPane.rowSpan="6">
                             <content>
-                                <FlowPane id="ruleFlowPane" fx:id="ruleFlowPane" prefHeight="507.0" prefWidth="203.0"/>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0"/>
                             </content>
                         </ScrollPane>
-                        <HBox alignment="CENTER" layoutX="40.0" layoutY="114.0" spacing="30.0" GridPane.columnIndex="8"
-                              GridPane.columnSpan="2" GridPane.rowIndex="2">
+                        <HBox alignment="BOTTOM_CENTER" spacing="20.0" GridPane.columnIndex="8" GridPane.columnSpan="2"
+                              GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
                             <children>
                                 <Button fx:id="pauseResumeButton" mnemonicParsing="false" text="Pause/Resume"/>
-                                <Button fx:id="stopTaskButton" layoutX="20.0" layoutY="35.0" mnemonicParsing="false"
-                                        text="Stop"/>
+                                <Button fx:id="stopTaskButton" mnemonicParsing="false" text="Stop"/>
                             </children>
                             <padding>
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                             </padding>
                         </HBox>
-                        <Label fx:id="taskMessageLabel" maxWidth="1.7976931348623157E308" styleClass="information-label"
-                               text="Task message" GridPane.columnIndex="4" GridPane.columnSpan="5"
-                               GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="TOP"/>
                     </children>
                 </GridPane>
             </children>
