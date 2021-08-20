@@ -33,7 +33,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     public TimeTableEngine() {
     }
 
-    public TimeTableEngine(HeaderController controller) {
+    public void setController(HeaderController controller) {
         this.controller = controller;
     }
 

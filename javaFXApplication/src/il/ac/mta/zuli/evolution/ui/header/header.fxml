@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<ScrollPane fx:id="headerComponent" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171"
+<ScrollPane fx:id="headerComponent" fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.mta.zuli.evolution.ui.header.HeaderController">
    <content>
       <VBox alignment="TOP_CENTER" spacing="5.0">

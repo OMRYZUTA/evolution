@@ -2,7 +2,7 @@ package il.ac.mta.zuli.evolution.ui.header;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
-import il.ac.mta.zuli.evolution.ui.rulecomponent.RuleController;
+import il.ac.mta.zuli.evolution.ui.app.AppController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
@@ -10,13 +10,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.FlowPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 public class HeaderController {
@@ -40,27 +37,28 @@ public class HeaderController {
     Button pauseResumeButton;
     @FXML
     Button stopTaskButton;
-    @FXML
-    FlowPane ruleFlowPane;
 
-    private Engine engine;
-    private DescriptorDTO descriptor; //the root in the xml hierarchy
-    private Stage primaryStage;
     private final SimpleStringProperty selectedFileProperty;
     private final SimpleBooleanProperty fileLoaded;
     private final SimpleBooleanProperty evolutionAlgorithmCompleted;
-
-    private final Map<String, RuleController> ruleNameToRuleController;
+    private AppController appController;
+    private Engine engine;
+    private DescriptorDTO descriptor; //the root in the xml hierarchy
+    private Stage primaryStage;
 
     public HeaderController() {
         selectedFileProperty = new SimpleStringProperty("");
         fileLoaded = new SimpleBooleanProperty(false);
         evolutionAlgorithmCompleted = new SimpleBooleanProperty(false);
-        ruleNameToRuleController = new HashMap<>();
     }
 
-    public void setEngine(Engine newEngine) {
-        this.engine = newEngine;
+    public void setAppController(AppController appController) {
+        this.appController = appController;
+    }
+
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+        engine.setController(this);
     }
 
     public void setPrimaryStage(Stage primaryStage) {
@@ -113,6 +111,7 @@ public class HeaderController {
 
     @FXML
     public void displaySettingsAction() {
+        this.appController.displaySettings(descriptor);
     }
 
     @FXML
@@ -137,10 +136,9 @@ public class HeaderController {
 
     //in the recording about 26 minutes in
     public void bindTaskToUIComponents(Task<?> task, Runnable onFinish) {
-//done here?
-//        taskMessageLabel.setText("");
-//        taskProgressBar.setProgress(0);
-//
+        taskMessageLabel.setText("");
+        taskProgressBar.setProgress(0);
+
         // task message
         taskMessageLabel.textProperty().bind(task.messageProperty());
 
@@ -148,16 +146,6 @@ public class HeaderController {
         taskProgressBar.progressProperty().bind(task.progressProperty());
 
         // TODO: bind to task.exceptionProperty() maybe?
-
-        // task percent label
-//        progressPercentLabel.textProperty().bind(
-//                Bindings.concat(
-//                        Bindings.format(
-//                                "%.0f",
-//                                Bindings.multiply(
-//                                        task.progressProperty(),
-//                                        100)),
-//                        " %"));
 
         // task cleanup upon finish
         task.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -169,7 +157,6 @@ public class HeaderController {
     //this function updates the ui once the task is finished
     public void onTaskFinished(Optional<Runnable> onFinish) {
         this.taskMessageLabel.textProperty().unbind();
-        //this.progressPercentLabel.textProperty().unbind();
         this.taskProgressBar.progressProperty().unbind();
         onFinish.ifPresent(Runnable::run);
     }
