@@ -7,12 +7,14 @@
 <ScrollPane fx:id="headerComponent" fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.mta.zuli.evolution.ui.header.HeaderController">
    <content>
-      <VBox alignment="TOP_CENTER" spacing="5.0">
+      <VBox alignment="TOP_CENTER" spacing="5.0" style="-fx-background-color: #A0B3AA;">
          <children>
             <HBox id="menuBox" alignment="CENTER" fillHeight="false" spacing="10.0">
                <children>
                   <Button id="openFileButton" fx:id="loadFileButton" minHeight="30.0" minWidth="100.0"
-                          mnemonicParsing="false" onAction="#loadFileButtonAction" text="Load File"/>
+                          mnemonicParsing="false" onAction="#loadFileButtonAction"
+                          style="-fx-background-color: #E1E3D4; -fx-border-color: #FFF9F7;" text="Load File"
+                          textFill="#a83e32"/>
                   <Button id="openFileButton" fx:id="displaySettingsButton" layoutX="105.0" layoutY="10.0"
                           minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#displaySettingsAction"
                           text="Display Settings"/>
@@ -38,7 +40,7 @@
                </padding>
             </HBox>
             <Label fx:id="taskMessageLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                   styleClass="information-label" text="Task message">
+                   styleClass="information-label" text="Task message" textFill="#442526">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                </padding>

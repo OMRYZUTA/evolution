@@ -13,8 +13,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
 import java.util.ArrayList;
@@ -90,21 +89,17 @@ public class TeacherSolutionController {
         Label label = new Label();
 
         solutionBasePane.getChildren().clear(); //clears any previous solutions from base
-        GridPane gridPane = new GridPane();
-        gridPane.setGridLinesVisible(true);
-        gridPane.setAlignment(Pos.CENTER);
-        gridPane.setPadding(new Insets(5));
-        GridPane.setMargin(label, new Insets(5));
+        GridPane gridPane = createGrid();
 
         if (teacherSolutionSize > 0) {
             for (int d = 0; d < days; d++) {
                 for (int h = 0; h < hours; h++) {
-                    String timeSlotInfo = timeSlotToString(teacherSolutionMatrix[h][d]);
-                    label = new Label(timeSlotInfo);
+                    label = timeSlotToLabel(teacherSolutionMatrix[h][d]);
                     gridPane.add(label, d, h);
                 }
             }
 
+            GridPane.setMargin(label, new Insets(5));
             solutionBasePane.getChildren().add(gridPane);
         } else {
             Label nothingToDisplay = new Label(" This teacher not scheduled in the timetable.");
@@ -112,8 +107,35 @@ public class TeacherSolutionController {
         }
     }
 
+    private GridPane createGrid() {
+        GridPane gridPane = new GridPane();
+        gridPane.setGridLinesVisible(true);
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.prefHeight(Region.USE_COMPUTED_SIZE);
+        gridPane.prefWidth(Region.USE_COMPUTED_SIZE);
+
+        int rowCount = hours;
+        int columnCount = days;
+
+        RowConstraints rc = new RowConstraints();
+        rc.setPercentHeight(100d / rowCount);
+
+        for (int i = 0; i < rowCount; i++) {
+            gridPane.getRowConstraints().add(rc);
+        }
+
+        ColumnConstraints cc = new ColumnConstraints();
+        cc.setPercentWidth(100d / columnCount);
+
+        for (int i = 0; i < columnCount; i++) {
+            gridPane.getColumnConstraints().add(cc);
+        }
+
+        return gridPane;
+    }
+
     //TODO make general for different for class and for teacher
-    private String timeSlotToString(List<QuintetDTO> quintets) {
+    private Label timeSlotToLabel(List<QuintetDTO> quintets) {
         StringBuilder sb = new StringBuilder();
         for (QuintetDTO quintet : quintets) {
             int id1 = quintet.getSchoolClass().getId();
@@ -123,7 +145,9 @@ public class TeacherSolutionController {
             sb.append(String.format("%d %s, %d %s\n", id1, s1, id2, s2));
         }
 
-        return sb.toString();
+        Label label = new Label(sb.toString());
+        label.setPadding(new Insets(5));
+        return label;
     }
 
     private List<QuintetDTO>[][] buildSolutionMatrix(Collection<QuintetDTO> quintets) {
