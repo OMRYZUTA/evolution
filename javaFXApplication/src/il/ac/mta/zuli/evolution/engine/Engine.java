@@ -13,7 +13,7 @@ public interface Engine {
 
     void loadXML(String fileToLoad, Consumer<DescriptorDTO> onSuccess, Consumer<Throwable> onFailure);
 
-    void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride);
+    void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride, Consumer<TimeTableSolutionDTO> onSuccess, Consumer<Throwable> onFailure);
 
     void executeEvolutionAlgorithmWithFitnessStop(int numOfGenerations, int generationsStride, double fittnessStop);
 

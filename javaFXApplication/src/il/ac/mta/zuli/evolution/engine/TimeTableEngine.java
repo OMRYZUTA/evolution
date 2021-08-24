@@ -1,8 +1,9 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.dto.*;
-import il.ac.mta.zuli.evolution.engine.events.*;
-import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
+import il.ac.mta.zuli.evolution.engine.events.ErrorEvent;
+import il.ac.mta.zuli.evolution.engine.events.ErrorType;
+import il.ac.mta.zuli.evolution.engine.events.EventsEmitter;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
@@ -10,6 +11,7 @@ import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.tasks.LoadXMLTask;
+import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
 import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
@@ -20,11 +22,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class TimeTableEngine extends EventsEmitter implements Engine {
     private Descriptor descriptor;
-    private EvolutionEngine<TimeTableSolution> evolutionEngine;
     private TimeTableSolution bestSolutionEver = null;
     private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride; // generation , solution
     private HeaderController controller;
@@ -67,91 +67,84 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         new Thread(currentRunningTask).start();
     }
 
-//because the loadXML returned a descriptorDTO to the controller, no need for this engine method
-    //    public DescriptorDTO getSystemDetails() {
-//    }
+//    Because the loadXML returned a descriptorDTO to the controller, no need for it as an engine method:
+//    public DescriptorDTO getSystemDetails()
 
     @Override
-    public void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride) {
+    public void executeEvolutionAlgorithm(int numOfGenerations,
+                                          int generationsStride,
+                                          Consumer<TimeTableSolutionDTO> onSuccess,
+                                          Consumer<Throwable> onFailure) {
+
         checkForErrorsBeforeExecutingAlgorithms(numOfGenerations, generationsStride);
-        try {
-            bestSolutionsInGenerationPerStride = new TreeMap<>();
-            List<TimeTableSolution> initialPopulation = getInitialGeneration();
-
-            evolutionEngine = new EvolutionEngine(this.descriptor.getEngineSettings(),
-                    this.descriptor.getTimeTable().getRules());
-
-            List<TimeTableSolution> prevGeneration = initialPopulation;
-            List<TimeTableSolution> currGeneration;
-            double bestSolutionFitnessScore = 0;
-
-            for (int i = 1; i <= numOfGenerations; i++) {
-                currGeneration = evolutionEngine.execute(prevGeneration);
-                TimeTableSolution currBestSolution = currGeneration.stream().
-                        sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
-
-                if (bestSolutionFitnessScore < currBestSolution.getTotalFitnessScore()) {
-                    bestSolutionEver = currBestSolution;
-                    bestSolutionFitnessScore = bestSolutionEver.getTotalFitnessScore();
-                }
-
-                //stride for purposes of info-display and to save a stride-generation history
-                //with addition of first and last generation
-                if (i == 1 || (i % generationsStride == 0) || (i == numOfGenerations)) {
-                    bestSolutionsInGenerationPerStride.put(i, currBestSolution);
-                    fireStrideDetails(i, currBestSolution);
-                }
-
-                prevGeneration = currGeneration;
-            }
-
-            fireEvent("completed", new Event("Evolution algorithm finished running."));
-        } catch (Throwable e) {
-            fireEvent("error", new ErrorEvent("Failed running evolution algorithm", ErrorType.RunError, e));
+        if (currentRunningTask != null) {
+            return; // TODO: should not come here, we want one task at a time
         }
+
+        currentRunningTask = new RunAlgorithmTask(
+                numOfGenerations,
+                generationsStride,
+                this.descriptor);
+
+        currentRunningTask.setOnSucceeded(value -> {
+            this.bestSolutionEver = (TimeTableSolution) currentRunningTask.getValue();
+            TimeTableSolutionDTO solutionDTO = createTimeTableSolutionDTO(bestSolutionEver);
+            onSuccess.accept(solutionDTO); //sending the best solution DTO to the controller
+            currentRunningTask = null; // clearing task
+        });
+
+        currentRunningTask.setOnFailed(value -> {
+            //TODO figure out how to handle exceptions, with reaching the "root" error as we did in the console
+            onFailure.accept(currentRunningTask.getException());
+            currentRunningTask = null;
+        });
+
+        controller.bindTaskToUIComponents(currentRunningTask, null);
+
+        new Thread(currentRunningTask).start();
     }
 
     //bonus
     @Override
     public void executeEvolutionAlgorithmWithFitnessStop(int numOfGenerations, int generationsStride, double fitnessStop) {
-        checkForErrorsBeforeExecutingAlgorithms(numOfGenerations, generationsStride);
-        try {
-            bestSolutionsInGenerationPerStride = new TreeMap<>();
-            bestSolutionsInGenerationPerStride = new HashMap<>(numOfGenerations);
-            List<TimeTableSolution> initialPopulation = getInitialGeneration();
-
-            evolutionEngine = new EvolutionEngine(this.descriptor.getEngineSettings(),
-                    this.descriptor.getTimeTable().getRules());
-
-            List<TimeTableSolution> prevGeneration = initialPopulation;
-            List<TimeTableSolution> currGeneration;
-            double bestSolutionFitnessScore = 0;
-
-            for (int i = 1; i <= numOfGenerations; i++) {
-                currGeneration = evolutionEngine.execute(prevGeneration);
-                TimeTableSolution currBestSolution = currGeneration.stream().
-                        sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
-
-                if (bestSolutionFitnessScore < currBestSolution.getTotalFitnessScore()) {
-                    bestSolutionEver = currBestSolution;
-                    bestSolutionFitnessScore = bestSolutionEver.getTotalFitnessScore();
-                }
-
-                //stride for purposes of info-display and to save a stride-generation history
-                if (i == 1 || (i % generationsStride == 0) || (i == numOfGenerations)) {
-                    bestSolutionsInGenerationPerStride.put(i, currBestSolution);
-                    fireStrideDetails(i, currBestSolution);
-                }
-                if (bestSolutionFitnessScore >= fitnessStop) {
-                    break;
-                }
-                prevGeneration = currGeneration;
-            }
-
-            fireEvent("completed", new Event("Evolution algorithm finished running."));
-        } catch (Throwable e) {
-            fireEvent("error", new ErrorEvent("Failed running evolution algorithm", ErrorType.RunError, e));
-        }
+//        checkForErrorsBeforeExecutingAlgorithms(numOfGenerations, generationsStride);
+//        try {
+//            bestSolutionsInGenerationPerStride = new TreeMap<>();
+//            bestSolutionsInGenerationPerStride = new HashMap<>(numOfGenerations);
+//            List<TimeTableSolution> initialPopulation = getInitialGeneration();
+//
+//            evolutionEngine = new EvolutionEngine(this.descriptor.getEngineSettings(),
+//                    this.descriptor.getTimeTable().getRules());
+//
+//            List<TimeTableSolution> prevGeneration = initialPopulation;
+//            List<TimeTableSolution> currGeneration;
+//            double bestSolutionFitnessScore = 0;
+//
+//            for (int i = 1; i <= numOfGenerations; i++) {
+//                currGeneration = evolutionEngine.execute(prevGeneration);
+//                TimeTableSolution currBestSolution = currGeneration.stream().
+//                        sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
+//
+//                if (bestSolutionFitnessScore < currBestSolution.getTotalFitnessScore()) {
+//                    bestSolutionEver = currBestSolution;
+//                    bestSolutionFitnessScore = bestSolutionEver.getTotalFitnessScore();
+//                }
+//
+//                //stride for purposes of info-display and to save a stride-generation history
+//                if (i == 1 || (i % generationsStride == 0) || (i == numOfGenerations)) {
+//                    bestSolutionsInGenerationPerStride.put(i, currBestSolution);
+//                    fireStrideDetails(i, currBestSolution);
+//                }
+//                if (bestSolutionFitnessScore >= fitnessStop) {
+//                    break;
+//                }
+//                prevGeneration = currGeneration;
+//            }
+//
+//            fireEvent("completed", new Event("Evolution algorithm finished running."));
+//        } catch (Throwable e) {
+//            fireEvent("error", new ErrorEvent("Failed running evolution algorithm", ErrorType.RunError, e));
+//        }
     }
 
     @Override
@@ -203,11 +196,6 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     //#endregion
 
     //#region auxiliary methods
-    private void fireStrideDetails(int i, TimeTableSolution currBestSolution) {
-        GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i, currBestSolution.getTotalFitnessScore());
-        fireEvent("stride", new OnStrideEvent("generation ", i, strideScoreDTO));
-    }
-
     private void checkForErrorsBeforeExecutingAlgorithms(int numOfGenerations, int generationsStride) {
         if (!isXMLLoaded()) {
             ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
@@ -228,26 +216,6 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                     new ValidationException(numOfGenerations + " is invalid number for generation strides, must be between 1 - " + numOfGenerations));
             fireEvent("error", e);
         }
-    }
-
-    public int getTimeTableHours() {
-        return descriptor.getTimeTableHours();
-    }
-
-    public int getTimeTableDays() {
-        return descriptor.getTimeTableDays();
-    }
-
-    @NotNull
-    private List<TimeTableSolution> getInitialGeneration() {
-        int initialPopulationSize = descriptor.getEngineSettings().getInitialPopulationSize();
-        List<TimeTableSolution> initialPopulation = new ArrayList<>();
-
-        for (int i = 0; i < initialPopulationSize; i++) {
-            initialPopulation.add(new TimeTableSolution(descriptor.getTimeTable()));
-        }
-
-        return initialPopulation;
     }
 
     @Override
@@ -309,11 +277,10 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         Map<Integer, TeacherDTO> teachersDTO = createSortedTeacherDTOCollection();
         Map<Integer, SchoolClassDTO> schoolClassesDTO = createSortedClassesDTOCollection();
         Set<RuleDTO> rulesDTO = createRulesDTOSet();
-        TimeTableDTO timeTableDTO = new TimeTableDTO(descriptor.getTimeTable().getDays(),
+
+        return new TimeTableDTO(descriptor.getTimeTable().getDays(),
                 descriptor.getTimeTable().getHours(),
                 subjectsDTO, teachersDTO, schoolClassesDTO, rulesDTO);
-
-        return timeTableDTO;
     }
 
     private Set<RuleDTO> createRulesDTOSet() {

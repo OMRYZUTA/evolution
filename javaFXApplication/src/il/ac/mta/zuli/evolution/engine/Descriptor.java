@@ -1,9 +1,12 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
+import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTDescriptor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 
 public class Descriptor {
@@ -21,6 +24,14 @@ public class Descriptor {
         //only reaching here if TimeTable and EngineSettings ctors didn't throw exceptions
         this.timeTable = tempTimeTable;
         this.engineSettings = tempEngineSetting;
+    }
+
+    public int getPopulationSize() {
+        return this.engineSettings.getInitialPopulationSize();
+    }
+
+    public Set<Rule> getRules() {
+        return this.timeTable.getRules();
     }
 
     public int getTimeTableHours() {

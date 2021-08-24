@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.ui.header;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
+import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -38,13 +39,16 @@ public class HeaderController {
     @FXML
     Button stopTaskButton;
 
-    private final SimpleStringProperty selectedFileProperty;
     private final SimpleBooleanProperty fileLoaded;
     private final SimpleBooleanProperty evolutionAlgorithmCompleted;
+    private final SimpleStringProperty selectedFileProperty;
     private AppController appController;
+    private Stage primaryStage;
     private Engine engine;
     private DescriptorDTO descriptor; //the root in the xml hierarchy
-    private Stage primaryStage;
+    private TimeTableSolutionDTO solution = null;
+    private int stride;
+    private int numOfGenerations;
 
     public HeaderController() {
         selectedFileProperty = new SimpleStringProperty("");
@@ -115,12 +119,38 @@ public class HeaderController {
     }
 
     @FXML
-    public void bestSolutionAction() {
-        //only here display rules applied, not before
+    public void runEngineAction() {
+//only here display rules applied
+
+        if (evolutionAlgorithmCompleted.get()) {
+            //TODO add popup?
+
+            // "The evolution-algorithm has already completed its course. "+ System.lineSeparator() +
+            // "If you choose to re-run it, the information from the previous run will be lost." + System.lineSeparator() +
+            // "Would you like to re-run the algorithm? (Enter Y/N)");
+        }
+
+        //TODO remove hardcoded values
+        this.numOfGenerations = 150;
+        this.stride = 20;
+
+//      executeEvolutionAlgorithm( int, int, Consumer<TimeTableSolutionDTO> onSuccess, Consumer <Throwable > onFailure)//
+        engine.executeEvolutionAlgorithm(
+                this.numOfGenerations,
+                this.stride,
+                solution -> {
+                    this.solution = solution;
+                    evolutionAlgorithmCompleted.set(true);
+                },
+                throwable -> {
+                    taskMessageLabel.setText("Failed running the algorithm." + System.lineSeparator()
+                            + throwable.getMessage());
+                });
     }
 
     @FXML
-    public void runEngineAction() {
+    public void bestSolutionAction() {
+        this.appController.displaySolution(this.solution, descriptor.getTimeTable());
     }
 
     @FXML

@@ -1,9 +1,12 @@
 package il.ac.mta.zuli.evolution.ui.app;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
+import il.ac.mta.zuli.evolution.dto.TimeTableDTO;
+import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.ui.details.DetailsController;
 import il.ac.mta.zuli.evolution.ui.header.HeaderController;
+import il.ac.mta.zuli.evolution.ui.solution.SolutionController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -19,10 +22,14 @@ public class AppController {
     private ScrollPane detailsComponent;
     @FXML
     private DetailsController detailsComponentController;
+    @FXML
+    private ScrollPane solutionComponent;
+    @FXML
+    private SolutionController solutionComponentController;
 
     // bound to visibility of different body components
     // buttons change its value
-    private final SimpleStringProperty currentBodyProperty;
+    private final SimpleStringProperty currentBodyProperty; //TODO set this inside header, based on button clicks
 
     public AppController() {
         currentBodyProperty = new SimpleStringProperty("none");
@@ -43,6 +50,7 @@ public class AppController {
         }
 
         detailsComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "details"));
+        solutionComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "solution"));
     }
 
     // headerController calls this function from displaySettingsAction
@@ -51,10 +59,9 @@ public class AppController {
         currentBodyProperty.set("details");
     }
 
-    public void bestSolutionAction() {
-        //only here display rules applied, not before
-    }
-
-    public void historyAction() {
+    public void displaySolution(TimeTableSolutionDTO solution, TimeTableDTO timetable) {
+        solutionComponentController.setSolution(solution);
+        solutionComponentController.setTimeTableSettings(timetable);
+        currentBodyProperty.set("solution");
     }
 }
