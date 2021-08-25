@@ -102,13 +102,13 @@ public class HeaderController {
                 },
                 throwable -> {
                     if (!fileLoaded.get()) {
-                        taskMessageLabel.setText("Failed loading the file." + System.lineSeparator()
+                        taskMessageLabel.setText("Failed loading the file." /*+ System.lineSeparator()
                                 + throwable.getMessage() + System.lineSeparator()
-                                + "There is no file loaded to the system.");
+                                + "There is no file loaded to the system."*/);
                     } else {
-                        taskMessageLabel.setText("Failed loading the file." + System.lineSeparator()
+                        taskMessageLabel.setText("Failed loading the file." /*+ System.lineSeparator()
                                 + throwable.getMessage() + System.lineSeparator()
-                                + "Reverted to last file that was successfully loaded.");
+                                + "Reverted to last file that was successfully loaded."*/);
                     }
                 });
     }

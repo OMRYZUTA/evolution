@@ -1,24 +1,22 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.crossover;
 
+import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 
 import java.util.List;
 
-public class AspectOriented implements CrossoverInterface {
-    private  int cuttingPoints;
+public class AspectOriented<S extends Solution> extends Crossover<S> {
     private Orientation orientation;
-    private TimeTable timeTable;
 
     public AspectOriented(int cuttingPoints, Orientation orientation, TimeTable timeTable) {
+        super(cuttingPoints, timeTable);
+        this.orientation = orientation;
     }
 
-    @Override
-    public int getNumOfCuttingPoints() {
-        return 0;
-    }
 
     @Override
-    public List crossover(List generation) {
-        return null;
+    public List<S> crossover(List<S> selectedParents) {
+        //TODO implement
+        return super.crossoverDH(selectedParents);
     }
 }

@@ -95,8 +95,8 @@
 		</ETT-Selection>
 		<ETT-Crossover name="AspectOriented" cutting-points="1" configuration="Orientation=CLASS"/>
 		<ETT-Mutations>
-			<ETT-Mutation name="Flipping" probability="0.2" configuration="MaxTupples=3"/>
-			<ETT-Mutation name="Sizer" probability="0.3" configuration="TotalTupples=7,Component=S"/>			
+			<ETT-Mutation name="Flipping" probability="0.2" configuration="MaxTupples=3,Component=S"/>
+			<ETT-Mutation name="Sizer" probability="0.3" configuration="TotalTupples=7"/>			
 		</ETT-Mutations>
 	</ETT-EvolutionEngine>
 </ETT-Descriptor>
