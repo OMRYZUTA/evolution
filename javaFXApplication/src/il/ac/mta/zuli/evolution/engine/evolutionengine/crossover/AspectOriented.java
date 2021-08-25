@@ -6,10 +6,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AspectOriented<S extends Solution> extends Crossover<S> {
@@ -23,19 +20,49 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
 
     @Override
     public List<S> crossover(List<S> selectedParents) {
-        //TODO implement
-        List<Map<Teacher, List<List<Quintet>>>> parentsAsTeacherMatrix = organizeSolutions(selectedParents);
-
         //for each solution, in selected parents, organize as map of teacher per dh matrix  map<teacher, list <list<q>>>
-        //while there are more than 1 solution in general collection
-        //randomly select 2 parents
-        //crossover between 2 parents
-        //for each teacher, crossover between parent 1 and parent 2. so we have 2 new children per teacher
-        //combine to create 2 solutions (without conflicts)
-        //flatten both matrixes to return 2 solutions
+        List<Map<Teacher, List<List<Quintet>>>> parentsAsTeacherMatrix = organizeSolutions(selectedParents);
+        Map<Teacher, List<List<Quintet>>> parent1;
+        Map<Teacher, List<List<Quintet>>> parent2;
+        List<List<Quintet>> child1;
+        List<List<Quintet>> child2;
+        List<TimeTableSolution> newGeneration = new ArrayList<>();
 
-        //return newGeneration
-        return null;
+        while (parentsAsTeacherMatrix.size() >= 2) {
+            parent1 = randomlySelectParent(parentsAsTeacherMatrix);
+            removeParentFromPoolOfParents(parentsAsTeacherMatrix, parent1);
+
+            parent2 = randomlySelectParent(parentsAsTeacherMatrix);
+            removeParentFromPoolOfParents(parentsAsTeacherMatrix, parent2);
+
+            List<List<List<Quintet>>> twoChildrenPerTeacher;
+            child1 = createEmptyDHMatrix();
+            child2 = createEmptyDHMatrix();
+
+            List<Teacher> teachers = new ArrayList<>(timeTable.getTeachers().values());
+            for (Teacher teacher : teachers) {
+                twoChildrenPerTeacher = crossoverBetween2Parents(parent1.get(teacher), parent2.get(teacher));
+                fillChildMatrix(twoChildrenPerTeacher.get(0), child1);
+                fillChildMatrix(twoChildrenPerTeacher.get(1), child2);
+            }
+            //flatten both matrixes to return 2 solutions
+            List<TimeTableSolution> twoSolutionChildren =convertMatrixToSolutions( child1, child2);
+            newGeneration.addAll(twoSolutionChildren);
+        }
+
+        return (List<S>)newGeneration;
+    }
+
+    private void fillChildMatrix(List<List<Quintet>> source, List<List<Quintet>> destination) {
+        //TODO check if we need to avoid conflicts in time slots
+        for (int i = 0; i < days * hours; i++) {
+            if (destination.get(i) == null) {
+                destination.set(i, source.get(i));
+            }
+            //adding source list<Quintet> to destination list<Quintet>
+            (destination.get(i)).addAll(source.get(i));
+        }
+
     }
 
     private List<Map<Teacher, List<List<Quintet>>>> organizeSolutions(List<S> selectedParents) {
@@ -61,4 +88,25 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
         }
         return parentsAsTeacherMatrix;
     }
+
+    private Map<Teacher, List<List<Quintet>>> randomlySelectParent(List<Map<Teacher, List<List<Quintet>>>> selectedSolutionsAsMatrix) {
+        int randomIndex = new Random().nextInt(selectedSolutionsAsMatrix.size());
+        return selectedSolutionsAsMatrix.get(randomIndex);
+    }
+
+    private void removeParentFromPoolOfParents(List<Map<Teacher, List<List<Quintet>>>> selectedSolutionsAsMatrix,
+                                               Map<Teacher, List<List<Quintet>>> itemToRemove) {
+        Iterator<Map<Teacher, List<List<Quintet>>>> itr = selectedSolutionsAsMatrix.iterator();
+
+        while (itr.hasNext()) {
+            Map<Teacher, List<List<Quintet>>> inner = itr.next();
+            //Map, List, Quintet and teacher implement equals()
+            if (inner.equals(itemToRemove)) {
+                itr.remove();
+                break;
+            }
+        }
+    }
+
+
 }

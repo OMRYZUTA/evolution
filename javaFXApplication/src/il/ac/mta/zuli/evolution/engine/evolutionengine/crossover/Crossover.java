@@ -57,8 +57,10 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
 
             parent2 = randomlySelectParent(selectedSolutionsAsMatrix);
             removeParentFromPoolOfParents(selectedSolutionsAsMatrix, parent2);
-
-            newGeneration.addAll(crossoverBetween2Parents(parent1, parent2));
+            List<List<List<Quintet>>> twoMatrixChildren =crossoverBetween2Parents(parent1, parent2);
+            //flattening-back from the hierarchy of solutionMatrix to List<Quintets> field in TimeTablesolution
+            List<TimeTableSolution> twoSolutionChildren =convertMatrixToSolutions( twoMatrixChildren.get(0), twoMatrixChildren.get(1));
+            newGeneration.addAll(twoSolutionChildren);
         }
 
         // if there is one parent left, need to add it to new generations
@@ -70,8 +72,8 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         return newGeneration;
     }
 
-    private List<TimeTableSolution> crossoverBetween2Parents(List<List<Quintet>> parent1, List<List<Quintet>> parent2) {
-        List<TimeTableSolution> twoNewSolutions = new ArrayList<>(2);
+    protected List<List<List<Quintet>>> crossoverBetween2Parents(List<List<Quintet>> parent1, List<List<Quintet>> parent2) {
+        List<List<List<Quintet>>> twoNewMatrix = new ArrayList<>(2);
         List<List<Quintet>> child1 = new ArrayList<>();
         List<List<Quintet>> child2 = new ArrayList<>();
         Iterator<Integer> cuttingPointsItr = cuttingPointsIndices.iterator();
@@ -95,10 +97,9 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
             }
         }
 
-        //flattening-back from the hierarchy of solutionMatrix to List<Quintets> field in TimeTablesolution
-        convertMatrixToSolutions(twoNewSolutions, child1, child2);
 
-        return twoNewSolutions;
+
+        return twoNewMatrix;
     }
 
     private void removeParentFromPoolOfParents(List<List<List<Quintet>>> selectedSolutionsAsMatrix,
@@ -120,8 +121,8 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         return selectedSolutionsAsMatrix.get(randomIndex);
     }
 
-    //function called in crossoverBetween2Parents()
-    private void convertMatrixToSolutions(List<TimeTableSolution> twoNewSolutions, List<List<Quintet>> child1, List<List<Quintet>> child2) {
+    protected List<TimeTableSolution> convertMatrixToSolutions(List<List<Quintet>> child1, List<List<Quintet>> child2) {
+        List<TimeTableSolution> twoNewSolutions = new ArrayList<>(2);
         List<Quintet> quintets = flattenSolutionMatrix(child1);
         TimeTableSolution tempSolution = new TimeTableSolution(quintets, timeTable);
         twoNewSolutions.add(tempSolution);
@@ -129,6 +130,7 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         quintets = flattenSolutionMatrix(child2);
         tempSolution = new TimeTableSolution(quintets, timeTable);
         twoNewSolutions.add(tempSolution);
+        return  twoNewSolutions;
     }
 
     //function used in convertMatrixToSolutions()
@@ -191,9 +193,9 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         return solutionMatrix;
     }
 
-    //function called in fillQuintetsToMatrix()
+
     @NotNull
-    private List<List<Quintet>> createEmptyDHMatrix() {
+    protected List<List<Quintet>> createEmptyDHMatrix() {
         // Array D*H length (instead of matrix) the index is: (hour * DAYS) + (day - 1)
         // each element in the array is a collection of quintets
         List<List<Quintet>> solutionMatrix = new ArrayList<>(days * hours);
