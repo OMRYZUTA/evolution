@@ -1,6 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine;
 
-import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterface;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverFactory;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.MutationFactory;
@@ -21,7 +21,7 @@ import java.util.List;
 public class EngineSettings<T extends Solution> {
     private int initialPopulationSize;
     private Selection<T> selection;
-    private Crossover<T> crossover;
+    private CrossoverInterface<T> crossover;
     private List<Mutation<T>> mutations;
 
 
@@ -67,7 +67,7 @@ public class EngineSettings<T extends Solution> {
         return selection;
     }
 
-    public Crossover<T> getCrossover() {
+    public CrossoverInterface<T> getCrossover() {
         return crossover;
     }
 

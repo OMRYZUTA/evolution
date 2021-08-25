@@ -4,7 +4,7 @@ import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.events.ErrorEvent;
 import il.ac.mta.zuli.evolution.engine.events.ErrorType;
 import il.ac.mta.zuli.evolution.engine.events.EventsEmitter;
-import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterface;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
@@ -252,7 +252,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     @NotNull
     private CrossoverDTO createCrossoverDTO() {
-        Crossover<TimeTableSolution> crossover = descriptor.getEngineSettings().getCrossover();
+        CrossoverInterface<TimeTableSolution> crossover = descriptor.getEngineSettings().getCrossover();
 
         return new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getNumOfCuttingPoints());
     }

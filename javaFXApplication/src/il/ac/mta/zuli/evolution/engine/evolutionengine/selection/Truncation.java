@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 public class Truncation<S extends Solution> implements Selection<S> {
     private int topPercent;
-
     public Truncation(ETTSelection ettSelection) {
         parseConfiguration(ettSelection);
     }
