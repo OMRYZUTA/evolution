@@ -10,8 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public abstract class Crossover<S extends Solution> implements CrossoverInterface<S>{
-
+public abstract class Crossover<S extends Solution> implements CrossoverInterface<S> {
     protected final int days;
     protected final int hours;
     protected final TimeTable timeTable;
@@ -23,35 +22,6 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         this.days = timeTable.getDays();
         this.hours = timeTable.getHours();
         setNumOfCuttingPoints(numOfCuttingPoints);
-    }
-
-
-    private void setNumOfCuttingPoints(int numOfCuttingPoints) {
-        if (numOfCuttingPoints > 0 && numOfCuttingPoints < days * hours) {
-            this.numOfCuttingPoints = numOfCuttingPoints;
-        } else {
-            throw new ValidationException("Invalid number of cutting points, must be between 1 -" + days * hours);
-        }
-    }
-
-    public int getNumOfCuttingPoints() {
-        return numOfCuttingPoints;
-    }
-
-    private void randomlyGenerateCuttingPoints() {
-        Set<Integer> tempSetOfPoints = new HashSet<>();
-
-        while (tempSetOfPoints.size() < numOfCuttingPoints) {
-            //we want random points from 1 to total size of solution (D*H)
-            if (days * hours > 1) {
-                tempSetOfPoints.add((new Random().nextInt((days * hours) - 1)) + 1);
-            } else {
-                tempSetOfPoints.add(1);
-            }
-        }
-
-        cuttingPointsIndices = new ArrayList<>(tempSetOfPoints);
-        Collections.sort(cuttingPointsIndices);
     }
 
     public List<S> crossoverDH(List<S> selectedParents) {
@@ -100,82 +70,6 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         return newGeneration;
     }
 
-    @NotNull
-    private List<List<List<Quintet>>> organizeSolutionsAsDayHourMatrix(List<S> selectedParents) {
-        List<List<List<Quintet>>> selectedSolutionsAsMatrix = new ArrayList<>();
-
-        for (S solution : selectedParents) {
-            selectedSolutionsAsMatrix.add(convertSolutionToMatrixDH(solution));
-        }
-        return selectedSolutionsAsMatrix;
-    }
-
-    private void removeParentFromPoolOfParents(List<List<List<Quintet>>> selectedSolutionsAsMatrix,
-                                               List<List<Quintet>> parent) {
-        Iterator<List<List<Quintet>>> itr = selectedSolutionsAsMatrix.iterator();
-
-        while (itr.hasNext()) {
-            List<List<Quintet>> inner = itr.next();
-            if (inner.equals(parent)) {
-                itr.remove();
-                break;
-            }
-        }
-    }
-
-    private List<List<Quintet>> randomlySelectParent(List<List<List<Quintet>>> selectedSolutionsAsMatrix) {
-        int randomIndex = new Random().nextInt(selectedSolutionsAsMatrix.size());
-
-        return selectedSolutionsAsMatrix.get(randomIndex);
-    }
-
-    private List<List<Quintet>> convertSolutionToMatrixDH(S solution) {
-        if (!(solution instanceof TimeTableSolution)) {
-            throw new RuntimeException("solution must be TimeTableSolution");
-        }
-
-        TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
-
-        List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
-
-        // Array D*H length (instead of matrix) the index is: (hour * DAYS) + day (zero based)
-        // each element in the array is a collection of quintets
-
-        return fillQuintetsToMatrix(solutionQuintets);
-    }
-
-    @NotNull
-    private List<List<Quintet>> fillQuintetsToMatrix(List<Quintet> solutionQuintets) {
-        List<List<Quintet>> solutionMatrix = createEmptyDHMatrix();
-
-        for (Quintet quintet : solutionQuintets) {
-            int hourIndex = quintet.getHour();
-            int dayIndex = quintet.getDay().getValue() - 1;
-            int i = hourIndex * days + dayIndex;
-            if (solutionMatrix.get(i) == null) {
-                solutionMatrix.set(i, new ArrayList<>());
-            }
-
-            (solutionMatrix.get(i)).add(quintet);
-        }
-
-        return solutionMatrix;
-    }
-
-
-    @NotNull
-    private List<List<Quintet>> createEmptyDHMatrix() {
-        // Array D*H length (instead of matrix) the index is: (hour * DAYS) + (day - 1)
-        // each element in the array is a collection of quintets
-        List<List<Quintet>> solutionMatrix = new ArrayList<>(days * hours);
-
-        for (int i = 0; i < days * hours; i++) {
-            solutionMatrix.add(null);
-        }
-
-        return solutionMatrix;
-    }
-
     private List<TimeTableSolution> crossoverBetween2Parents(List<List<Quintet>> parent1, List<List<Quintet>> parent2) {
         List<TimeTableSolution> twoNewSolutions = new ArrayList<>(2);
         List<List<Quintet>> child1 = new ArrayList<>();
@@ -207,6 +101,26 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         return twoNewSolutions;
     }
 
+    private void removeParentFromPoolOfParents(List<List<List<Quintet>>> selectedSolutionsAsMatrix,
+                                               List<List<Quintet>> parent) {
+        Iterator<List<List<Quintet>>> itr = selectedSolutionsAsMatrix.iterator();
+
+        while (itr.hasNext()) {
+            List<List<Quintet>> inner = itr.next();
+            if (inner.equals(parent)) {
+                itr.remove();
+                break;
+            }
+        }
+    }
+
+    private List<List<Quintet>> randomlySelectParent(List<List<List<Quintet>>> selectedSolutionsAsMatrix) {
+        int randomIndex = new Random().nextInt(selectedSolutionsAsMatrix.size());
+
+        return selectedSolutionsAsMatrix.get(randomIndex);
+    }
+
+    //function called in crossoverBetween2Parents()
     private void convertMatrixToSolutions(List<TimeTableSolution> twoNewSolutions, List<List<Quintet>> child1, List<List<Quintet>> child2) {
         List<Quintet> quintets = flattenSolutionMatrix(child1);
         TimeTableSolution tempSolution = new TimeTableSolution(quintets, timeTable);
@@ -217,6 +131,7 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         twoNewSolutions.add(tempSolution);
     }
 
+    //function used in convertMatrixToSolutions()
     @NotNull
     private List<Quintet> flattenSolutionMatrix(List<List<Quintet>> child1) {
         List<Quintet> quintets = new ArrayList<>();
@@ -230,4 +145,95 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
     }
 
 
+    //#region organizing the parent-solutions
+    @NotNull
+    private List<List<List<Quintet>>> organizeSolutionsAsDayHourMatrix(List<S> selectedParents) {
+        List<List<List<Quintet>>> selectedSolutionsAsMatrix = new ArrayList<>();
+
+        for (S solution : selectedParents) {
+            selectedSolutionsAsMatrix.add(convertSolutionToMatrixDH(solution));
+        }
+        return selectedSolutionsAsMatrix;
+    }
+
+    //function called in organizeSolutionsAsDayHourMatrix()
+    private List<List<Quintet>> convertSolutionToMatrixDH(S solution) {
+        if (!(solution instanceof TimeTableSolution)) {
+            throw new RuntimeException("solution must be TimeTableSolution");
+        }
+
+        TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+
+        List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
+
+        // Array D*H length (instead of matrix) the index is: (hour * DAYS) + day (zero based)
+        // each element in the array is a collection of quintets
+
+        return fillQuintetsToMatrix(solutionQuintets);
+    }
+
+    //function called in convertSolutionToMatrixDH
+    @NotNull
+    private List<List<Quintet>> fillQuintetsToMatrix(List<Quintet> solutionQuintets) {
+        List<List<Quintet>> solutionMatrix = createEmptyDHMatrix();
+
+        for (Quintet quintet : solutionQuintets) {
+            int hourIndex = quintet.getHour();
+            int dayIndex = quintet.getDay().getValue() - 1;
+            int i = hourIndex * days + dayIndex;
+            if (solutionMatrix.get(i) == null) {
+                solutionMatrix.set(i, new ArrayList<>());
+            }
+
+            (solutionMatrix.get(i)).add(quintet);
+        }
+
+        return solutionMatrix;
+    }
+
+    //function called in fillQuintetsToMatrix()
+    @NotNull
+    private List<List<Quintet>> createEmptyDHMatrix() {
+        // Array D*H length (instead of matrix) the index is: (hour * DAYS) + (day - 1)
+        // each element in the array is a collection of quintets
+        List<List<Quintet>> solutionMatrix = new ArrayList<>(days * hours);
+
+        for (int i = 0; i < days * hours; i++) {
+            solutionMatrix.add(null);
+        }
+
+        return solutionMatrix;
+    }
+
+    //#endregion organizing the parent-solutions
+
+    //#region cuttingPoint related
+    private void setNumOfCuttingPoints(int numOfCuttingPoints) {
+        if (numOfCuttingPoints > 0 && numOfCuttingPoints < days * hours) {
+            this.numOfCuttingPoints = numOfCuttingPoints;
+        } else {
+            throw new ValidationException("Invalid number of cutting points, must be between 1 -" + days * hours);
+        }
+    }
+
+    public int getNumOfCuttingPoints() {
+        return numOfCuttingPoints;
+    }
+
+    private void randomlyGenerateCuttingPoints() {
+        Set<Integer> tempSetOfPoints = new HashSet<>();
+
+        while (tempSetOfPoints.size() < numOfCuttingPoints) {
+            //we want random points from 1 to total size of solution (D*H)
+            if (days * hours > 1) {
+                tempSetOfPoints.add((new Random().nextInt((days * hours) - 1)) + 1);
+            } else {
+                tempSetOfPoints.add(1);
+            }
+        }
+
+        cuttingPointsIndices = new ArrayList<>(tempSetOfPoints);
+        Collections.sort(cuttingPointsIndices);
+    }
+//#endregion cuttingPoint related
 }
