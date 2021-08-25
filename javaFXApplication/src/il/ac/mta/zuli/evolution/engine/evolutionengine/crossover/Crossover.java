@@ -169,12 +169,12 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         // Array D*H length (instead of matrix) the index is: (hour * DAYS) + day (zero based)
         // each element in the array is a collection of quintets
 
-        return fillQuintetsToMatrix(solutionQuintets);
+        return convertQuintetListToMatrix(solutionQuintets);
     }
 
     //function called in convertSolutionToMatrixDH
     @NotNull
-    private List<List<Quintet>> fillQuintetsToMatrix(List<Quintet> solutionQuintets) {
+    protected List<List<Quintet>> convertQuintetListToMatrix(List<Quintet> solutionQuintets) {
         List<List<Quintet>> solutionMatrix = createEmptyDHMatrix();
 
         for (Quintet quintet : solutionQuintets) {
