@@ -171,29 +171,58 @@ public class TimeTable {
         List<ETTRule> ruleList = ettRules.getETTRule();
         Rule ruleToAdd;
 
-        for (ETTRule r : ruleList) {
-            switch (r.getETTRuleId().toLowerCase()) {
+        for (ETTRule rule : ruleList) {
+            switch (rule.getETTRuleId().toLowerCase()) {
                 case "teacherishuman":
-                    ruleToAdd = new TeacherIsHuman(r.getType());
+                    ruleToAdd = new TeacherIsHuman(rule.getType());
                     break;
                 case "singularity":
-                    ruleToAdd = new Singularity(r.getType());
+                    ruleToAdd = new Singularity(rule.getType());
                     break;
                 case "knowledgeable":
-                    ruleToAdd = new Knowledgeable(r.getType());
+                    ruleToAdd = new Knowledgeable(rule.getType());
                     break;
                 case "satisfactory":
-                    ruleToAdd = new Satisfactory(r.getType(), this.schoolClasses);
+                    ruleToAdd = new Satisfactory(rule.getType(), this.schoolClasses);
+                    break;
+                case "sequentiality":
+                    ruleToAdd = new Sequentiality(rule.getType(), fetchTotalHours(rule.getETTConfiguration()));
+                    break;
+                case "dayoffteacher":
+                    ruleToAdd = new DayOffTeacher(rule.getType());
                     break;
                 default:
-                    throw new ValidationException("Invalid rule for ex.1: " + r.getETTRuleId());
+                    throw new ValidationException("Invalid rule for ex.1: " + rule.getETTRuleId());
             }
 
             //add returns false if element already exists in set
             if (!this.rules.add(ruleToAdd)) {
-                throw new ValidationException("Failed to add rule " + r.getETTRuleId() + ". Duplicate rules are not permitted");
+                throw new ValidationException("Failed to add rule " + rule.getETTRuleId() + ". Duplicate rules are not permitted");
             }
         }
+    }
+
+    private int fetchTotalHours(String configuration) {
+
+        if (configuration.length() == 0) {
+            throw new ValidationException("Empty configuration");
+        }
+
+        int index = configuration.indexOf('=');
+
+        if (index == -1) {
+            throw new ValidationException("Invalid configuration format, missing '=' ");
+        }
+
+        int hours;
+
+        try {
+            hours = Integer.parseInt(configuration.substring(index + 1));
+        } catch (Throwable e) {
+            throw new ValidationException("Invalid configuration format, total hours value must be number");
+        }
+
+        return hours;
     }
 
     private void setHardRulesWeight(int hardRulesWeight) {

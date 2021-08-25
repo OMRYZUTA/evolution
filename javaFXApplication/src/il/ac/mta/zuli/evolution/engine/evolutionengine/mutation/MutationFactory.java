@@ -29,11 +29,11 @@ public class MutationFactory {
         int totalTuples = extractTotalTuplesFromString(ettMutation);
 
         if (totalTuples > timeTable.getHours() * timeTable.getDays()) {
-            throw new ValidationException("positive total-tuples must be <days * hours, invalid value: " + totalTuples);
+            throw new ValidationException("positive-total-tuples must be < (days * hours), invalid value: " + totalTuples);
         }
 
         if (totalTuples < (-1) * timeTable.getHours() * timeTable.getDays()) {
-            throw new ValidationException("negative total-tuples must be > -(days * hours), invalid value: " + totalTuples);
+            throw new ValidationException("negative-total-tuples must be > -(days * hours), invalid value: " + totalTuples);
         }
 
         return new Sizer(ettMutation.getProbability(), totalTuples, timeTable);
