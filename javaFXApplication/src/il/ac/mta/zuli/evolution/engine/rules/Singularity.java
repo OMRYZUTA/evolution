@@ -58,11 +58,11 @@ public class Singularity extends Rule {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(),this.getClass());
+        return Objects.hash(this.getClass());
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj) && this.getClass()==obj.getClass();
+        return this.getClass() == obj.getClass();
     }
 }

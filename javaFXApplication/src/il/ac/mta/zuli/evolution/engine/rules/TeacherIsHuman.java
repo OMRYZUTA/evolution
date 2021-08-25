@@ -55,11 +55,11 @@ public class TeacherIsHuman extends Rule {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode());
+        return Objects.hash(this.getClass());
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj)&& this.getClass()==obj.getClass();
+        return this.getClass() == obj.getClass();
     }
 }

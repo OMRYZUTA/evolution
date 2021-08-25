@@ -105,16 +105,13 @@ public class Satisfactory extends Rule {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Satisfactory)) return false;
-        Satisfactory that = (Satisfactory) o;
-        return Objects.equals(schoolClasses, that.schoolClasses);
+    public int hashCode() {
+        return Objects.hash(this.getClass());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(schoolClasses,this.getClass());
+    public boolean equals(Object obj) {
+        return this.getClass() == obj.getClass();
     }
 }
 
