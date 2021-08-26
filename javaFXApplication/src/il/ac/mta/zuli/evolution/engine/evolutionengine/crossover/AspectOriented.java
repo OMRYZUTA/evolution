@@ -3,6 +3,8 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine.crossover;
 import il.ac.mta.zuli.evolution.engine.Quintet;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
+import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 
@@ -10,47 +12,145 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class AspectOriented<S extends Solution> extends Crossover<S> {
-    private Orientation orientation;
+    private final Orientation orientation;
 
     public AspectOriented(int cuttingPoints, Orientation orientation, TimeTable timeTable) {
         super(cuttingPoints, timeTable);
         this.orientation = orientation;
     }
 
-
+    //This implementation of the interface method mainly envelops the class generic method
     @Override
     public List<S> crossover(List<S> selectedParents) {
-        //for each solution, in selected parents, organize as map of teacher per dh matrix  map<teacher, list <list<q>>>
-        List<Map<Teacher, List<List<Quintet>>>> parentsAsTeacherMatrix = organizeSolutions(selectedParents);
-        Map<Teacher, List<List<Quintet>>> parent1;
-        Map<Teacher, List<List<Quintet>>> parent2;
+        if (selectedParents.size() == 0) {
+            throw new EmptyCollectionException("Parent-generation is empty");
+        }
+        if (selectedParents.size() == 1) {
+            return selectedParents;
+        }
+
+        randomlyGenerateCuttingPoints();
+
+        return aspectOrientedCrossover(selectedParents);
+    }
+
+    //generic method - T is either Teacher or SchoolClass
+    private <T> List<S> aspectOrientedCrossover(List<S> selectedParents) {
+        //organize every solution in selectedParents as map of dh-matrix-per-aspect (map<aspect, list <list<q>>>)
+        List<Map<T, List<List<Quintet>>>> parentsAsAspectMatrix = organizeSolutionsPerAspect(selectedParents);
+
+        Map<T, List<List<Quintet>>> parent1;
+        Map<T, List<List<Quintet>>> parent2;
         List<List<Quintet>> child1;
         List<List<Quintet>> child2;
         List<TimeTableSolution> newGeneration = new ArrayList<>();
 
-        while (parentsAsTeacherMatrix.size() >= 2) {
-            parent1 = randomlySelectParent(parentsAsTeacherMatrix);
-            removeParentFromPoolOfParents(parentsAsTeacherMatrix, parent1);
+        while (parentsAsAspectMatrix.size() >= 2) {
+            parent1 = randomlySelectParent(parentsAsAspectMatrix);
+            removeParentFromPoolOfParents(parentsAsAspectMatrix, parent1);
 
-            parent2 = randomlySelectParent(parentsAsTeacherMatrix);
-            removeParentFromPoolOfParents(parentsAsTeacherMatrix, parent2);
+            parent2 = randomlySelectParent(parentsAsAspectMatrix);
+            removeParentFromPoolOfParents(parentsAsAspectMatrix, parent2);
 
             List<List<List<Quintet>>> twoChildrenPerTeacher;
             child1 = createEmptyDHMatrix();
             child2 = createEmptyDHMatrix();
+            List<T> teachersOrClasses = getRelevantList();
 
-            List<Teacher> teachers = new ArrayList<>(timeTable.getTeachers().values());
-            for (Teacher teacher : teachers) {
-                twoChildrenPerTeacher = crossoverBetween2Parents(parent1.get(teacher), parent2.get(teacher));
+            for (T teacherOrClass : teachersOrClasses) {
+                twoChildrenPerTeacher = crossoverBetween2Parents(parent1.get(teacherOrClass), parent2.get(teacherOrClass));
                 fillChildMatrix(twoChildrenPerTeacher.get(0), child1);
                 fillChildMatrix(twoChildrenPerTeacher.get(1), child2);
             }
-            //flatten both matrixes to return 2 solutions
-            List<TimeTableSolution> twoSolutionChildren =convertMatrixToSolutions( child1, child2);
+
+            //flatten both matrix to return 2 solutions
+            List<TimeTableSolution> twoSolutionChildren = convertMatrixToSolutions(child1, child2);
             newGeneration.addAll(twoSolutionChildren);
         }
 
-        return (List<S>)newGeneration;
+        return (List<S>) newGeneration;
+    }
+
+    //generic method - T is either Teacher or SchoolClass
+    private <T> List<T> getRelevantList() {
+        List<T> teachersOrClasses;
+
+        if (orientation == Orientation.TEACHER) {
+            List<Teacher> teachers = new ArrayList<>(timeTable.getTeachers().values());
+            teachersOrClasses = (List<T>) teachers;
+        } else {
+            List<SchoolClass> schoolClasses = new ArrayList<>(timeTable.getSchoolClasses().values());
+            teachersOrClasses = (List<T>) schoolClasses;
+        }
+
+        return teachersOrClasses;
+    }
+
+    //generic method - T is either Teacher or SchoolClass
+    private <T> List<Map<T, List<List<Quintet>>>> organizeSolutionsPerAspect(List<S> selectedParents) {
+        List<Map<T, List<List<Quintet>>>> parentsAsAspectMatrix = new ArrayList();
+
+        for (S solution : selectedParents) {
+
+            if (!(solution instanceof TimeTableSolution)) {
+                throw new RuntimeException("solution must be TimeTableSolution");
+            }
+            TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+
+            //grouping solution-quintets by orientation
+            Map<T, List<Quintet>> solutionQuintetsGroupedByAspect;
+
+            if (orientation == Orientation.TEACHER) {
+                //grouped by TEACHER
+                Map<Teacher, List<Quintet>> solutionQuintetsGroupedByTeacher = timeTableSolution.getSolutionQuintets()
+                        .stream()
+                        .collect(Collectors.groupingBy(Quintet::getTeacher));
+
+                solutionQuintetsGroupedByAspect = (Map<T, List<Quintet>>) solutionQuintetsGroupedByTeacher;
+            } else {
+                //grouped by CLASS
+                Map<SchoolClass, List<Quintet>> solutionQuintetsGroupedByClass = timeTableSolution.getSolutionQuintets()
+                        .stream()
+                        .collect(Collectors.groupingBy(Quintet::getSchoolClass));
+                solutionQuintetsGroupedByAspect = (Map<T, List<Quintet>>) solutionQuintetsGroupedByClass;
+            }
+
+            //for each teacher/class in solution: convert List<Quintet> to DH-Matrix (List<List<Quintet>>)
+            Map<T, List<List<Quintet>>> solutionMatrixPerAspect = new HashMap();
+
+            for (Map.Entry<T, List<Quintet>> entry : solutionQuintetsGroupedByAspect.entrySet()) {
+                solutionMatrixPerAspect.put(entry.getKey(), convertQuintetListToMatrix(entry.getValue()));
+            }
+            //add single-converted-solution to the collection of parents
+            parentsAsAspectMatrix.add(solutionMatrixPerAspect);
+        }
+
+        return parentsAsAspectMatrix;
+    }
+
+    //generic method - T is either Teacher or SchoolClass
+    private <T> Map<T, List<List<Quintet>>> randomlySelectParent(
+            List<Map<T, List<List<Quintet>>>> selectedSolutionsAsMatrix) {
+
+        int randomIndex = new Random().nextInt(selectedSolutionsAsMatrix.size());
+
+        return selectedSolutionsAsMatrix.get(randomIndex);
+    }
+
+    //generic method - T is either Teacher or SchoolClass
+    private <T> void removeParentFromPoolOfParents(
+            List<Map<T, List<List<Quintet>>>> selectedSolutionsAsMatrix, Map<T, List<List<Quintet>>> itemToRemove) {
+
+        Iterator<Map<T, List<List<Quintet>>>> itr = selectedSolutionsAsMatrix.iterator();
+
+        while (itr.hasNext()) {
+            Map<T, List<List<Quintet>>> inner = itr.next();
+            //Map, List, Quintet and teacher implement equals()
+            if (inner.equals(itemToRemove)) {
+                itr.remove();
+                break;
+            }
+        }
     }
 
     private void fillChildMatrix(List<List<Quintet>> source, List<List<Quintet>> destination) {
@@ -62,51 +162,5 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
             //adding source list<Quintet> to destination list<Quintet>
             (destination.get(i)).addAll(source.get(i));
         }
-
     }
-
-    private List<Map<Teacher, List<List<Quintet>>>> organizeSolutions(List<S> selectedParents) {
-        List<Map<Teacher, List<List<Quintet>>>> parentsAsTeacherMatrix = new ArrayList();
-
-        for (S solution : selectedParents) {
-            if (!(solution instanceof TimeTableSolution)) {
-                throw new RuntimeException("solution must be TimeTableSolution");
-            }
-
-            TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
-            //grouping solution quintets by teacher
-            Map<Teacher, List<Quintet>> teachersSubSolution = timeTableSolution.getSolutionQuintets()
-                    .stream()
-                    .collect(Collectors.groupingBy(Quintet::getTeacher));
-            //for each teacher from list of quintets to matrix
-            Map<Teacher, List<List<Quintet>>> tempMap = new HashMap();
-            for (Map.Entry<Teacher, List<Quintet>> entry : teachersSubSolution.entrySet()) {
-
-                tempMap.put(entry.getKey(), convertQuintetListToMatrix(entry.getValue()));
-            }
-            parentsAsTeacherMatrix.add(tempMap);
-        }
-        return parentsAsTeacherMatrix;
-    }
-
-    private Map<Teacher, List<List<Quintet>>> randomlySelectParent(List<Map<Teacher, List<List<Quintet>>>> selectedSolutionsAsMatrix) {
-        int randomIndex = new Random().nextInt(selectedSolutionsAsMatrix.size());
-        return selectedSolutionsAsMatrix.get(randomIndex);
-    }
-
-    private void removeParentFromPoolOfParents(List<Map<Teacher, List<List<Quintet>>>> selectedSolutionsAsMatrix,
-                                               Map<Teacher, List<List<Quintet>>> itemToRemove) {
-        Iterator<Map<Teacher, List<List<Quintet>>>> itr = selectedSolutionsAsMatrix.iterator();
-
-        while (itr.hasNext()) {
-            Map<Teacher, List<List<Quintet>>> inner = itr.next();
-            //Map, List, Quintet and teacher implement equals()
-            if (inner.equals(itemToRemove)) {
-                itr.remove();
-                break;
-            }
-        }
-    }
-
-
 }
