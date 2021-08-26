@@ -41,8 +41,8 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
 
         Map<T, List<List<Quintet>>> parent1;
         Map<T, List<List<Quintet>>> parent2;
-        List<List<Quintet>> child1;
-        List<List<Quintet>> child2;
+        List<List<Quintet>> child1ToUnite;
+        List<List<Quintet>> child2ToUnite;
         List<TimeTableSolution> newGeneration = new ArrayList<>();
         List<T> teachersOrClasses = getRelevantList();
 
@@ -53,33 +53,37 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
             parent2 = randomlySelectParent(parentsAsAspectMatrix);
             removeParentFromPoolOfParents(parentsAsAspectMatrix, parent2);
 
-            List<List<List<Quintet>>> twoChildrenPerTeacher = new ArrayList<>(); //2 child matrix
-            child1 = createEmptyDHMatrix();
-            child2 = createEmptyDHMatrix();
+            List<List<List<Quintet>>> twoChildrenPerAspect = new ArrayList<>(); //2 child matrix
+            //TODO refactor
+            twoChildrenPerAspect.add(createEmptyDHMatrix());
+            twoChildrenPerAspect.add(createEmptyDHMatrix());
+            child1ToUnite = createEmptyDHMatrix();
+            child2ToUnite = createEmptyDHMatrix();
 
             for (T teacherOrClass : teachersOrClasses) {
-                System.out.println("in aspectOrientedCrossover(), start of for loop");
-                if ((parent1.get(teacherOrClass) != null) && (parent2.get(teacherOrClass) != null)) {
-                    twoChildrenPerTeacher = crossoverBetween2Parents(
-                            parent1.get(teacherOrClass),
-                            parent2.get(teacherOrClass));
-                } else if (parent1.get(teacherOrClass) == null && parent2.get(teacherOrClass) != null) {
-                    twoChildrenPerTeacher.set(0, parent2.get(teacherOrClass));
-                    twoChildrenPerTeacher.set(1, parent2.get(teacherOrClass));
 
-                } else if (parent1.get(teacherOrClass) != null && parent2.get(teacherOrClass) == null) {
-                    twoChildrenPerTeacher.set(0, parent1.get(teacherOrClass));
-                    twoChildrenPerTeacher.set(1, parent1.get(teacherOrClass));
+                List<List<Quintet>> matrix1=parent1.get(teacherOrClass);
+                List<List<Quintet>> matrix2=parent2.get(teacherOrClass);
+                if ((matrix1 != null) && (matrix2 != null)) {
+                    twoChildrenPerAspect = crossoverBetween2Parents(
+                            matrix1,
+                            matrix2);
+                } else if ((matrix1 == null) && (matrix2 != null)) {
+                    twoChildrenPerAspect.set(0, matrix2);
+                    twoChildrenPerAspect.set(1, matrix2);
+
+                } else if ((matrix1 != null) && (matrix2 == null)) {
+                    twoChildrenPerAspect.set(0, matrix1);
+                    twoChildrenPerAspect.set(1, matrix1);
                 } else {
-                    System.out.println("both parent solutions are empty");
                     continue;//nothing to add to child-solutions
                 }
 
-                fillChildMatrix(twoChildrenPerTeacher.get(0), child1);
-                fillChildMatrix(twoChildrenPerTeacher.get(1), child2);
+                fillChildMatrix(twoChildrenPerAspect.get(0), child1ToUnite);
+                fillChildMatrix(twoChildrenPerAspect.get(1), child2ToUnite);
             }
 
-            List<TimeTableSolution> twoSolutionChildren = convertMatrixToSolutions(child1, child2);
+            List<TimeTableSolution> twoSolutionChildren = convertMatrixToSolutions(child1ToUnite, child2ToUnite);
             newGeneration.addAll(twoSolutionChildren);
         }
 
@@ -186,8 +190,12 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
             if (destination.get(i) == null) {
                 destination.set(i, source.get(i));
             }
-            //adding source list<Quintet> to destination list<Quintet>
-            (destination.get(i)).addAll(source.get(i));
+            else{
+                //adding source list<Quintet> to destination list<Quintet>.
+                if(source.get(i)!=null) {
+                    (destination.get(i)).addAll(source.get(i));
+                }
+            }
         }
     }
 }
