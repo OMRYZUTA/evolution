@@ -132,14 +132,17 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
 
     protected List<TimeTableSolution> convertMatrixToSolutions(List<List<Quintet>> child1, List<List<Quintet>> child2) {
         List<TimeTableSolution> twoNewSolutions = new ArrayList<>(2);
-        List<Quintet> quintets = flattenSolutionMatrix(child1);
-        TimeTableSolution tempSolution = new TimeTableSolution(quintets, timeTable);
-        twoNewSolutions.add(tempSolution);
 
-        quintets = flattenSolutionMatrix(child2);
-        tempSolution = new TimeTableSolution(quintets, timeTable);
-        twoNewSolutions.add(tempSolution);
+        twoNewSolutions.add(convertSingleMatrixToSolution(child1));
+        twoNewSolutions.add(convertSingleMatrixToSolution(child2));
+
         return twoNewSolutions;
+    }
+
+    protected TimeTableSolution convertSingleMatrixToSolution(List<List<Quintet>> quintetMatrix) {
+        List<Quintet> quintets = flattenSolutionMatrix(quintetMatrix);
+
+        return new TimeTableSolution(quintets, timeTable);
     }
 
     @NotNull

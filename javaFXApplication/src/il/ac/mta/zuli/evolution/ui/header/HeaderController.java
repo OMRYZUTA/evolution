@@ -42,6 +42,7 @@ public class HeaderController {
     private final SimpleBooleanProperty fileLoaded;
     private final SimpleBooleanProperty evolutionAlgorithmCompleted;
     private final SimpleStringProperty selectedFileProperty;
+    private SimpleBooleanProperty isPaused;
     private AppController appController;
     private Stage primaryStage;
     private Engine engine;
@@ -78,6 +79,8 @@ public class HeaderController {
         //disabling the remaining buttons until the algorithm completed at least once
         bestSolutionButton.disableProperty().bind(evolutionAlgorithmCompleted.not());
         historyButton.disableProperty().bind(evolutionAlgorithmCompleted.not());
+        stopTaskButton.setDisable(true);
+        pauseResumeButton.setDisable(true);
     }
 
     @FXML
@@ -120,7 +123,9 @@ public class HeaderController {
 
     @FXML
     public void runEngineAction() {
-//only here display rules applied
+        stopTaskButton.setDisable(false);
+        pauseResumeButton.setText("Pause");
+        pauseResumeButton.setDisable(false);
 
         if (evolutionAlgorithmCompleted.get()) {
             //TODO add popup?

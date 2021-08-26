@@ -19,7 +19,7 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
         int solutionIndex;
         Random random = new Random();
 
-        List<Integer> scoreRangePerIndex = buildScoreRangePerIndexList(solutions);
+        scoreRangePerIndex = buildScoreRangePerIndexList(solutions);
 
         for (int i = 0; i < populationSize; i++) {
             //scoreRangePerIndex.get() returns an index in the solutions-list
@@ -56,4 +56,11 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
         //this selection has no configuration bur we still need to override the interface method
         return "-";
     }
+
+//    an example to make things more clear:
+//    if there are 3 solutions: solutions[0].score=80, solutions[1].score=20, solutions[2].score=75
+//    then scoreRangePerIndex will look like this:
+//    scoreRangePerIndex[0]-scoreRangePerIndex[79]: value is 0
+//    scoreRangePerIndex[80]-scoreRangePerIndex[99]: value is 1
+//    scoreRangePerIndex[100]-scoreRangePerIndex[174]: value is 2
 }

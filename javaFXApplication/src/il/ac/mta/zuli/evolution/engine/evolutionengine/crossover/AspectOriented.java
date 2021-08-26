@@ -44,6 +44,7 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
         List<List<Quintet>> child1;
         List<List<Quintet>> child2;
         List<TimeTableSolution> newGeneration = new ArrayList<>();
+        List<T> teachersOrClasses = getRelevantList();
 
         while (parentsAsAspectMatrix.size() >= 2) {
             parent1 = randomlySelectParent(parentsAsAspectMatrix);
@@ -52,20 +53,46 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
             parent2 = randomlySelectParent(parentsAsAspectMatrix);
             removeParentFromPoolOfParents(parentsAsAspectMatrix, parent2);
 
-            List<List<List<Quintet>>> twoChildrenPerTeacher;
+            List<List<List<Quintet>>> twoChildrenPerTeacher = new ArrayList<>(); //2 child matrix
             child1 = createEmptyDHMatrix();
             child2 = createEmptyDHMatrix();
-            List<T> teachersOrClasses = getRelevantList();
 
             for (T teacherOrClass : teachersOrClasses) {
-                twoChildrenPerTeacher = crossoverBetween2Parents(parent1.get(teacherOrClass), parent2.get(teacherOrClass));
+                System.out.println("in aspectOrientedCrossover(), start of for loop");
+                if ((parent1.get(teacherOrClass) != null) && (parent2.get(teacherOrClass) != null)) {
+                    twoChildrenPerTeacher = crossoverBetween2Parents(
+                            parent1.get(teacherOrClass),
+                            parent2.get(teacherOrClass));
+                } else if (parent1.get(teacherOrClass) == null && parent2.get(teacherOrClass) != null) {
+                    twoChildrenPerTeacher.set(0, parent2.get(teacherOrClass));
+                    twoChildrenPerTeacher.set(1, parent2.get(teacherOrClass));
+
+                } else if (parent1.get(teacherOrClass) != null && parent2.get(teacherOrClass) == null) {
+                    twoChildrenPerTeacher.set(0, parent1.get(teacherOrClass));
+                    twoChildrenPerTeacher.set(1, parent1.get(teacherOrClass));
+                } else {
+                    //nothing to add to child-solutions
+                    continue;
+                }
+
                 fillChildMatrix(twoChildrenPerTeacher.get(0), child1);
                 fillChildMatrix(twoChildrenPerTeacher.get(1), child2);
             }
 
-            //flatten both matrix to return 2 solutions
             List<TimeTableSolution> twoSolutionChildren = convertMatrixToSolutions(child1, child2);
             newGeneration.addAll(twoSolutionChildren);
+        }
+
+        // if there is one parent left, need to add it to new generations
+        if (parentsAsAspectMatrix.size() == 1) {
+            Map<T, List<List<Quintet>>> lastParent = parentsAsAspectMatrix.get(0);
+            List<List<Quintet>> onlyChild = new ArrayList<>();
+
+            for (T teacherOrClass : teachersOrClasses) {
+                fillChildMatrix(lastParent.get(teacherOrClass), onlyChild);
+            }
+
+            newGeneration.add(convertSingleMatrixToSolution(onlyChild));
         }
 
         return (List<S>) newGeneration;
