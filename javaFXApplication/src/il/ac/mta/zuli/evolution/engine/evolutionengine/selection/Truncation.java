@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 public class Truncation<S extends Solution> implements Selection<S> {
     private int topPercent;
+
     public Truncation(ETTSelection ettSelection) {
         parseConfiguration(ettSelection);
     }
@@ -42,15 +43,8 @@ public class Truncation<S extends Solution> implements Selection<S> {
         return solutions.stream().limit(topFitnessSolutions).collect(Collectors.toList());
     }
 
-
     public String getConfiguration() {
         return String.format("TopPercent = %d", topPercent);
-    }
-
-    @Override
-    public String toString() {
-        return "Selection: " + this.getClass().getSimpleName() +
-                "topPercent=" + topPercent;
     }
 
     private void setTopPercent(int topPercent) {
@@ -59,5 +53,11 @@ public class Truncation<S extends Solution> implements Selection<S> {
         } else {
             throw new RuntimeException("Invalid top percent value :" + topPercent + ". Must be between 1 - 100");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Selection: " + this.getClass().getSimpleName() +
+                "topPercent=" + topPercent;
     }
 }

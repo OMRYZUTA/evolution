@@ -322,7 +322,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         return quintetDTOList;
     }
 
-    private TimeTableSolutionDTO createTimeTableSolutionDTO(TimeTableSolution solution) {
+    private TimeTableSolutionDTO createTimeTableSolutionDTO(@NotNull TimeTableSolution solution) {
         List<QuintetDTO> quintets = createQuintetDTOList(solution.getSolutionQuintets());
         Map<RuleDTO, Double> fitnessScorePerRuleDTO = new HashMap<>();
 
