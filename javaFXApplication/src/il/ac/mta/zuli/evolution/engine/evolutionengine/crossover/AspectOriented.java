@@ -185,7 +185,6 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
     }
 
     private void fillChildMatrix(List<List<Quintet>> source, List<List<Quintet>> destination) {
-        //TODO check if we need to avoid conflicts in time slots
         for (int i = 0; i < days * hours; i++) {
             if (destination.get(i) == null) {
                 destination.set(i, source.get(i));
@@ -193,6 +192,8 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
             else{
                 //adding source list<Quintet> to destination list<Quintet>.
                 if(source.get(i)!=null) {
+                    //TODO check if we need to avoid conflicts in time slots consider generics
+
                     (destination.get(i)).addAll(source.get(i));
                 }
             }

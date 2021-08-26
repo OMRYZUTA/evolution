@@ -93,7 +93,7 @@ public class HeaderController {
 //
 //        String absolutePath = selectedFile.getAbsolutePath();
         //TODO restore from hard coded
-        String absolutePath ="C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-smallForApect(oldSelectionAndRules).xml";
+        String absolutePath ="C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\ex1\\EX1-small.xml";
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(
                 absolutePath,
