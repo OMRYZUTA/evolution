@@ -65,6 +65,9 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
                 System.out.println("in RunAlgoTask call(), end of loop " + i); //TODO delete later
             } //end of for loop
         } catch (Throwable e) {
+            updateMessage("Failed running algorithm: " + e.getMessage());
+            return null;
+            //TODO figure it out
 //            fireEvent("error", new ErrorEvent("Failed running evolution algorithm", ErrorType.RunError, e));
         }
 

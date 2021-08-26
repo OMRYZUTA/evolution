@@ -71,8 +71,8 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
                     twoChildrenPerTeacher.set(0, parent1.get(teacherOrClass));
                     twoChildrenPerTeacher.set(1, parent1.get(teacherOrClass));
                 } else {
-                    //nothing to add to child-solutions
-                    continue;
+                    System.out.println("both parent solutions are empty");
+                    continue;//nothing to add to child-solutions
                 }
 
                 fillChildMatrix(twoChildrenPerTeacher.get(0), child1);
