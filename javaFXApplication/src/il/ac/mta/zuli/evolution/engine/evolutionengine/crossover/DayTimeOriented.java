@@ -52,6 +52,7 @@ public class DayTimeOriented<S extends Solution> extends Crossover<S> {
 
             parent2 = randomlySelectParent(selectedSolutionsAsMatrix);
             removeParentFromPoolOfParents(selectedSolutionsAsMatrix, parent2);
+
             List<List<List<Quintet>>> twoMatrixChildren = crossoverBetween2Parents(parent1, parent2);
             //flattening-back from the hierarchy of solutionMatrix to List<Quintets> field in TimeTablesolution
             List<TimeTableSolution> twoSolutionChildren = convertMatrixToSolutions(twoMatrixChildren.get(0), twoMatrixChildren.get(1));

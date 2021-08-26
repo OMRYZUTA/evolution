@@ -48,6 +48,8 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
             }
         }
 
+        twoNewMatrix.add(child1);
+        twoNewMatrix.add(child2);
 
         return twoNewMatrix;
     }

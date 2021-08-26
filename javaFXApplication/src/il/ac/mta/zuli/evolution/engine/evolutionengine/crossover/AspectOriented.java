@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class AspectOriented<S extends Solution> extends Crossover<S> {
-    private final Orientation orientation;
+    private final Orientation orientation; //TEACHER or CLASS
 
     public AspectOriented(int cuttingPoints, Orientation orientation, TimeTable timeTable) {
         super(cuttingPoints, timeTable);
