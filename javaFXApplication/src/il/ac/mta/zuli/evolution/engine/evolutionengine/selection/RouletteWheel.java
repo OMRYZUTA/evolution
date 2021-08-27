@@ -45,7 +45,7 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
             //add as many elements as solution[i]'s score
             elementsToAdd = (int) Math.ceil(currSolutionScore);
             List<Integer> tempList = Collections.nCopies(elementsToAdd, i);
-            scoreRangePerIndex.addAll((int) Math.ceil(sum), tempList);
+            scoreRangePerIndex.addAll( tempList);
         }
 
         return scoreRangePerIndex;

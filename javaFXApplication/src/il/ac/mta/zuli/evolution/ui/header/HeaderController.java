@@ -37,10 +37,11 @@ public class HeaderController {
     @FXML
     Button stopTaskButton;
 
-    private final SimpleBooleanProperty fileLoaded;
-    private final SimpleBooleanProperty evolutionAlgorithmCompleted;
-    private final SimpleStringProperty selectedFileProperty;
+    private SimpleBooleanProperty fileLoaded;
+    private SimpleBooleanProperty evolutionAlgorithmCompleted;
+    private SimpleStringProperty selectedFileProperty;
     private SimpleBooleanProperty isPaused;
+    private SimpleBooleanProperty runningAlgorithm;
     private AppController appController;
     private Stage primaryStage;
     private Engine engine;
@@ -53,6 +54,7 @@ public class HeaderController {
         selectedFileProperty = new SimpleStringProperty("");
         fileLoaded = new SimpleBooleanProperty(false);
         evolutionAlgorithmCompleted = new SimpleBooleanProperty(false);
+        runningAlgorithm = new SimpleBooleanProperty(false);
     }
 
     public void setAppController(AppController appController) {
@@ -79,6 +81,7 @@ public class HeaderController {
         historyButton.disableProperty().bind(evolutionAlgorithmCompleted.not());
         stopTaskButton.setDisable(true);
         pauseResumeButton.setDisable(true);
+        taskProgressBar.visibleProperty().bind(runningAlgorithm);
     }
 
     @FXML
@@ -93,7 +96,7 @@ public class HeaderController {
 //
 //        String absolutePath = selectedFile.getAbsolutePath();
         //TODO restore from hard coded
-        String absolutePath ="C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\ex1\\EX1-small.xml";
+        String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-smallForRoullete(oldSelectionAndRules).xml";
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(
                 absolutePath,
@@ -122,6 +125,7 @@ public class HeaderController {
 
     @FXML
     public void runEngineAction() {
+        runningAlgorithm.set(true);
         stopTaskButton.setDisable(false);
         pauseResumeButton.setText("Pause");
         pauseResumeButton.setDisable(false);
@@ -145,10 +149,12 @@ public class HeaderController {
                 solution -> {
                     this.solution = solution;
                     evolutionAlgorithmCompleted.set(true);
+                    runningAlgorithm.set(false);
                 },
                 throwable -> {
                     taskMessageLabel.setText("Failed running the algorithm." + System.lineSeparator()
                             + throwable.getMessage());
+                    runningAlgorithm.set(false);
                 });
     }
 

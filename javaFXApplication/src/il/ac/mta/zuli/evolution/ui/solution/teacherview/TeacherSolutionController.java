@@ -15,6 +15,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.util.StringConverter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -79,11 +80,13 @@ public class TeacherSolutionController {
 
         teacherChoiceBox.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    displaySolution(newValue);
+                    if(newValue!=null) {
+                        displaySolution(newValue);
+                    }
                 });
     }
 
-    private void displaySolution(TeacherDTO teacher) {
+    private void displaySolution(@NotNull TeacherDTO teacher) {
         int teacherSolutionSize = solutionTeacherGroups.get(teacher).size();
         List<QuintetDTO>[][] teacherSolutionMatrix = buildSolutionMatrix(solutionTeacherGroups.get(teacher));
         Label label = new Label();
