@@ -96,7 +96,7 @@ public class HeaderController {
 //
 //        String absolutePath = selectedFile.getAbsolutePath();
         //TODO restore from hard coded
-        String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-smallForRoullete(oldSelectionAndRules).xml";
+        String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-DayOffTeacherOnly.xml";
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(
                 absolutePath,

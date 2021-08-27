@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ETT-Descriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ETT-V1.xsd">
+<ETT-Descriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ETT-V2.xsd">
 	<ETT-TimeTable days="6" hours="8">
 		<ETT-Teachers>
 			<ETT-Teacher id="1">
@@ -116,21 +116,9 @@
 				</ETT-Requirements>
 			</ETT-Class>								
 		</ETT-Classes>
-		<ETT-Rules hard-rules-weight="60">
-			<ETT-Rule type="Soft">
+		<ETT-Rules hard-rules-weight="100">
+			<ETT-Rule type="Hard">
 				<ETT-RuleId>DayOffTeacher</ETT-RuleId>
-			</ETT-Rule>
-			<ETT-Rule type="Hard">
-				<ETT-RuleId>TeacherIsHuman</ETT-RuleId>
-			</ETT-Rule>
-			<ETT-Rule type="Hard">
-				<ETT-RuleId>Singularity</ETT-RuleId>
-			</ETT-Rule>
-			<ETT-Rule type="Soft">
-				<ETT-RuleId>Knowledgeable</ETT-RuleId>
-			</ETT-Rule>
-			<ETT-Rule type="Hard">
-				<ETT-RuleId>Satisfactory</ETT-RuleId>
 			</ETT-Rule>
 		</ETT-Rules>
 	</ETT-TimeTable>
