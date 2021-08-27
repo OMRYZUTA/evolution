@@ -18,7 +18,12 @@
                     <tabs>
                         <Tab text="Raw">
                             <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <fx:include fx:id="rawSolutionComponent"
+                                                    source="./rawview/rawSolutionComponent.fxml"/>
+                                    </children>
+                                </AnchorPane>
                             </content>
                         </Tab>
                         <Tab text="Teacher View">
@@ -40,7 +45,7 @@
                 </TabPane>
             </center>
             <left>
-                <FlowPane prefHeight="200.0" prefWidth="200.0" rowValignment="TOP"
+                <FlowPane fx:id="RulePane" prefHeight="200.0" prefWidth="200.0" rowValignment="TOP"
                           style="-fx-border-color: #FFF9F7; -fx-background-color: #E1E3D4;"
                           BorderPane.alignment="CENTER">
                     <children>

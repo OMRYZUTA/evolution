@@ -44,7 +44,7 @@ public class TeacherSolutionController {
 
     public void setSolution(TimeTableSolutionDTO solution) {
         this.solution = solution;
-        scoreProperty.set(solution.getTotalFitnessScore());
+        this.scoreProperty.set(solution.getTotalFitnessScore());
     }
 
     public void setTimeTableSettings(TimeTableDTO timeTable) {
