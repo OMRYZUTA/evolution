@@ -50,6 +50,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         currentRunningTask = new LoadXMLTask(fileToLoad);
 
         currentRunningTask.setOnSucceeded(value -> {
+            controller.onTaskFinished();
             this.descriptor = (Descriptor) currentRunningTask.getValue();
             DescriptorDTO descDTO = createDescriptorDTO();
             onSuccess.accept(descDTO); //sending the descriptorDTO to the controller
@@ -57,12 +58,13 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         });
 
         currentRunningTask.setOnFailed(value -> {
+            controller.onTaskFinished();
             //TODO figure out how to handle exceptions, with reaching the "root" error as we did in the console
             onFailure.accept(currentRunningTask.getException());
             currentRunningTask = null;
         });
 
-        controller.bindTaskToUIComponents(currentRunningTask, null);
+        controller.bindTaskToUIComponents(currentRunningTask);
 
         new Thread(currentRunningTask).start();
     }
@@ -87,6 +89,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                 this.descriptor);
 
         currentRunningTask.setOnSucceeded(value -> {
+            controller.onTaskFinished();
             this.bestSolutionEver = (TimeTableSolution) currentRunningTask.getValue();
             TimeTableSolutionDTO solutionDTO = createTimeTableSolutionDTO(bestSolutionEver);
             onSuccess.accept(solutionDTO); //sending the best solution DTO to the controller
@@ -94,12 +97,13 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         });
 
         currentRunningTask.setOnFailed(value -> {
+            controller.onTaskFinished();
             //TODO figure out how to handle exceptions, with reaching the "root" error as we did in the console
             onFailure.accept(currentRunningTask.getException());
             currentRunningTask = null;
         });
 
-        controller.bindTaskToUIComponents(currentRunningTask, null);
+        controller.bindTaskToUIComponents(currentRunningTask);
 
         new Thread(currentRunningTask).start();
     }

@@ -17,7 +17,6 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
     //TODO later change to updateProgress and send one by one upwards
     private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride;
 
-
     public RunAlgorithmTask(int numOfGenerations, int generationsStride, Descriptor descriptor) {
         this.descriptor = descriptor;
         this.numOfGenerations = numOfGenerations;
@@ -27,7 +26,6 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
     @Override
     protected TimeTableSolution call() throws Exception {
         EvolutionEngine<TimeTableSolution> evolutionEngine;
-        System.out.println("in RunAlgoTask call()"); //TODO delete later
         updateMessage("starting to run evolution algorithm");
 
         try {
@@ -41,14 +39,11 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
             double bestSolutionFitnessScore = 0;
 
             for (int i = 1; i <= this.numOfGenerations; i++) {
-                System.out.println("in RunAlgoTask call(), start of loop " + i); //TODO delete later
                 currGeneration = evolutionEngine.execute(prevGeneration);
-                System.out.println("in RunAlgoTask call(), after exectue"); //TODO delete later
                 TimeTableSolution currBestSolution = currGeneration.stream().
                         sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
-                System.out.println("in RunAlgoTask call(), after currBestSolution assignment"); //TODO delete later
+
                 if (bestSolutionFitnessScore < currBestSolution.getTotalFitnessScore()) {
-                    System.out.println("in RunAlgoTask call(), inside if 50"); //TODO delete later
                     this.bestSolutionEver = currBestSolution;
                     bestSolutionFitnessScore = this.bestSolutionEver.getTotalFitnessScore();
                 }
@@ -62,7 +57,6 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
                 }
 
                 prevGeneration = currGeneration;
-                System.out.println("in RunAlgoTask call(), end of loop " + i); //TODO delete later
             } //end of for loop
         } catch (Throwable e) {
             updateMessage("Failed running algorithm: " + e.getMessage());

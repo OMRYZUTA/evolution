@@ -11,9 +11,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.util.Optional;
+import java.io.File;
 
 public class HeaderController {
     @FXML
@@ -37,11 +38,11 @@ public class HeaderController {
     @FXML
     Button stopTaskButton;
 
-    private SimpleBooleanProperty fileLoaded;
-    private SimpleBooleanProperty evolutionAlgorithmCompleted;
-    private SimpleStringProperty selectedFileProperty;
+    private final SimpleBooleanProperty fileLoaded;
+    private final SimpleBooleanProperty evolutionAlgorithmCompleted;
+    private final SimpleStringProperty selectedFileProperty;
     private SimpleBooleanProperty isPaused;
-    private SimpleBooleanProperty runningAlgorithm;
+    private final SimpleBooleanProperty runningAlgorithm;
     private AppController appController;
     private Stage primaryStage;
     private Engine engine;
@@ -86,17 +87,17 @@ public class HeaderController {
 
     @FXML
     public void loadFileButtonAction() {
-//        FileChooser fileChooser = new FileChooser();
-//        fileChooser.setTitle("Select words file");
-//        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
-//        File selectedFile = fileChooser.showOpenDialog(primaryStage);
-//        if (selectedFile == null) {
-//            return;
-//        }
-//
-//        String absolutePath = selectedFile.getAbsolutePath();
-        //TODO restore from hard coded
-        String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-DayOffTeacherOnly.xml";
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select words file");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
+        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+        if (selectedFile == null) {
+            return;
+        }
+
+        String absolutePath = selectedFile.getAbsolutePath();
+//        String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-DayOffTeacherOnly.xml";
+
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(
                 absolutePath,
@@ -107,13 +108,13 @@ public class HeaderController {
                 },
                 throwable -> {
                     if (!fileLoaded.get()) {
-                        taskMessageLabel.setText("Failed loading the file." /*+ System.lineSeparator()
+                        taskMessageLabel.setText("Failed loading the file." + System.lineSeparator()
                                 + throwable.getMessage() + System.lineSeparator()
-                                + "There is no file loaded to the system."*/);
+                                + "There is no file loaded to the system.");
                     } else {
-                        taskMessageLabel.setText("Failed loading the file." /*+ System.lineSeparator()
+                        taskMessageLabel.setText("Failed loading the file." + System.lineSeparator()
                                 + throwable.getMessage() + System.lineSeparator()
-                                + "Reverted to last file that was successfully loaded."*/);
+                                + "Reverted to last file that was successfully loaded.");
                     }
                 });
     }
@@ -175,7 +176,7 @@ public class HeaderController {
     }
 
     //in the recording about 26 minutes in
-    public void bindTaskToUIComponents(Task<?> task, Runnable onFinish) {
+    public void bindTaskToUIComponents(Task<?> task) {
         taskMessageLabel.setText("");
         taskProgressBar.setProgress(0);
 
@@ -186,19 +187,13 @@ public class HeaderController {
         taskProgressBar.progressProperty().bind(task.progressProperty());
 
         // TODO: bind to task.exceptionProperty() maybe?
-
-        // task cleanup upon finish
-        task.valueProperty().addListener((observable, oldValue, newValue) -> {
-            onTaskFinished(Optional.ofNullable(onFinish));
-        });
     }
 
     // mentions this in the recording about 27 minutes in
     //this function updates the ui once the task is finished
-    public void onTaskFinished(Optional<Runnable> onFinish) {
+    public void onTaskFinished() {
         this.taskMessageLabel.textProperty().unbind();
         this.taskProgressBar.progressProperty().unbind();
-        onFinish.ifPresent(Runnable::run);
     }
 
 //TODO add UIAdaptor and use it in loadXMLTask (better for later use of task in Ex. 3)

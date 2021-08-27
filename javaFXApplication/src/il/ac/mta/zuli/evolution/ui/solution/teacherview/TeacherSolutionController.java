@@ -79,36 +79,36 @@ public class TeacherSolutionController {
 
         teacherChoiceBox.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                        displaySolution(newValue);
+                    displaySolution(newValue);
                 });
     }
 
-    private void displaySolution( TeacherDTO teacher) {
-        if(teacher ==null){
+    private void displaySolution(TeacherDTO teacher) {
+        solutionBasePane.getChildren().clear(); //clears any previous solutions from base
+        if (teacher == null) {
             solutionBasePane.getChildren().add(new Label("choice is null"));
-        }else {
-            int teacherSolutionSize = solutionTeacherGroups.get(teacher).size();
-            List<QuintetDTO>[][] teacherSolutionMatrix = buildSolutionMatrix(solutionTeacherGroups.get(teacher));
-            Label label = new Label();
+            return;
+        }
 
-            solutionBasePane.getChildren().clear(); //clears any previous solutions from base
-            GridPane gridPane = createGrid();
+        if (!solutionTeacherGroups.containsKey(teacher)) {
+            Label nothingToDisplay = new Label(" This teacher not scheduled in the timetable.");
+            solutionBasePane.getChildren().add(nothingToDisplay);
+            return;
+        }
 
-            if (teacherSolutionSize > 0) {
-                for (int d = 0; d < days; d++) {
-                    for (int h = 0; h < hours; h++) {
-                        label = timeSlotToLabel(teacherSolutionMatrix[h][d]);
-                        gridPane.add(label, d, h);
-                    }
-                }
+        // if we reached this line, we have a teacher-solution
+        List<QuintetDTO>[][] teacherSolutionMatrix = buildSolutionMatrix(solutionTeacherGroups.get(teacher));
+        GridPane gridPane = createGrid();
 
+        for (int d = 0; d < days; d++) {
+            for (int h = 0; h < hours; h++) {
+                Label label = timeSlotToLabel(teacherSolutionMatrix[h][d]);
+                gridPane.add(label, d, h);
                 GridPane.setMargin(label, new Insets(5));
-                solutionBasePane.getChildren().add(gridPane);
-            } else {
-                Label nothingToDisplay = new Label(" This teacher not scheduled in the timetable.");
-                solutionBasePane.getChildren().add(nothingToDisplay);
             }
         }
+
+        solutionBasePane.getChildren().add(gridPane);
     }
 
     private GridPane createGrid() {
