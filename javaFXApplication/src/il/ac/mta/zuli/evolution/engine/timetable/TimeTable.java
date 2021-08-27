@@ -189,7 +189,7 @@ public class TimeTable {
                     ruleToAdd = new Sequentiality(rule.getType(), fetchTotalHours(rule.getETTConfiguration()));
                     break;
                 case "dayoffteacher":
-                    ruleToAdd = new DayOffTeacher(rule.getType());
+                    ruleToAdd = new DayOffTeacher(rule.getType(), days, new ArrayList<>(teachers.values()));
                     break;
                 default:
                     throw new ValidationException("Invalid rule for ex.1: " + rule.getETTRuleId());
