@@ -44,6 +44,7 @@ public class Sequentiality extends Rule {
     }
 
     private double calculateScoreSequentiality(TimeTableSolution timeTableSolution) {
+
         Map<SchoolClass, List<Quintet>> classSubSolutions = timeTableSolution.getSolutionQuintets().stream()
                 .collect(Collectors.groupingBy(Quintet::getSchoolClass));
 
@@ -56,11 +57,12 @@ public class Sequentiality extends Rule {
         int satisfactoryClasses = (int) classScores.stream().filter(s -> s == 100.0).count();
 
         double score;
-
-        if (this.isHardRule() && (satisfactoryClasses < schoolClasses.size())) {
+        int numOfClasses = schoolClasses.size();
+        if (this.isHardRule() && (satisfactoryClasses < numOfClasses)) {
             score = 0.0;
         } else {
             score = classScores.stream().reduce(0.0, (sum, element) -> sum + element);
+            score = score / numOfClasses;
         }
 
         return score;

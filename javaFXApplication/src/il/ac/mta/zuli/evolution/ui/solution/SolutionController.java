@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.ui.solution;
 import il.ac.mta.zuli.evolution.dto.RuleDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
+import il.ac.mta.zuli.evolution.ui.solution.classview.ClassSolutionController;
 import il.ac.mta.zuli.evolution.ui.solution.rawview.RawSolutionController;
 import il.ac.mta.zuli.evolution.ui.solution.ruletile.RuleController;
 import il.ac.mta.zuli.evolution.ui.solution.teacherview.TeacherSolutionController;
@@ -21,15 +22,19 @@ import java.util.Map;
 
 public class SolutionController {
     @FXML
-    private VBox rulePane;
-    @FXML
     private ScrollPane teacherSolutionComponent;
     @FXML
     private TeacherSolutionController teacherSolutionComponentController;
     @FXML
+    private ScrollPane classSolutionComponent;
+    @FXML
+    private ClassSolutionController classSolutionComponentController;
+    @FXML
     private ScrollPane rawSolutionComponent;
     @FXML
     private RawSolutionController rawSolutionComponentController;
+    @FXML
+    private VBox rulePane;
     @FXML
     private Label scoreLabel;
 
@@ -41,6 +46,7 @@ public class SolutionController {
 
     public void setSolution(TimeTableSolutionDTO solution) {
         teacherSolutionComponentController.setSolution(solution);
+        classSolutionComponentController.setSolution(solution);
         rawSolutionComponentController.setSolution(solution);
         scoreProperty.set(solution.getTotalFitnessScore());
         loadRules(solution);
@@ -48,6 +54,7 @@ public class SolutionController {
 
     public void setTimeTableSettings(TimeTableDTO timeTable) {
         teacherSolutionComponentController.setTimeTableSettings(timeTable);
+        classSolutionComponentController.setTimeTableSettings(timeTable);
     }
 
     @FXML

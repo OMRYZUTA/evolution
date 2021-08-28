@@ -1,7 +1,7 @@
-package il.ac.mta.zuli.evolution.ui.solution.teacherview;
+package il.ac.mta.zuli.evolution.ui.solution.classview;
 
 import il.ac.mta.zuli.evolution.dto.QuintetDTO;
-import il.ac.mta.zuli.evolution.dto.TeacherDTO;
+import il.ac.mta.zuli.evolution.dto.SchoolClassDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import javafx.collections.FXCollections;
@@ -20,18 +20,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class TeacherSolutionController {
+public class ClassSolutionController {
     @FXML
     Pane solutionBasePane;
     @FXML
-    ChoiceBox<TeacherDTO> teacherChoiceBox;
+    ChoiceBox<SchoolClassDTO> classChoiceBox;
 
     private int hours;
     private int days;
-    private Map<Integer, TeacherDTO> teachers;
-    private Map<TeacherDTO, List<QuintetDTO>> solutionTeacherGroups;
+    private Map<Integer, SchoolClassDTO> classes;
+    private Map<SchoolClassDTO, List<QuintetDTO>> solutionClassGroups;
     private TimeTableSolutionDTO solution;
-    private ObservableList<TeacherDTO> teacherChoices;
+    private ObservableList<SchoolClassDTO> classChoices;
 
     public void setSolution(TimeTableSolutionDTO solution) {
         this.solution = solution;
@@ -40,58 +40,59 @@ public class TeacherSolutionController {
     public void setTimeTableSettings(TimeTableDTO timeTable) {
         this.hours = timeTable.getHours();
         this.days = timeTable.getDays();
-        this.teachers = timeTable.getTeachers();
-        this.solutionTeacherGroups = solution.getSolutionQuintets().stream()
-                .collect(Collectors.groupingBy(QuintetDTO::getTeacher));
-        this.teacherChoices = FXCollections.observableArrayList(timeTable.getTeachers().values());
+        this.classes = timeTable.getSchoolClasses();
+        this.solutionClassGroups = solution.getSolutionQuintets().stream()
+                .collect(Collectors.groupingBy(QuintetDTO::getSchoolClass));
+        this.classChoices = FXCollections.observableArrayList(timeTable.getSchoolClasses().values());
 
         //the following can't happen in initialize() because it causes a NullPointerException
-        teacherChoiceBox.setItems(teacherChoices);
-        teacherChoiceBox.setValue(teacherChoices.get(0));
+        classChoiceBox.setItems(classChoices);
+        classChoiceBox.setValue(classChoices.get(0));
     }
 
     @FXML
     private void initialize() {
 
-        teacherChoiceBox.setConverter(new StringConverter<TeacherDTO>() {
+        classChoiceBox.setConverter(new StringConverter<SchoolClassDTO>() {
             @Override
-            public String toString(TeacherDTO object) {
+            public String toString(SchoolClassDTO object) {
                 return object.getName();
             }
 
             @Override
-            public TeacherDTO fromString(String string) {
+            public SchoolClassDTO fromString(String string) {
                 // not used ???
                 return null;
             }
         });
 
-        teacherChoiceBox.getSelectionModel().selectedItemProperty()
+        classChoiceBox.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     displaySolution(newValue);
                 });
     }
 
-    private void displaySolution(TeacherDTO teacher) {
+    private void displaySolution(SchoolClassDTO schoolClass) {
         solutionBasePane.getChildren().clear(); //clears any previous solutions from base
-        if (teacher == null) {
+
+        if (schoolClass == null) {
             solutionBasePane.getChildren().add(new Label("choice is null"));
             return;
         }
 
-        if (!solutionTeacherGroups.containsKey(teacher)) {
-            Label nothingToDisplay = new Label(" This teacher is not scheduled in the timetable.");
+        if (!solutionClassGroups.containsKey(schoolClass)) {
+            Label nothingToDisplay = new Label(" This class is not scheduled in the timetable.");
             solutionBasePane.getChildren().add(nothingToDisplay);
             return;
         }
 
-        // if we reached this line, we have a teacher-solution
-        List<QuintetDTO>[][] teacherSolutionMatrix = buildSolutionMatrix(solutionTeacherGroups.get(teacher));
+        // if we reached this line, we have a class-solution
+        List<QuintetDTO>[][] classSolutionMatrix = buildSolutionMatrix(solutionClassGroups.get(schoolClass));
         GridPane gridPane = createGrid();
 
         for (int d = 0; d < days; d++) {
             for (int h = 0; h < hours; h++) {
-                Label label = timeSlotToLabel(teacherSolutionMatrix[h][d]);
+                Label label = timeSlotToLabel(classSolutionMatrix[h][d]);
                 gridPane.add(label, d, h);
                 GridPane.setMargin(label, new Insets(5));
             }
@@ -131,8 +132,9 @@ public class TeacherSolutionController {
     private Label timeSlotToLabel(List<QuintetDTO> quintets) {
         StringBuilder sb = new StringBuilder();
         for (QuintetDTO quintet : quintets) {
-            int id1 = quintet.getSchoolClass().getId();
-            String s1 = quintet.getSchoolClass().getName();
+//            <teacher id, teacher name, subject id, subject name>
+            int id1 = quintet.getTeacherID();
+            String s1 = quintet.getTeacher().getName();
             int id2 = quintet.getSubject().getId();
             String s2 = quintet.getSubject().getName();
             sb.append(String.format("%d %s, %d %s\n", id1, s1, id2, s2));
@@ -159,4 +161,5 @@ public class TeacherSolutionController {
 
         return matrix;
     }
+
 }
