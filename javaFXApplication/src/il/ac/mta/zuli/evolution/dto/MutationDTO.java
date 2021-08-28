@@ -1,9 +1,9 @@
 package il.ac.mta.zuli.evolution.dto;
 
 public class MutationDTO {
-    String name;
-    double probability;
-    String configuration;
+    private final String name;
+    private final double probability;
+    private final String configuration;
 
     public MutationDTO(String name, double probability, String configuration) {
         this.name = name;

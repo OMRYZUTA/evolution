@@ -1,8 +1,8 @@
 package il.ac.mta.zuli.evolution.dto;
 
 public class SelectionDTO {
-    String type;
-    String configuration;
+    private final String type;
+    private final String configuration;
 
     public SelectionDTO(String type, String configuration) {
         this.type = type;

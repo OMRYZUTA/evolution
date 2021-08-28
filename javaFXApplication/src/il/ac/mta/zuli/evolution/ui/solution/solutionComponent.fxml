@@ -18,10 +18,12 @@
                     <tabs>
                         <Tab text="Raw">
                             <content>
-                                <AnchorPane>
+                                <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                     <children>
                                         <fx:include fx:id="rawSolutionComponent"
-                                                    source="./rawview/rawSolutionComponent.fxml"/>
+                                                    source="./rawview/rawSolutionComponent.fxml"
+                                                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                     </children>
                                 </AnchorPane>
                             </content>
@@ -31,7 +33,9 @@
                                 <AnchorPane>
                                     <children>
                                         <fx:include fx:id="teacherSolutionComponent"
-                                                    source="./teacherview/teacherSolutionComponent.fxml"/>
+                                                    source="./teacherview/teacherSolutionComponent.fxml"
+                                                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                     </children>
                                 </AnchorPane>
                             </content>
@@ -49,8 +53,8 @@
                     <children>
                         <Label fx:id="scoreLabel" text="Score"/>
                         <Label style="-fx-text-fill: #A83E32;" text="Rules"/>
-                        <FlowPane fx:id="RulePane" orientation="VERTICAL" prefWrapLength="1000.0" rowValignment="TOP"
-                                  style="-fx-border-color: #FFF9F7; -fx-background-color: #E1E3D4;"/>
+                        <VBox fx:id="rulePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                              spacing="5.0"/>
                     </children>
                     <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>

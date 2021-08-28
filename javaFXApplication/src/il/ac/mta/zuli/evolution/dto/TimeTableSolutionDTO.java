@@ -8,7 +8,7 @@ public class TimeTableSolutionDTO {
     private final int solutionSize;
     private final double totalFitnessScore;
     private final Map<RuleDTO, Double> fitnessScorePerRule;
-    TimeTableDTO timeTable;
+    private final TimeTableDTO timeTable;
 
     public TimeTableSolutionDTO(List<QuintetDTO> solution, int solutionSize,
                                 double totalFitnessScore, Map<RuleDTO, Double> fitnessScorePerRule,
