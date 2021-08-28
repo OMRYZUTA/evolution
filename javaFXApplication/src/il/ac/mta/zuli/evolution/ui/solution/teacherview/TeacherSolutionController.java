@@ -80,7 +80,7 @@ public class TeacherSolutionController {
         }
 
         if (!solutionTeacherGroups.containsKey(teacher)) {
-            Label nothingToDisplay = new Label(" This teacher not scheduled in the timetable.");
+            Label nothingToDisplay = new Label(" This teacher is not scheduled in the timetable.");
             solutionBasePane.getChildren().add(nothingToDisplay);
             return;
         }
