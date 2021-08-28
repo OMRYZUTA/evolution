@@ -1,8 +1,8 @@
 package il.ac.mta.zuli.evolution.dto;
 
 public class CrossoverDTO {
-    String name;
-    int cuttingPoints;
+    private final String name;
+    private final int cuttingPoints;
 
     public CrossoverDTO(String name, int cuttingPoints) {
         this.name = name;

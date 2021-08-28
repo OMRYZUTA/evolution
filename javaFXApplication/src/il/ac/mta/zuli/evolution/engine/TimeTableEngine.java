@@ -292,7 +292,12 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         Set<RuleDTO> rulesDTO = new HashSet<>();
 
         for (Rule rule : rules) {
-            rulesDTO.add(new RuleDTO(rule.getClass().getSimpleName(), rule.getRuleType().toString()));
+            rulesDTO.add(
+                    new RuleDTO(
+                            rule.getClass().getSimpleName(),
+                            rule.getRuleType().toString(),
+                            rule.getParams()
+                    ));
         }
 
         return rulesDTO;
@@ -332,8 +337,10 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
         for (Map.Entry<Rule, Double> entry : solution.getFitnessScorePerRule().entrySet()) {
             Rule rule = entry.getKey();
-            fitnessScorePerRuleDTO.put(new RuleDTO(rule.getClass().getSimpleName(), rule.getRuleType().toString()),
-                    entry.getValue());
+            fitnessScorePerRuleDTO.put(
+                    new RuleDTO(rule.getClass().getSimpleName(), rule.getRuleType().toString(), rule.getParams()),
+                    entry.getValue()
+            );
         }
 
         return new TimeTableSolutionDTO(quintets, solution.getSolutionSize(), solution.getTotalFitnessScore(),

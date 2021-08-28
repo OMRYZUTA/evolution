@@ -8,13 +8,18 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="il.ac.mta.zuli.evolution.ui.solution.rawview.RawSolutionController">
     <content>
-        <VBox alignment="TOP_CENTER" spacing="5.0">
+        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
             </padding>
             <children>
                 <Label text="Quintet &lt;D,H,C,T,S&gt;"/>
-                <Label fx:id="quintetListLabel" text="quintet list"/>
+                <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" maxHeight="1.7976931348623157E308"
+                            maxWidth="1.7976931348623157E308" pannable="true" vbarPolicy="ALWAYS">
+                    <content>
+                        <Label fx:id="quintetListLabel" text="quintet list"/>
+                    </content>
+                </ScrollPane>
             </children>
         </VBox>
     </content>

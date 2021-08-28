@@ -27,6 +27,10 @@ public abstract class Rule implements RuleInterface {
         return this.ruleType == RuleType.HARD;
     }
 
+    public String getParams() {
+        return "";
+    }
+
     @Override
     public String toString() {
         return "Rule{RuleID: " + getClass().getSimpleName() +

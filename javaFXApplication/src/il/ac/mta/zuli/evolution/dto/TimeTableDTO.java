@@ -6,10 +6,10 @@ import java.util.Set;
 public class TimeTableDTO {
     private final int days;
     private final int hours;
-    Map<Integer, SubjectDTO> subjects;
-    Map<Integer, TeacherDTO> teachers;
-    Map<Integer, SchoolClassDTO> schoolClasses;
-    Set<RuleDTO> rules;
+    private final Map<Integer, SubjectDTO> subjects;
+    private final Map<Integer, TeacherDTO> teachers;
+    private final Map<Integer, SchoolClassDTO> schoolClasses;
+    private final Set<RuleDTO> rules;
 
     public TimeTableDTO(int days, int hours, Map<Integer, SubjectDTO> subjects,
                         Map<Integer, TeacherDTO> teachers,

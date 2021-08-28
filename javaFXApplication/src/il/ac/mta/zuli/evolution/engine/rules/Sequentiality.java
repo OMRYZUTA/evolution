@@ -38,6 +38,11 @@ public class Sequentiality extends Rule {
         timeTableSolution.addScoreToRule(this, score);
     }
 
+    @Override
+    public String getParams() {
+        return String.format("totalHours=%d", totalHours);
+    }
+
     private double calculateScoreSequentiality(TimeTableSolution timeTableSolution) {
         Map<SchoolClass, List<Quintet>> classSubSolutions = timeTableSolution.getSolutionQuintets().stream()
                 .collect(Collectors.groupingBy(Quintet::getSchoolClass));

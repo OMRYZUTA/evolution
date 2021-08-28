@@ -3,12 +3,14 @@ package il.ac.mta.zuli.evolution.dto;
 import java.util.Objects;
 
 public class RuleDTO {
-    String name;
-    String type;
+    private final String name;
+    private final String type;
+    private final String params;
 
-    public RuleDTO(String name, String type) {
+    public RuleDTO(String name, String type, String params) {
         this.name = name;
         this.type = type;
+        this.params = params;
     }
 
     @Override
@@ -35,6 +37,10 @@ public class RuleDTO {
 
     public String getType() {
         return type;
+    }
+
+    public String getParams() {
+        return params;
     }
 
     public boolean isHardRule() {
