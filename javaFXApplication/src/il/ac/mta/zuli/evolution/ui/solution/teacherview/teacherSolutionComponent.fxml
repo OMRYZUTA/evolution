@@ -15,7 +15,6 @@
             <children>
                 <HBox alignment="CENTER" spacing="10.0">
                     <children>
-                        <Label fx:id="scoreLabel" style="-fx-text-fill: #442526;" text="solution score x"/>
                         <Label text="Teacher:"/>
                         <ChoiceBox fx:id="teacherChoiceBox"
                                    style="-fx-border-color: #442526; -fx-background-color: #FFF9F7;"/>
