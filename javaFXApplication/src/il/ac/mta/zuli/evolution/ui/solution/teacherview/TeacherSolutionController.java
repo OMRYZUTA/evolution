@@ -4,8 +4,6 @@ import il.ac.mta.zuli.evolution.dto.QuintetDTO;
 import il.ac.mta.zuli.evolution.dto.TeacherDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,24 +25,16 @@ public class TeacherSolutionController {
     Pane solutionBasePane;
     @FXML
     ChoiceBox<TeacherDTO> teacherChoiceBox;
-    @FXML
-    Label scoreLabel;
 
     private int hours;
     private int days;
     private Map<Integer, TeacherDTO> teachers;
     private Map<TeacherDTO, List<QuintetDTO>> solutionTeacherGroups;
     private TimeTableSolutionDTO solution;
-    private final SimpleDoubleProperty scoreProperty;
     private ObservableList<TeacherDTO> teacherChoices;
-
-    public TeacherSolutionController() {
-        scoreProperty = new SimpleDoubleProperty(0);
-    }
 
     public void setSolution(TimeTableSolutionDTO solution) {
         this.solution = solution;
-        this.scoreProperty.set(solution.getTotalFitnessScore());
     }
 
     public void setTimeTableSettings(TimeTableDTO timeTable) {
@@ -62,7 +52,6 @@ public class TeacherSolutionController {
 
     @FXML
     private void initialize() {
-        scoreLabel.textProperty().bind(Bindings.format("Solution Score: %f", scoreProperty));
 
         teacherChoiceBox.setConverter(new StringConverter<TeacherDTO>() {
             @Override
