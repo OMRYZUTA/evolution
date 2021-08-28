@@ -8,7 +8,8 @@
           xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="il.ac.mta.zuli.evolution.ui.solution.ruletile.RuleController">
    <children>
-      <VBox spacing="5.0" TilePane.alignment="TOP_LEFT">
+      <VBox spacing="5.0" style="-fx-border-color: #442526; -fx-background-color: #A0B3AA;"
+            TilePane.alignment="TOP_LEFT">
          <children>
             <Label fx:id="scoreLabel" text="rule score for this solution"/>
             <Label fx:id="nameLabel" text="rule name label"/>
