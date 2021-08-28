@@ -27,7 +27,7 @@ public class EngineSettings<T extends Solution> {
 
     public EngineSettings(@NotNull ETTEvolutionEngine ee, @NotNull TimeTable timeTable) {
         setInitialPopulationSize(ee.getETTInitialPopulation().getSize());
-        setSelection(ee.getETTSelection());
+        setSelection(ee.getETTSelection(),initialPopulationSize);
         setCrossover(ee.getETTCrossover(), timeTable);
         setMutations(ee.getETTMutations().getETTMutation(), timeTable);
     }
@@ -41,8 +41,8 @@ public class EngineSettings<T extends Solution> {
         }
     }
 
-    private void setSelection(@NotNull ETTSelection ettSelection) {
-        this.selection = SelectionFactory.createSelection(ettSelection);
+    private void setSelection(@NotNull ETTSelection ettSelection,int populationSize) {
+        this.selection = SelectionFactory.createSelection(ettSelection,populationSize);
     }
 
     private void setCrossover(@NotNull ETTCrossover ettCrossover, TimeTable timeTable) {
@@ -85,5 +85,9 @@ public class EngineSettings<T extends Solution> {
                 ", crossover=" + crossover + System.lineSeparator() +
                 ", mutations=" + mutations +
                 '}';
+    }
+
+    public int getEliteNumber() {
+        return  selection.getElitism();
     }
 }

@@ -272,7 +272,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     private SelectionDTO createSelectionDTO() {
         Selection<TimeTableSolution> selection = descriptor.getEngineSettings().getSelection();
 
-        return new SelectionDTO(selection.getClass().getSimpleName(), selection.getConfiguration());
+        return new SelectionDTO(selection);
     }
 
     @NotNull

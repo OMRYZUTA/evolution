@@ -1,6 +1,8 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.selection;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTSelection;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -11,6 +13,13 @@ import java.util.Random;
 public class RouletteWheel<S extends Solution> implements Selection<S> {
 
     private List<Integer> scoreRangePerIndex;
+    private int elitism;
+
+    public RouletteWheel(ETTSelection ettSelection, int populationSize) {
+        if(ettSelection.getETTElitism()!=null){
+            setElitism(ettSelection.getETTElitism(), populationSize);
+        }// else elitism is initialize to zero anyway
+    }
 
     @Override
     public List<S> select(List<S> solutions) {
@@ -56,6 +65,20 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
         //this selection has no configuration bur we still need to override the interface method
         return "-";
     }
+
+    @Override
+    public int getElitism() {
+        return elitism;
+    }
+
+    public void setElitism(int elitism, int populationSize) {
+        if (elitism > 0 && elitism <= populationSize) {
+            this.elitism = elitism;
+        } else {
+            throw new ValidationException("number of elitism given : " + elitism + " is out of range");
+        }
+    }
+
 
 //    an example to make things more clear:
 //    if there are 3 solutions: solutions[0].score=80, solutions[1].score=20, solutions[2].score=75

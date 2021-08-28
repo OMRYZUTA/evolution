@@ -10,9 +10,13 @@ import java.util.stream.Collectors;
 
 public class Truncation<S extends Solution> implements Selection<S> {
     private int topPercent;
+    private int elitism;
 
-    public Truncation(ETTSelection ettSelection) {
+    public Truncation(ETTSelection ettSelection, int populationSize) {
         parseConfiguration(ettSelection);
+        if(ettSelection.getETTElitism()!=null){
+            setElitism(ettSelection.getETTElitism(), populationSize);
+        }// else elitism is initialize to zero anyway
     }
 
     private void parseConfiguration(ETTSelection ettSelection) {
@@ -33,6 +37,8 @@ public class Truncation<S extends Solution> implements Selection<S> {
         setTopPercent(num);
     }
 
+
+
     @Override
     public List<S> select(List<S> solutions) {
         Collections.sort(solutions); //sorting by fitnessScore
@@ -45,6 +51,19 @@ public class Truncation<S extends Solution> implements Selection<S> {
 
     public String getConfiguration() {
         return String.format("TopPercent = %d", topPercent);
+    }
+
+    @Override
+    public int getElitism() {
+        return elitism;
+    }
+
+    public void setElitism(int elitism, int populationSize) {
+        if (elitism > 0 && elitism <= populationSize) {
+            this.elitism = elitism;
+        } else {
+            throw new ValidationException("number of elitism given : " + elitism + " is out of range");
+        }
     }
 
     private void setTopPercent(int topPercent) {

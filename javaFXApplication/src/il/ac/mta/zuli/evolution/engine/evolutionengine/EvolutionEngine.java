@@ -14,11 +14,13 @@ import java.util.stream.Collectors;
 public class EvolutionEngine<T extends Solution> {
     private final EngineSettings<T> engineSettings;
     private Set<Rule> rules;
+    private int numOfElitism;
 
 
     public EvolutionEngine(@NotNull EngineSettings<T> engineSettings, @NotNull Set<Rule> rules) {
         this.engineSettings = engineSettings;
         setRules(rules);
+        this.numOfElitism = engineSettings.getEliteNumber();
     }
 
     public void setRules(@NotNull Set<Rule> rules) {
@@ -35,7 +37,7 @@ public class EvolutionEngine<T extends Solution> {
         }
 
         evaluateSolutions(generation);
-
+        //extract elitism from generation List<T>
         List<T> parents = selectParentsFrom(generation);
 
         List<T> newGeneration = CrossoverNewGeneration(parents);

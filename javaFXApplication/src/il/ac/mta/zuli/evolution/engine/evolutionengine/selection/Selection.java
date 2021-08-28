@@ -9,4 +9,6 @@ public interface Selection<T extends Solution> {
     List<T> select(List<T> solutions);
 
     String getConfiguration();
+
+    int getElitism();
 }
