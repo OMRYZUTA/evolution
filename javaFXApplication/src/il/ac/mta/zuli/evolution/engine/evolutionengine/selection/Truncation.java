@@ -11,11 +11,13 @@ import java.util.stream.Collectors;
 public class Truncation<S extends Solution> implements Selection<S> {
     private int topPercent;
     private int elitism;
+    private int populationSize;
 
     public Truncation(ETTSelection ettSelection, int populationSize) {
         parseConfiguration(ettSelection);
+        this.populationSize=populationSize;
         if(ettSelection.getETTElitism()!=null){
-            setElitism(ettSelection.getETTElitism(), populationSize);
+            setElitism(ettSelection.getETTElitism());
         }// else elitism is initialize to zero anyway
     }
 
@@ -45,6 +47,7 @@ public class Truncation<S extends Solution> implements Selection<S> {
         Collections.reverse(solutions); //in descending order
 
         int topFitnessSolutions = (int) Math.ceil(((double) topPercent * solutions.size()) / 100);
+        topFitnessSolutions = Math.min(topFitnessSolutions, (populationSize - elitism));
 
         return solutions.stream().limit(topFitnessSolutions).collect(Collectors.toList());
     }
@@ -58,7 +61,7 @@ public class Truncation<S extends Solution> implements Selection<S> {
         return elitism;
     }
 
-    public void setElitism(int elitism, int populationSize) {
+    public void setElitism(int elitism) {
         if (elitism > 0 && elitism <= populationSize) {
             this.elitism = elitism;
         } else {

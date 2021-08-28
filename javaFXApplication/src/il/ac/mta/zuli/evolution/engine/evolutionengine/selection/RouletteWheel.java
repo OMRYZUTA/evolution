@@ -30,7 +30,7 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
 
         scoreRangePerIndex = buildScoreRangePerIndexList(solutions);
 
-        for (int i = 0; i < populationSize; i++) {
+        for (int i = 0; i < (populationSize-elitism); i++) {
             //scoreRangePerIndex.get() returns an index in the solutions-list
             solutionIndex = scoreRangePerIndex.get(random.nextInt(scoreRangePerIndex.size()));
             selectedParents.add(solutions.get(solutionIndex));

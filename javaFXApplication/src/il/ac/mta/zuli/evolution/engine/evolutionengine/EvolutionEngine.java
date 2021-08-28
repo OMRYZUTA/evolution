@@ -5,16 +5,13 @@ import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EvolutionEngine<T extends Solution> {
     private final EngineSettings<T> engineSettings;
     private Set<Rule> rules;
-    private int numOfElitism;
+    private final int numOfElitism;
 
 
     public EvolutionEngine(@NotNull EngineSettings<T> engineSettings, @NotNull Set<Rule> rules) {
@@ -37,12 +34,19 @@ public class EvolutionEngine<T extends Solution> {
         }
 
         evaluateSolutions(generation);
-        //extract elitism from generation List<T>
+
+        //extract elitism from generation
+        List<T> eliteSolutions = generation.stream()
+                .sorted(Collections.reverseOrder()).
+                        limit(numOfElitism).collect(Collectors.toList());
+
         List<T> parents = selectParentsFrom(generation);
 
-        List<T> newGeneration = CrossoverNewGeneration(parents);
+        List<T> newGeneration = crossoverNewGeneration(parents);//makes sure that new generation < populationSize- elitism
 
         List<T> newGenerationAfterMutation = mutateGeneration(newGeneration);
+
+        newGenerationAfterMutation.addAll(eliteSolutions);//elite solutions weren't mutated.
 
         //final fitnessEvaluation for new generation
         evaluateSolutions(newGenerationAfterMutation);
@@ -74,17 +78,18 @@ public class EvolutionEngine<T extends Solution> {
     }
 
     @NotNull
-    private List<T> CrossoverNewGeneration(List<T> parents) {
+    private List<T> crossoverNewGeneration(List<T> parents) {
         // crossover to create next generation (repeat crossover until we receive generation big enough)
         List<T> newGeneration = new ArrayList<>();
         int populationSize = engineSettings.getInitialPopulationSize();
 
-        while (newGeneration.size() < populationSize) {
+        while (newGeneration.size() < (populationSize - numOfElitism)) {
             newGeneration.addAll(engineSettings.getCrossover().crossover(parents));
         }
 
-        if (newGeneration.size() > populationSize) {
-            newGeneration = removeExtraSolutionsFromGeneration(newGeneration, populationSize);
+        if (newGeneration.size() > (populationSize - numOfElitism)) {
+            //keeps the best solution, remove the worst.
+            newGeneration = removeExtraSolutionsFromGeneration(newGeneration, (populationSize - numOfElitism));
         }
 
         return newGeneration;

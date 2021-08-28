@@ -90,7 +90,7 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
         // if there is one parent left, need to add it to new generations
         if (parentsAsAspectMatrix.size() == 1) {
             Map<T, List<List<Quintet>>> lastParent = parentsAsAspectMatrix.get(0);
-            List<List<Quintet>> onlyChild = new ArrayList<>();
+            List<List<Quintet>> onlyChild = createEmptyDHMatrix();
 
             for (T teacherOrClass : teachersOrClasses) {
                 fillChildMatrix(lastParent.get(teacherOrClass), onlyChild);
