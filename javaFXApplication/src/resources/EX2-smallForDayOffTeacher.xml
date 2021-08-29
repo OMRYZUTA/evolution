@@ -46,7 +46,7 @@
 			<ETT-Class id="2">
 				<ETT-Name>Nerds</ETT-Name>
 				<ETT-Requirements>
-					<ETT-Study subject-id="2" hours="1"/>
+					<ETT-Study subject-id="2" hours="4"/>
 
 				</ETT-Requirements>
 			</ETT-Class>			

@@ -15,8 +15,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
-public class HeaderController {
+public class HeaderController<T> {// in our case T is integer or a double, used for predicate
     @FXML
     Button loadFileButton;
     @FXML
@@ -49,7 +52,7 @@ public class HeaderController {
     private DescriptorDTO descriptor; //the root in the xml hierarchy
     private TimeTableSolutionDTO solution = null;
     private int stride;
-    private int numOfGenerations;
+    private List<Predicate<T>> finishLineCondition;
 
     public HeaderController() {
         selectedFileProperty = new SimpleStringProperty("");
@@ -139,13 +142,24 @@ public class HeaderController {
             // "Would you like to re-run the algorithm? (Enter Y/N)");
         }
 
-        //TODO remove hardcoded values
-        this.numOfGenerations = 150;
+        //TODO remove hardcoded values, handle invalid input
+//        if (numOfGenerations < 0) {
+//            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
+//                    ErrorType.RunError,
+//                    new ValidationException(numOfGenerations + " is invalid number for generations, must be positive number"));
+//            fireEvent("error", e);
+//        }
+//        if (generationsStride < 0 || generationsStride > numOfGenerations) {
+//            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
+//                    ErrorType.RunError,
+//                    new ValidationException(numOfGenerations + " is invalid number for generation strides, must be between 1 - " + numOfGenerations));
+//            fireEvent("error", e);
+//        }
         this.stride = 20;
-
+        finishLineCondition = new ArrayList<>();
 //      executeEvolutionAlgorithm( int, int, Consumer<TimeTableSolutionDTO> onSuccess, Consumer <Throwable > onFailure)//
         engine.executeEvolutionAlgorithm(
-                this.numOfGenerations,
+                this.finishLineCondition,
                 this.stride,
                 solution -> {
                     this.solution = solution;

@@ -8,7 +8,6 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterf
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
-import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.tasks.LoadXMLTask;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
@@ -22,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class TimeTableEngine extends EventsEmitter implements Engine {
     private Descriptor descriptor;
@@ -73,18 +73,18 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 //    public DescriptorDTO getSystemDetails()
 
     @Override
-    public void executeEvolutionAlgorithm(int numOfGenerations,
+    public void executeEvolutionAlgorithm(List<Predicate<Integer>> finishConditions,
                                           int generationsStride,
                                           Consumer<TimeTableSolutionDTO> onSuccess,
                                           Consumer<Throwable> onFailure) {
 
-        checkForErrorsBeforeExecutingAlgorithms(numOfGenerations, generationsStride);
+        checkForErrorsBeforeExecutingAlgorithms();
         if (currentRunningTask != null) {
             return; // TODO: should not come here, we want one task at a time
         }
 
         currentRunningTask = new RunAlgorithmTask(
-                numOfGenerations,
+                finishConditions,
                 generationsStride,
                 this.descriptor);
 
@@ -200,7 +200,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     //#endregion
 
     //#region auxiliary methods
-    private void checkForErrorsBeforeExecutingAlgorithms(int numOfGenerations, int generationsStride) {
+    private void checkForErrorsBeforeExecutingAlgorithms( ) {
         if (!isXMLLoaded()) {
             ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
                     ErrorType.RunError,
@@ -208,18 +208,6 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
             fireEvent("error", e);
         }
 
-        if (numOfGenerations < 0) {
-            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
-                    ErrorType.RunError,
-                    new ValidationException(numOfGenerations + " is invalid number for generations, must be positive number"));
-            fireEvent("error", e);
-        }
-        if (generationsStride < 0 || generationsStride > numOfGenerations) {
-            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
-                    ErrorType.RunError,
-                    new ValidationException(numOfGenerations + " is invalid number for generation strides, must be between 1 - " + numOfGenerations));
-            fireEvent("error", e);
-        }
     }
 
     @Override

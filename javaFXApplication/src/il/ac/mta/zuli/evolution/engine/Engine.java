@@ -7,13 +7,14 @@ import il.ac.mta.zuli.evolution.ui.header.HeaderController;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public interface Engine {
     void setController(HeaderController controller);
 
     void loadXML(String fileToLoad, Consumer<DescriptorDTO> onSuccess, Consumer<Throwable> onFailure);
 
-    void executeEvolutionAlgorithm(int numOfGenerations, int generationsStride, Consumer<TimeTableSolutionDTO> onSuccess, Consumer<Throwable> onFailure);
+    void executeEvolutionAlgorithm(List<Predicate<Integer>> finishConditions, int generationsStride, Consumer<TimeTableSolutionDTO> onSuccess, Consumer<Throwable> onFailure);
 
     void executeEvolutionAlgorithmWithFitnessStop(int numOfGenerations, int generationsStride, double fittnessStop);
 

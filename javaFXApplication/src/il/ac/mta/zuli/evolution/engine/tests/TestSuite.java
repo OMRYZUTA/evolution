@@ -416,9 +416,41 @@
 //        DayOffTeacher dayOffTeacherRule = new DayOffTeacher("soft",descriptor.getTimeTableDays(),new ArrayList<>(descriptor.getTimeTable().getTeachers().values()));
 //        dayOffTeacherRule.fitnessEvaluation(solution);
 //        solution.calculateTotalScore();
-//        System.out.println(solution);
 //        assertEquals(100.0,solution.getTotalFitnessScore());
 //    }
+//
+//    @Test
+//    void dayoffTeacherGiveSolutionZeroscore() throws Throwable {
+//        descriptor = xmlParser.unmarshall("src/resources/EX2-smallForDayOffTeacher.xml");
+//        List<Quintet> quintets = new ArrayList<>();
+//        int dayIndex = 1;
+//        DayOfWeek day = DayOfWeek.of(dayIndex);
+//        int hour = 0;
+//        SchoolClass schoolClass = descriptor.getTimeTable().getSchoolClasses().get(2);
+//
+//        for (Requirement requirement : schoolClass.getRequirements()) {
+//            for (int i = 0; i < requirement.getHours(); i+=5) {
+//                Subject subject = requirement.getSubject();
+//                Teacher teacher = descriptor.getTimeTable()
+//                        .getTeachers().get(descriptor.getTimeTable().getTeachersThatTeachSubject(subject.getId()).get(0));
+//                if (hour >= descriptor.getTimeTable().getHours()) {
+//                    hour = 0;
+//                    dayIndex++;
+//                    day = DayOfWeek.of(dayIndex);
+//                }
+//                quintets.add(new Quintet(day, hour, teacher, schoolClass, subject));
+//                hour++;
+//            }
+//        }
+//        TimeTableSolution solution = new TimeTableSolution(quintets, quintets.size(), descriptor.getTimeTable());
+//
+//        DayOffTeacher dayOffTeacherRule = new DayOffTeacher("Hard",descriptor.getTimeTableDays(),new ArrayList<>(descriptor.getTimeTable().getTeachers().values()));
+//        dayOffTeacherRule.fitnessEvaluation(solution);
+//        solution.calculateTotalScore();
+//        System.out.println(solution);
+//        assertEquals(0.0,solution.getTotalFitnessScore());
+//    }
+//
 //
 //    @Test
 //    void allRulesGiveSolutionFullScore() throws Throwable {
