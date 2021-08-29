@@ -34,23 +34,23 @@ public class EvolutionEngine<T extends Solution> {
         }
 
         evaluateSolutions(generation);
-
+        System.out.println("after first evaluation");
         //extract elitism from generation
         List<T> eliteSolutions = generation.stream()
                 .sorted(Collections.reverseOrder()).
                         limit(numOfElitism).collect(Collectors.toList());
-
+        System.out.println("after elitism");
         List<T> parents = selectParentsFrom(generation);
-
+        System.out.println("after selection");
         List<T> newGeneration = crossoverNewGeneration(parents);//makes sure that new generation < populationSize- elitism
-
+        System.out.println("after crossover");
         List<T> newGenerationAfterMutation = mutateGeneration(newGeneration);
-
+        System.out.println("afterMutation");
         newGenerationAfterMutation.addAll(eliteSolutions);//elite solutions weren't mutated.
-
+        System.out.println("after adding elite");
         //final fitnessEvaluation for new generation
         evaluateSolutions(newGenerationAfterMutation);
-
+        System.out.println("after final evaluation");
         return newGenerationAfterMutation;
     }
 
@@ -82,14 +82,16 @@ public class EvolutionEngine<T extends Solution> {
         // crossover to create next generation (repeat crossover until we receive generation big enough)
         List<T> newGeneration = new ArrayList<>();
         int populationSize = engineSettings.getInitialPopulationSize();
-
+        System.out.println("starting crossover new generation");
         while (newGeneration.size() < (populationSize - numOfElitism)) {
             newGeneration.addAll(engineSettings.getCrossover().crossover(parents));
+            System.out.println("made it after a crossover");
         }
-
+        System.out.println("after crossover while loop");
         if (newGeneration.size() > (populationSize - numOfElitism)) {
             //keeps the best solution, remove the worst.
             newGeneration = removeExtraSolutionsFromGeneration(newGeneration, (populationSize - numOfElitism));
+            System.out.println("after removing");
         }
 
         return newGeneration;

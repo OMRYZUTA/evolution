@@ -59,15 +59,6 @@ public class SchoolClass {
         }
     }
 
-    @Override
-    public String toString() {
-        return "SchoolClass{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", requirements=" + requirements +
-                '}';
-    }
-
     public int getTotalRequiredHours() {
         int totalRequiredHours = 0;
 
@@ -101,5 +92,14 @@ public class SchoolClass {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "SchoolClass{" +
+                "id=" + id ;
+//                ", name='" + name + '\'' +
+//                ", requirements=" + requirements +
+//                '}';
     }
 }

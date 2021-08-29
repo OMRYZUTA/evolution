@@ -30,7 +30,7 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
         }
 
         randomlyGenerateCuttingPoints();
-
+        System.out.println("after generating cutting points");
         return aspectOrientedCrossover(selectedParents);
     }
 
@@ -38,25 +38,26 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
     private <T> List<S> aspectOrientedCrossover(List<S> selectedParents) {
         //organize every solution in selectedParents as map of dh-matrix-per-aspect (map<aspect, list <list<q>>>)
         List<Map<T, List<List<Quintet>>>> parentsAsAspectMatrix = organizeSolutionsPerAspect(selectedParents);
-
+        System.out.println("after orgnazing solutions as matrix");
         Map<T, List<List<Quintet>>> parent1;
         Map<T, List<List<Quintet>>> parent2;
         List<List<Quintet>> child1ToUnite;
         List<List<Quintet>> child2ToUnite;
         List<TimeTableSolution> newGeneration = new ArrayList<>();
         List<T> teachersOrClasses = getRelevantList();
-
+        System.out.println("after getting relvantList");
         while (parentsAsAspectMatrix.size() >= 2) {
             parent1 = randomlySelectParent(parentsAsAspectMatrix);
             removeParentFromPoolOfParents(parentsAsAspectMatrix, parent1);
-
+            System.out.println("after getting and removing parent 1");
             parent2 = randomlySelectParent(parentsAsAspectMatrix);
             removeParentFromPoolOfParents(parentsAsAspectMatrix, parent2);
-
+            System.out.println("after getting and removing parent 2");
             List<List<List<Quintet>>> twoChildrenPerAspect = new ArrayList<>(); //2 child matrix
             //TODO refactor
             twoChildrenPerAspect.add(createEmptyDHMatrix());
             twoChildrenPerAspect.add(createEmptyDHMatrix());
+            System.out.println("after creating empty matrix for children");
             child1ToUnite = createEmptyDHMatrix();
             child2ToUnite = createEmptyDHMatrix();
 
@@ -68,6 +69,7 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
                     twoChildrenPerAspect = crossoverBetween2Parents(
                             matrix1,
                             matrix2);
+                    System.out.println("after crossoverBetween2Parents");
                 } else if ((matrix1 == null) && (matrix2 != null)) {
                     twoChildrenPerAspect.set(0, matrix2);
                     twoChildrenPerAspect.set(1, matrix2);
@@ -81,22 +83,32 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
 
                 fillChildMatrix(twoChildrenPerAspect.get(0), child1ToUnite);
                 fillChildMatrix(twoChildrenPerAspect.get(1), child2ToUnite);
+                System.out.println("after filling child matrix 1, 2");
             }
 
             List<TimeTableSolution> twoSolutionChildren = convertMatrixToSolutions(child1ToUnite, child2ToUnite);
+            System.out.println("after convertMatrixToSolutions");
             newGeneration.addAll(twoSolutionChildren);
+            System.out.println("after adding all to new generation");
         }
 
         // if there is one parent left, need to add it to new generations
         if (parentsAsAspectMatrix.size() == 1) {
+            System.out.println("in if  (parentsAsAspectMatrix.size() == 1) ");
             Map<T, List<List<Quintet>>> lastParent = parentsAsAspectMatrix.get(0);
+            System.out.println("last parent is: "+lastParent);
+            System.out.println("last parent size:"+lastParent.size());
             List<List<Quintet>> onlyChild = createEmptyDHMatrix();
+            System.out.println("only child is: "+onlyChild);
+            System.out.println("aspect list size :"+ teachersOrClasses.size());
 
             for (T teacherOrClass : teachersOrClasses) {
                 fillChildMatrix(lastParent.get(teacherOrClass), onlyChild);
+                System.out.println("after succecful fill child matrix");
             }
 
             newGeneration.add(convertSingleMatrixToSolution(onlyChild));
+            System.out.println("after adding only child to new generation");
         }
 
         return (List<S>) newGeneration;
@@ -185,16 +197,17 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
     }
 
     private void fillChildMatrix(List<List<Quintet>> source, List<List<Quintet>> destination) {
-        for (int i = 0; i < days * hours; i++) {
-            if (destination.get(i) == null) {
-                destination.set(i, source.get(i));
-            }
-            else{
-                //adding source list<Quintet> to destination list<Quintet>.
-                if(source.get(i)!=null) {
-                    //TODO check if we need to avoid conflicts in time slots consider generics
+        if(source !=null) {
+            for (int i = 0; i < days * hours; i++) {
+                if (destination.get(i) == null) {
+                    destination.set(i, source.get(i));
+                } else {
+                    //adding source list<Quintet> to destination list<Quintet>.
+                    if (source.get(i) != null) {
+                        //TODO check if we need to avoid conflicts in time slots consider generics
 
-                    (destination.get(i)).addAll(source.get(i));
+                        (destination.get(i)).addAll(source.get(i));
+                    }
                 }
             }
         }

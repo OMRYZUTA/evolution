@@ -37,12 +37,13 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
             List<TimeTableSolution> prevGeneration = initialPopulation;
             List<TimeTableSolution> currGeneration;
             double bestSolutionFitnessScore = 0;
+            System.out.println("prev Generation size:  "+prevGeneration.size());
 
             for (int i = 1; i <= this.numOfGenerations; i++) {
                 currGeneration = evolutionEngine.execute(prevGeneration);
                 TimeTableSolution currBestSolution = currGeneration.stream().
                         sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
-
+                System.out.println("i is : " + i +" "+currBestSolution.getTotalFitnessScore());
                 if (bestSolutionFitnessScore < currBestSolution.getTotalFitnessScore()) {
                     this.bestSolutionEver = currBestSolution;
                     bestSolutionFitnessScore = this.bestSolutionEver.getTotalFitnessScore();
