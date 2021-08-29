@@ -8,6 +8,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterf
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
+import il.ac.mta.zuli.evolution.engine.predicates.FinishPredicate;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.tasks.LoadXMLTask;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
@@ -21,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class TimeTableEngine extends EventsEmitter implements Engine {
     private Descriptor descriptor;
@@ -73,7 +73,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 //    public DescriptorDTO getSystemDetails()
 
     @Override
-    public void executeEvolutionAlgorithm(List<Predicate<Integer>> finishConditions,
+    public void executeEvolutionAlgorithm(List<FinishPredicate> finishConditions,
                                           int generationsStride,
                                           Consumer<TimeTableSolutionDTO> onSuccess,
                                           Consumer<Throwable> onFailure) {

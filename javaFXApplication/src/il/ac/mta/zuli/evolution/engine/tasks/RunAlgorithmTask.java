@@ -3,40 +3,46 @@ package il.ac.mta.zuli.evolution.engine.tasks;
 import il.ac.mta.zuli.evolution.engine.Descriptor;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
+import il.ac.mta.zuli.evolution.engine.predicates.FinishPredicate;
 import javafx.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class RunAlgorithmTask extends Task<TimeTableSolution> {
     private final Descriptor descriptor;
-    List<Predicate<Integer>> finishConditions;
+    List<FinishPredicate> finishPredicates;
     private final int generationsStride;
     private TimeTableSolution bestSolutionEver = null;
     private int currentGenerationNum;
+    private long start;
     //TODO later change to updateProgress and send one by one upwards
     private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride;
 
-    public RunAlgorithmTask(List<Predicate<Integer>> finishConditions, int generationsStride, Descriptor descriptor) {
+    public RunAlgorithmTask(List<FinishPredicate> finishPredicates, int generationsStride, Descriptor descriptor) {
         this.descriptor = descriptor;
-        this.finishConditions = finishConditions;
+        this.finishPredicates = finishPredicates;
         this.generationsStride = generationsStride;
     }
 
     @Override
     protected TimeTableSolution call() throws Exception {
+        start = System.currentTimeMillis();
+
         EvolutionEngine<TimeTableSolution> evolutionEngine;
         updateMessage("starting to run evolution algorithm");
         bestSolutionsInGenerationPerStride = new TreeMap<>();
+
         List<TimeTableSolution> initialPopulation = getInitialGeneration();
         evolutionEngine = new EvolutionEngine(descriptor.getEngineSettings(), descriptor.getRules());
+
         List<TimeTableSolution> prevGeneration = initialPopulation;
         List<TimeTableSolution> currGeneration;
         double bestSolutionFitnessScore = 0;
-        TimeTableSolution currBestSolution=null;
+        TimeTableSolution currBestSolution = null;
         currentGenerationNum = 1;
+
         while (checkAllPredicates()) {
             currGeneration = evolutionEngine.execute(prevGeneration);
             currBestSolution = currGeneration.stream().
@@ -50,8 +56,8 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
             //with addition of first and last generation
             if (currentGenerationNum == 1 || (currentGenerationNum % generationsStride == 0)) {
                 bestSolutionsInGenerationPerStride.put(currentGenerationNum, currBestSolution);
-                System.out.println("current genereation: "+currentGenerationNum);
-                System.out.println("best score: "+currBestSolution.getTotalFitnessScore());
+                System.out.println("current generation: " + currentGenerationNum);
+                System.out.println("best score: " + currBestSolution.getTotalFitnessScore());
                 //TODO updateMessage ?
                 //fireStrideDetails(i, currBestSolution);
             }
@@ -59,7 +65,7 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
             prevGeneration = currGeneration;
             currentGenerationNum++;
         } //end of for loop
-        bestSolutionsInGenerationPerStride.put(currentGenerationNum-1, currBestSolution);
+        bestSolutionsInGenerationPerStride.put(currentGenerationNum - 1, currBestSolution);
 //        } catch (Throwable e) {
 //            updateMessage("Failed running algorithm: " + e.getMessage());
 //            //TODO figure it out
@@ -72,15 +78,30 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
     }
 
     private boolean checkAllPredicates() {
-        boolean result =true;
-        for (Predicate<Integer> predicate:finishConditions) {
-            boolean predicateResult;
-            //switch predicate.type
-            //case reachedTotalNumOfGeneration
-            predicateResult = predicate.test(currentGenerationNum);
-            System.out.println("predicate name + result");
-            result = result &&predicateResult;
+        boolean result = true, predicateResult = true;
+        System.out.println("num of predicates " + finishPredicates.size());
+        //we know (validation in header controller, that there's at least one predicate (max of 3)
+        for (FinishPredicate predicate : finishPredicates) {
+            switch (predicate.getType()) {
+                case FITNESS:
+                    if (bestSolutionEver != null) {
+                        predicateResult = predicate.test(bestSolutionEver.getTotalFitnessScore());
+                        System.out.println("best score" + bestSolutionEver.getTotalFitnessScore());
+                    }
+                    break;
+                case GENERATIONS:
+                    predicateResult = predicate.test((double) currentGenerationNum);
+                    break;
+                case TIME:
+                    long elapsedTimeMillis = System.currentTimeMillis() - start;
+                    float elapsedTimeMin = elapsedTimeMillis / (60 * 1000F);
+                    predicateResult = predicate.test((double) elapsedTimeMin);
+                    break;
+            }
+            System.out.println("predicate + result" + predicate.getType() + " " + predicateResult);
+            result = result && predicateResult;
         }
+
         return result;
     }
 

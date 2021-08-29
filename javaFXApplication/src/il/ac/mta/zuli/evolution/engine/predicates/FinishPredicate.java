@@ -4,13 +4,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public abstract class PredicateClass implements Predicate<Double> {
+public class FinishPredicate implements Predicate<Double> {
     private final PredicateType type;
     private final double benchmark;
 
-    public PredicateClass(PredicateType type, double benchmark) {
+    public FinishPredicate(PredicateType type, double benchmark) {
         this.type = type;
         this.benchmark = benchmark;
+    }
+
+    @Override
+    public boolean test(Double aDouble) {
+        //currMinutes <= totalMinutes, currGenerationNum <= numOfGenerations, score <= scoreGoal
+        return aDouble <= benchmark;
     }
 
     public PredicateType getType() {
@@ -19,12 +25,6 @@ public abstract class PredicateClass implements Predicate<Double> {
 
     public double getParameter() {
         return benchmark;
-    }
-
-    @Override
-    public boolean test(double parameter) {
-        //currMinutes <= totalMinutes, currGenerationNum <= numOfGenerations, score <= scoreGoal
-        return parameter <= benchmark;
     }
 
     @NotNull

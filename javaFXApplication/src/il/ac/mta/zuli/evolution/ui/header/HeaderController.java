@@ -3,8 +3,7 @@ package il.ac.mta.zuli.evolution.ui.header;
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
-import il.ac.mta.zuli.evolution.engine.predicates.PredicateClass;
-import il.ac.mta.zuli.evolution.engine.predicates.PredicateFactory;
+import il.ac.mta.zuli.evolution.engine.predicates.FinishPredicate;
 import il.ac.mta.zuli.evolution.engine.predicates.PredicateType;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -54,7 +53,7 @@ public class HeaderController {// in our case T is integer or a double, used for
     private DescriptorDTO descriptor; //the root in the xml hierarchy
     private TimeTableSolutionDTO solution = null;
     private int stride;
-    private List<PredicateClass<Double>> finishConditions;
+    private List<FinishPredicate> finishPredicates;
 
     public HeaderController() {
         selectedFileProperty = new SimpleStringProperty("");
@@ -144,7 +143,7 @@ public class HeaderController {// in our case T is integer or a double, used for
             // "Would you like to re-run the algorithm? (Enter Y/N)");
         }
         this.stride = 20;
-        finishConditions = new ArrayList<>();
+        finishPredicates = new ArrayList<>();
         //TODO ask the user for input
         //TODO remove hardcoded values, handle invalid input
 //        if (numOfGenerations < 0) {
@@ -161,12 +160,14 @@ public class HeaderController {// in our case T is integer or a double, used for
 //        }
 
 //      executeEvolutionAlgorithm( int, int, Consumer<TimeTableSolutionDTO> onSuccess, Consumer <Throwable > onFailure)//
+//todo validate that each type of predicate is given only once
 
-        PredicateFactory<? extends Number> predicateFactory = new PredicateFactory();
-        finishConditions.add(predicateFactory.createPredicate(PredicateType.GENERATIONS, 120.0));
+//        finishPredicates.add(new FinishPredicate(PredicateType.GENERATIONS, 120));
+//        finishPredicates.add(new FinishPredicate(PredicateType.FITNESS, 85));
+        finishPredicates.add(new FinishPredicate(PredicateType.TIME, 1));
 
         engine.executeEvolutionAlgorithm(
-                this.finishConditions,
+                this.finishPredicates,
                 this.stride,
                 solution -> {
                     this.solution = solution;
