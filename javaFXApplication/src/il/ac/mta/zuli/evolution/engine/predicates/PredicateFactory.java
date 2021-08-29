@@ -1,13 +1,25 @@
 package il.ac.mta.zuli.evolution.engine.predicates;
 
-import java.util.function.Predicate;
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 
-public class PredicateFactory <T>{
-    public  Predicate<T> createPredicate(PredicateType type, T parameter){
-        Predicate<T> predicate;
-        switch (type){
+public class PredicateFactory<T> {
+    public PredicateClass<T> createPredicate(PredicateType type, T parameter) {
+        PredicateClass<T> predicate = null;
+
+        switch (type) {
             case FITNESS:
-                predicate = new FitnessPredicate(type, parameter);
+                predicate = new FitnessPredicate(type, (Double) parameter);
+                break;
+            case GENERATIONS:
+                predicate = new GenerationsPredicate(type, (Integer) parameter);
+                break;
+            case TIME:
+                predicate = new TimePredicate(type, (Integer) parameter);
+                break;
+            default:
+                throw new ValidationException("Invalid finish-condition for ex. 2");
         }
+
+        return predicate;
     }
 }
