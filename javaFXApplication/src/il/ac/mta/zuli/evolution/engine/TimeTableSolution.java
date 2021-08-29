@@ -152,7 +152,7 @@ public class TimeTableSolution implements Solution {
 
     public void addScoreToRule(@NotNull Rule rule, double score) {
         if (score < 0) {
-            throw new ValidationException("Score can't be negative number");
+            throw new ValidationException("Score can't be negative number "+rule.getClass().getSimpleName());
         }
 
         fitnessScorePerRule.put(rule, score);
