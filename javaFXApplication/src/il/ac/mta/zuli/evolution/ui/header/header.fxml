@@ -9,6 +9,7 @@
    <content>
       <VBox alignment="TOP_CENTER" spacing="5.0" style="-fx-background-color: #A0B3AA;">
          <children>
+
             <HBox id="menuBox" alignment="CENTER" fillHeight="false" spacing="10.0">
                <children>
                   <Button id="openFileButton" fx:id="loadFileButton" minHeight="30.0" minWidth="100.0"

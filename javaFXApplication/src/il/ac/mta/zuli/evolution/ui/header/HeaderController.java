@@ -6,19 +6,19 @@ import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.predicates.FinishPredicate;
 import il.ac.mta.zuli.evolution.engine.predicates.PredicateType;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
+import il.ac.mta.zuli.evolution.ui.endConditions.EndConditionsController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class HeaderController {// in our case T is integer or a double, used for predicate
     @FXML
@@ -41,6 +41,10 @@ public class HeaderController {// in our case T is integer or a double, used for
     Button pauseResumeButton;
     @FXML
     Button stopTaskButton;
+    @FXML
+    private DialogPane endConditionsDialogPane;
+    @FXML
+    private EndConditionsController endConditionsDialogPaneController;
 
     private final SimpleBooleanProperty fileLoaded;
     private final SimpleBooleanProperty evolutionAlgorithmCompleted;
@@ -130,6 +134,9 @@ public class HeaderController {// in our case T is integer or a double, used for
 
     @FXML
     public void runEngineAction() {
+        TextInputDialog dialog = new TextInputDialog("end conditions");
+        dialog.setDialogPane(endConditionsDialogPane);
+        Optional<String> result = dialog.showAndWait();
         runningAlgorithm.set(true);
         stopTaskButton.setDisable(false);
         pauseResumeButton.setText("Pause");
