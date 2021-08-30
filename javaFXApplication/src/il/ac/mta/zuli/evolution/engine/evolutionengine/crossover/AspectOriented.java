@@ -162,7 +162,7 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
 
             for (Map.Entry<T, List<Quintet>> entry : solutionQuintetsGroupedByAspect.entrySet()) {
                 List<Quintet> solutionQuintets = entry.getValue();
-                System.out.println("organizeSolutionsPerAspect: numOfQuintets in solutionSubGroup " + solutionQuintets.size());
+//                System.out.println("organizeSolutionsPerAspect: numOfQuintets in solutionSubGroup " + solutionQuintets.size());
                 solutionMatrixPerAspect.put(entry.getKey(), convertQuintetListToMatrix(entry.getValue()));
             }
             //add converted-solution to the collection of parents
@@ -211,7 +211,7 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
                         destination.set(i, singleQuintetList);
                     } else {
                         //adding source list<Quintet> to destination list<Quintet>.
-                        System.out.println("fillChildMatrix, numofQuintets already in destination i: " + destination.get(i).size());
+//                        System.out.println("fillChildMatrix, numofQuintets already in destination i: " + destination.get(i).size());
                         (destination.get(i)).addAll(singleQuintetList);
                     }
                 }

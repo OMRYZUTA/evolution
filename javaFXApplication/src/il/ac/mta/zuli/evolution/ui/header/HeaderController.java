@@ -13,10 +13,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,16 +89,16 @@ public class HeaderController {// in our case T is integer or a double, used for
 
     @FXML
     public void loadFileButtonAction() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select words file");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
-        File selectedFile = fileChooser.showOpenDialog(primaryStage);
-        if (selectedFile == null) {
-            return;
-        }
-
-        String absolutePath = selectedFile.getAbsolutePath();
-//        String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-small.xml";
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Select words file");
+//        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
+//        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+//        if (selectedFile == null) {
+//            return;
+//        }
+//
+//        String absolutePath = selectedFile.getAbsolutePath();
+        String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-small.xml";
 
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(

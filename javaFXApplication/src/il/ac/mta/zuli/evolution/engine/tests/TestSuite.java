@@ -447,7 +447,6 @@
 //        DayOffTeacher dayOffTeacherRule = new DayOffTeacher("Hard",descriptor.getTimeTableDays(),new ArrayList<>(descriptor.getTimeTable().getTeachers().values()));
 //        dayOffTeacherRule.fitnessEvaluation(solution);
 //        solution.calculateTotalScore();
-//        System.out.println(solution);
 //        assertEquals(0.0,solution.getTotalFitnessScore());
 //    }
 //
