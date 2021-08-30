@@ -2,6 +2,7 @@ package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
 import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
+import il.ac.mta.zuli.evolution.dto.StrideDataDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.predicates.FinishPredicate;
 import il.ac.mta.zuli.evolution.ui.header.HeaderController;
@@ -14,9 +15,12 @@ public interface Engine {
 
     void loadXML(String fileToLoad, Consumer<DescriptorDTO> onSuccess, Consumer<Throwable> onFailure);
 
-    void executeEvolutionAlgorithm(List<FinishPredicate> finishConditions, int generationsStride, Consumer<TimeTableSolutionDTO> onSuccess, Consumer<Throwable> onFailure);
-
-    void executeEvolutionAlgorithmWithFitnessStop(int numOfGenerations, int generationsStride, double fittnessStop);
+    void executeEvolutionAlgorithm(
+            List<FinishPredicate> finishConditions,
+            int generationsStride,
+            Consumer<TimeTableSolutionDTO> onSuccess,
+            Consumer<Throwable> onFailure,
+            Consumer<StrideDataDTO> reportStride);
 
     TimeTableSolutionDTO getBestSolution();
 

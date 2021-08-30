@@ -1,92 +1,87 @@
 package il.ac.mta.zuli.evolution.engine.tasks;
 
 import il.ac.mta.zuli.evolution.engine.Descriptor;
+import il.ac.mta.zuli.evolution.engine.StrideData;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.predicates.FinishPredicate;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class RunAlgorithmTask extends Task<TimeTableSolution> {
     private final Descriptor descriptor;
-    List<FinishPredicate> finishPredicates;
+    private final List<FinishPredicate> finishPredicates;
     private final int generationsStride;
-    private TimeTableSolution bestSolutionEver = null;
+    private final Consumer<StrideData> reportStrideLater;
     private int currentGenerationNum;
     private long start;
-    //TODO later change to updateProgress and send one by one upwards
-    private Map<Integer, TimeTableSolution> bestSolutionsInGenerationPerStride;
 
-    public RunAlgorithmTask(List<FinishPredicate> finishPredicates, int generationsStride, Descriptor descriptor) {
+    public RunAlgorithmTask(List<FinishPredicate> finishPredicates, int generationsStride, Descriptor descriptor, Consumer<StrideData> reportStride) {
         this.descriptor = descriptor;
         this.finishPredicates = finishPredicates;
         this.generationsStride = generationsStride;
+        this.reportStrideLater = (StrideData strideData) -> {
+            Platform.runLater(() -> {
+                reportStride.accept(strideData);
+            });
+        };
     }
 
     @Override
     protected TimeTableSolution call() throws Exception {
         start = System.currentTimeMillis();
-
-        EvolutionEngine<TimeTableSolution> evolutionEngine;
-        updateMessage("starting to run evolution algorithm");
-        bestSolutionsInGenerationPerStride = new TreeMap<>();
-
         List<TimeTableSolution> initialPopulation = getInitialGeneration();
-        evolutionEngine = new EvolutionEngine(descriptor.getEngineSettings(), descriptor.getRules());
+        EvolutionEngine<TimeTableSolution> evolutionEngine = new EvolutionEngine<TimeTableSolution>(descriptor.getEngineSettings(), descriptor.getRules());
 
         List<TimeTableSolution> prevGeneration = initialPopulation;
         List<TimeTableSolution> currGeneration;
         double bestSolutionFitnessScore = 0;
         TimeTableSolution currBestSolution = null;
+        TimeTableSolution bestSolutionEver = null;
         currentGenerationNum = 1;
 
-        while (checkAllPredicates()) {
+        while (checkAllPredicates(bestSolutionFitnessScore)) {
             currGeneration = evolutionEngine.execute(prevGeneration);
             currBestSolution = currGeneration.stream().
                     sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
+
             if (bestSolutionFitnessScore < currBestSolution.getTotalFitnessScore()) {
-                this.bestSolutionEver = currBestSolution;
-                bestSolutionFitnessScore = this.bestSolutionEver.getTotalFitnessScore();
+                bestSolutionEver = currBestSolution;
+                bestSolutionFitnessScore = bestSolutionEver.getTotalFitnessScore();
             }
 
             //stride for purposes of info-display and to save a stride-generation history
             //with addition of first and last generation
             if (currentGenerationNum == 1 || (currentGenerationNum % generationsStride == 0)) {
-                bestSolutionsInGenerationPerStride.put(currentGenerationNum, currBestSolution);
-                System.out.println("current generation: " + currentGenerationNum);
-//                System.out.println("best score: " + currBestSolution.getTotalFitnessScore());
-                //TODO updateMessage ?
-                //fireStrideDetails(i, currBestSolution);
+                reportStrideLater.accept(new StrideData(currentGenerationNum, currBestSolution));
+                System.out.println("current generation: " + currentGenerationNum); //TODO delete later
             }
 
             prevGeneration = currGeneration;
             currentGenerationNum++;
         } //end of for loop
-        bestSolutionsInGenerationPerStride.put(currentGenerationNum - 1, currBestSolution);
-//        } catch (Throwable e) {
-//            updateMessage("Failed running algorithm: " + e.getMessage());
-//            //TODO figure it out
-////            fireEvent("error", new ErrorEvent("Failed running evolution algorithm", ErrorType.RunError, e));
-//            return null;
-//        }
 
+        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
         updateMessage("Evolution algorithm completed running successfully");
         return bestSolutionEver;
     }
 
-    private boolean checkAllPredicates() {
-        boolean result = true, predicateResult = true;
+    private boolean checkAllPredicates(double currentScore) {
+        boolean result = true;
+        boolean predicateResult = true;
 
         //we know (validation in header controller, that there's at least one predicate (max of 3)
         for (FinishPredicate predicate : finishPredicates) {
             switch (predicate.getType()) {
                 case FITNESS:
-                    if (bestSolutionEver != null) {
-                        predicateResult = predicate.test(bestSolutionEver.getTotalFitnessScore());
-                    }
+                    predicateResult = predicate.test(currentScore);
                     break;
                 case GENERATIONS:
                     predicateResult = predicate.test((double) currentGenerationNum);
@@ -115,9 +110,4 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
 
         return initialPopulation;
     }
-
-//    private void fireStrideDetails(int i, TimeTableSolution currBestSolution) {
-//        GenerationStrideScoreDTO strideScoreDTO = new GenerationStrideScoreDTO(i, currBestSolution.getTotalFitnessScore());
-//        fireEvent("stride", new OnStrideEvent("generation ", i, strideScoreDTO));
-//    }
 }

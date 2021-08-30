@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.ui.header;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
+import il.ac.mta.zuli.evolution.dto.StrideDataDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.predicates.FinishPredicate;
@@ -14,8 +15,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -93,16 +96,16 @@ public class HeaderController {// in our case T is integer or a double, used for
 
     @FXML
     public void loadFileButtonAction() {
-//        FileChooser fileChooser = new FileChooser();
-//        fileChooser.setTitle("Select words file");
-//        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
-//        File selectedFile = fileChooser.showOpenDialog(primaryStage);
-//        if (selectedFile == null) {
-//            return;
-//        }
-//
-//        String absolutePath = selectedFile.getAbsolutePath();
-        String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-small.xml";
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select words file");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
+        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+        if (selectedFile == null) {
+            return;
+        }
+
+        String absolutePath = selectedFile.getAbsolutePath();
+//        String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-small.xml";
 
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(
@@ -214,7 +217,11 @@ public class HeaderController {// in our case T is integer or a double, used for
                     taskMessageLabel.setText("Failed running the algorithm." + System.lineSeparator()
                             + throwable.getMessage());
                     runningAlgorithm.set(false);
-                });
+                },
+                (StrideDataDTO strideData) -> {
+
+                }
+        );
     }
 
     @FXML

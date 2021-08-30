@@ -76,7 +76,8 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     public void executeEvolutionAlgorithm(List<FinishPredicate> finishConditions,
                                           int generationsStride,
                                           Consumer<TimeTableSolutionDTO> onSuccess,
-                                          Consumer<Throwable> onFailure) {
+                                          Consumer<Throwable> onFailure,
+                                          Consumer<StrideDataDTO> reportStride) {
 
         checkForErrorsBeforeExecutingAlgorithms();
         if (currentRunningTask != null) {
@@ -86,7 +87,13 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         currentRunningTask = new RunAlgorithmTask(
                 finishConditions,
                 generationsStride,
-                this.descriptor);
+                this.descriptor,
+                (StrideData strideData) -> {
+                    StrideDataDTO strideDataDTO = new StrideDataDTO(
+                            strideData.getGenerationNum(),
+                            createTimeTableSolutionDTO(strideData.getSolution()));
+                    reportStride.accept(strideDataDTO);
+                });
 
         currentRunningTask.setOnSucceeded(value -> {
             controller.onTaskFinished();
@@ -106,49 +113,6 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         controller.bindTaskToUIComponents(currentRunningTask);
 
         new Thread(currentRunningTask).start();
-    }
-
-    //bonus
-    @Override
-    public void executeEvolutionAlgorithmWithFitnessStop(int numOfGenerations, int generationsStride, double fitnessStop) {
-//        checkForErrorsBeforeExecutingAlgorithms(numOfGenerations, generationsStride);
-//        try {
-//            bestSolutionsInGenerationPerStride = new TreeMap<>();
-//            bestSolutionsInGenerationPerStride = new HashMap<>(numOfGenerations);
-//            List<TimeTableSolution> initialPopulation = getInitialGeneration();
-//
-//            evolutionEngine = new EvolutionEngine(this.descriptor.getEngineSettings(),
-//                    this.descriptor.getTimeTable().getRules());
-//
-//            List<TimeTableSolution> prevGeneration = initialPopulation;
-//            List<TimeTableSolution> currGeneration;
-//            double bestSolutionFitnessScore = 0;
-//
-//            for (int i = 1; i <= numOfGenerations; i++) {
-//                currGeneration = evolutionEngine.execute(prevGeneration);
-//                TimeTableSolution currBestSolution = currGeneration.stream().
-//                        sorted(Collections.reverseOrder()).limit(1).collect(Collectors.toList()).get(0);
-//
-//                if (bestSolutionFitnessScore < currBestSolution.getTotalFitnessScore()) {
-//                    bestSolutionEver = currBestSolution;
-//                    bestSolutionFitnessScore = bestSolutionEver.getTotalFitnessScore();
-//                }
-//
-//                //stride for purposes of info-display and to save a stride-generation history
-//                if (i == 1 || (i % generationsStride == 0) || (i == numOfGenerations)) {
-//                    bestSolutionsInGenerationPerStride.put(i, currBestSolution);
-//                    fireStrideDetails(i, currBestSolution);
-//                }
-//                if (bestSolutionFitnessScore >= fitnessStop) {
-//                    break;
-//                }
-//                prevGeneration = currGeneration;
-//            }
-//
-//            fireEvent("completed", new Event("Evolution algorithm finished running."));
-//        } catch (Throwable e) {
-//            fireEvent("error", new ErrorEvent("Failed running evolution algorithm", ErrorType.RunError, e));
-//        }
     }
 
     @Override
@@ -200,7 +164,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     //#endregion
 
     //#region auxiliary methods
-    private void checkForErrorsBeforeExecutingAlgorithms( ) {
+    private void checkForErrorsBeforeExecutingAlgorithms() {
         if (!isXMLLoaded()) {
             ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
                     ErrorType.RunError,
