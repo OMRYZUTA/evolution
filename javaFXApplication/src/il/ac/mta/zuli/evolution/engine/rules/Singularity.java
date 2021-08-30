@@ -43,7 +43,7 @@ public class Singularity extends Rule {
             score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
         }
 
-        if (numOfQuintets > 1000) {//TODO delete later
+        if (numOfQuintets > 200) {//TODO delete later
             System.out.printf("numOfQuintets: %d, collisions: %d, score:: %.2f%n", numOfQuintets, collisions, score);
         }
         if (score < 0) {

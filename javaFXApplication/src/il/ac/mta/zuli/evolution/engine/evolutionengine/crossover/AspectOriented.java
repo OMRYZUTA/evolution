@@ -182,7 +182,8 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
 
     //generic method - T is either Teacher or SchoolClass
     private <T> void removeParentFromPoolOfParents(
-            List<Map<T, List<List<Quintet>>>> selectedSolutionsAsMatrix, Map<T, List<List<Quintet>>> itemToRemove) {
+            List<Map<T, List<List<Quintet>>>> selectedSolutionsAsMatrix,
+            Map<T, List<List<Quintet>>> itemToRemove) {
 
         Iterator<Map<T, List<List<Quintet>>>> itr = selectedSolutionsAsMatrix.iterator();
 
@@ -201,7 +202,6 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
         if (source != null) {
             for (int i = 0; i < days * hours; i++) {
                 if (source.get(i) != null) {
-
                     //select a single quintet from source-list to add to mega-child
                     int randomElementIndex = ThreadLocalRandom.current().nextInt(source.get(i).size());
                     List<Quintet> singleQuintetList = new ArrayList();
@@ -210,7 +210,7 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
                     if (destination.get(i) == null) {
                         destination.set(i, singleQuintetList);
                     } else {
-                        //adding source list<Quintet> to destination list<Quintet>.
+                        //adding source List<Quintet> to destination list<Quintet>.
 //                        System.out.println("fillChildMatrix, numofQuintets already in destination i: " + destination.get(i).size());
                         (destination.get(i)).addAll(singleQuintetList);
                     }
