@@ -11,11 +11,15 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,10 +45,6 @@ public class HeaderController {// in our case T is integer or a double, used for
     Button pauseResumeButton;
     @FXML
     Button stopTaskButton;
-    @FXML
-    private DialogPane endConditionsDialogPane;
-    @FXML
-    private EndConditionsController endConditionsDialogPaneController;
 
     private final SimpleBooleanProperty fileLoaded;
     private final SimpleBooleanProperty evolutionAlgorithmCompleted;
@@ -134,9 +134,35 @@ public class HeaderController {// in our case T is integer or a double, used for
 
     @FXML
     public void runEngineAction() {
-        TextInputDialog dialog = new TextInputDialog("end conditions");
-        dialog.setDialogPane(endConditionsDialogPane);
-        Optional<String> result = dialog.showAndWait();
+        try {
+            Dialog<ButtonType> dialog = new Dialog<>();
+            ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+            ButtonType doneButtonType = new ButtonType("Done", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().add(cancelButtonType);
+            dialog.getDialogPane().getButtonTypes().add(doneButtonType);
+
+            FXMLLoader loader = new FXMLLoader();
+            URL mainFXML = getClass().getResource("/il/ac/mta/zuli/evolution/ui/endConditions/endConditionsFormComponent.fxml");
+            loader.setLocation(mainFXML);
+            GridPane gridPane = loader.load();
+            EndConditionsController controller = loader.getController();
+
+            dialog.getDialogPane().setContent(gridPane);
+            Optional<ButtonType> result = dialog.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+                return;
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+//        TextInputDialog dialog = new TextInputDialog("end conditions");
+//        dialog.setDialogPane(endConditionsDialogPane);
+//        Optional<String> result = dialog.showAndWait();
+
         runningAlgorithm.set(true);
         stopTaskButton.setDisable(false);
         pauseResumeButton.setText("Pause");
