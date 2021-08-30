@@ -162,9 +162,9 @@ public class HeaderController {// in our case T is integer or a double, used for
 //      executeEvolutionAlgorithm( int, int, Consumer<TimeTableSolutionDTO> onSuccess, Consumer <Throwable > onFailure)//
 //todo validate that each type of predicate is given only once
 
-//        finishPredicates.add(new FinishPredicate(PredicateType.GENERATIONS, 120));
+        finishPredicates.add(new FinishPredicate(PredicateType.GENERATIONS, 500));
 //        finishPredicates.add(new FinishPredicate(PredicateType.FITNESS, 85));
-        finishPredicates.add(new FinishPredicate(PredicateType.TIME, 1));
+        //finishPredicates.add(new FinishPredicate(PredicateType.TIME, 1));
 
         engine.executeEvolutionAlgorithm(
                 this.finishPredicates,

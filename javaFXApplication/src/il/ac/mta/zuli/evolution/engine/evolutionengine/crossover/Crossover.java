@@ -143,6 +143,9 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
 
     protected TimeTableSolution convertSingleMatrixToSolution(List<List<Quintet>> quintetMatrix) {
         List<Quintet> quintets = flattenSolutionMatrix(quintetMatrix);
+        if (quintets.size() > 1000) {
+            System.out.println("too many quintets " + quintets.size());
+        }
 
         return new TimeTableSolution(quintets, timeTable);
     }

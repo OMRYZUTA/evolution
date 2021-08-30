@@ -57,7 +57,7 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
             if (currentGenerationNum == 1 || (currentGenerationNum % generationsStride == 0)) {
                 bestSolutionsInGenerationPerStride.put(currentGenerationNum, currBestSolution);
                 System.out.println("current generation: " + currentGenerationNum);
-                System.out.println("best score: " + currBestSolution.getTotalFitnessScore());
+//                System.out.println("best score: " + currBestSolution.getTotalFitnessScore());
                 //TODO updateMessage ?
                 //fireStrideDetails(i, currBestSolution);
             }
@@ -79,14 +79,13 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
 
     private boolean checkAllPredicates() {
         boolean result = true, predicateResult = true;
-        System.out.println("num of predicates " + finishPredicates.size());
+
         //we know (validation in header controller, that there's at least one predicate (max of 3)
         for (FinishPredicate predicate : finishPredicates) {
             switch (predicate.getType()) {
                 case FITNESS:
                     if (bestSolutionEver != null) {
                         predicateResult = predicate.test(bestSolutionEver.getTotalFitnessScore());
-                        System.out.println("best score" + bestSolutionEver.getTotalFitnessScore());
                     }
                     break;
                 case GENERATIONS:
@@ -98,7 +97,7 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
                     predicateResult = predicate.test((double) elapsedTimeMin);
                     break;
             }
-            System.out.println("predicate + result" + predicate.getType() + " " + predicateResult);
+//            System.out.println("predicate + result" + predicate.getType() + " " + predicateResult);
             result = result && predicateResult;
         }
 

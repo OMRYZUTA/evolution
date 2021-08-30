@@ -36,21 +36,18 @@ public class Singularity extends Rule {
                 //if the set already contains the element, the call leaves the set unchanged and returns false.
                 if (!classDayHourSet.add(DHC)) {
                     collisions++;
-                    if (this.isHardRule()) {
-                        break;
-                    }
                 }
             }
-            if (this.isHardRule() && 0 < collisions) {
-                score = 0;
-            }
-
+            //specifically for singularity we decided not to assign a score of 0 if it's a HARD rule
+//            if (this.isHardRule() && 0 < collisions) { score = 0;}
             score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
         }
 
-        if (this.isHardRule() && collisions > 0) {
-//            score = 0;
-            score /= 2;
+        if (numOfQuintets > 1000) {//TODO delete later
+            System.out.printf("numOfQuintets: %d, collisions: %d, score:: %.2f%n", numOfQuintets, collisions, score);
+        }
+        if (score < 0) {
+            System.out.println("score is negative!");
         }
 
         timeTableSolution.addScoreToRule(this, score);

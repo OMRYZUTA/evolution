@@ -33,6 +33,7 @@ public class TimeTableSolution implements Solution {
     }
 
     public TimeTableSolution(@NotNull List<Quintet> quintets, @NotNull TimeTable timeTable) {
+
         this.timeTable = timeTable;
         fitnessScorePerRule = new HashMap<>();
         solutionSize = quintets.size();

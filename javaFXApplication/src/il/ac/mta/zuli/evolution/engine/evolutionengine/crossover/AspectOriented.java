@@ -10,6 +10,7 @@ import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class AspectOriented<S extends Solution> extends Crossover<S> {
@@ -31,19 +32,21 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
         }
 
         randomlyGenerateCuttingPoints();
+
         return aspectOrientedCrossover(selectedParents);
     }
 
-    //generic method - T is either Teacher or SchoolClass
+    //In the following generic methods: T is either Teacher or SchoolClass
     private <T> List<S> aspectOrientedCrossover(List<S> selectedParents) {
-        //organize every solution in selectedParents as map of dh-matrix-per-aspect (map<aspect, list <list<q>>>)
+        //organize every solution in selectedParents as a map of dh-matrix-per-aspect (map<aspect, list <list<q>>>)
         List<Map<T, List<List<Quintet>>>> parentsAsAspectMatrix = organizeSolutionsPerAspect(selectedParents);
+
+        List<TimeTableSolution> newGeneration = new ArrayList<>();
         Map<T, List<List<Quintet>>> parent1;
         Map<T, List<List<Quintet>>> parent2;
         List<List<Quintet>> child1ToUnite;
         List<List<Quintet>> child2ToUnite;
-        List<TimeTableSolution> newGeneration = new ArrayList<>();
-        List<T> teachersOrClasses = getRelevantList();
+        List<T> teachersOrClasses = getRelevantList(); //list of timetable teachers or classes
 
         while (parentsAsAspectMatrix.size() >= 2) {
             parent1 = randomlySelectParent(parentsAsAspectMatrix);
@@ -52,7 +55,10 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
             parent2 = randomlySelectParent(parentsAsAspectMatrix);
             removeParentFromPoolOfParents(parentsAsAspectMatrix, parent2);
 
-            List<List<List<Quintet>>> twoChildrenPerAspect = new ArrayList<>( Arrays.asList(createEmptyDHMatrix(),createEmptyDHMatrix())); //2 child matrix
+            //crossover between the 2 randomly selected parents
+            //begin with crossover-per-aspect, after which, every teacher/class will have 2 children
+            //we'll unite half of the children to one mega-child and the other half to another, so that every 2 parent have 2 children
+            List<List<List<Quintet>>> twoChildrenPerAspect = new ArrayList<>(Arrays.asList(createEmptyDHMatrix(), createEmptyDHMatrix())); //2 child matrix
             child1ToUnite = createEmptyDHMatrix();
             child2ToUnite = createEmptyDHMatrix();
 
@@ -60,15 +66,14 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
                 List<List<Quintet>> matrix1 = parent1.get(teacherOrClass);
                 List<List<Quintet>> matrix2 = parent2.get(teacherOrClass);
 
-                if((matrix1!=null) ||(matrix2 !=null)){
+                if ((matrix1 != null) || (matrix2 != null)) {
                     subSolutionCrossover(twoChildrenPerAspect, matrix1, matrix2);
                     fillChildMatrix(twoChildrenPerAspect.get(0), child1ToUnite);
                     fillChildMatrix(twoChildrenPerAspect.get(1), child2ToUnite);
                 }
-            }
+            }//end of for loop
 
-            List<TimeTableSolution> twoSolutionChildren = convertMatrixToSolutions(child1ToUnite, child2ToUnite);
-            newGeneration.addAll(twoSolutionChildren);
+            newGeneration.addAll(convertMatrixToSolutions(child1ToUnite, child2ToUnite));
         }
 
         // if there is one parent left, need to add it to new generations
@@ -89,10 +94,14 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
         for (T teacherOrClass : teachersOrClasses) {
             fillChildMatrix(lastParent.get(teacherOrClass), onlyChild);
         }
+
         return onlyChild;
     }
 
-    void subSolutionCrossover(List<List<List<Quintet>>> twoChildrenPerAspect, List<List<Quintet>> matrix1, List<List<Quintet>> matrix2) {
+    void subSolutionCrossover(
+            List<List<List<Quintet>>> twoChildrenPerAspect,
+            List<List<Quintet>> matrix1,
+            List<List<Quintet>> matrix2) {
         if ((matrix1 != null) && (matrix2 != null)) {
             twoChildrenPerAspect = crossoverBetween2Parents(
                     matrix1,
@@ -107,7 +116,6 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
         }
     }
 
-    //generic method - T is either Teacher or SchoolClass
     private <T> List<T> getRelevantList() {
         List<T> teachersOrClasses;
 
@@ -122,7 +130,7 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
         return teachersOrClasses;
     }
 
-    //generic method - T is either Teacher or SchoolClass
+    ////This function organizes every solution in selectedParents as a Map<aspect, List<List<Quintet>> >
     private <T> List<Map<T, List<List<Quintet>>>> organizeSolutionsPerAspect(List<S> selectedParents) {
         List<Map<T, List<List<Quintet>>>> parentsAsAspectMatrix = new ArrayList();
 
@@ -133,38 +141,37 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
             }
             TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
 
-            //grouping solution-quintets by orientation
+            //grouping solution-quintets by aspect (either teacher or class)
             Map<T, List<Quintet>> solutionQuintetsGroupedByAspect;
 
             if (orientation == Orientation.TEACHER) {
-                //grouped by TEACHER
                 Map<Teacher, List<Quintet>> solutionQuintetsGroupedByTeacher = timeTableSolution.getSolutionQuintets()
                         .stream()
                         .collect(Collectors.groupingBy(Quintet::getTeacher));
 
                 solutionQuintetsGroupedByAspect = (Map<T, List<Quintet>>) solutionQuintetsGroupedByTeacher;
-            } else {
-                //grouped by CLASS
+            } else { //grouped by CLASS
                 Map<SchoolClass, List<Quintet>> solutionQuintetsGroupedByClass = timeTableSolution.getSolutionQuintets()
                         .stream()
                         .collect(Collectors.groupingBy(Quintet::getSchoolClass));
                 solutionQuintetsGroupedByAspect = (Map<T, List<Quintet>>) solutionQuintetsGroupedByClass;
             }
 
-            //for each teacher/class in solution: convert List<Quintet> to DH-Matrix (List<List<Quintet>>)
+            //for each teacher/class in solution: convert List<Quintet> to DH-Matrix(List<List<Quintet>>)
             Map<T, List<List<Quintet>>> solutionMatrixPerAspect = new HashMap();
 
             for (Map.Entry<T, List<Quintet>> entry : solutionQuintetsGroupedByAspect.entrySet()) {
+                List<Quintet> solutionQuintets = entry.getValue();
+                System.out.println("organizeSolutionsPerAspect: numOfQuintets in solutionSubGroup " + solutionQuintets.size());
                 solutionMatrixPerAspect.put(entry.getKey(), convertQuintetListToMatrix(entry.getValue()));
             }
-            //add single-converted-solution to the collection of parents
+            //add converted-solution to the collection of parents
             parentsAsAspectMatrix.add(solutionMatrixPerAspect);
         }
 
         return parentsAsAspectMatrix;
     }
 
-    //generic method - T is either Teacher or SchoolClass
     private <T> Map<T, List<List<Quintet>>> randomlySelectParent(
             List<Map<T, List<List<Quintet>>>> selectedSolutionsAsMatrix) {
 
@@ -189,17 +196,23 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
         }
     }
 
+    //this method combines a subSolution into a mega-solution
     private void fillChildMatrix(List<List<Quintet>> source, List<List<Quintet>> destination) {
         if (source != null) {
             for (int i = 0; i < days * hours; i++) {
-                if (destination.get(i) == null) {
-                    destination.set(i, source.get(i));
-                } else {
-                    //adding source list<Quintet> to destination list<Quintet>.
-                    if (source.get(i) != null) {
-                        //TODO check if we need to avoid conflicts in time slots consider generics
+                if (source.get(i) != null) {
 
-                        (destination.get(i)).addAll(source.get(i));
+                    //select a single quintet from source-list to add to mega-child
+                    int randomElementIndex = ThreadLocalRandom.current().nextInt(source.get(i).size());
+                    List<Quintet> singleQuintetList = new ArrayList();
+                    singleQuintetList.add(source.get(i).get(randomElementIndex));
+
+                    if (destination.get(i) == null) {
+                        destination.set(i, singleQuintetList);
+                    } else {
+                        //adding source list<Quintet> to destination list<Quintet>.
+                        System.out.println("fillChildMatrix, numofQuintets already in destination i: " + destination.get(i).size());
+                        (destination.get(i)).addAll(singleQuintetList);
                     }
                 }
             }
