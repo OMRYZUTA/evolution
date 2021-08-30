@@ -1,54 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<GridPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.mta.zuli.evolution.ui.endConditions.EndConditionsController">
    <columnConstraints>
-      <ColumnConstraints/>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0"/>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0"/>
-      <ColumnConstraints hgrow="SOMETIMES"/>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0"/>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0"/>
+      <ColumnConstraints />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+      <ColumnConstraints hgrow="SOMETIMES" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints/>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-      <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-      <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-      <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-      <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+      <RowConstraints />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
       <Label text="Generation Stride" GridPane.columnIndex="3" GridPane.rowIndex="2">
          <GridPane.margin>
-            <Insets/>
+            <Insets />
          </GridPane.margin>
          <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </Label>
-      <TextField fx:id="strideField" GridPane.columnIndex="5" GridPane.rowIndex="2"/>
-      <Label text="Please select at list one finish condition :" GridPane.columnIndex="3" GridPane.columnSpan="3"
-             GridPane.rowIndex="4"/>
-      <CheckBox fx:id="generationCheckbox" mnemonicParsing="false" text="Number of Generations" GridPane.columnIndex="2"
-                GridPane.columnSpan="2" GridPane.rowIndex="6"/>
-      <TextField fx:id="generationTextField" layoutX="255.0" layoutY="40.0" GridPane.columnIndex="5"
-                 GridPane.rowIndex="6"/>
-      <CheckBox fx:id="fitnessCheckbox" layoutX="41.0" layoutY="145.0" mnemonicParsing="false" text="Fitness score"
-                GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8"/>
-      <TextField fx:id="fitnessTextField" layoutX="261.0" layoutY="140.0" GridPane.columnIndex="5"
-                 GridPane.rowIndex="8"/>
-      <CheckBox fx:id="minutesCheckbox" layoutX="41.0" layoutY="195.0" mnemonicParsing="false" text="Time (minutes)"
-                GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="10"/>
-      <TextField fx:id="timeTextField" layoutX="261.0" layoutY="190.0" GridPane.columnIndex="5" GridPane.rowIndex="10"/>
+      <TextField fx:id="strideField" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+      <Label text="Please select at list one finish condition :" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+      <CheckBox fx:id="generationCheckbox" mnemonicParsing="false" text="Number of Generations" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6" />
+      <TextField fx:id="generationTextField" layoutX="255.0" layoutY="40.0" GridPane.columnIndex="5" GridPane.rowIndex="6" />
+      <CheckBox fx:id="fitnessCheckbox" layoutX="41.0" layoutY="145.0" mnemonicParsing="false" text="Fitness score" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+      <TextField fx:id="fitnessTextField" layoutX="261.0" layoutY="140.0" GridPane.columnIndex="5" GridPane.rowIndex="8" />
+      <CheckBox fx:id="minutesCheckbox" layoutX="41.0" layoutY="195.0" mnemonicParsing="false" text="Time (minutes)" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="10" />
+      <TextField fx:id="timeTextField" layoutX="261.0" layoutY="190.0" GridPane.columnIndex="5" GridPane.rowIndex="10" />
    </children>
 </GridPane>

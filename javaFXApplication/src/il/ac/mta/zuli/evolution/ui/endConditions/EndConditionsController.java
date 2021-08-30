@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.ui.endConditions;
 
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -49,6 +50,12 @@ public class EndConditionsController {
 
     @FXML
     private void initialize() {
+        generationTextField.disableProperty().bind(generationCheckbox.selectedProperty().not());
+        fitnessTextField.disableProperty().bind(fitnessCheckbox.selectedProperty().not());
+        timeTextField.disableProperty().bind(minutesCheckbox.selectedProperty().not());
+//        strideField.textProperty().addListener((observable, oldValue, newValue) -> {
+//            validateData()
+//        });
 
 //        strideField.focusedProperty().addListener((arg0, oldValue, newValue) -> {
 //            if (!newValue) { //when focus lost
@@ -58,6 +65,14 @@ public class EndConditionsController {
 //                }
 //            }
 //        });
+    }
+
+    public int getStride() {
+        int stride =Integer.parseInt(strideField.textProperty().get());
+        if(stride<=0){
+            throw new ValidationException("Invalid stride value entered, the value must be a positive integer");
+        }
+        return stride;
     }
 
     public int getStrideProperty() {
