@@ -57,12 +57,11 @@ public class EndConditionsController {
     }
 
     public int getStride() {
-        int stride=-1;
+        int stride = -1;
         try {
-             stride = Integer.parseInt(strideField.textProperty().get());
+            stride = Integer.parseInt(strideField.textProperty().get());
 
-        }
-        catch(Throwable e){
+        } catch (Throwable e) {
 
         }
         return stride;
@@ -99,36 +98,71 @@ public class EndConditionsController {
     public boolean validateAndStore() {
         warningsFlowPane.getChildren().clear();
         boolean result = true;
-        if(getStride()<0){
-            Label strideLable = new Label();
-            strideLable.textProperty().set("stride must be positive number, received: "+strideField.textProperty().get());
-            strideLable.textFillProperty().set(Color.color(1, 0, 0));
-            warningsFlowPane.getChildren().add(strideLable);
-            result=false;
+        if (getStride() < 0) {
+             addWarning("stride must be positive number ");
+             result=false;
         }
-        if(totalGenerationsCheckProperty.get()){
-            if(getTotalGenerations()<0){
-                Label generationsLable = new Label();
-                generationsLable.textProperty().set("total generations must be positive number, received: "+generationTextField.textProperty().get());
-                generationsLable.textFillProperty().set(Color.color(1, 0, 0));
-                warningsFlowPane.getChildren().add(generationsLable);
+        if (generationCheckbox.selectedProperty().get()) {
+            if (getTotalGenerations() < 0) {
+                 addWarning("total generations must be positive number ");
+                result=false;
+            } else if (getStride() > getTotalGenerations()) {
+                 addWarning("stride must be less than total generations ");
                 result=false;
             }
         }
-
+        if (fitnessCheckbox.selectedProperty().get()) {
+            if (getfitness() < 0 || getfitness() > 100) {
+                 addWarning("fitness must be between 1.0 to 100.0 ");
+                result=false;
+            }
+        }
+        if(minutesCheckbox.selectedProperty().get()){
+            if(getTime()<0){
+                addWarning("minutes must be a positive number ");
+                result=false;
+            }
+        }
         return result;
     }
 
-    private int getTotalGenerations() {
-        int generations=-1;
+    private int getTime() {
+        int time = -1;
         try {
-            generations = Integer.parseInt(generationTextField.textProperty().get());
+            time = Integer.parseInt(timeTextField.textProperty().get());
+
+        } catch (Throwable e) {
 
         }
-        catch(Throwable e){
+        return time;
+    }
+
+    private double getfitness() {
+        double generations = -1;
+        try {
+            generations = Double.parseDouble(fitnessTextField.textProperty().get());
+
+        } catch (Throwable e) {
 
         }
         return generations;
+    }
 
+    private void addWarning(String s) {
+        Label strideLable = new Label();
+        strideLable.textProperty().set(s);
+        strideLable.textFillProperty().set(Color.color(1, 0, 0));
+        warningsFlowPane.getChildren().add(strideLable);
+    }
+
+    private int getTotalGenerations() {
+        int generations = -1;
+        try {
+            generations = Integer.parseInt(generationTextField.textProperty().get());
+
+        } catch (Throwable e) {
+
+        }
+        return generations;
     }
 }

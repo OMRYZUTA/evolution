@@ -36,7 +36,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label text="Generation Stride" GridPane.columnIndex="3" GridPane.rowIndex="4">
+      <Label text="Generation Stride" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets />
          </GridPane.margin>
@@ -45,13 +45,13 @@
          </padding>
       </Label>
       <TextField fx:id="strideField" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-      <Label text="Please select at list one finish condition :" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="6" />
+      <Label text="Please select at list one finish condition :" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="6" />
       <CheckBox fx:id="generationCheckbox" mnemonicParsing="false" text="Number of Generations" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" />
       <TextField fx:id="generationTextField" layoutX="255.0" layoutY="40.0" GridPane.columnIndex="5" GridPane.rowIndex="8" />
       <CheckBox fx:id="fitnessCheckbox" layoutX="41.0" layoutY="145.0" mnemonicParsing="false" text="Fitness score" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="10" />
       <TextField fx:id="fitnessTextField" layoutX="261.0" layoutY="140.0" GridPane.columnIndex="5" GridPane.rowIndex="10" />
       <CheckBox fx:id="minutesCheckbox" layoutX="41.0" layoutY="195.0" mnemonicParsing="false" text="Time (minutes)" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="12" />
       <TextField fx:id="timeTextField" layoutX="261.0" layoutY="190.0" GridPane.columnIndex="5" GridPane.rowIndex="12" />
-      <FlowPane fx:id="warningsFlowPane" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+      <FlowPane fx:id="warningsFlowPane" prefWrapLength="200.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2" />
    </children>
 </GridPane>
