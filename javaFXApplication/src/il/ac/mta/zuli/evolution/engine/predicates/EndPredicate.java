@@ -4,11 +4,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public class FinishPredicate implements Predicate<Double> {
+public class EndPredicate implements Predicate<Double> {
     private final EndConditionType type;
     private final double benchmark;
 
-    public FinishPredicate(EndConditionType type, double benchmark) {
+    public EndPredicate(EndConditionType type, double benchmark) {
         this.type = type;
         this.benchmark = benchmark;
     }

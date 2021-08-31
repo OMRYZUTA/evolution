@@ -4,7 +4,7 @@ import il.ac.mta.zuli.evolution.engine.Descriptor;
 import il.ac.mta.zuli.evolution.engine.StrideData;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
-import il.ac.mta.zuli.evolution.engine.predicates.FinishPredicate;
+import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 
 public class RunAlgorithmTask extends Task<TimeTableSolution> {
     private final Descriptor descriptor;
-    private final List<FinishPredicate> finishPredicates;
+    private final List<EndPredicate> endPredicates;
     private final int generationsStride;
     private final Consumer<StrideData> reportStrideLater;
     private int currentGenerationNum;
     private long start;
 
-    public RunAlgorithmTask(List<FinishPredicate> finishPredicates, int generationsStride, Descriptor descriptor, Consumer<StrideData> reportStride) {
+    public RunAlgorithmTask(List<EndPredicate> endPredicates, int generationsStride, Descriptor descriptor, Consumer<StrideData> reportStride) {
         this.descriptor = descriptor;
-        this.finishPredicates = finishPredicates;
+        this.endPredicates = endPredicates;
         this.generationsStride = generationsStride;
         this.reportStrideLater = (StrideData strideData) -> {
             Platform.runLater(() -> {
@@ -78,7 +78,7 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
         boolean predicateResult = true;
 
         //we know (validation in header controller, that there's at least one predicate (max of 3)
-        for (FinishPredicate predicate : finishPredicates) {
+        for (EndPredicate predicate : endPredicates) {
             switch (predicate.getType()) {
                 case FITNESS:
                     predicateResult = predicate.test(currentScore);

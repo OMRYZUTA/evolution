@@ -4,7 +4,7 @@ import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
 import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
 import il.ac.mta.zuli.evolution.dto.StrideDataDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
-import il.ac.mta.zuli.evolution.engine.predicates.FinishPredicate;
+import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.ui.header.HeaderController;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public interface Engine {
     void loadXML(String fileToLoad, Consumer<DescriptorDTO> onSuccess, Consumer<Throwable> onFailure);
 
     void executeEvolutionAlgorithm(
-            List<FinishPredicate> finishConditions,
+            List<EndPredicate> finishConditions,
             int generationsStride,
             Consumer<TimeTableSolutionDTO> onSuccess,
             Consumer<Throwable> onFailure,
@@ -28,4 +28,12 @@ public interface Engine {
 
     //used for the engine to "protect itself" even though the relevant buttons are disabled in the ui
     boolean isXMLLoaded();
+
+    void cancelCurrentTask();
+
+    boolean isPaused();
+
+    void resume();
+
+    void pause();
 }

@@ -13,9 +13,7 @@
             <HBox id="menuBox" alignment="CENTER" fillHeight="false" spacing="10.0">
                <children>
                   <Button id="openFileButton" fx:id="loadFileButton" minHeight="30.0" minWidth="100.0"
-                          mnemonicParsing="false" onAction="#loadFileButtonAction"
-                          style="-fx-background-color: #E1E3D4; -fx-border-color: #FFF9F7;" text="Load File"
-                          textFill="#a83e32"/>
+                          mnemonicParsing="false" onAction="#loadFileButtonAction" text="Load File"/>
                   <Button id="openFileButton" fx:id="displaySettingsButton" layoutX="105.0" layoutY="10.0"
                           minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#displaySettingsAction"
                           text="Display Settings"/>
@@ -34,7 +32,7 @@
             <HBox fillHeight="false" spacing="10.0">
                <children>
                   <Label alignment="TOP_LEFT" text="File: " textFill="#6e2f24"/>
-                  <Label fx:id="selectedFileName" text="selectedFileName"/>
+                  <Label fx:id="selectedFileNameLabel" text="selectedFileName"/>
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
@@ -46,17 +44,6 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                </padding>
             </Label>
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
-               <children>
-                  <ProgressBar id="taskProgressBar" fx:id="taskProgressBar" maxWidth="1.7976931348623157E308"
-                               progress="0.0"/>
-                  <Button fx:id="pauseResumeButton" mnemonicParsing="false" text="Pause/Resume"/>
-                  <Button fx:id="stopTaskButton" mnemonicParsing="false" text="Stop"/>
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-               </padding>
-            </HBox>
          </children>
          <opaqueInsets>
             <Insets/>

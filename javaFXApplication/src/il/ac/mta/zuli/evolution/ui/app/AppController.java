@@ -33,7 +33,6 @@ public class AppController {
     @FXML
     private RunAlgoController runAlgoComponentController;
 
-
     // bound to visibility of different body components
     // buttons change its value
     private final SimpleStringProperty currentBodyProperty; //TODO set this inside header, based on button clicks
@@ -44,6 +43,7 @@ public class AppController {
 
     public void setEngine(Engine newEngine) {
         this.headerComponentController.setEngine(newEngine);
+        this.runAlgoComponentController.setEngine(newEngine);
     }
 
     public void setPrimaryStage(Stage primaryStage) {
@@ -57,9 +57,8 @@ public class AppController {
         }
 
         detailsComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "details"));
+        runAlgoComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "runAlgorithm"));
         solutionComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "solution"));
-        solutionComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "runAlgorithm"));
-
     }
 
     // headerController calls this function from displaySettingsAction
@@ -76,5 +75,6 @@ public class AppController {
 
     public void runAlgorithm() {
         currentBodyProperty.set("runAlgorithm");
+        this.runAlgoComponentController.runAlgorithm();
     }
 }

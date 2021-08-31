@@ -8,7 +8,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterf
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
-import il.ac.mta.zuli.evolution.engine.predicates.FinishPredicate;
+import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.tasks.LoadXMLTask;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
@@ -73,7 +73,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 //    public DescriptorDTO getSystemDetails()
 
     @Override
-    public void executeEvolutionAlgorithm(List<FinishPredicate> finishConditions,
+    public void executeEvolutionAlgorithm(List<EndPredicate> finishConditions,
                                           int generationsStride,
                                           Consumer<TimeTableSolutionDTO> onSuccess,
                                           Consumer<Throwable> onFailure,
@@ -113,6 +113,25 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         controller.bindTaskToUIComponents(currentRunningTask);
 
         new Thread(currentRunningTask).start();
+    }
+
+    public void cancelCurrentTask() {
+        currentRunningTask.cancel();
+    }
+
+    @Override
+    public boolean isPaused() {
+        return false;
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void pause() {
+
     }
 
     @Override

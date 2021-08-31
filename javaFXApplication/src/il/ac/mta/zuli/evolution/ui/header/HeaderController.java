@@ -1,73 +1,52 @@
 package il.ac.mta.zuli.evolution.ui.header;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
-import il.ac.mta.zuli.evolution.dto.StrideDataDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
-import il.ac.mta.zuli.evolution.engine.predicates.EndConditionType;
-import il.ac.mta.zuli.evolution.engine.predicates.FinishPredicate;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
-import il.ac.mta.zuli.evolution.ui.endConditions.EndConditionsController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
-public class HeaderController {// in our case T is integer or a double, used for predicate
+public class HeaderController {
     @FXML
-    Button loadFileButton;
-    @FXML
-    Label selectedFileName; //TODO add "Label" to end of name
-    @FXML
-    Button displaySettingsButton;
-    @FXML
-    Button runEngineButton;
-    @FXML
-    Button bestSolutionButton;
-    @FXML
-    Button historyButton;
-    @FXML
-    Label taskMessageLabel;
-    @FXML
-    ProgressBar taskProgressBar;
-    @FXML
-    Button pauseResumeButton;
-    @FXML
-    Button stopTaskButton;
+    private Button displaySettingsButton;
 
-    private final SimpleBooleanProperty fileLoaded;
-    private final SimpleBooleanProperty evolutionAlgorithmCompleted;
+    @FXML
+    private Button runEngineButton;
+
+    @FXML
+    private Button bestSolutionButton;
+
+    @FXML
+    private Button historyButton;
+
+    @FXML
+    private Label selectedFileNameLabel;
+
+    @FXML
+    private Label taskMessageLabel;
+
+    private final SimpleBooleanProperty fileLoadedProperty;
+    private final SimpleBooleanProperty evolutionAlgoCompletedProperty;
     private final SimpleStringProperty selectedFileProperty;
-    private SimpleBooleanProperty isPaused;
-    private final SimpleBooleanProperty runningAlgorithm;
     private AppController appController;
     private Stage primaryStage;
     private Engine engine;
     private DescriptorDTO descriptor; //the root in the xml hierarchy
-    private TimeTableSolutionDTO solution = null;
-    private int stride;
-    private List<FinishPredicate> finishPredicates;
+    private final TimeTableSolutionDTO solution = null;
 
     public HeaderController() {
         selectedFileProperty = new SimpleStringProperty("");
-        fileLoaded = new SimpleBooleanProperty(false);
-        evolutionAlgorithmCompleted = new SimpleBooleanProperty(false);
-        runningAlgorithm = new SimpleBooleanProperty(false);
-        finishPredicates = new ArrayList<>();
+        fileLoadedProperty = new SimpleBooleanProperty(false);
+        evolutionAlgoCompletedProperty = new SimpleBooleanProperty(false);
     }
 
     public void setAppController(AppController appController) {
@@ -85,22 +64,19 @@ public class HeaderController {// in our case T is integer or a double, used for
 
     @FXML
     private void initialize() {
-        selectedFileName.textProperty().bind(selectedFileProperty);
+        selectedFileNameLabel.textProperty().bind(selectedFileProperty);
         //disabling 2 of the buttons until a file is loaded to the system
-        displaySettingsButton.disableProperty().bind(fileLoaded.not());
-        runEngineButton.disableProperty().bind(fileLoaded.not());
+        displaySettingsButton.disableProperty().bind(fileLoadedProperty.not());
+        runEngineButton.disableProperty().bind(fileLoadedProperty.not());
         //disabling the remaining buttons until the algorithm completed at least once
-        bestSolutionButton.disableProperty().bind(evolutionAlgorithmCompleted.not());
-        historyButton.disableProperty().bind(evolutionAlgorithmCompleted.not());
-        stopTaskButton.setDisable(true);
-        pauseResumeButton.setDisable(true);
-        taskProgressBar.visibleProperty().bind(runningAlgorithm);
+        bestSolutionButton.disableProperty().bind(evolutionAlgoCompletedProperty.not());
+        historyButton.disableProperty().bind(evolutionAlgoCompletedProperty.not());
     }
 
     @FXML
     public void loadFileButtonAction() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select words file");
+        fileChooser.setTitle("Select file");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
         File selectedFile = fileChooser.showOpenDialog(primaryStage);
         if (selectedFile == null) {
@@ -108,18 +84,19 @@ public class HeaderController {// in our case T is integer or a double, used for
         }
 
         String absolutePath = selectedFile.getAbsolutePath();
-//        String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-small.xml";
+//      String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-small.xml";
 
-//         engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
+
+        // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(
                 absolutePath,
                 descriptorDTO -> {
                     descriptor = descriptorDTO;
                     selectedFileProperty.set(absolutePath); //so this path will now be displayed (because of the binding)
-                    fileLoaded.set(true); // because we're in the onSuccessConsumer
+                    fileLoadedProperty.set(true); // because we're in the onSuccessConsumer
                 },
                 throwable -> {
-                    if (!fileLoaded.get()) {
+                    if (!fileLoadedProperty.get()) {
                         taskMessageLabel.setText("Failed loading the file." + System.lineSeparator()
                                 + throwable.getMessage() + System.lineSeparator()
                                 + "There is no file loaded to the system.");
@@ -138,108 +115,16 @@ public class HeaderController {// in our case T is integer or a double, used for
 
     @FXML
     public void runEngineAction() {
-        this.appController.runAlgorithm();
-
-        try {
-            finishPredicates = new ArrayList<>();
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-
-            FXMLLoader loader = new FXMLLoader();
-            URL mainFXML = getClass().getResource("/il/ac/mta/zuli/evolution/ui/endConditions/endConditionsFormComponent.fxml");
-            loader.setLocation(mainFXML);
-            GridPane gridPane = loader.load();
-            EndConditionsController controller = loader.getController();
-
-            dialog.getDialogPane().setContent(gridPane);
-
-            //TODO - when OK button is clicked, need to validate all the text field, and show a lable with the error
-            final Button btOk = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
-            btOk.addEventFilter(ActionEvent.ACTION, event -> {
-                if (!controller.validateAndStore()) {
-                    event.consume();
-                }
-            });
-            Optional<ButtonType> result = dialog.showAndWait();
-
-            if (result.isPresent() && result.get() == ButtonType.CANCEL) {
-                System.out.println("cancel pressed");
-                return;
-            }
-            this.stride = controller.getStride();
-            setPredicatesAccordingToDialogEndConditions(controller.getEndConditionTypePerValue());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        runningAlgorithm.set(true);
-        stopTaskButton.setDisable(false);
-        pauseResumeButton.setText("Pause");
-        pauseResumeButton.setDisable(false);
-
-        if (evolutionAlgorithmCompleted.get()) {
+        if (evolutionAlgoCompletedProperty.get()) {
             //TODO add popup?
-
             // "The evolution-algorithm has already completed its course. "+ System.lineSeparator() +
             // "If you choose to re-run it, the information from the previous run will be lost." + System.lineSeparator() +
             // "Would you like to re-run the algorithm? (Enter Y/N)");
         }
 
-
-        //TODO ask the user for input
-        //TODO remove hardcoded values, handle invalid input
-//        if (numOfGenerations < 0) {
-//            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
-//                    ErrorType.RunError,
-//                    new ValidationException(numOfGenerations + " is invalid number for generations, must be positive number"));
-//            fireEvent("error", e);
-//        }
-//        if (generationsStride < 0 || generationsStride > numOfGenerations) {
-//            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
-//                    ErrorType.RunError,
-//                    new ValidationException(numOfGenerations + " is invalid number for generation strides, must be between 1 - " + numOfGenerations));
-//            fireEvent("error", e);
-//        }
-
-//      executeEvolutionAlgorithm( int, int, Consumer<TimeTableSolutionDTO> onSuccess, Consumer <Throwable > onFailure)//
-//todo validate that each type of predicate is given only once
-
-
-        engine.executeEvolutionAlgorithm(
-                this.finishPredicates,
-                this.stride,
-                solution -> {
-                    this.solution = solution;
-                    evolutionAlgorithmCompleted.set(true);
-                    runningAlgorithm.set(false);
-                },
-                throwable -> {
-                    taskMessageLabel.setText("Failed running the algorithm." + System.lineSeparator()
-                            + throwable.getMessage());
-                    runningAlgorithm.set(false);
-                },
-                (StrideDataDTO strideData) -> {
-
-                }
-        );
+        this.appController.runAlgorithm();
     }
 
-    private void setPredicatesAccordingToDialogEndConditions(Map<EndConditionType, Double> endConditionTypePerValue) {
-        for (EndConditionType endCondtion:endConditionTypePerValue.keySet()) {
-            switch (endCondtion){
-                case FITNESS:
-                    finishPredicates.add(new FinishPredicate(EndConditionType.FITNESS,  endConditionTypePerValue.get(endCondtion)));
-                    break;
-                case GENERATIONS:
-                    finishPredicates.add(new FinishPredicate(EndConditionType.GENERATIONS,  endConditionTypePerValue.get(endCondtion)));
-                    break;
-                case TIME:
-                    finishPredicates.add(new FinishPredicate(EndConditionType.TIME, endConditionTypePerValue.get(endCondtion)));
-                    break;
-            }
-        }
-    }
 
     @FXML
     public void bestSolutionAction() {
@@ -250,54 +135,20 @@ public class HeaderController {// in our case T is integer or a double, used for
     public void historyAction() {
     }
 
-    //in the recording ~20min. this is the "old-fashioned" way, better to do it with property
-    //TODO change to property implementation - no need for method (buttons only abled when running algorithm?)
-    private void toggleTaskButtons(boolean isActive) {
-        pauseResumeButton.setDisable(!isActive);
-        stopTaskButton.setDisable(!isActive);
-    }
-
     //in the recording about 26 minutes in
     public void bindTaskToUIComponents(Task<?> task) {
         taskMessageLabel.setText("");
-        taskProgressBar.setProgress(0);
-
         // task message
         taskMessageLabel.textProperty().bind(task.messageProperty());
-
-        // task progress bar
-        taskProgressBar.progressProperty().bind(task.progressProperty());
-
-        // TODO: bind to task.exceptionProperty() maybe?
     }
 
     // mentions this in the recording about 27 minutes in
     //this function updates the ui once the task is finished
     public void onTaskFinished() {
         this.taskMessageLabel.textProperty().unbind();
-        this.taskProgressBar.progressProperty().unbind();
     }
 
-//TODO add UIAdaptor and use it in loadXMLTask (better for later use of task in Ex. 3)
+    //TODO add UIAdaptor and use it in loadXMLTask (better for later use of task in Ex. 3)
     ///uiAdaptor - the way in which the task reports its data back to the UI
     // about 57 minutes into the recording!
-
-//    private void createRuleTile(String ruleName,  String ruleType) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader();
-//            URL ruleFXML = getClass().getResource("il/ac/mta/zuli/evolution/ui/rulecomponent/ruleScene.fxml");
-//            loader.setLocation(ruleFXML);
-//            Node singleRuleTile = loader.load();
-//
-//            RuleController ruleController = loader.getController();
-//            ruleController.setCount(count);
-//            singleWordController.setWord(word);
-//
-//            histogramFlowPane.getChildren().add(singleWordTile);
-//            wordToTileController.put(word, singleWordController);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
 }
