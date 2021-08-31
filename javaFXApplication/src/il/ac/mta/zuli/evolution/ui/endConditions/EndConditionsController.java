@@ -97,7 +97,7 @@ public class EndConditionsController {
     }
 
     public boolean validateAndStore() {
-        warningsFlowPane.getChildren().removeAll();
+        warningsFlowPane.getChildren().clear();
         boolean result = true;
         if(getStride()<0){
             Label strideLable = new Label();
