@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.ui.endConditions;
 
+import il.ac.mta.zuli.evolution.engine.predicates.EndConditionType;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -10,6 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EndConditionsController {
     @FXML
@@ -38,6 +42,7 @@ public class EndConditionsController {
     private final SimpleDoubleProperty scoreProperty;
     private final SimpleBooleanProperty totalMinutesCheckProperty;
     private final SimpleIntegerProperty totalMinutesProperty;
+    private final Map<EndConditionType, Double> endConditionTypePerValue;
 
     public EndConditionsController() {
         strideProperty = new SimpleIntegerProperty(0);
@@ -47,6 +52,7 @@ public class EndConditionsController {
         scoreProperty = new SimpleDoubleProperty(0f);
         totalMinutesCheckProperty = new SimpleBooleanProperty(false);
         totalMinutesProperty = new SimpleIntegerProperty(0);
+        endConditionTypePerValue = new HashMap<EndConditionType, Double>();
     }
 
     @FXML
@@ -97,33 +103,48 @@ public class EndConditionsController {
 
     public boolean validateAndStore() {
         warningsFlowPane.getChildren().clear();
+        endConditionTypePerValue.clear();
         boolean result = true;
         if (getStride() < 0) {
-             addWarning("stride must be positive number ");
-             result=false;
+            addWarning("stride must be positive double ");
+            result = false;
         }
         if (generationCheckbox.selectedProperty().get()) {
             if (getTotalGenerations() < 0) {
-                 addWarning("total generations must be positive number ");
-                result=false;
+                addWarning("total generations must be positive double ");
+                result = false;
             } else if (getStride() > getTotalGenerations()) {
-                 addWarning("stride must be less than total generations ");
-                result=false;
+                addWarning("stride must be less than total generations ");
+                result = false;
+            } else {
+                endConditionTypePerValue.put(EndConditionType.GENERATIONS, (double) getTotalGenerations());
             }
         }
         if (fitnessCheckbox.selectedProperty().get()) {
             if (getfitness() < 0 || getfitness() > 100) {
-                 addWarning("fitness must be between 1.0 to 100.0 ");
-                result=false;
+                addWarning("fitness must be between 1.0 to 100.0 ");
+                result = false;
+            } else {
+                endConditionTypePerValue.put(EndConditionType.FITNESS, getfitness());
             }
         }
-        if(minutesCheckbox.selectedProperty().get()){
-            if(getTime()<0){
+        if (minutesCheckbox.selectedProperty().get()) {
+            if (getTime() < 0) {
                 addWarning("minutes must be a positive number ");
-                result=false;
+                result = false;
+            } else {
+                endConditionTypePerValue.put(EndConditionType.TIME, (double) getTime());
             }
+        }
+        if (allCheckboxesUnChecked()) {
+            addWarning("you must choose at least one end condtion ");
+            result = false;
         }
         return result;
+    }
+
+    private boolean allCheckboxesUnChecked() {
+        return generationCheckbox.selectedProperty().not().and(fitnessCheckbox.selectedProperty().not()).and(minutesCheckbox.selectedProperty().not()).get();
     }
 
     private int getTime() {
@@ -164,5 +185,9 @@ public class EndConditionsController {
 
         }
         return generations;
+    }
+
+    public Map<EndConditionType, Double> getEndConditionTypePerValue() {
+        return endConditionTypePerValue;
     }
 }

@@ -61,7 +61,7 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
             //with addition of first and last generation
             if (currentGenerationNum == 1 || (currentGenerationNum % generationsStride == 0)) {
                 reportStrideLater.accept(new StrideData(currentGenerationNum, currBestSolution));
-                System.out.println("current generation: " + currentGenerationNum); //TODO delete later
+                System.out.println("current generation: " + currentGenerationNum+" best "+currBestSolution.getTotalFitnessScore()); //TODO delete later
             }
 
             prevGeneration = currGeneration;

@@ -5,7 +5,7 @@ import il.ac.mta.zuli.evolution.dto.StrideDataDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.predicates.FinishPredicate;
-import il.ac.mta.zuli.evolution.engine.predicates.PredicateType;
+import il.ac.mta.zuli.evolution.engine.predicates.EndConditionType;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
 import il.ac.mta.zuli.evolution.ui.endConditions.EndConditionsController;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class HeaderController {// in our case T is integer or a double, used for predicate
@@ -64,6 +65,7 @@ public class HeaderController {// in our case T is integer or a double, used for
         fileLoaded = new SimpleBooleanProperty(false);
         evolutionAlgorithmCompleted = new SimpleBooleanProperty(false);
         runningAlgorithm = new SimpleBooleanProperty(false);
+        finishPredicates = new ArrayList<>();
     }
 
     public void setAppController(AppController appController) {
@@ -135,6 +137,7 @@ public class HeaderController {// in our case T is integer or a double, used for
     @FXML
     public void runEngineAction() {
         try {
+            finishPredicates = new ArrayList<>();
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
             dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
@@ -160,17 +163,11 @@ public class HeaderController {// in our case T is integer or a double, used for
                 System.out.println("cancel pressed");
                 return;
             }
-
-            int stride = controller.getStride();
-            System.out.println("stride is "+stride);
+            this.stride = controller.getStride();
+            setPredicatesAccordingToDialogEndConditions(controller.getEndConditionTypePerValue());
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-//        TextInputDialog dialog = new TextInputDialog("end conditions");
-//        dialog.setDialogPane(endConditionsDialogPane);
-//        Optional<String> result = dialog.showAndWait();
 
         runningAlgorithm.set(true);
         stopTaskButton.setDisable(false);
@@ -184,8 +181,8 @@ public class HeaderController {// in our case T is integer or a double, used for
             // "If you choose to re-run it, the information from the previous run will be lost." + System.lineSeparator() +
             // "Would you like to re-run the algorithm? (Enter Y/N)");
         }
-        this.stride = 50;
-        finishPredicates = new ArrayList<>();
+
+
         //TODO ask the user for input
         //TODO remove hardcoded values, handle invalid input
 //        if (numOfGenerations < 0) {
@@ -204,9 +201,6 @@ public class HeaderController {// in our case T is integer or a double, used for
 //      executeEvolutionAlgorithm( int, int, Consumer<TimeTableSolutionDTO> onSuccess, Consumer <Throwable > onFailure)//
 //todo validate that each type of predicate is given only once
 
-        finishPredicates.add(new FinishPredicate(PredicateType.GENERATIONS, 500));
-//        finishPredicates.add(new FinishPredicate(PredicateType.FITNESS, 85));
-        //finishPredicates.add(new FinishPredicate(PredicateType.TIME, 1));
 
         engine.executeEvolutionAlgorithm(
                 this.finishPredicates,
@@ -225,6 +219,22 @@ public class HeaderController {// in our case T is integer or a double, used for
 
                 }
         );
+    }
+
+    private void setPredicatesAccordingToDialogEndConditions(Map<EndConditionType, Double> endConditionTypePerValue) {
+        for (EndConditionType endCondtion:endConditionTypePerValue.keySet()) {
+            switch (endCondtion){
+                case FITNESS:
+                    finishPredicates.add(new FinishPredicate(EndConditionType.FITNESS,  endConditionTypePerValue.get(endCondtion)));
+                    break;
+                case GENERATIONS:
+                    finishPredicates.add(new FinishPredicate(EndConditionType.GENERATIONS,  endConditionTypePerValue.get(endCondtion)));
+                    break;
+                case TIME:
+                    finishPredicates.add(new FinishPredicate(EndConditionType.TIME, endConditionTypePerValue.get(endCondtion)));
+                    break;
+            }
+        }
     }
 
     @FXML

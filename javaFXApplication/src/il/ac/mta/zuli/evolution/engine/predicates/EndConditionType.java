@@ -1,5 +1,5 @@
 package il.ac.mta.zuli.evolution.engine.predicates;
 
-public enum PredicateType {
+public enum EndConditionType {
     GENERATIONS, FITNESS,TIME
 }

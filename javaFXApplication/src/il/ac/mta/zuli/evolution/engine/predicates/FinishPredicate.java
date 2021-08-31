@@ -5,10 +5,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 
 public class FinishPredicate implements Predicate<Double> {
-    private final PredicateType type;
+    private final EndConditionType type;
     private final double benchmark;
 
-    public FinishPredicate(PredicateType type, double benchmark) {
+    public FinishPredicate(EndConditionType type, double benchmark) {
         this.type = type;
         this.benchmark = benchmark;
     }
@@ -19,7 +19,7 @@ public class FinishPredicate implements Predicate<Double> {
         return aDouble <= benchmark;
     }
 
-    public PredicateType getType() {
+    public EndConditionType getType() {
         return type;
     }
 
