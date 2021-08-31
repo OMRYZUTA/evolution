@@ -6,12 +6,14 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.paint.Color;
 
 public class EndConditionsController {
     @FXML
-    private DialogPane endConditionsDialogPane;
+    private FlowPane warningsFlowPane;
     @FXML
     private TextField strideField;
     @FXML
@@ -52,27 +54,18 @@ public class EndConditionsController {
         generationTextField.disableProperty().bind(generationCheckbox.selectedProperty().not());
         fitnessTextField.disableProperty().bind(fitnessCheckbox.selectedProperty().not());
         timeTextField.disableProperty().bind(minutesCheckbox.selectedProperty().not());
-//        strideField.textProperty().addListener((observable, oldValue, newValue) -> {
-//            validateData()
-//        });
-
-//        strideField.focusedProperty().addListener((arg0, oldValue, newValue) -> {
-//            if (!newValue) { //when focus lost
-//                if(!strideField.getText().matches("[1-500]")){
-//                    //set the textField empty
-//                    strideField.setText("");
-//                }
-//            }
-//        });
     }
 
     public int getStride() {
-        return 30;
-//        int stride = Integer.parseInt(strideField.textProperty().get());
-//        if (stride <= 0) {
-//            throw new ValidationException("Invalid stride value entered, the value must be a positive integer");
-//        }
-//        return stride;
+        int stride=-1;
+        try {
+             stride = Integer.parseInt(strideField.textProperty().get());
+
+        }
+        catch(Throwable e){
+
+        }
+        return stride;
     }
 
     public int getStrideProperty() {
@@ -101,5 +94,41 @@ public class EndConditionsController {
 
     public int getTotalMinutesProperty() {
         return totalMinutesProperty.get();
+    }
+
+    public boolean validateAndStore() {
+        warningsFlowPane.getChildren().removeAll();
+        boolean result = true;
+        if(getStride()<0){
+            Label strideLable = new Label();
+            strideLable.textProperty().set("stride must be positive number, received: "+strideField.textProperty().get());
+            strideLable.textFillProperty().set(Color.color(1, 0, 0));
+            warningsFlowPane.getChildren().add(strideLable);
+            result=false;
+        }
+        if(totalGenerationsCheckProperty.get()){
+            if(getTotalGenerations()<0){
+                Label generationsLable = new Label();
+                generationsLable.textProperty().set("total generations must be positive number, received: "+generationTextField.textProperty().get());
+                generationsLable.textFillProperty().set(Color.color(1, 0, 0));
+                warningsFlowPane.getChildren().add(generationsLable);
+                result=false;
+            }
+        }
+
+        return result;
+    }
+
+    private int getTotalGenerations() {
+        int generations=-1;
+        try {
+            generations = Integer.parseInt(generationTextField.textProperty().get());
+
+        }
+        catch(Throwable e){
+
+        }
+        return generations;
+
     }
 }

@@ -11,14 +11,13 @@ import il.ac.mta.zuli.evolution.ui.endConditions.EndConditionsController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -96,16 +95,16 @@ public class HeaderController {// in our case T is integer or a double, used for
 
     @FXML
     public void loadFileButtonAction() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select words file");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
-        File selectedFile = fileChooser.showOpenDialog(primaryStage);
-        if (selectedFile == null) {
-            return;
-        }
-
-        String absolutePath = selectedFile.getAbsolutePath();
-//        String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-small.xml";
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Select words file");
+//        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
+//        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+//        if (selectedFile == null) {
+//            return;
+//        }
+//
+//        String absolutePath = selectedFile.getAbsolutePath();
+        String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-small.xml";
 
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(
@@ -137,9 +136,8 @@ public class HeaderController {// in our case T is integer or a double, used for
     public void runEngineAction() {
         try {
             Dialog<ButtonType> dialog = new Dialog<>();
-            ButtonType doneButtonType = new ButtonType("Done", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-            dialog.getDialogPane().getButtonTypes().add(doneButtonType);
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
 
             FXMLLoader loader = new FXMLLoader();
             URL mainFXML = getClass().getResource("/il/ac/mta/zuli/evolution/ui/endConditions/endConditionsFormComponent.fxml");
@@ -148,18 +146,23 @@ public class HeaderController {// in our case T is integer or a double, used for
             EndConditionsController controller = loader.getController();
 
             dialog.getDialogPane().setContent(gridPane);
+
+            //TODO - when OK button is clicked, need to validate all the text field, and show a lable with the error
+            final Button btOk = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+            btOk.addEventFilter(ActionEvent.ACTION, event -> {
+                if (!controller.validateAndStore()) {
+                    event.consume();
+                }
+            });
             Optional<ButtonType> result = dialog.showAndWait();
-            System.out.println("before button pressed");
-            System.out.println("result is present: "+result.isPresent());
-            System.out.println("result get(): "+ result.get());
-            //TODO - when done button is clicked, need to validate all the text field, and show a lable with the error
+
             if (result.isPresent() && result.get() == ButtonType.CANCEL) {
                 System.out.println("cancel pressed");
                 return;
             }
 
             int stride = controller.getStride();
-            System.out.println("after submit");
+            System.out.println("stride is "+stride);
         } catch (IOException e) {
             e.printStackTrace();
         }
