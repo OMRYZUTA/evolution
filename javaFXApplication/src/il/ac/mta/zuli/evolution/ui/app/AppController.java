@@ -6,11 +6,13 @@ import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.ui.details.DetailsController;
 import il.ac.mta.zuli.evolution.ui.header.HeaderController;
+import il.ac.mta.zuli.evolution.ui.runningAlgorithm.RunAlgoController;
 import il.ac.mta.zuli.evolution.ui.solution.SolutionController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class AppController {
@@ -26,6 +28,11 @@ public class AppController {
     private ScrollPane solutionComponent;
     @FXML
     private SolutionController solutionComponentController;
+    @FXML
+    private GridPane runAlgoComponent;
+    @FXML
+    private RunAlgoController runAlgoComponentController;
+
 
     // bound to visibility of different body components
     // buttons change its value
@@ -51,6 +58,8 @@ public class AppController {
 
         detailsComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "details"));
         solutionComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "solution"));
+        solutionComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "runAlgorithm"));
+
     }
 
     // headerController calls this function from displaySettingsAction
@@ -63,5 +72,9 @@ public class AppController {
         solutionComponentController.setSolution(solution);
         solutionComponentController.setTimeTableSettings(timetable);
         currentBodyProperty.set("solution");
+    }
+
+    public void runAlgorithm() {
+        currentBodyProperty.set("runAlgorithm");
     }
 }
