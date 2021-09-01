@@ -109,7 +109,6 @@ public class RunAlgoController {
         runningAlgoProperty.set(true);
         stopButton.setDisable(false);
         pauseButton.setDisable(false);
-        toggleTaskButtons(true);
         // executeEvolutionAlgorithm( int, int, Consumer<TimeTableSolutionDTO> onSuccess, Consumer <Throwable > onFailure)//
         engine.executeEvolutionAlgorithm(
                 this.endPredicates,
@@ -132,8 +131,6 @@ public class RunAlgoController {
                     // this is the current best solution
                 }
         );
-
-//        toggleTaskButtons(false);
     }
 
     private boolean getUserInput() {

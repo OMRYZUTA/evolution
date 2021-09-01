@@ -87,15 +87,13 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
                 updateMessage(message);
             }
 
-            prevGeneration = currGeneration;
-            currentGenerationNum++;
+            prevEvolutionState = currEvolutionState;
         } //end of for loop
-        System.out.println("report stride gonna get gen num: "+currentGenerationNum+"best solution score: "+currBestSolution.getTotalFitnessScore());
-        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
-        System.out.println("after report stride later");
-        updateMessage("Evolution algorithm completed running successfully");
-        System.out.println("after report update meassage best score: "+bestSolutionEver.getTotalFitnessScore());
-        return bestSolutionEver;
+
+        //TODO updateMessage about last stride
+//        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
+
+        return currEvolutionState;
     }
 
     private boolean checkAllPredicates(EvolutionState evolutionState) {
