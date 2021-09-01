@@ -42,7 +42,8 @@
         <ProgressBar id="taskProgressBar" fx:id="progressBar" maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="2" />
         <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
             <children>
-                <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseResumeAction" text="Pause" />
+                <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseAction" text="Pause" />
+                <Button fx:id="resumeButton" mnemonicParsing="false" onAction="#runAlgorithm" text="Resume"/>
                 <Button fx:id="stopButton" mnemonicParsing="false" onAction="#stopAction" text="Stop" />
                 <Button fx:id="bestSolutionButton" mnemonicParsing="false" onAction="#currBestSolutionAction" text="Current Best Solution" textAlignment="CENTER" wrapText="true" />
             </children>

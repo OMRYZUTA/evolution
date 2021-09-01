@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution.ui.runningAlgorithm;
 
-import il.ac.mta.zuli.evolution.dto.StrideDataDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.predicates.EndConditionType;
@@ -28,6 +27,8 @@ public class RunAlgoController {
     private ProgressBar progressBar;
     @FXML
     private Button pauseButton;
+    @FXML
+    private Button resumeButton;
     @FXML
     private Button stopButton;
     @FXML
@@ -62,7 +63,7 @@ public class RunAlgoController {
 
     private Engine engine;
     private int stride;
-    private TimeTableSolutionDTO solution = null;
+    private final TimeTableSolutionDTO solution = null;
     private final List<EndPredicate> endPredicates;
     private final SimpleBooleanProperty isPausedProperty;
     private final SimpleBooleanProperty runningAlgoProperty;
@@ -91,17 +92,13 @@ public class RunAlgoController {
     }
 
     @FXML
-    public void pauseResumeAction() {
-        if (engine.isPaused()) {
-            engine.resume();
-        } else {
-            engine.pause();
-        }
+    public void pauseAction() {
+        engine.pause();
     }
 
     @FXML
     public void stopAction() {
-        engine.cancelCurrentTask();
+        engine.stop();
     }
 
     public void runAlgorithm() {
@@ -117,8 +114,9 @@ public class RunAlgoController {
         engine.executeEvolutionAlgorithm(
                 this.endPredicates,
                 this.stride,
-                solution -> {
-                    this.solution = solution;
+                finished -> {
+                    // if finished -> the run is complete
+                    // if !finished -> the run was paused
                     //TODO - figure it out
 //                    evolutionAlgoCompletedProperty.set(true); //this is a headerController property
                     runningAlgoProperty.set(false);
@@ -130,11 +128,12 @@ public class RunAlgoController {
                             + throwable.getMessage());
                     runningAlgoProperty.set(false);
                 },
-                (StrideDataDTO strideData) -> {
+                (TimeTableSolutionDTO solution) -> {
+                    // this is the current best solution
                 }
         );
 
-        toggleTaskButtons(false);
+//        toggleTaskButtons(false);
     }
 
     private boolean getUserInput() {
@@ -176,14 +175,6 @@ public class RunAlgoController {
             e.printStackTrace(); //TODO: show error message to user
             return false;
         }
-    }
-
-
-    //in the recording ~20min. this is the "old-fashioned" way, better to do it with property
-    //TODO change to property implementation - no need for method (buttons only abled when running algorithm?)
-    private void toggleTaskButtons(boolean isActive) {
-        stopButton.setDisable(!isActive);
-
     }
 
     private void setPredicatesAccordingToDialogEndConditions(Map<EndConditionType, Double> endConditionTypePerValue) {
