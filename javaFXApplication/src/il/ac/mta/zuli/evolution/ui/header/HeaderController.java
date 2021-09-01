@@ -10,10 +10,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import java.io.File;
 
 public class HeaderController {
     @FXML
@@ -75,16 +72,16 @@ public class HeaderController {
 
     @FXML
     public void loadFileButtonAction() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select file");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
-        File selectedFile = fileChooser.showOpenDialog(primaryStage);
-        if (selectedFile == null) {
-            return;
-        }
-
-        String absolutePath = selectedFile.getAbsolutePath();
-//      String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-small.xml";
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Select file");
+//        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
+//        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+//        if (selectedFile == null) {
+//            return;
+//        }
+//
+//        String absolutePath = selectedFile.getAbsolutePath();
+      String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-small.xml";
 
 
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
@@ -128,7 +125,7 @@ public class HeaderController {
 
     @FXML
     public void bestSolutionAction() {
-        this.appController.displaySolution(this.solution, descriptor.getTimeTable());
+        this.appController.displaySolution(descriptor.getTimeTable());
     }
 
     @FXML
@@ -148,6 +145,9 @@ public class HeaderController {
         this.taskMessageLabel.textProperty().unbind();
     }
 
+    public void onAlgorithmFinished(){
+        evolutionAlgoCompletedProperty.set(true);
+    }
     //TODO add UIAdaptor and use it in loadXMLTask (better for later use of task in Ex. 3)
     ///uiAdaptor - the way in which the task reports its data back to the UI
     // about 57 minutes into the recording!

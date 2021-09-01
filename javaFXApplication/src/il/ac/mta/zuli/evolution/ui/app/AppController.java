@@ -33,9 +33,12 @@ public class AppController {
     @FXML
     private RunAlgoController runAlgoComponentController;
 
+
     // bound to visibility of different body components
     // buttons change its value
     private final SimpleStringProperty currentBodyProperty; //TODO set this inside header, based on button clicks
+    private TimeTableSolutionDTO solution;
+    private TimeTableDTO timetable;
 
     public AppController() {
         currentBodyProperty = new SimpleStringProperty("none");
@@ -55,7 +58,9 @@ public class AppController {
         if (headerComponentController != null) {
             headerComponentController.setAppController(this);
         }
-
+        if (runAlgoComponentController != null) {
+            runAlgoComponentController.setAppController(this);
+        }
         detailsComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "details"));
         runAlgoComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "runAlgorithm"));
         solutionComponent.visibleProperty().bind(Bindings.equal(currentBodyProperty, "solution"));
@@ -67,7 +72,7 @@ public class AppController {
         currentBodyProperty.set("details");
     }
 
-    public void displaySolution(TimeTableSolutionDTO solution, TimeTableDTO timetable) {
+    public void displaySolution( TimeTableDTO timetable) {
         solutionComponentController.setSolution(solution);
         solutionComponentController.setTimeTableSettings(timetable);
         currentBodyProperty.set("solution");
@@ -76,5 +81,10 @@ public class AppController {
     public void runAlgorithm() {
         currentBodyProperty.set("runAlgorithm");
         this.runAlgoComponentController.runAlgorithm();
+    }
+
+    public void onAlgorithmFinished(TimeTableSolutionDTO solution){
+        this.solution = solution;
+        headerComponentController.onAlgorithmFinished();
     }
 }

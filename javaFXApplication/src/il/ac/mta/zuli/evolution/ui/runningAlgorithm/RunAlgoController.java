@@ -5,6 +5,7 @@ import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.predicates.EndConditionType;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
+import il.ac.mta.zuli.evolution.ui.app.AppController;
 import il.ac.mta.zuli.evolution.ui.endConditions.EndConditionsController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -66,6 +67,9 @@ public class RunAlgoController {
     private final SimpleBooleanProperty isPausedProperty;
     private final SimpleBooleanProperty runningAlgoProperty;
 
+
+
+    private AppController appController;
     public RunAlgoController() {
         endPredicates = new ArrayList<>();
         isPausedProperty = new SimpleBooleanProperty(false);
@@ -110,7 +114,6 @@ public class RunAlgoController {
         pauseResumeButton.setText("Pause");
         pauseResumeButton.setDisable(false);
         toggleTaskButtons(true);
-
         // executeEvolutionAlgorithm( int, int, Consumer<TimeTableSolutionDTO> onSuccess, Consumer <Throwable > onFailure)//
         engine.executeEvolutionAlgorithm(
                 this.endPredicates,
@@ -120,6 +123,8 @@ public class RunAlgoController {
                     //TODO - figure it out
 //                    evolutionAlgoCompletedProperty.set(true); //this is a headerController property
                     runningAlgoProperty.set(false);
+                    appController.onAlgorithmFinished(solution);
+
                 },
                 throwable -> {
                     taskMessageLabel.setText("Failed running the algorithm." + System.lineSeparator()
@@ -196,5 +201,8 @@ public class RunAlgoController {
                     break;
             }
         }
+    }
+    public void setAppController(AppController appController) {
+        this.appController = appController;
     }
 }

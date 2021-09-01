@@ -46,7 +46,6 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
         TimeTableSolution currBestSolution = null;
         TimeTableSolution bestSolutionEver = null;
         currentGenerationNum = 1;
-
         while (checkAllPredicates(bestSolutionFitnessScore)) {
             currGeneration = evolutionEngine.execute(prevGeneration);
             currBestSolution = currGeneration.stream().
@@ -67,9 +66,11 @@ public class RunAlgorithmTask extends Task<TimeTableSolution> {
             prevGeneration = currGeneration;
             currentGenerationNum++;
         } //end of for loop
-
+        System.out.println("report stride gonna get gen num: "+currentGenerationNum+"best solution score: "+currBestSolution.getTotalFitnessScore());
         reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
+        System.out.println("after report stride later");
         updateMessage("Evolution algorithm completed running successfully");
+        System.out.println("after report update meassage best score: "+bestSolutionEver.getTotalFitnessScore());
         return bestSolutionEver;
     }
 
