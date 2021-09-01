@@ -27,7 +27,7 @@ public class RunAlgoController {
     @FXML
     private ProgressBar progressBar;
     @FXML
-    private Button pauseResumeButton;
+    private Button pauseButton;
     @FXML
     private Button stopButton;
     @FXML
@@ -111,8 +111,7 @@ public class RunAlgoController {
 
         runningAlgoProperty.set(true);
         stopButton.setDisable(false);
-        pauseResumeButton.setText("Pause");
-        pauseResumeButton.setDisable(false);
+        pauseButton.setDisable(false);
         toggleTaskButtons(true);
         // executeEvolutionAlgorithm( int, int, Consumer<TimeTableSolutionDTO> onSuccess, Consumer <Throwable > onFailure)//
         engine.executeEvolutionAlgorithm(
