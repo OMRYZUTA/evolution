@@ -86,7 +86,7 @@ public class EvolutionEngine<T extends Solution> {
         return newGeneration;
     }
 
-    private void evaluateSolutions(@NotNull List<T> generation) {
+    public void evaluateSolutions(@NotNull List<T> generation) {
         // calculate fitness for every solution in generation and save score to solution
         for (T solution : generation) {
             fitnessEvaluationPerSolution(solution);

@@ -83,8 +83,11 @@ public class AppController {
         this.runAlgoComponentController.runAlgorithm();
     }
 
-    public void onAlgorithmFinished(TimeTableSolutionDTO solution){
+    public void updateBestSolution(TimeTableSolutionDTO solution){
         this.solution = solution;
+    }
+
+    public void onFinishAlgorithm() {
         headerComponentController.onAlgorithmFinished();
     }
 }

@@ -35,11 +35,6 @@ public class EvolutionState {
     }
 
     public TimeTableSolution getGenerationBestSolution() {
-        //when this method is called the 1st generation wasn't evaluated yet, so there's no best solution
-        if (generationNum == 1) {
-            return null;
-        }
-
         return solutions.stream().
                 sorted(Collections.reverseOrder())
                 .limit(1).collect(Collectors.toList()).get(0);

@@ -20,6 +20,7 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
     private final EvolutionState initialEvolutionState;
     private final Consumer<TimeTableSolution> reportBestSolution;
     private TimeTableSolution bestSolutionEver;
+    private EvolutionEngine<TimeTableSolution> evolutionEngine;
 
     public RunAlgorithmTask(
             Descriptor descriptor,
@@ -32,6 +33,7 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
         this.generationsStride = generationsStride;
         // we either receive a generation to resume from, or create an initial one
         this.initialEvolutionState = initialEvolutionState;
+        this.evolutionEngine= new EvolutionEngine<TimeTableSolution>(descriptor.getEngineSettings(), descriptor.getRules());
         this.reportBestSolution = (TimeTableSolution bestSolution) -> {
             Platform.runLater(() -> {
                 reportBestSolution.accept(bestSolution);
@@ -41,7 +43,6 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
 
     @Override
     protected EvolutionState call() throws Exception {
-        EvolutionEngine<TimeTableSolution> evolutionEngine = new EvolutionEngine<TimeTableSolution>(descriptor.getEngineSettings(), descriptor.getRules());
         //initialGeneration is either null or not, depending on if we're resuming from pause or starting
         long startTime = System.currentTimeMillis();
         EvolutionState prevEvolutionState = initialEvolutionState;
@@ -50,10 +51,13 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
         if (initialEvolutionState == null) {
             //if we're just now starting the task, and not resuming after pause
             prevEvolutionState = createFirstGenerationState();
+            bestSolutionEver = prevEvolutionState.getGenerationBestSolution();
+        }else{
+            bestSolutionEver = prevEvolutionState.getBestSolutionSoFar();
         }
 
-        bestSolutionEver = prevEvolutionState.getBestSolutionSoFar();
-        reportBestSolution.accept(bestSolutionEver); //TODO can this consumer handle a null sent (on the 1st time)?
+
+        reportBestSolution.accept(bestSolutionEver);
 
         //while the user didn't click Pause or Stop, and we haven't reached any of the end-conditions yet
         while (!isCancelled() && checkAllPredicates(prevEvolutionState)) {
@@ -134,7 +138,7 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
         for (int i = 0; i < initialPopulationSize; i++) {
             initialPopulation.add(new TimeTableSolution(descriptor.getTimeTable()));
         }
-
+        evolutionEngine.evaluateSolutions(initialPopulation);
         return initialPopulation;
     }
 }

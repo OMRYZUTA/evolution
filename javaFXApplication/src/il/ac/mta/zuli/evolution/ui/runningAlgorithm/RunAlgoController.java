@@ -5,21 +5,14 @@ import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.predicates.EndConditionType;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
-import il.ac.mta.zuli.evolution.ui.endConditions.EndConditionsController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class RunAlgoController {
     //#region FXML components
@@ -119,8 +112,7 @@ public class RunAlgoController {
                     //TODO - figure it out
 //                    evolutionAlgoCompletedProperty.set(true); //this is a headerController property
                     runningAlgoProperty.set(false);
-                    appController.onAlgorithmFinished(solution);
-
+                    appController.onFinishAlgorithm();
                 },
                 throwable -> {
                     taskMessageLabel.setText("Failed running the algorithm." + System.lineSeparator()
@@ -129,6 +121,7 @@ public class RunAlgoController {
                 },
                 (TimeTableSolutionDTO solution) -> {
                     // this is the current best solution
+                    appController.updateBestSolution(solution);
                 }
         );
     }
@@ -136,39 +129,41 @@ public class RunAlgoController {
     private boolean getUserInput() {
         try {
             endPredicates.clear();
-
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-
-            FXMLLoader loader = new FXMLLoader();
-            URL mainFXML = getClass().getResource("/il/ac/mta/zuli/evolution/ui/endConditions/endConditionsFormComponent.fxml");
-            loader.setLocation(mainFXML);
-            GridPane gridPane = loader.load();
-            EndConditionsController controller = loader.getController();
-
-            dialog.getDialogPane().setContent(gridPane);
-
-            //TODO - when OK button is clicked, need to validate all the text field, and show a lable with the error
-            final Button btOk = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
-            btOk.addEventFilter(ActionEvent.ACTION, event -> {
-                if (!controller.validateAndStore()) {
-                    event.consume();
-                }
-            });
-
-            Optional<ButtonType> result = dialog.showAndWait();
-
-            if (result.isPresent() && result.get() == ButtonType.CANCEL) {
-                System.out.println("cancel pressed");
-                return false;
-            }
-
-            this.stride = controller.getStride();
-            setPredicatesAccordingToDialogEndConditions(controller.getEndConditionTypePerValue());
-
+            //comemnted out for faster debugging!!
+//
+//            Dialog<ButtonType> dialog = new Dialog<>();
+//            dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+//            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+//
+//            FXMLLoader loader = new FXMLLoader();
+//            URL mainFXML = getClass().getResource("/il/ac/mta/zuli/evolution/ui/endConditions/endConditionsFormComponent.fxml");
+//            loader.setLocation(mainFXML);
+//            GridPane gridPane = loader.load();
+//            EndConditionsController controller = loader.getController();
+//
+//            dialog.getDialogPane().setContent(gridPane);
+//
+//
+//            final Button btOk = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+//            btOk.addEventFilter(ActionEvent.ACTION, event -> {
+//                if (!controller.validateAndStore()) {
+//                    event.consume();
+//                }
+//            });
+//
+//            Optional<ButtonType> result = dialog.showAndWait();
+//
+//            if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+//                return false;
+//            }
+//
+//            this.stride = controller.getStride();
+//            setPredicatesAccordingToDialogEndConditions(controller.getEndConditionTypePerValue());
+//
+            stride = 5;
+            endPredicates.add(new EndPredicate(EndConditionType.GENERATIONS, 500));
             return true;
-        } catch (IOException e) {
+        } catch (Throwable e) {
             e.printStackTrace(); //TODO: show error message to user
             return false;
         }
