@@ -17,7 +17,7 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
     private final Descriptor descriptor;
     private final List<EndPredicate> endPredicates;
     private final int generationsStride;
-    private final EvolutionState initialEvolutionState;
+    private final EvolutionState evolutionState;
     private final Consumer<TimeTableSolution> reportBestSolution;
     private TimeTableSolution bestSolutionEver;
     private EvolutionEngine<TimeTableSolution> evolutionEngine;
@@ -26,13 +26,13 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
             Descriptor descriptor,
             List<EndPredicate> endPredicates,
             int generationsStride,
-            EvolutionState initialEvolutionState,
+            EvolutionState evolutionState,
             Consumer<TimeTableSolution> reportBestSolution) {
         this.descriptor = descriptor;
         this.endPredicates = endPredicates;
         this.generationsStride = generationsStride;
         // we either receive a generation to resume from, or create an initial one
-        this.initialEvolutionState = initialEvolutionState;
+        this.evolutionState = evolutionState;
         this.evolutionEngine= new EvolutionEngine<TimeTableSolution>(descriptor.getEngineSettings(), descriptor.getRules());
         this.reportBestSolution = (TimeTableSolution bestSolution) -> {
             Platform.runLater(() -> {
@@ -45,10 +45,10 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
     protected EvolutionState call() throws Exception {
         //initialGeneration is either null or not, depending on if we're resuming from pause or starting
         long startTime = System.currentTimeMillis();
-        EvolutionState prevEvolutionState = initialEvolutionState;
+        EvolutionState prevEvolutionState = evolutionState;
         EvolutionState currEvolutionState = null;
 
-        if (initialEvolutionState == null) {
+        if (evolutionState == null) {
             //if we're just now starting the task, and not resuming after pause
             prevEvolutionState = createFirstGenerationState();
             bestSolutionEver = prevEvolutionState.getGenerationBestSolution();
@@ -64,7 +64,7 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
             List<TimeTableSolution> currSolutions = evolutionEngine.execute(prevEvolutionState.getGenerationSolutions());
             // building the current EvolutionState
             long timeFromStart = System.currentTimeMillis() - startTime;
-            long elapsedTime = initialEvolutionState == null ? timeFromStart : initialEvolutionState.getNetRunTime() + timeFromStart;
+            long elapsedTime = evolutionState == null ? timeFromStart : evolutionState.getNetRunTime() + timeFromStart;
 
             currEvolutionState = new EvolutionState(
                     prevEvolutionState.getGenerationNum() + 1,
@@ -95,6 +95,7 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
         } //end of for loop
 
         //TODO updateMessage about last stride
+        updateValue(currEvolutionState);
 //        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
 
         return currEvolutionState;
@@ -141,4 +142,6 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
         evolutionEngine.evaluateSolutions(initialPopulation);
         return initialPopulation;
     }
+
+
 }
