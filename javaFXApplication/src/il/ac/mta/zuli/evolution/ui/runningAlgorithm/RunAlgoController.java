@@ -62,8 +62,8 @@ public class RunAlgoController {
     private final SimpleBooleanProperty runningAlgoProperty;
 
 
-
     private AppController appController;
+
     public RunAlgoController() {
         endPredicates = new ArrayList<>();
         isPausedProperty = new SimpleBooleanProperty(false);
@@ -90,6 +90,35 @@ public class RunAlgoController {
     }
 
     @FXML
+    void resumeAction() {
+        runningAlgoProperty.set(true);
+        stopButton.setDisable(false);
+        pauseButton.setDisable(false);
+
+        //same parameters as startEvolutionAlgorithm()
+        engine.resume(
+                this.endPredicates,
+                this.stride,
+                finished -> {
+                    // if finished -> the run is complete
+                    // if !finished -> the run was paused
+                    //TODO - figure it out
+//                    evolutionAlgoCompletedProperty.set(true); //this is a headerController property
+                    runningAlgoProperty.set(false);
+                    appController.onFinishAlgorithm();
+                },
+                throwable -> {
+                    taskMessageLabel.setText("Failed running the algorithm." + System.lineSeparator()
+                            + throwable.getMessage());
+                    runningAlgoProperty.set(false);
+                },
+                (TimeTableSolutionDTO solution) -> {
+                    // this is the current best solution
+                    appController.updateBestSolution(solution);
+                });
+    }
+
+    @FXML
     public void stopAction() {
         engine.stop();
     }
@@ -103,8 +132,8 @@ public class RunAlgoController {
         runningAlgoProperty.set(true);
         stopButton.setDisable(false);
         pauseButton.setDisable(false);
-        // executeEvolutionAlgorithm( int, int, Consumer<TimeTableSolutionDTO> onSuccess, Consumer <Throwable > onFailure)//
-        engine.executeEvolutionAlgorithm(
+
+        engine.startEvolutionAlgorithm(
                 this.endPredicates,
                 this.stride,
                 finished -> {
@@ -185,6 +214,7 @@ public class RunAlgoController {
             }
         }
     }
+
     public void setAppController(AppController appController) {
         this.appController = appController;
     }

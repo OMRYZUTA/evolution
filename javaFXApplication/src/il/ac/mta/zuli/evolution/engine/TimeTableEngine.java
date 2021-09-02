@@ -28,7 +28,6 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     private EvolutionState currEvolutionState;
     private HeaderController controller;
     private Task<?> currentRunningTask;
-    private boolean wasStopped;
 
     public TimeTableEngine() {
     }
@@ -73,11 +72,11 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 //    no need for "DescriptorDTO getSystemDetails()" as an engine method
 
     @Override
-    public void executeEvolutionAlgorithm(List<EndPredicate> endConditions,
-                                          int generationsStride,
-                                          Consumer<Boolean> onSuccess,
-                                          Consumer<Throwable> onFailure,
-                                          Consumer<TimeTableSolutionDTO> reportBestSolution) {
+    public void startEvolutionAlgorithm(List<EndPredicate> endConditions,
+                                        int generationsStride,
+                                        Consumer<Boolean> onSuccess,
+                                        Consumer<Throwable> onFailure,
+                                        Consumer<TimeTableSolutionDTO> reportBestSolution) {
 
         checkForErrorsBeforeExecutingAlgorithms();
 
@@ -93,6 +92,33 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                 this.descriptor,
                 endConditions,
                 generationsStride,
+                null,
+                (EvolutionState state) -> {
+                    this.currEvolutionState = state;
+                },
+                (TimeTableSolution solution) -> {
+                    reportBestSolution.accept(createTimeTableSolutionDTO(solution));
+                });
+
+        callingTask(onSuccess, onFailure);
+    }
+
+    @Override
+    public void resume(List<EndPredicate> endConditions,
+                       int generationsStride,
+                       Consumer<Boolean> onSuccess,
+                       Consumer<Throwable> onFailure,
+                       Consumer<TimeTableSolutionDTO> reportBestSolution) {
+
+        if (currentRunningTask != null) {
+            System.out.println("currentRunningTask isn't null");
+            return; // TODO: should not come here, we want one task at a time
+        }
+
+        currentRunningTask = new RunAlgorithmTask(
+                this.descriptor,
+                endConditions,
+                generationsStride,
                 this.currEvolutionState,
                 (EvolutionState state) -> {
                     this.currEvolutionState = state;
@@ -101,32 +127,24 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                     reportBestSolution.accept(createTimeTableSolutionDTO(solution));
                 });
 
+        callingTask(onSuccess, onFailure);
+    }
+
+    private void callingTask(Consumer<Boolean> onSuccess, Consumer<Throwable> onFailure) {
         currentRunningTask.setOnCancelled(event -> {
-            //System.out.println("in engine on canceled : "+currentRunningTask.getValue());
-//            System.out.println("in engine on canceled : " + this.currEvolutionState.getGenerationNum());
-//            this.currEvolutionState = (EvolutionState) currentRunningTask.getValue();
             controller.onTaskFinished();
             onSuccess.accept(false);
             currentRunningTask = null; // clearing task
-            synchronized (this) {
-                if (wasStopped) {
-                    this.currEvolutionState = null;
-                    System.out.println("setONCancelled, currEvolutionState: " + currEvolutionState);
-                }
-            }
         });
 
         currentRunningTask.setOnSucceeded(event -> {
-//            System.out.println("in engine on succeed : "+currentRunningTask.getValue());
-            // reset state
-            this.currEvolutionState = null;
+            this.currEvolutionState = null; // reset state
             controller.onTaskFinished();
             onSuccess.accept(true); // sending the best solutionDTO to the controller
             currentRunningTask = null; // clearing task
         });
 
         currentRunningTask.setOnFailed(value -> {
-//            System.out.println("in engine on failed : "+currentRunningTask.getValue());
             controller.onTaskFinished();
             //TODO figure out how to handle exceptions, with reaching the "root" error as we did in the console
             onFailure.accept(currentRunningTask.getException());
@@ -146,18 +164,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     @Override
     public void stop() {
         currentRunningTask.cancel();
-        System.out.println("in stop: " + currentRunningTask);
-        currentRunningTask = null;
-        System.out.println("in stop, after nullifying task: " + currentRunningTask);
-
-        synchronized (this) {
-            this.currentRunningTask = null;
-            this.wasStopped = true;
-            System.out.println("in sync in stop");
-        }
-
-//        this.currEvolutionState = null; //we don't want to save the previous state
-
+        this.currEvolutionState = null; //in case of STOP we don't want to save the previous state}
     }
 
     @Override

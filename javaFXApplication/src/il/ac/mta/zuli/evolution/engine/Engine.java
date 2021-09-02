@@ -14,7 +14,7 @@ public interface Engine {
 
     void loadXML(String fileToLoad, Consumer<DescriptorDTO> onSuccess, Consumer<Throwable> onFailure);
 
-    void executeEvolutionAlgorithm(
+    void startEvolutionAlgorithm(
             List<EndPredicate> endConditions,
             int generationsStride,
             Consumer<Boolean> onSuccess,
@@ -31,4 +31,10 @@ public interface Engine {
     void stop();
 
     void pause();
+
+    void resume(List<EndPredicate> endConditions,
+                int generationsStride,
+                Consumer<Boolean> onSuccess,
+                Consumer<Throwable> onFailure,
+                Consumer<TimeTableSolutionDTO> reportBestSolution);
 }

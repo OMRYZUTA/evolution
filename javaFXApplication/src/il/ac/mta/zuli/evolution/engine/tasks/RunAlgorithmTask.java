@@ -31,18 +31,13 @@ public class RunAlgorithmTask extends Task<Boolean> {
             EvolutionState evolutionState,
             Consumer<EvolutionState> reportState,
             Consumer<TimeTableSolution> reportBestSolution) {
-        System.out.println("in task ctor, received evolutionState: " + evolutionState);
         this.descriptor = descriptor;
         this.endPredicates = endPredicates;
         this.generationsStride = generationsStride;
         // we either receive a generation to resume from, or create an initial one
         this.inEvolutionState = evolutionState;
         this.evolutionEngine = new EvolutionEngine<TimeTableSolution>(descriptor.getEngineSettings(), descriptor.getRules());
-        this.reportState = (EvolutionState state) -> {
-            Platform.runLater(() -> {
-                reportState.accept(outEvolutionState);
-            });
-        };
+        this.reportState = reportState;
         this.reportBestSolution = (TimeTableSolution bestSolution) -> {
             Platform.runLater(() -> {
                 reportBestSolution.accept(bestSolution);
@@ -104,11 +99,6 @@ public class RunAlgorithmTask extends Task<Boolean> {
             reportState.accept(outEvolutionState);
         } //end of for loop
 
-        String message = String.format(
-                "Generation: %d. Top Score: %f",
-                currEvolutionState.getGenerationNum(),
-                currEvolutionState.getGenerationBestSolution().getTotalFitnessScore());
-        updateMessage(message);
 //        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
 
         return true;
