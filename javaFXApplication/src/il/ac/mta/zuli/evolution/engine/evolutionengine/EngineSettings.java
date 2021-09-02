@@ -1,7 +1,8 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine;
 
-import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterface;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverFactory;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterface;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.MutationFactory;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
@@ -27,9 +28,21 @@ public class EngineSettings<T extends Solution> {
 
     public EngineSettings(@NotNull ETTEvolutionEngine ee, @NotNull TimeTable timeTable) {
         setInitialPopulationSize(ee.getETTInitialPopulation().getSize());
-        setSelection(ee.getETTSelection(),initialPopulationSize);
+        setSelection(ee.getETTSelection(), initialPopulationSize);
         setCrossover(ee.getETTCrossover(), timeTable);
         setMutations(ee.getETTMutations().getETTMutation(), timeTable);
+    }
+
+    //TODO - use when updating settings after pause (or using public setters)
+    public EngineSettings(@NotNull EngineSettings prevSettings,
+                          @NotNull TimeTable timeTable,
+                          Selection newSelection,
+                          Crossover newCrossover,
+                          List<Mutation<T>> newMutationList) {
+        initialPopulationSize = prevSettings.getInitialPopulationSize();
+        selection = newSelection;
+        crossover = newCrossover;
+        mutations = newMutationList;
     }
 
     //#region setters
@@ -41,8 +54,8 @@ public class EngineSettings<T extends Solution> {
         }
     }
 
-    private void setSelection(@NotNull ETTSelection ettSelection,int populationSize) {
-        this.selection = SelectionFactory.createSelection(ettSelection,populationSize);
+    private void setSelection(@NotNull ETTSelection ettSelection, int populationSize) {
+        this.selection = SelectionFactory.createSelection(ettSelection, populationSize);
     }
 
     private void setCrossover(@NotNull ETTCrossover ettCrossover, TimeTable timeTable) {
@@ -88,6 +101,6 @@ public class EngineSettings<T extends Solution> {
     }
 
     public int getEliteNumber() {
-        return  selection.getElitism();
+        return selection.getElitism();
     }
 }

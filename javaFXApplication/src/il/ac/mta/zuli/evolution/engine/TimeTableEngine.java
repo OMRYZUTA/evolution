@@ -28,6 +28,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     private EvolutionState currEvolutionState;
     private HeaderController controller;
     private Task<?> currentRunningTask;
+    private boolean wasStopped;
 
     public TimeTableEngine() {
     }
@@ -41,8 +42,9 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                         Consumer<DescriptorDTO> onSuccess,
                         Consumer<Throwable> onFailure) {
 
+        //TODO delete before submitting
         if (currentRunningTask != null) {
-            return; // TODO: should not come here, we want one task at a time
+            System.out.println(" currentRunningTask != null, do we ever reach this line");
         }
 
         currentRunningTask = new LoadXMLTask(fileToLoad);
@@ -80,6 +82,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         checkForErrorsBeforeExecutingAlgorithms();
 
         if (currentRunningTask != null) {
+            System.out.println("currentRunningTask isn't null");
             return; // TODO: should not come here, we want one task at a time
         }
 
@@ -100,15 +103,21 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
         currentRunningTask.setOnCancelled(event -> {
             //System.out.println("in engine on canceled : "+currentRunningTask.getValue());
-            System.out.println("in engine on canceled : " + this.currEvolutionState.getGenerationNum());
+//            System.out.println("in engine on canceled : " + this.currEvolutionState.getGenerationNum());
 //            this.currEvolutionState = (EvolutionState) currentRunningTask.getValue();
             controller.onTaskFinished();
             onSuccess.accept(false);
             currentRunningTask = null; // clearing task
+            synchronized (this) {
+                if (wasStopped) {
+                    this.currEvolutionState = null;
+                    System.out.println("setONCancelled, currEvolutionState: " + currEvolutionState);
+                }
+            }
         });
 
         currentRunningTask.setOnSucceeded(event -> {
-            System.out.println("in engine on succeed : "+currentRunningTask.getValue());
+//            System.out.println("in engine on succeed : "+currentRunningTask.getValue());
             // reset state
             this.currEvolutionState = null;
             controller.onTaskFinished();
@@ -117,7 +126,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         });
 
         currentRunningTask.setOnFailed(value -> {
-            System.out.println("in engine on failed : "+currentRunningTask.getValue());
+//            System.out.println("in engine on failed : "+currentRunningTask.getValue());
             controller.onTaskFinished();
             //TODO figure out how to handle exceptions, with reaching the "root" error as we did in the console
             onFailure.accept(currentRunningTask.getException());
@@ -129,11 +138,6 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         new Thread(currentRunningTask).start();
     }
 
-//    public void cancelCurrentTask() {
-//        currentRunningTask.cancel();
-//    }
-
-
     @Override
     public void pause() {
         currentRunningTask.cancel();
@@ -142,7 +146,18 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     @Override
     public void stop() {
         currentRunningTask.cancel();
-        currEvolutionState = null; //we don't want to save the previous state
+        System.out.println("in stop: " + currentRunningTask);
+        currentRunningTask = null;
+        System.out.println("in stop, after nullifying task: " + currentRunningTask);
+
+        synchronized (this) {
+            this.currentRunningTask = null;
+            this.wasStopped = true;
+            System.out.println("in sync in stop");
+        }
+
+//        this.currEvolutionState = null; //we don't want to save the previous state
+
     }
 
     @Override

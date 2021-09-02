@@ -161,7 +161,7 @@ public class RunAlgoController {
 //            this.stride = controller.getStride();
 //            setPredicatesAccordingToDialogEndConditions(controller.getEndConditionTypePerValue());
 //
-            stride = 5;
+            stride = 50;
             endPredicates.add(new EndPredicate(EndConditionType.GENERATIONS, 2000));
             return true;
         } catch (Throwable e) {

@@ -8,7 +8,6 @@ public class TeacherDTO {
     private final String name;
     private final Map<Integer, SubjectDTO> subjects;
 
-    //TODO suggestion - in DTOs hold only lists not maps and sets?? think about it
     public TeacherDTO(int id, String name, Map<Integer, SubjectDTO> subjects) {
         this.id = id;
         this.name = name;

@@ -5,7 +5,10 @@ import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EvolutionEngine<T extends Solution> {
@@ -19,6 +22,8 @@ public class EvolutionEngine<T extends Solution> {
         setRules(rules);
         this.numOfElitism = engineSettings.getEliteNumber();
     }
+
+    //TODO setEngineSettings()
 
     public void setRules(@NotNull Set<Rule> rules) {
         if (rules.size() == 0) {

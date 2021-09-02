@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class RunAlgorithmTask extends Task<EvolutionState> {
+public class RunAlgorithmTask extends Task<Boolean> {
     private final Descriptor descriptor;
     private final List<EndPredicate> endPredicates;
     private final int generationsStride;
@@ -31,6 +31,7 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
             EvolutionState evolutionState,
             Consumer<EvolutionState> reportState,
             Consumer<TimeTableSolution> reportBestSolution) {
+        System.out.println("in task ctor, received evolutionState: " + evolutionState);
         this.descriptor = descriptor;
         this.endPredicates = endPredicates;
         this.generationsStride = generationsStride;
@@ -50,10 +51,10 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
     }
 
     @Override
-    protected EvolutionState call() throws Exception {
+    protected Boolean call() throws Exception {
         //initialGeneration is either null or not, depending on if we're resuming from pause or starting
         long startTime = System.currentTimeMillis();
-        EvolutionState prevEvolutionState = inEvolutionState;
+        EvolutionState prevEvolutionState = inEvolutionState; //our way to resume after pause
         EvolutionState currEvolutionState = null;
 
         if (inEvolutionState == null) {
@@ -63,7 +64,6 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
         } else {
             bestSolutionEver = prevEvolutionState.getBestSolutionSoFar();
         }
-
 
         reportBestSolution.accept(bestSolutionEver);
 
@@ -103,14 +103,15 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
             outEvolutionState = currEvolutionState;
             reportState.accept(outEvolutionState);
         } //end of for loop
-        System.out.println("after while Loop");
-        System.out.println("generation number" + currEvolutionState.getGenerationNum());
 
-        //TODO updateMessage about last stride
-        //updateValue(currEvolutionState);
+        String message = String.format(
+                "Generation: %d. Top Score: %f",
+                currEvolutionState.getGenerationNum(),
+                currEvolutionState.getGenerationBestSolution().getTotalFitnessScore());
+        updateMessage(message);
 //        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
 
-        return currEvolutionState;
+        return true;
     }
 
     private boolean checkAllPredicates(EvolutionState evolutionState) {

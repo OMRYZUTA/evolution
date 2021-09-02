@@ -4,7 +4,6 @@ import il.ac.mta.zuli.evolution.engine.Descriptor;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 import javafx.concurrent.Task;
 
-//TODO move tasks to ui
 
 public class LoadXMLTask extends Task<Descriptor> {
     private final String fileName;
