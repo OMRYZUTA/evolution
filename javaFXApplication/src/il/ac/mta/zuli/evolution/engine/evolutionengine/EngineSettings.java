@@ -34,12 +34,10 @@ public class EngineSettings<T extends Solution> {
     }
 
     //TODO - use when updating settings after pause (or using public setters)
-    public EngineSettings(@NotNull EngineSettings prevSettings,
-                          @NotNull TimeTable timeTable,
-                          Selection newSelection,
+    public EngineSettings(Selection newSelection,
                           Crossover newCrossover,
-                          List<Mutation<T>> newMutationList) {
-        initialPopulationSize = prevSettings.getInitialPopulationSize();
+                          List<Mutation<T>> newMutationList, int initialPopulationSize) {
+        this.initialPopulationSize = initialPopulationSize;
         selection = newSelection;
         crossover = newCrossover;
         mutations = newMutationList;

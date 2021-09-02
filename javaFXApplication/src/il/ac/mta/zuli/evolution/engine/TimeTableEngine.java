@@ -174,6 +174,11 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     }
 
     @Override
+    public Descriptor getDescriptor(){
+        return descriptor;
+    }
+
+    @Override
     public void setEngineSettings(EngineSettings validatedSettings) {
         this.descriptor.setValidatedEngineSettings(validatedSettings);
     }

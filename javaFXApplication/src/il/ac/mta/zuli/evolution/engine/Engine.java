@@ -15,6 +15,8 @@ public interface Engine {
 
     void loadXML(String fileToLoad, Consumer<DescriptorDTO> onSuccess, Consumer<Throwable> onFailure);
 
+    Descriptor getDescriptor();
+
     void setEngineSettings(EngineSettings settings);
 
     EngineSettings getEngineSettings();

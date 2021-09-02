@@ -98,7 +98,7 @@ public class RunAlgoController {
     @FXML
     private FlowPane progressFlowPane;
     //#endregion FXML components
-
+    private EngineSettings newEngineSettings;
     private Engine engine;
     private int stride;
     private final TimeTableSolutionDTO solution = null;
@@ -143,9 +143,9 @@ public class RunAlgoController {
         updateSettingsScrollPane.disableProperty().bind(isPausedProperty.not());
 
         engineSettingsSaveButton.addEventFilter(ActionEvent.ACTION, event -> {
-            if (validateAndStoreEngineSettings() == null) {
-                event.consume();
-            }
+//            if (validateAndStoreEngineSettings() == null) {
+//                event.consume();
+//            }
         });
     }
 
@@ -197,25 +197,25 @@ public class RunAlgoController {
 
     @FXML
     public void saveEngineSettingsChangesAction() {
-        Selection<TimeTableSolution> updatedSelection = null;
-        try {
-            updatedSelection = createNewSelection();
-            //crossover
-            //mutations
-
-            engine.setEngineSettings();
-
-        } catch (Throwable e) {
-        }
+        EngineSettings engineSettings = null;
+            if(validateAndStoreEngineSettings()){
+                engine.setEngineSettings(newEngineSettings);
+            }
     }
 
     private boolean validateAndStoreEngineSettings() {
+        boolean result = false;
         try {
             Selection<TimeTableSolution> updatedSelection = createNewSelection();
+            //TODO implement crossover and list of mutations
+            newEngineSettings = new EngineSettings( updatedSelection,null,null,engine.getEngineSettings().getInitialPopulationSize());
+            result = true;
         } catch (Throwable e) {
+            errorLabel.setText(e.getMessage());
+            result =false;
         }
 
-
+    return result;
     }
 
     private Selection<TimeTableSolution> createNewSelection() {
@@ -237,6 +237,8 @@ public class RunAlgoController {
                     "truncation",
                     settings.getInitialPopulationSize(),
                     elitism, topPercent);
+        }else{
+            updatedSelection = engine.getEngineSettings().getSelection(); // it remains the same.
         }
 
         System.out.println(updatedSelection);
