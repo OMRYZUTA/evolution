@@ -2,56 +2,101 @@ package il.ac.mta.zuli.evolution.ui.runningAlgorithm;
 
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
+import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.SelectionFactory;
 import il.ac.mta.zuli.evolution.engine.predicates.EndConditionType;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class RunAlgoController {
     //#region FXML components
     @FXML
+    private Label errorLabel;
+    @FXML
+    private GridPane runAlgoGridPane;
+
+    @FXML
     private ProgressBar progressBar;
+
     @FXML
     private Button pauseButton;
+
     @FXML
     private Button resumeButton;
+
     @FXML
     private Button stopButton;
+
     @FXML
     private Button bestSolutionButton;
+
     @FXML
     private ScrollPane updateSettingsScrollPane;
+
     @FXML
     private CheckBox elitismCheckbox;
+
     @FXML
     private TextField elitismTextField;
+
+    @FXML
+    private Button engineSettingsSaveButton;
+
+    @FXML
+    private AnchorPane selectionPane;
+
     @FXML
     private Label truncationCheckbox;
+
     @FXML
     private RadioButton rouletteWheelRadioButton;
+
     @FXML
-    private RadioButton truncationRadioButton;
+    private ToggleGroup selectionGroup;
+
     @FXML
     private TextField topPercentTextField;
+
+    @FXML
+    private RadioButton truncationRadioButton;
+
+    @FXML
+    private AnchorPane crossoverPane;
+
     @FXML
     private RadioButton dayTimeOrientedRadioButton;
+
     @FXML
-    private RadioButton classOrientedRadioButton;
+    private ToggleGroup crossoverGroup;
+
     @FXML
     private RadioButton teacherOrientedRadioButton;
+
     @FXML
-    private Label generationStrideLabel;
+    private RadioButton classOrientedRadioButton;
+
     @FXML
-    private Label generationStrideDataLabel;
+    private FlowPane mutationPane;
+
     @FXML
-    private Label taskMessageLabel; //TODO start out invisible, will only be needed if failed running
+    private Button addMutationButton;
+
+    @FXML
+    private FlowPane progressFlowPane;
     //#endregion FXML components
 
     private Engine engine;
@@ -60,14 +105,33 @@ public class RunAlgoController {
     private final List<EndPredicate> endPredicates;
     private final SimpleBooleanProperty isPausedProperty;
     private final SimpleBooleanProperty runningAlgoProperty;
-
-
     private AppController appController;
+    private final Consumer<Boolean> onSuccess;
+    private final Consumer<Throwable> onFailure;
+    private final Consumer<TimeTableSolutionDTO> reportBestSolution;
 
     public RunAlgoController() {
         endPredicates = new ArrayList<>();
         isPausedProperty = new SimpleBooleanProperty(false);
         runningAlgoProperty = new SimpleBooleanProperty(false);
+        onSuccess = finished -> {
+            // if finished -> the run is complete
+            // if !finished -> the run was paused
+            //TODO - figure it out
+//                    evolutionAlgoCompletedProperty.set(true); //this is a headerController property
+            runningAlgoProperty.set(false);
+            appController.onFinishAlgorithm();
+        };
+        onFailure = throwable -> {
+            errorLabel.setVisible(true);
+            errorLabel.setText("Failed running the algorithm." + System.lineSeparator()
+                    + throwable.getMessage());
+            runningAlgoProperty.set(false);
+        };
+        reportBestSolution = (TimeTableSolutionDTO solution) -> {
+            // this is the current best solution
+            appController.updateBestSolution(solution);
+        };
     }
 
     public void setEngine(Engine engine) {
@@ -76,8 +140,13 @@ public class RunAlgoController {
 
     @FXML
     private void initialize() {
-        updateSettingsScrollPane.setDisable(!isPausedProperty.get());
-        generationStrideLabel.textProperty().bind(Bindings.format("%d", stride));
+        updateSettingsScrollPane.disableProperty().bind(isPausedProperty.not());
+
+        engineSettingsSaveButton.addEventFilter(ActionEvent.ACTION, event -> {
+            if (validateAndStoreEngineSettings() == null) {
+                event.consume();
+            }
+        });
     }
 
     @FXML
@@ -86,6 +155,7 @@ public class RunAlgoController {
 
     @FXML
     public void pauseAction() {
+        isPausedProperty.set(true);
         engine.pause();
     }
 
@@ -95,34 +165,18 @@ public class RunAlgoController {
         stopButton.setDisable(false);
         pauseButton.setDisable(false);
 
-        //same parameters as startEvolutionAlgorithm()
         engine.resume(
                 this.endPredicates,
                 this.stride,
-                finished -> {
-                    // if finished -> the run is complete
-                    // if !finished -> the run was paused
-                    //TODO - figure it out
-//                    evolutionAlgoCompletedProperty.set(true); //this is a headerController property
-                    runningAlgoProperty.set(false);
-                    appController.onFinishAlgorithm();
-                },
-                throwable -> {
-                    taskMessageLabel.setText("Failed running the algorithm." + System.lineSeparator()
-                            + throwable.getMessage());
-                    runningAlgoProperty.set(false);
-                },
-                (TimeTableSolutionDTO solution) -> {
-                    // this is the current best solution
-                    appController.updateBestSolution(solution);
-                });
+                onSuccess,
+                onFailure,
+                reportBestSolution);
     }
 
     @FXML
     public void stopAction() {
         engine.stop();
     }
-
 
     public void runAlgorithm() {
         if (!getUserInput()) {
@@ -136,24 +190,57 @@ public class RunAlgoController {
         engine.startEvolutionAlgorithm(
                 this.endPredicates,
                 this.stride,
-                finished -> {
-                    // if finished -> the run is complete
-                    // if !finished -> the run was paused
-                    //TODO - figure it out
-//                    evolutionAlgoCompletedProperty.set(true); //this is a headerController property
-                    runningAlgoProperty.set(false);
-                    appController.onFinishAlgorithm();
-                },
-                throwable -> {
-                    taskMessageLabel.setText("Failed running the algorithm." + System.lineSeparator()
-                            + throwable.getMessage());
-                    runningAlgoProperty.set(false);
-                },
-                (TimeTableSolutionDTO solution) -> {
-                    // this is the current best solution
-                    appController.updateBestSolution(solution);
-                }
-        );
+                onSuccess,
+                onFailure,
+                reportBestSolution);
+    }
+
+    @FXML
+    public void saveEngineSettingsChangesAction() {
+        Selection<TimeTableSolution> updatedSelection = null;
+        try {
+            updatedSelection = createNewSelection();
+            //crossover
+            //mutations
+
+            engine.setEngineSettings();
+
+        } catch (Throwable e) {
+        }
+    }
+
+    private boolean validateAndStoreEngineSettings() {
+        try {
+            Selection<TimeTableSolution> updatedSelection = createNewSelection();
+        } catch (Throwable e) {
+        }
+
+
+    }
+
+    private Selection<TimeTableSolution> createNewSelection() {
+        EngineSettings settings = engine.getEngineSettings();
+        Selection<TimeTableSolution> updatedSelection = null;
+        int elitism = 0;
+        if (elitismCheckbox.isSelected()) {
+            elitism = Integer.parseInt(elitismTextField.getText());
+        }
+
+        if (rouletteWheelRadioButton.isSelected()) {
+            updatedSelection = SelectionFactory.createSelectionFromInput(
+                    "rouletteWheel",
+                    settings.getInitialPopulationSize(),
+                    elitism, 0); //topPercent NA for rouletteWheel
+        } else if (truncationRadioButton.isSelected()) {
+            int topPercent = Integer.parseInt(topPercentTextField.getText());
+            updatedSelection = SelectionFactory.createSelectionFromInput(
+                    "truncation",
+                    settings.getInitialPopulationSize(),
+                    elitism, topPercent);
+        }
+
+        System.out.println(updatedSelection);
+        return updatedSelection;
     }
 
     private boolean getUserInput() {
@@ -199,7 +286,8 @@ public class RunAlgoController {
         }
     }
 
-    private void setPredicatesAccordingToDialogEndConditions(Map<EndConditionType, Double> endConditionTypePerValue) {
+    private void setPredicatesAccordingToDialogEndConditions
+            (Map<EndConditionType, Double> endConditionTypePerValue) {
         for (EndConditionType endCondition : endConditionTypePerValue.keySet()) {
             switch (endCondition) {
                 case FITNESS:

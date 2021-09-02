@@ -16,9 +16,13 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
     private int elitism;
 
     public RouletteWheel(ETTSelection ettSelection, int populationSize) {
-        if(ettSelection.getETTElitism()!=null){
+        if (ettSelection.getETTElitism() != null) {
             setElitism(ettSelection.getETTElitism(), populationSize);
-        }// else elitism is initialize to zero anyway
+        }// else elitism is initialized to zero anyway
+    }
+
+    public RouletteWheel(int populationSize, int elitism) {
+        setElitism(elitism, populationSize);
     }
 
     @Override
@@ -30,7 +34,7 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
 
         scoreRangePerIndex = buildScoreRangePerIndexList(solutions);
 
-        for (int i = 0; i < (populationSize-elitism); i++) {
+        for (int i = 0; i < (populationSize - elitism); i++) {
             //scoreRangePerIndex.get() returns an index in the solutions-list
             solutionIndex = scoreRangePerIndex.get(random.nextInt(scoreRangePerIndex.size()));
             selectedParents.add(solutions.get(solutionIndex));
@@ -54,7 +58,7 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
             //add as many elements as solution[i]'s score
             elementsToAdd = (int) Math.ceil(currSolutionScore);
             List<Integer> tempList = Collections.nCopies(elementsToAdd, i);
-            scoreRangePerIndex.addAll( tempList);
+            scoreRangePerIndex.addAll(tempList);
         }
 
         return scoreRangePerIndex;

@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.engine;
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
 import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.ui.header.HeaderController;
 
@@ -13,6 +14,10 @@ public interface Engine {
     void setController(HeaderController controller);
 
     void loadXML(String fileToLoad, Consumer<DescriptorDTO> onSuccess, Consumer<Throwable> onFailure);
+
+    void setEngineSettings(EngineSettings settings);
+
+    EngineSettings getEngineSettings();
 
     void startEvolutionAlgorithm(
             List<EndPredicate> endConditions,

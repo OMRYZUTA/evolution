@@ -11,14 +11,21 @@ import java.util.stream.Collectors;
 public class Truncation<S extends Solution> implements Selection<S> {
     private int topPercent;
     private int elitism;
-    private int populationSize;
+    private final int populationSize;
 
     public Truncation(ETTSelection ettSelection, int populationSize) {
         parseConfiguration(ettSelection);
-        this.populationSize=populationSize;
-        if(ettSelection.getETTElitism()!=null){
+        this.populationSize = populationSize;
+        if (ettSelection.getETTElitism() != null) {
             setElitism(ettSelection.getETTElitism());
         }// else elitism is initialize to zero anyway
+    }
+
+    public Truncation(int topPercent, int populationSize, int elitism) {
+        this.populationSize = populationSize;
+        setTopPercent(topPercent);
+        setElitism(elitism);
+
     }
 
     private void parseConfiguration(ETTSelection ettSelection) {

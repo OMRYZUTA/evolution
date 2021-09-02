@@ -55,7 +55,7 @@ public class EngineSettings<T extends Solution> {
     }
 
     private void setSelection(@NotNull ETTSelection ettSelection, int populationSize) {
-        this.selection = SelectionFactory.createSelection(ettSelection, populationSize);
+        this.selection = SelectionFactory.createSelectionFromETT(ettSelection, populationSize);
     }
 
     private void setCrossover(@NotNull ETTCrossover ettCrossover, TimeTable timeTable) {
@@ -69,6 +69,8 @@ public class EngineSettings<T extends Solution> {
             mutations.add(MutationFactory.createMutation(ettMutation, timeTable));
         }
     }
+
+
     //#endregion
 
     //#region getters

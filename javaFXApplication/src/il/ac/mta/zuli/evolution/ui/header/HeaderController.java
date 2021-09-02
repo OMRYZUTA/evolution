@@ -81,8 +81,8 @@ public class HeaderController {
 //        }
 //
 //        String absolutePath = selectedFile.getAbsolutePath();
-      String absolutePath = "javaFXApplication\\src\\resources\\EX2-small.xml";
-
+        String absolutePath = "javaFXApplication\\src\\resources\\EX2-small.xml";
+//        String absolutePath ="C:\\Users\\fifil\\source\\repos\\evolution\\javaFXApplication\\src\\resources\\EX2-error-3.4.xml";
 
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(
@@ -145,7 +145,7 @@ public class HeaderController {
         this.taskMessageLabel.textProperty().unbind();
     }
 
-    public void onAlgorithmFinished(){
+    public void onAlgorithmFinished() {
         evolutionAlgoCompletedProperty.set(true);
     }
     //TODO add UIAdaptor and use it in loadXMLTask (better for later use of task in Ex. 3)

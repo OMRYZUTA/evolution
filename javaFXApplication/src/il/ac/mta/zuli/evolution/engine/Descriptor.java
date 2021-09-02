@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class Descriptor {
     private final TimeTable timeTable;
-    private final EngineSettings engineSettings;
+    private EngineSettings engineSettings;
 
     public Descriptor(@NotNull ETTDescriptor d) {
         // only if received another valid file we want to overwrite the previous descriptor instance
@@ -57,4 +57,9 @@ public class Descriptor {
     public EngineSettings getEngineSettings() {
         return engineSettings;
     }
+
+    public void setValidatedEngineSettings(EngineSettings newEngineSettings) {
+        this.engineSettings = newEngineSettings;
+    }
+
 }

@@ -4,6 +4,7 @@ import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.events.ErrorEvent;
 import il.ac.mta.zuli.evolution.engine.events.ErrorType;
 import il.ac.mta.zuli.evolution.engine.events.EventsEmitter;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterface;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
@@ -165,6 +166,16 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     public void stop() {
         currentRunningTask.cancel();
         this.currEvolutionState = null; //in case of STOP we don't want to save the previous state}
+    }
+
+    @Override
+    public EngineSettings getEngineSettings() {
+        return descriptor.getEngineSettings();
+    }
+
+    @Override
+    public void setEngineSettings(EngineSettings validatedSettings) {
+        this.descriptor.setValidatedEngineSettings(validatedSettings);
     }
 
     @Override
