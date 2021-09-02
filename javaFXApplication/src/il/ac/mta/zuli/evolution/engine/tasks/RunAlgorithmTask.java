@@ -17,8 +17,10 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
     private final Descriptor descriptor;
     private final List<EndPredicate> endPredicates;
     private final int generationsStride;
-    private final EvolutionState evolutionState;
+    private final EvolutionState inEvolutionState;
+    private  EvolutionState outEvolutionState;
     private final Consumer<TimeTableSolution> reportBestSolution;
+    private final Consumer<EvolutionState> reportState;
     private TimeTableSolution bestSolutionEver;
     private EvolutionEngine<TimeTableSolution> evolutionEngine;
 
@@ -27,13 +29,19 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
             List<EndPredicate> endPredicates,
             int generationsStride,
             EvolutionState evolutionState,
+            Consumer<EvolutionState> reportState,
             Consumer<TimeTableSolution> reportBestSolution) {
         this.descriptor = descriptor;
         this.endPredicates = endPredicates;
         this.generationsStride = generationsStride;
         // we either receive a generation to resume from, or create an initial one
-        this.evolutionState = evolutionState;
-        this.evolutionEngine= new EvolutionEngine<TimeTableSolution>(descriptor.getEngineSettings(), descriptor.getRules());
+        this.inEvolutionState = evolutionState;
+        this.evolutionEngine = new EvolutionEngine<TimeTableSolution>(descriptor.getEngineSettings(), descriptor.getRules());
+        this.reportState = (EvolutionState state)->{
+            Platform.runLater(()->{
+                reportState.accept(outEvolutionState);
+            });
+        }
         this.reportBestSolution = (TimeTableSolution bestSolution) -> {
             Platform.runLater(() -> {
                 reportBestSolution.accept(bestSolution);
@@ -45,14 +53,14 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
     protected EvolutionState call() throws Exception {
         //initialGeneration is either null or not, depending on if we're resuming from pause or starting
         long startTime = System.currentTimeMillis();
-        EvolutionState prevEvolutionState = evolutionState;
+        EvolutionState prevEvolutionState = inEvolutionState;
         EvolutionState currEvolutionState = null;
 
-        if (evolutionState == null) {
+        if (inEvolutionState == null) {
             //if we're just now starting the task, and not resuming after pause
             prevEvolutionState = createFirstGenerationState();
             bestSolutionEver = prevEvolutionState.getGenerationBestSolution();
-        }else{
+        } else {
             bestSolutionEver = prevEvolutionState.getBestSolutionSoFar();
         }
 
@@ -64,7 +72,7 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
             List<TimeTableSolution> currSolutions = evolutionEngine.execute(prevEvolutionState.getGenerationSolutions());
             // building the current EvolutionState
             long timeFromStart = System.currentTimeMillis() - startTime;
-            long elapsedTime = evolutionState == null ? timeFromStart : evolutionState.getNetRunTime() + timeFromStart;
+            long elapsedTime = inEvolutionState == null ? timeFromStart : inEvolutionState.getNetRunTime() + timeFromStart;
 
             currEvolutionState = new EvolutionState(
                     prevEvolutionState.getGenerationNum() + 1,
@@ -92,10 +100,13 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
             }
 
             prevEvolutionState = currEvolutionState;
+            outEvolutionState=currEvolutionState;
         } //end of for loop
+        System.out.println("after while Loop");
+        System.out.println("generation number" + currEvolutionState.getGenerationNum());
 
         //TODO updateMessage about last stride
-        updateValue(currEvolutionState);
+        //updateValue(currEvolutionState);
 //        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
 
         return currEvolutionState;

@@ -90,18 +90,23 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                 endConditions,
                 generationsStride,
                 this.currEvolutionState,
+                (EvolutionState state)->{
+                  this.currEvolutionState = state;
+                },
                 (TimeTableSolution solution) -> {
                     reportBestSolution.accept(createTimeTableSolutionDTO(solution));
                 });
 
         currentRunningTask.setOnCancelled(event -> {
-            this.currEvolutionState = (EvolutionState) currentRunningTask.getValue();
+            System.out.println("in engine on canceled : "+currentRunningTask.getValue());
+//            this.currEvolutionState = (EvolutionState) currentRunningTask.getValue();
             controller.onTaskFinished();
             onSuccess.accept(false);
             currentRunningTask = null; // clearing task
         });
 
         currentRunningTask.setOnSucceeded(event -> {
+            System.out.println("in engine on succeed : "+currentRunningTask.getValue());
             // reset state
             this.currEvolutionState = null;
             controller.onTaskFinished();
@@ -110,6 +115,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         });
 
         currentRunningTask.setOnFailed(value -> {
+            System.out.println("in engine on failed : "+currentRunningTask.getValue());
             controller.onTaskFinished();
             //TODO figure out how to handle exceptions, with reaching the "root" error as we did in the console
             onFailure.accept(currentRunningTask.getException());

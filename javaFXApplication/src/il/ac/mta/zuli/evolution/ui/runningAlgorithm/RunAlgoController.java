@@ -162,7 +162,7 @@ public class RunAlgoController {
 //            setPredicatesAccordingToDialogEndConditions(controller.getEndConditionTypePerValue());
 //
             stride = 5;
-            endPredicates.add(new EndPredicate(EndConditionType.GENERATIONS, 500));
+            endPredicates.add(new EndPredicate(EndConditionType.GENERATIONS, 2000));
             return true;
         } catch (Throwable e) {
             e.printStackTrace(); //TODO: show error message to user
