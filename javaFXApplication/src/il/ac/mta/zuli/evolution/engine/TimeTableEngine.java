@@ -84,21 +84,23 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         }
 
 //        public RunAlgorithmTask(Descriptor descriptor, List < EndPredicate > endPredicates,
-//        int generationsStride, EvolutionState initialEvolutionState, Consumer < TimeTableSolution > reportBestSolution)
+//        int generationsStride, EvolutionState initialEvolutionState, Consumer < EvolutionState > reportState,
+//        Consumer < TimeTableSolution > reportBestSolution)
         currentRunningTask = new RunAlgorithmTask(
                 this.descriptor,
                 endConditions,
                 generationsStride,
                 this.currEvolutionState,
-                (EvolutionState state)->{
-                  this.currEvolutionState = state;
+                (EvolutionState state) -> {
+                    this.currEvolutionState = state;
                 },
                 (TimeTableSolution solution) -> {
                     reportBestSolution.accept(createTimeTableSolutionDTO(solution));
                 });
 
         currentRunningTask.setOnCancelled(event -> {
-            System.out.println("in engine on canceled : "+currentRunningTask.getValue());
+            //System.out.println("in engine on canceled : "+currentRunningTask.getValue());
+            System.out.println("in engine on canceled : " + this.currEvolutionState.getGenerationNum());
 //            this.currEvolutionState = (EvolutionState) currentRunningTask.getValue();
             controller.onTaskFinished();
             onSuccess.accept(false);

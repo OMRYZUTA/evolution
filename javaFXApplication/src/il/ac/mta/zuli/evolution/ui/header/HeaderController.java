@@ -81,7 +81,7 @@ public class HeaderController {
 //        }
 //
 //        String absolutePath = selectedFile.getAbsolutePath();
-      String absolutePath = "C:\\Users\\zuta\\IdeaProjects\\evolution\\javaFXApplication\\src\\resources\\EX2-small.xml";
+      String absolutePath = "javaFXApplication\\src\\resources\\EX2-small.xml";
 
 
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)

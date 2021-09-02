@@ -18,11 +18,11 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
     private final List<EndPredicate> endPredicates;
     private final int generationsStride;
     private final EvolutionState inEvolutionState;
-    private  EvolutionState outEvolutionState;
+    private EvolutionState outEvolutionState;
     private final Consumer<TimeTableSolution> reportBestSolution;
     private final Consumer<EvolutionState> reportState;
     private TimeTableSolution bestSolutionEver;
-    private EvolutionEngine<TimeTableSolution> evolutionEngine;
+    private final EvolutionEngine<TimeTableSolution> evolutionEngine;
 
     public RunAlgorithmTask(
             Descriptor descriptor,
@@ -37,11 +37,11 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
         // we either receive a generation to resume from, or create an initial one
         this.inEvolutionState = evolutionState;
         this.evolutionEngine = new EvolutionEngine<TimeTableSolution>(descriptor.getEngineSettings(), descriptor.getRules());
-        this.reportState = (EvolutionState state)->{
-            Platform.runLater(()->{
+        this.reportState = (EvolutionState state) -> {
+            Platform.runLater(() -> {
                 reportState.accept(outEvolutionState);
             });
-        }
+        };
         this.reportBestSolution = (TimeTableSolution bestSolution) -> {
             Platform.runLater(() -> {
                 reportBestSolution.accept(bestSolution);
@@ -100,7 +100,8 @@ public class RunAlgorithmTask extends Task<EvolutionState> {
             }
 
             prevEvolutionState = currEvolutionState;
-            outEvolutionState=currEvolutionState;
+            outEvolutionState = currEvolutionState;
+            reportState.accept(outEvolutionState);
         } //end of for loop
         System.out.println("after while Loop");
         System.out.println("generation number" + currEvolutionState.getGenerationNum());
