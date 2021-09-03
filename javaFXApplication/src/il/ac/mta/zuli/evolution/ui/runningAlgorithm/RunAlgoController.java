@@ -104,10 +104,19 @@ public class RunAlgoController {
     private VBox mutationsBox;
 
     @FXML
+    private Label generationsProgressBarLabel;
+
+    @FXML
     private ProgressBar generationsProgressBar;
 
     @FXML
+    private Label fitnessProgressBarLabel;
+
+    @FXML
     private ProgressBar fitnessProgressBar;
+
+    @FXML
+    private Label timeProgressBarLabel;
 
     @FXML
     private ProgressBar timeProgressBar;
@@ -382,6 +391,7 @@ public class RunAlgoController {
 //
             stride = 50;
             endPredicates.add(new EndPredicate(EndConditionType.GENERATIONS, 2000));
+            endPredicates.add(new EndPredicate(EndConditionType.FITNESS, 96.8));
             bindProgressBars();
             return true;
         } catch (Throwable e) {
@@ -412,19 +422,28 @@ public class RunAlgoController {
     }
 
     private void bindProgressBars() {
+        //initially setting all 3 bars to be invisible
+        timeProgressBarLabel.setVisible(false);
         timeProgressBar.setVisible(false);
+        fitnessProgressBarLabel.setVisible(false);
         fitnessProgressBar.setVisible(false);
+        generationsProgressBarLabel.setVisible(false);
         generationsProgressBar.setVisible(false);
+
         for (EndPredicate predicate : this.endPredicates) {
             switch (predicate.getType()) {
                 case TIME:
                     timeProgressBar.setVisible(true);
+                    timeProgressBarLabel.setVisible(true);
                     timeProgressBar.progressProperty().bind(engine.getTimeProperty().divide(predicate.getParameter() * 60 * 1000F));
                 case FITNESS:
                     fitnessProgressBar.setVisible(true);
+                    fitnessProgressBarLabel.setVisible(true);
                     fitnessProgressBar.progressProperty().bind(engine.getFitnessProperty().divide(predicate.getParameter()));
                 case GENERATIONS:
                     generationsProgressBar.setVisible(true);
+                    generationsProgressBarLabel.setVisible(true);
+                    //TODO generation progress bar reaches end to soon
                     generationsProgressBar.progressProperty().bind(engine.getGenerationNumProperty().divide(predicate.getParameter()));
             }
         }

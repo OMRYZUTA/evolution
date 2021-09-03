@@ -58,9 +58,9 @@ public class TimeTableEngine implements Engine {
                         Consumer<Boolean> onSuccess,
                         Consumer<Throwable> onFailure) {
 
-        //TODO delete before submitting
         if (currentRunningTask != null) {
-            System.out.println(" currentRunningTask != null, do we ever reach this line");
+            onFailure.accept(new RuntimeException("Failed running task because another task is currently running"));
+            return;
         }
 
         currentRunningTask = new LoadXMLTask(fileToLoad);
@@ -128,8 +128,8 @@ public class TimeTableEngine implements Engine {
                                        Consumer<TimeTableSolutionDTO> reportBestSolution,
                                        EvolutionState currentState) {
         if (currentRunningTask != null) {
-            System.out.println("currentRunningTask isn't null");
-            return; // TODO: should not come here, we want one task at a time
+            onFailure.accept(new RuntimeException("Failed running task because another task is currently running"));
+            return;
         }
 
         currentRunningTask = new RunAlgorithmTask(

@@ -151,15 +151,18 @@
                 </GridPane>
             </content>
         </ScrollPane>
-        <Label text="Generations" GridPane.columnIndex="4" GridPane.rowIndex="3"/>
+        <Label fx:id="generationsProgressBarLabel" text="Generations" visible="false" GridPane.columnIndex="4"
+               GridPane.rowIndex="3"/>
         <ProgressBar id="taskProgressBar" fx:id="generationsProgressBar" maxWidth="1.7976931348623157E308"
-                     progress="0.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4"/>
-        <Label text="Fitness Score" GridPane.columnIndex="4" GridPane.rowIndex="5"/>
+                     progress="0.0" visible="false" GridPane.columnIndex="4" GridPane.columnSpan="2"
+                     GridPane.rowIndex="4"/>
+        <Label fx:id="fitnessProgressBarLabel" text="Fitness Score" visible="false" GridPane.columnIndex="4"
+               GridPane.rowIndex="5"/>
         <ProgressBar id="taskProgressBar" fx:id="fitnessProgressBar" maxWidth="1.7976931348623157E308" progress="0.0"
-                     GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="6"/>
-        <Label text="Time" GridPane.columnIndex="4" GridPane.rowIndex="7"/>
+                     visible="false" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="6"/>
+        <Label fx:id="timeProgressBarLabel" text="Time" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="7"/>
         <ProgressBar id="taskProgressBar" fx:id="timeProgressBar" maxWidth="1.7976931348623157E308" progress="0.0"
-                     GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8"/>
+                     visible="false" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8"/>
         <Label fx:id="errorLabel" text="Error" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="1"/>
     </children>
 </GridPane>
