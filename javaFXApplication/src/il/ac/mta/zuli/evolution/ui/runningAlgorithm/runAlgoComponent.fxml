@@ -31,7 +31,8 @@
         <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="1" GridPane.columnSpan="2"
               GridPane.rowIndex="2">
             <children>
-                <Button fx:id="startButton" mnemonicParsing="false" onAction="#startAction" text="Start"/>
+                <Button fx:id="startButton" mnemonicParsing="false" onAction="#startAction"
+                        style="-fx-font-weight: 600;" text="Start"/>
                 <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseAction" text="Pause"/>
                 <Button fx:id="resumeButton" mnemonicParsing="false" onAction="#resumeAction" text="Resume"/>
                 <Button fx:id="stopButton" mnemonicParsing="false" onAction="#stopAction" text="Stop"/>

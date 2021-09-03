@@ -68,14 +68,14 @@ public class AppController {
 
     // headerController calls this function from displaySettingsAction
     public void displaySettings(DescriptorDTO descriptor) {
-        detailsComponentController.setDescriptor(descriptor);
         currentBodyProperty.set("details");
+        detailsComponentController.setDescriptor(descriptor);
     }
 
     public void displaySolution( TimeTableDTO timetable) {
+        currentBodyProperty.set("solution");
         solutionComponentController.setSolution(solution);
         solutionComponentController.setTimeTableSettings(timetable);
-        currentBodyProperty.set("solution");
     }
 
     public void runAlgorithm() {

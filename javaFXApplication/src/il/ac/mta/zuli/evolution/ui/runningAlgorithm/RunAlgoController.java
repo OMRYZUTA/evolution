@@ -166,8 +166,17 @@ public class RunAlgoController {
         this.engine = engine;
     }
 
+    public void setAppController(AppController appController) {
+        this.appController = appController;
+    }
+
     @FXML
     private void initialize() {
+        //initially, only StartButton is an option, the others are disabled
+        pauseButton.setDisable(true);
+        resumeButton.setDisable(true);
+        stopButton.setDisable(true);
+
         updateSettingsScrollPane.disableProperty().bind(isPausedProperty.not());
 
         engineSettingsSaveButton.addEventFilter(ActionEvent.ACTION, event -> {
@@ -178,7 +187,38 @@ public class RunAlgoController {
     }
 
     @FXML
+    void startAction(ActionEvent event) {
+        if (!getEndPredicatesInput()) {
+            return;
+        }
+
+        runningAlgoProperty.set(true);
+        stopButton.setDisable(false);
+        pauseButton.setDisable(false);
+        resumeButton.setDisable(true);
+
+        engine.startEvolutionAlgorithm(
+                this.endPredicates,
+                this.stride,
+                onSuccess,
+                onFailure,
+                reportBestSolution);
+    }
+
+    @FXML
+    void stopAction(ActionEvent event) {
+        startButton.setDisable(false);
+        pauseButton.setDisable(true);
+        resumeButton.setDisable(true);
+
+        engine.stopEvolutionAlgorithm();
+    }
+
+    @FXML
     void pauseAction(ActionEvent event) {
+        resumeButton.setDisable(false);
+        stopButton.setDisable(true);
+        startButton.setDisable(true);
         isPausedProperty.set(true);
         engine.pauseEvolutionAlgorithm();
     }
@@ -188,6 +228,7 @@ public class RunAlgoController {
         runningAlgoProperty.set(true);
         stopButton.setDisable(false);
         pauseButton.setDisable(false);
+        startButton.setDisable(true);
 
         engine.resumeEvolutionAlgorithm(
                 this.endPredicates,
@@ -198,8 +239,25 @@ public class RunAlgoController {
     }
 
     @FXML
-    void saveEngineSettingsChangesAction(ActionEvent event) {
+    public void saveEngineSettingsChangesAction() {
+        EngineSettings newEngineSettings = null;
 
+        try {
+            Selection<TimeTableSolution> updatedSelection = createSelectionFromInput();
+            CrossoverInterface<TimeTableSolution> updatedCrossover = createCrossoverFromInput();
+            List<Mutation<TimeTableSolution>> updatedMutations = createMutationListFromInput();
+
+            newEngineSettings = new EngineSettings(
+                    updatedSelection,
+                    updatedCrossover,
+                    updatedMutations,
+                    engine.getEngineSettings().getInitialPopulationSize());
+        } catch (Throwable e) {
+            errorLabel.setText(e.getMessage());
+            return;
+        }
+
+        engine.setEngineSettings(newEngineSettings); //the timetableEngine holds a descriptor which has engine settings
     }
 
     @FXML
@@ -216,50 +274,6 @@ public class RunAlgoController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    void startAction(ActionEvent event) {
-        //TODO change the RunAlgo so that we also have a start button
-        if (!getEndPredicates()) {
-            return;
-        }
-
-        runningAlgoProperty.set(true);
-        stopButton.setDisable(false);
-        pauseButton.setDisable(false);
-
-        engine.startEvolutionAlgorithm(
-                this.endPredicates,
-                this.stride,
-                onSuccess,
-                onFailure,
-                reportBestSolution);
-    }
-
-    @FXML
-    void stopAction(ActionEvent event) {
-        engine.stopEvolutionAlgorithm();
-    }
-
-    @FXML
-    public void saveEngineSettingsChangesAction2() {
-        EngineSettings newEngineSettings = null;
-        try {
-            Selection<TimeTableSolution> updatedSelection = createSelectionFromInput();
-            CrossoverInterface<TimeTableSolution> updatedCrossover = createCrossoverFromInput();
-            List<Mutation<TimeTableSolution>> updatedMutations = createMutationListFromInput();
-            newEngineSettings = new EngineSettings(
-                    updatedSelection,
-                    updatedCrossover,
-                    updatedMutations,
-                    engine.getEngineSettings().getInitialPopulationSize());
-        } catch (Throwable e) {
-            errorLabel.setText(e.getMessage());
-            return;
-        }
-
-        engine.setEngineSettings(newEngineSettings); //the timetableEngine holds a descriptor which has engine settings
     }
 
     private Selection<TimeTableSolution> createSelectionFromInput() {
@@ -332,30 +346,7 @@ public class RunAlgoController {
                 .collect(Collectors.toList());
     }
 
-//    @FXML
-//    public void saveEngineSettingsChangesAction() {
-//        EngineSettings engineSettings = null;
-//        if (validateAndStoreEngineSettings()) {
-//            engine.setEngineSettings(newEngineSettings);
-//        }
-//    }
-
-//    private boolean validateAndStoreEngineSettings() {
-//        boolean result = false;
-//        try {
-//            Selection<TimeTableSolution> updatedSelection = createNewSelection();
-//            //TODO implement crossover and list of mutations
-//            newEngineSettings = new EngineSettings(updatedSelection, null, null, engine.getEngineSettings().getInitialPopulationSize());
-//            result = true;
-//        } catch (Throwable e) {
-//            errorLabel.setText(e.getMessage());
-//            result = false;
-//        }
-//
-//        return result;
-//    }
-
-    private boolean getEndPredicates() {
+    private boolean getEndPredicatesInput() {
         try {
             endPredicates.clear();
             //commented out for faster debugging!!
@@ -393,6 +384,7 @@ public class RunAlgoController {
             endPredicates.add(new EndPredicate(EndConditionType.GENERATIONS, 2000));
             endPredicates.add(new EndPredicate(EndConditionType.FITNESS, 96.8));
             bindProgressBars();
+
             return true;
         } catch (Throwable e) {
             e.printStackTrace(); //TODO: show error message to user
@@ -415,10 +407,6 @@ public class RunAlgoController {
                     break;
             }
         }
-    }
-
-    public void setAppController(AppController appController) {
-        this.appController = appController;
     }
 
     private void bindProgressBars() {

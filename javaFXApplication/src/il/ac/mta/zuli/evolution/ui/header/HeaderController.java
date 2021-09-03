@@ -8,9 +8,13 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 public class HeaderController {
     @FXML
@@ -65,8 +69,9 @@ public class HeaderController {
         //disabling 2 of the buttons until a file is loaded to the system
         displaySettingsButton.disableProperty().bind(fileLoadedProperty.not());
         runEngineButton.disableProperty().bind(fileLoadedProperty.not());
-        //disabling the remaining buttons until the algorithm completed at least once
-        bestSolutionButton.disableProperty().bind(evolutionAlgoCompletedProperty.not());
+//        bestSolutionButton.disableProperty().bind(evolutionAlgoCompletedProperty.not());
+        bestSolutionButton.setDisable(true);
+        //TODO delete:
         historyButton.disableProperty().bind(evolutionAlgoCompletedProperty.not());
     }
 
@@ -82,7 +87,6 @@ public class HeaderController {
 //
 //        String absolutePath = selectedFile.getAbsolutePath();
         String absolutePath = "javaFXApplication\\src\\resources\\EX2-small.xml";
-//        String absolutePath ="C:\\Users\\fifil\\source\\repos\\evolution\\javaFXApplication\\src\\resources\\EX2-error-3.4.xml";
 
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(
@@ -112,13 +116,23 @@ public class HeaderController {
     @FXML
     public void runEngineAction() {
         if (evolutionAlgoCompletedProperty.get()) {
-            //TODO add popup?
-            // "The evolution-algorithm has already completed its course. "+ System.lineSeparator() +
-            // "If you choose to re-run it, the information from the previous run will be lost." + System.lineSeparator() +
-            // "Would you like to re-run the algorithm? (Enter Y/N)");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Dialog");
+            alert.setHeaderText("The evolution-algorithm previously ran.");
+            alert.setContentText("If you choose to re-run it, the information from the previous run will be lost." + System.lineSeparator() +
+                    "Would you like to re-run the algorithm?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+
+                // ... user chose OK
+            } else {
+                // ... user chose CANCEL or closed the dialog
+            }
         }
 
         this.appController.runAlgorithm();
+        bestSolutionButton.setDisable(false);
     }
 
 
