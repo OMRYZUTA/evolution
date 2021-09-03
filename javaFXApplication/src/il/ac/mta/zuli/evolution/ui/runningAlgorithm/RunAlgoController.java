@@ -107,7 +107,7 @@ public class RunAlgoController {
     private ProgressBar generationsProgressBar;
 
     @FXML
-    private ProgressBar scoreProgressBar;
+    private ProgressBar fitnessProgressBar;
 
     @FXML
     private ProgressBar timeProgressBar;
@@ -171,7 +171,7 @@ public class RunAlgoController {
     @FXML
     void pauseAction(ActionEvent event) {
         isPausedProperty.set(true);
-        engine.pause();
+        engine.pauseEvolutionAlgorithm();
     }
 
     @FXML
@@ -180,7 +180,7 @@ public class RunAlgoController {
         stopButton.setDisable(false);
         pauseButton.setDisable(false);
 
-        engine.resume(
+        engine.resumeEvolutionAlgorithm(
                 this.endPredicates,
                 this.stride,
                 onSuccess,
@@ -230,7 +230,7 @@ public class RunAlgoController {
 
     @FXML
     void stopAction(ActionEvent event) {
-        engine.stop();
+        engine.stopEvolutionAlgorithm();
     }
 
     @FXML
@@ -323,7 +323,6 @@ public class RunAlgoController {
                 .collect(Collectors.toList());
     }
 
-
 //    @FXML
 //    public void saveEngineSettingsChangesAction() {
 //        EngineSettings engineSettings = null;
@@ -383,6 +382,7 @@ public class RunAlgoController {
 //
             stride = 50;
             endPredicates.add(new EndPredicate(EndConditionType.GENERATIONS, 2000));
+            bindProgressBars();
             return true;
         } catch (Throwable e) {
             e.printStackTrace(); //TODO: show error message to user
@@ -409,5 +409,24 @@ public class RunAlgoController {
 
     public void setAppController(AppController appController) {
         this.appController = appController;
+    }
+
+    private void bindProgressBars() {
+        timeProgressBar.setVisible(false);
+        fitnessProgressBar.setVisible(false);
+        generationsProgressBar.setVisible(false);
+        for (EndPredicate predicate : this.endPredicates) {
+            switch (predicate.getType()) {
+                case TIME:
+                    timeProgressBar.setVisible(true);
+                    timeProgressBar.progressProperty().bind(engine.getTimeProperty().divide(predicate.getParameter() * 60 * 1000F));
+                case FITNESS:
+                    fitnessProgressBar.setVisible(true);
+                    fitnessProgressBar.progressProperty().bind(engine.getFitnessProperty().divide(predicate.getParameter()));
+                case GENERATIONS:
+                    generationsProgressBar.setVisible(true);
+                    generationsProgressBar.progressProperty().bind(engine.getGenerationNumProperty().divide(predicate.getParameter()));
+            }
+        }
     }
 }

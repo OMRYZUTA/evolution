@@ -12,6 +12,9 @@ import il.ac.mta.zuli.evolution.engine.tasks.LoadXMLTask;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
 import il.ac.mta.zuli.evolution.engine.timetable.*;
 import il.ac.mta.zuli.evolution.ui.header.HeaderController;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,12 +22,31 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class TimeTableEngine implements Engine {
+    // used for progress updates
+    private final SimpleIntegerProperty generationNumProperty;
+    private final SimpleDoubleProperty fitnessProperty;
+    private final SimpleLongProperty timeProperty;
     private Descriptor descriptor;
     private EvolutionState currEvolutionState;
     private HeaderController controller;
     private Task<?> currentRunningTask;
 
+    public SimpleIntegerProperty getGenerationNumProperty() {
+        return generationNumProperty;
+    }
+
+    public SimpleDoubleProperty getFitnessProperty() {
+        return fitnessProperty;
+    }
+
+    public SimpleLongProperty getTimeProperty() {
+        return timeProperty;
+    }
+
     public TimeTableEngine() {
+        this.generationNumProperty = new SimpleIntegerProperty(0);
+        this.fitnessProperty = new SimpleDoubleProperty(0f);
+        this.timeProperty = new SimpleLongProperty(0L);
     }
 
     public void setController(HeaderController controller) {
@@ -71,42 +93,40 @@ public class TimeTableEngine implements Engine {
                                         Consumer<Boolean> onSuccess,
                                         Consumer<Throwable> onFailure,
                                         Consumer<TimeTableSolutionDTO> reportBestSolution) {
-
         if (!isXMLLoaded()) {
             onFailure.accept(new InvalidOperationException("Can't execute Evolution algorithm, file is not loaded"));
             return;
         }
 
-        if (currentRunningTask != null) {
-            System.out.println("currentRunningTask isn't null");
-            return; // TODO: should not come here, we want one task at a time
-        }
-
-//        public RunAlgorithmTask(Descriptor descriptor, List < EndPredicate > endPredicates,
-//        int generationsStride, EvolutionState initialEvolutionState, Consumer < EvolutionState > reportState,
-//        Consumer < TimeTableSolution > reportBestSolution)
-        currentRunningTask = new RunAlgorithmTask(
-                this.descriptor,
-                endConditions,
+        runEvolutionAlgorithm(endConditions,
                 generationsStride,
-                null,
-                (EvolutionState state) -> {
-                    this.currEvolutionState = state;
-                },
-                (TimeTableSolution solution) -> {
-                    reportBestSolution.accept(createTimeTableSolutionDTO(solution));
-                });
-
-        callingTask(onSuccess, onFailure);
+                onSuccess,
+                onFailure,
+                reportBestSolution,
+                null); // sending null as currentState, to start a fresh run
     }
 
     @Override
-    public void resume(List<EndPredicate> endConditions,
-                       int generationsStride,
-                       Consumer<Boolean> onSuccess,
-                       Consumer<Throwable> onFailure,
-                       Consumer<TimeTableSolutionDTO> reportBestSolution) {
+    public void resumeEvolutionAlgorithm(List<EndPredicate> endConditions,
+                                         int generationsStride,
+                                         Consumer<Boolean> onSuccess,
+                                         Consumer<Throwable> onFailure,
+                                         Consumer<TimeTableSolutionDTO> reportBestSolution) {
 
+        runEvolutionAlgorithm(endConditions,
+                generationsStride,
+                onSuccess,
+                onFailure,
+                reportBestSolution,
+                this.currEvolutionState);
+    }
+
+    private void runEvolutionAlgorithm(List<EndPredicate> endConditions,
+                                       int generationsStride,
+                                       Consumer<Boolean> onSuccess,
+                                       Consumer<Throwable> onFailure,
+                                       Consumer<TimeTableSolutionDTO> reportBestSolution,
+                                       EvolutionState currentState) {
         if (currentRunningTask != null) {
             System.out.println("currentRunningTask isn't null");
             return; // TODO: should not come here, we want one task at a time
@@ -116,18 +136,16 @@ public class TimeTableEngine implements Engine {
                 this.descriptor,
                 endConditions,
                 generationsStride,
-                this.currEvolutionState,
+                currentState,
                 (EvolutionState state) -> {
                     this.currEvolutionState = state;
+                    generationNumProperty.set(state.getGenerationNum());
+                    fitnessProperty.set(state.getBestSolutionSoFar().getTotalFitnessScore());
+                    timeProperty.set(state.getNetRunTime());
                 },
                 (TimeTableSolution solution) -> {
                     reportBestSolution.accept(createTimeTableSolutionDTO(solution));
                 });
-
-        callingTask(onSuccess, onFailure);
-    }
-
-    private void callingTask(Consumer<Boolean> onSuccess, Consumer<Throwable> onFailure) {
         currentRunningTask.setOnCancelled(event -> {
             controller.onTaskFinished();
             onSuccess.accept(false);
@@ -154,12 +172,12 @@ public class TimeTableEngine implements Engine {
     }
 
     @Override
-    public void pause() {
+    public void pauseEvolutionAlgorithm() {
         currentRunningTask.cancel();
     }
 
     @Override
-    public void stop() {
+    public void stopEvolutionAlgorithm() {
         currentRunningTask.cancel();
         this.currEvolutionState = null; //in case of STOP we don't want to save the previous state}
     }
