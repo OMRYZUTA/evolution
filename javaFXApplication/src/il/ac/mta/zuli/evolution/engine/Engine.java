@@ -5,6 +5,7 @@ import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
+import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.ui.header.HeaderController;
 
 import java.util.List;
@@ -13,13 +14,18 @@ import java.util.function.Consumer;
 public interface Engine {
     void setController(HeaderController controller);
 
-    void loadXML(String fileToLoad, Consumer<DescriptorDTO> onSuccess, Consumer<Throwable> onFailure);
-
-    Descriptor getDescriptor();
-
     void setEngineSettings(EngineSettings settings);
 
     EngineSettings getEngineSettings();
+
+    TimeTable getTimeTable();
+
+    DescriptorDTO getDescriptorDTO();
+
+    void loadXML(String fileToLoad, Consumer<Boolean> onSuccess, Consumer<Throwable> onFailure);
+
+    //used for the engine to "protect itself" even though the relevant buttons are disabled in the ui
+    boolean isXMLLoaded();
 
     void startEvolutionAlgorithm(
             List<EndPredicate> endConditions,
@@ -27,13 +33,6 @@ public interface Engine {
             Consumer<Boolean> onSuccess,
             Consumer<Throwable> onFailure,
             Consumer<TimeTableSolutionDTO> reportBestSolution);
-
-    TimeTableSolutionDTO getBestSolution();
-
-    List<GenerationProgressDTO> getEvolutionProgress();
-
-    //used for the engine to "protect itself" even though the relevant buttons are disabled in the ui
-    boolean isXMLLoaded();
 
     void stop();
 
@@ -44,4 +43,6 @@ public interface Engine {
                 Consumer<Boolean> onSuccess,
                 Consumer<Throwable> onFailure,
                 Consumer<TimeTableSolutionDTO> reportBestSolution);
+
+    List<GenerationProgressDTO> getEvolutionProgress();
 }

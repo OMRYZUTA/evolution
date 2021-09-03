@@ -8,18 +8,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-
 public class Descriptor {
     private final TimeTable timeTable;
-    private EngineSettings engineSettings;
+    private EngineSettings<TimeTableSolution> engineSettings;
 
     public Descriptor(@NotNull ETTDescriptor d) {
         // only if received another valid file we want to overwrite the previous descriptor instance
-        TimeTable tempTimeTable = null;
-        EngineSettings tempEngineSetting = null;
-
-        tempTimeTable = new TimeTable(d.getETTTimeTable());
-        tempEngineSetting = new EngineSettings(d.getETTEvolutionEngine(), tempTimeTable);
+        TimeTable tempTimeTable = new TimeTable(d.getETTTimeTable());
+        EngineSettings<TimeTableSolution> tempEngineSetting = new EngineSettings<>(d.getETTEvolutionEngine(), tempTimeTable);
 
         //only reaching here if TimeTable and EngineSettings ctors didn't throw exceptions
         this.timeTable = tempTimeTable;
@@ -54,12 +50,11 @@ public class Descriptor {
         return timeTable;
     }
 
-    public EngineSettings getEngineSettings() {
+    public EngineSettings<TimeTableSolution> getEngineSettings() {
         return engineSettings;
     }
 
-    public void setValidatedEngineSettings(EngineSettings newEngineSettings) {
+    public void setValidatedEngineSettings(EngineSettings<TimeTableSolution> newEngineSettings) {
         this.engineSettings = newEngineSettings;
     }
-
 }

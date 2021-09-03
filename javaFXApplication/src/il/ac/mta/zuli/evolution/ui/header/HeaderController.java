@@ -87,8 +87,7 @@ public class HeaderController {
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(
                 absolutePath,
-                descriptorDTO -> {
-                    descriptor = descriptorDTO;
+                result -> {
                     selectedFileProperty.set(absolutePath); //so this path will now be displayed (because of the binding)
                     fileLoadedProperty.set(true); // because we're in the onSuccessConsumer
                 },
@@ -107,7 +106,7 @@ public class HeaderController {
 
     @FXML
     public void displaySettingsAction() {
-        this.appController.displaySettings(descriptor);
+        this.appController.displaySettings(engine.getDescriptorDTO());
     }
 
     @FXML

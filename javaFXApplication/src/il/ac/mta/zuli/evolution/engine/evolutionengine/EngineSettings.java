@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine;
 
-import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Crossover;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverFactory;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterface;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
@@ -22,7 +21,7 @@ import java.util.List;
 public class EngineSettings<T extends Solution> {
     private int initialPopulationSize;
     private Selection<T> selection;
-    private CrossoverInterface<T> crossover;
+    private CrossoverInterface<T> crossover; //why isn't the interface name simply crossover?
     private List<Mutation<T>> mutations;
 
 
@@ -34,8 +33,8 @@ public class EngineSettings<T extends Solution> {
     }
 
     //TODO - use when updating settings after pause (or using public setters)
-    public EngineSettings(Selection newSelection,
-                          Crossover newCrossover,
+    public EngineSettings(Selection<T> newSelection,
+                          CrossoverInterface<T> newCrossover,
                           List<Mutation<T>> newMutationList, int initialPopulationSize) {
         this.initialPopulationSize = initialPopulationSize;
         selection = newSelection;

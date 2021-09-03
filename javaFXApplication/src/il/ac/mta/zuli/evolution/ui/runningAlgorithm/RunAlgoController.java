@@ -4,6 +4,10 @@ import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverFactory;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterface;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Orientation;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.SelectionFactory;
 import il.ac.mta.zuli.evolution.engine.predicates.EndConditionType;
@@ -90,6 +94,9 @@ public class RunAlgoController {
     private RadioButton classOrientedRadioButton;
 
     @FXML
+    private TextField cuttingPointsTextField;
+
+    @FXML
     private FlowPane mutationPane;
 
     @FXML
@@ -98,7 +105,7 @@ public class RunAlgoController {
     @FXML
     private FlowPane progressFlowPane;
     //#endregion FXML components
-    private EngineSettings newEngineSettings;
+    //private EngineSettings newEngineSettings; //why do we need this as a field?
     private Engine engine;
     private int stride;
     private final TimeTableSolutionDTO solution = null;
@@ -179,6 +186,7 @@ public class RunAlgoController {
     }
 
     public void runAlgorithm() {
+        //TODO change the RunAlgo so that we also have a start button
         if (!getUserInput()) {
             return;
         }
@@ -195,60 +203,122 @@ public class RunAlgoController {
                 reportBestSolution);
     }
 
-    @FXML
-    public void saveEngineSettingsChangesAction() {
-        EngineSettings engineSettings = null;
-            if(validateAndStoreEngineSettings()){
-                engine.setEngineSettings(newEngineSettings);
-            }
-    }
 
-    private boolean validateAndStoreEngineSettings() {
-        boolean result = false;
+    @FXML
+    public void saveEngineSettingsChangesAction2() {
+        EngineSettings newEngineSettings = null;
         try {
-            Selection<TimeTableSolution> updatedSelection = createNewSelection();
-            //TODO implement crossover and list of mutations
-            newEngineSettings = new EngineSettings( updatedSelection,null,null,engine.getEngineSettings().getInitialPopulationSize());
-            result = true;
+            Selection<TimeTableSolution> updatedSelection = createSelectionFromInput();
+            CrossoverInterface<TimeTableSolution> updatedCrossover = createCrossoverFromInput();
+            List<Mutation<TimeTableSolution>> updatedMutations = createMutationListFromInput();
+            newEngineSettings = new EngineSettings(
+                    updatedSelection,
+                    updatedCrossover,
+                    updatedMutations,
+                    engine.getEngineSettings().getInitialPopulationSize());
         } catch (Throwable e) {
             errorLabel.setText(e.getMessage());
-            result =false;
+            return;
         }
 
-    return result;
+        engine.setEngineSettings(newEngineSettings); //the timetableEngine holds a descriptor which has engine settings
     }
 
-    private Selection<TimeTableSolution> createNewSelection() {
-        EngineSettings settings = engine.getEngineSettings();
+    private Selection<TimeTableSolution> createSelectionFromInput() {
+        EngineSettings<TimeTableSolution> previousSettings = engine.getEngineSettings();
         Selection<TimeTableSolution> updatedSelection = null;
         int elitism = 0;
+
         if (elitismCheckbox.isSelected()) {
+            //relevant for both types of selection (if left empty we get 0?)
             elitism = Integer.parseInt(elitismTextField.getText());
         }
 
+        //rouletteWheelRadioButton and truncationRadioButton are in the same toggle-group, one-at-most can be selected
         if (rouletteWheelRadioButton.isSelected()) {
             updatedSelection = SelectionFactory.createSelectionFromInput(
                     "rouletteWheel",
-                    settings.getInitialPopulationSize(),
+                    previousSettings.getInitialPopulationSize(),
                     elitism, 0); //topPercent NA for rouletteWheel
         } else if (truncationRadioButton.isSelected()) {
             int topPercent = Integer.parseInt(topPercentTextField.getText());
             updatedSelection = SelectionFactory.createSelectionFromInput(
                     "truncation",
-                    settings.getInitialPopulationSize(),
+                    previousSettings.getInitialPopulationSize(),
                     elitism, topPercent);
-        }else{
-            updatedSelection = engine.getEngineSettings().getSelection(); // it remains the same.
+        } else {
+            // if nothing was selected from this toggle-group, it remains unchanged from previous settings
+            updatedSelection = engine.getEngineSettings().getSelection();
         }
 
-        System.out.println(updatedSelection);
         return updatedSelection;
     }
+
+    private CrossoverInterface<TimeTableSolution> createCrossoverFromInput() {
+        EngineSettings<TimeTableSolution> previousSettings = engine.getEngineSettings();
+        CrossoverInterface<TimeTableSolution> updatedCrossover = null;
+
+        int numOfCuttingPoints = Integer.parseInt(cuttingPointsTextField.getText());
+
+        //radioButtons in crossover-toggle-group
+        if (dayTimeOrientedRadioButton.isSelected()) {
+            updatedCrossover = CrossoverFactory.createCrossoverFromInput(
+                    "daytimeoriented",
+                    numOfCuttingPoints,
+                    null,
+                    engine.getTimeTable());
+        } else if (teacherOrientedRadioButton.isSelected()) {
+            updatedCrossover = CrossoverFactory.createCrossoverFromInput(
+                    "aspectoriented",
+                    numOfCuttingPoints,
+                    Orientation.TEACHER,
+                    engine.getTimeTable());
+        } else if (classOrientedRadioButton.isSelected()) {
+            updatedCrossover = CrossoverFactory.createCrossoverFromInput(
+                    "aspectoriented",
+                    numOfCuttingPoints,
+                    Orientation.CLASS,
+                    engine.getTimeTable());
+        } else {
+            // if nothing was selected from this toggle-group, it remains unchanged from previous settings
+            updatedCrossover = engine.getEngineSettings().getCrossover();
+        }
+
+        return updatedCrossover;
+    }
+
+    private List<Mutation<TimeTableSolution>> createMutationListFromInput() {
+        return null;
+    }
+
+
+//    @FXML
+//    public void saveEngineSettingsChangesAction() {
+//        EngineSettings engineSettings = null;
+//        if (validateAndStoreEngineSettings()) {
+//            engine.setEngineSettings(newEngineSettings);
+//        }
+//    }
+
+//    private boolean validateAndStoreEngineSettings() {
+//        boolean result = false;
+//        try {
+//            Selection<TimeTableSolution> updatedSelection = createNewSelection();
+//            //TODO implement crossover and list of mutations
+//            newEngineSettings = new EngineSettings(updatedSelection, null, null, engine.getEngineSettings().getInitialPopulationSize());
+//            result = true;
+//        } catch (Throwable e) {
+//            errorLabel.setText(e.getMessage());
+//            result = false;
+//        }
+//
+//        return result;
+//    }
 
     private boolean getUserInput() {
         try {
             endPredicates.clear();
-            //comemnted out for faster debugging!!
+            //commented out for faster debugging!!
 //
 //            Dialog<ButtonType> dialog = new Dialog<>();
 //            dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);

@@ -14,7 +14,7 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
-        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
         <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
@@ -66,13 +66,13 @@
                         <RowConstraints/>
                         <RowConstraints/>
                         <RowConstraints/>
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
                         <RowConstraints/>
                     </rowConstraints>
                     <children>
@@ -105,7 +105,7 @@
                             </children>
                         </AnchorPane>
                         <AnchorPane fx:id="crossoverPane" style="-fx-border-color: #A83E32;" GridPane.columnSpan="4"
-                                    GridPane.rowIndex="4" GridPane.rowSpan="2">
+                                    GridPane.rowIndex="4" GridPane.rowSpan="3">
                             <children>
                                 <Label layoutX="7.0" layoutY="7.0" text="Crossover:"/>
                                 <RadioButton fx:id="dayTimeOrientedRadioButton" layoutX="78.0" layoutY="7.0"
@@ -119,10 +119,13 @@
                                              mnemonicParsing="false" text="Teacher" toggleGroup="$crossoverGroup"/>
                                 <RadioButton fx:id="classOrientedRadioButton" layoutX="168.0" layoutY="34.0"
                                              mnemonicParsing="false" text="Class" toggleGroup="$crossoverGroup"/>
+                                <TextField fx:id="cuttingPointsTextField" layoutX="151.0" layoutY="60.0"
+                                           prefHeight="25.0" prefWidth="82.0"/>
+                                <Label layoutX="11.0" layoutY="64.0" text="Number of Cutting Points:"/>
                             </children>
                         </AnchorPane>
                         <FlowPane fx:id="mutationPane" style="-fx-border-color: #A83E32;" GridPane.columnSpan="4"
-                                  GridPane.rowIndex="6" GridPane.rowSpan="2">
+                                  GridPane.rowIndex="7" GridPane.rowSpan="2">
                             <children>
                                 <Label text="Mutations:"/>
                                 <Button fx:id="addMutationButton" mnemonicParsing="false" text="Add Mutation"/>

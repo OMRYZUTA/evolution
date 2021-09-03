@@ -1,9 +1,6 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.dto.*;
-import il.ac.mta.zuli.evolution.engine.events.ErrorEvent;
-import il.ac.mta.zuli.evolution.engine.events.ErrorType;
-import il.ac.mta.zuli.evolution.engine.events.EventsEmitter;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterface;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
@@ -13,10 +10,7 @@ import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.tasks.LoadXMLTask;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
-import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
-import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
-import il.ac.mta.zuli.evolution.engine.timetable.Subject;
-import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
+import il.ac.mta.zuli.evolution.engine.timetable.*;
 import il.ac.mta.zuli.evolution.ui.header.HeaderController;
 import javafx.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class TimeTableEngine extends EventsEmitter implements Engine {
+public class TimeTableEngine implements Engine {
     private Descriptor descriptor;
     private EvolutionState currEvolutionState;
     private HeaderController controller;
@@ -39,7 +33,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 
     @Override
     public void loadXML(String fileToLoad,
-                        Consumer<DescriptorDTO> onSuccess,
+                        Consumer<Boolean> onSuccess,
                         Consumer<Throwable> onFailure) {
 
         //TODO delete before submitting
@@ -52,8 +46,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
         currentRunningTask.setOnSucceeded(value -> {
             controller.onTaskFinished();
             this.descriptor = (Descriptor) currentRunningTask.getValue();
-            DescriptorDTO descDTO = createDescriptorDTO();
-            onSuccess.accept(descDTO); //sending the descriptorDTO to the controller
+            onSuccess.accept(true);
             currentRunningTask = null; // clearing task
         });
 
@@ -79,7 +72,10 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
                                         Consumer<Throwable> onFailure,
                                         Consumer<TimeTableSolutionDTO> reportBestSolution) {
 
-        checkForErrorsBeforeExecutingAlgorithms();
+        if (!isXMLLoaded()) {
+            onFailure.accept(new InvalidOperationException("Can't execute Evolution algorithm, file is not loaded"));
+            return;
+        }
 
         if (currentRunningTask != null) {
             System.out.println("currentRunningTask isn't null");
@@ -174,18 +170,18 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
     }
 
     @Override
-    public Descriptor getDescriptor(){
-        return descriptor;
-    }
-
-    @Override
     public void setEngineSettings(EngineSettings validatedSettings) {
         this.descriptor.setValidatedEngineSettings(validatedSettings);
     }
 
     @Override
-    public TimeTableSolutionDTO getBestSolution() {
-        return null;
+    public DescriptorDTO getDescriptorDTO() {
+        return createDescriptorDTO();
+    }
+
+    @Override
+    public TimeTable getTimeTable() {
+        return descriptor.getTimeTable();
     }
 
     @Override
@@ -230,17 +226,7 @@ public class TimeTableEngine extends EventsEmitter implements Engine {
 //        }
         return null;
     }
-    //#endregion
 
-    //#region auxiliary methods
-    private void checkForErrorsBeforeExecutingAlgorithms() {
-        if (!isXMLLoaded()) {
-            ErrorEvent e = new ErrorEvent("Failed running evolution algorithm",
-                    ErrorType.RunError,
-                    new InvalidOperationException("Can't execute Evolution algorithm, file is not loaded"));
-            fireEvent("error", e);
-        }
-    }
 
     @Override
     public boolean isXMLLoaded() {
