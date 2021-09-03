@@ -80,7 +80,6 @@ public class AppController {
 
     public void runAlgorithm() {
         currentBodyProperty.set("runAlgorithm");
-        this.runAlgoComponentController.runAlgorithm();
     }
 
     public void updateBestSolution(TimeTableSolutionDTO solution){

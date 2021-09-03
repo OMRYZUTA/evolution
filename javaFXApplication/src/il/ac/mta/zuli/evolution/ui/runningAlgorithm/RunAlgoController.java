@@ -13,28 +13,32 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.SelectionFactor
 import il.ac.mta.zuli.evolution.engine.predicates.EndConditionType;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
+import il.ac.mta.zuli.evolution.ui.runningAlgorithm.mutation.MutationController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class RunAlgoController {
     //#region FXML components
     @FXML
-    private Label errorLabel;
-    @FXML
     private GridPane runAlgoGridPane;
 
     @FXML
-    private ProgressBar progressBar;
+    private Button startButton;
 
     @FXML
     private Button pauseButton;
@@ -46,16 +50,7 @@ public class RunAlgoController {
     private Button stopButton;
 
     @FXML
-    private Button bestSolutionButton;
-
-    @FXML
     private ScrollPane updateSettingsScrollPane;
-
-    @FXML
-    private CheckBox elitismCheckbox;
-
-    @FXML
-    private TextField elitismTextField;
 
     @FXML
     private Button engineSettingsSaveButton;
@@ -79,6 +74,12 @@ public class RunAlgoController {
     private RadioButton truncationRadioButton;
 
     @FXML
+    private CheckBox elitismCheckbox;
+
+    @FXML
+    private TextField elitismTextField;
+
+    @FXML
     private AnchorPane crossoverPane;
 
     @FXML
@@ -97,35 +98,46 @@ public class RunAlgoController {
     private TextField cuttingPointsTextField;
 
     @FXML
-    private FlowPane mutationPane;
-
-    @FXML
     private Button addMutationButton;
 
     @FXML
-    private FlowPane progressFlowPane;
+    private VBox mutationsBox;
+
+    @FXML
+    private ProgressBar generationsProgressBar;
+
+    @FXML
+    private ProgressBar scoreProgressBar;
+
+    @FXML
+    private ProgressBar timeProgressBar;
+
+    @FXML
+    private Label errorLabel;
     //#endregion FXML components
-    //private EngineSettings newEngineSettings; //why do we need this as a field?
-    private Engine engine;
-    private int stride;
+
     private final TimeTableSolutionDTO solution = null;
     private final List<EndPredicate> endPredicates;
+    private final List<MutationController> mutations;
     private final SimpleBooleanProperty isPausedProperty;
     private final SimpleBooleanProperty runningAlgoProperty;
-    private AppController appController;
     private final Consumer<Boolean> onSuccess;
     private final Consumer<Throwable> onFailure;
     private final Consumer<TimeTableSolutionDTO> reportBestSolution;
+    private AppController appController;
+    private Engine engine;
+    private int stride;
 
     public RunAlgoController() {
         endPredicates = new ArrayList<>();
+        mutations = new ArrayList<>();
         isPausedProperty = new SimpleBooleanProperty(false);
         runningAlgoProperty = new SimpleBooleanProperty(false);
         onSuccess = finished -> {
             // if finished -> the run is complete
             // if !finished -> the run was paused
             //TODO - figure it out
-//                    evolutionAlgoCompletedProperty.set(true); //this is a headerController property
+            // evolutionAlgoCompletedProperty.set(true); //this is a headerController property
             runningAlgoProperty.set(false);
             appController.onFinishAlgorithm();
         };
@@ -157,17 +169,13 @@ public class RunAlgoController {
     }
 
     @FXML
-    public void currBestSolutionAction() {
-    }
-
-    @FXML
-    public void pauseAction() {
+    void pauseAction(ActionEvent event) {
         isPausedProperty.set(true);
         engine.pause();
     }
 
     @FXML
-    void resumeAction() {
+    void resumeAction(ActionEvent event) {
         runningAlgoProperty.set(true);
         stopButton.setDisable(false);
         pauseButton.setDisable(false);
@@ -181,13 +189,30 @@ public class RunAlgoController {
     }
 
     @FXML
-    public void stopAction() {
-        engine.stop();
+    void saveEngineSettingsChangesAction(ActionEvent event) {
+
     }
 
-    public void runAlgorithm() {
+    @FXML
+    void addMutationAction(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            URL mainFXML = getClass().getResource("/il/ac/mta/zuli/evolution/ui/runningAlgorithm/mutation/mutationComponent.fxml");
+            loader.setLocation(mainFXML);
+            BorderPane mutationComponent = loader.load();
+            mutationsBox.getChildren().add(mutationComponent);
+            MutationController controller = loader.getController();
+            controller.setTimeTable(engine.getTimeTable());
+            mutations.add(controller);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void startAction(ActionEvent event) {
         //TODO change the RunAlgo so that we also have a start button
-        if (!getUserInput()) {
+        if (!getEndPredicates()) {
             return;
         }
 
@@ -203,6 +228,10 @@ public class RunAlgoController {
                 reportBestSolution);
     }
 
+    @FXML
+    void stopAction(ActionEvent event) {
+        engine.stop();
+    }
 
     @FXML
     public void saveEngineSettingsChangesAction2() {
@@ -288,7 +317,10 @@ public class RunAlgoController {
     }
 
     private List<Mutation<TimeTableSolution>> createMutationListFromInput() {
-        return null;
+        return mutations
+                .stream()
+                .map(mutationController -> mutationController.getMutation())
+                .collect(Collectors.toList());
     }
 
 
@@ -315,7 +347,7 @@ public class RunAlgoController {
 //        return result;
 //    }
 
-    private boolean getUserInput() {
+    private boolean getEndPredicates() {
         try {
             endPredicates.clear();
             //commented out for faster debugging!!

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <GridPane fx:id="runAlgoGridPane" alignment="TOP_CENTER" hgap="10.0" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.mta.zuli.evolution.ui.runningAlgorithm.RunAlgoController">
@@ -14,9 +15,7 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
-        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
@@ -29,20 +28,18 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <ProgressBar id="taskProgressBar" fx:id="progressBar" maxWidth="1.7976931348623157E308" progress="0.0"
-                     GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="3"/>
         <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="1" GridPane.columnSpan="2"
-              GridPane.rowIndex="4">
+              GridPane.rowIndex="2">
             <children>
+                <Button fx:id="startButton" mnemonicParsing="false" onAction="#startAction" text="Start"/>
                 <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseAction" text="Pause"/>
                 <Button fx:id="resumeButton" mnemonicParsing="false" onAction="#resumeAction" text="Resume"/>
                 <Button fx:id="stopButton" mnemonicParsing="false" onAction="#stopAction" text="Stop"/>
-                <Button fx:id="bestSolutionButton" mnemonicParsing="false" onAction="#currBestSolutionAction"
-                        text="Current Best Solution" textAlignment="CENTER" wrapText="true"/>
             </children>
         </HBox>
-        <ScrollPane fx:id="updateSettingsScrollPane" style="-fx-border-color: #A0B3AA; -fx-background-color: #E1E3D4;"
-                    GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.rowSpan="9">
+        <ScrollPane fx:id="updateSettingsScrollPane" fitToHeight="true" fitToWidth="true"
+                    style="-fx-border-color: #A0B3AA; -fx-background-color: #E1E3D4;" GridPane.columnIndex="1"
+                    GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="8">
             <content>
                 <GridPane hgap="1.0" style="-fx-background-color: #A0B3AA;" vgap="1.0">
                     <columnConstraints>
@@ -72,8 +69,8 @@
                         <RowConstraints/>
                         <RowConstraints/>
                         <RowConstraints/>
-                        <RowConstraints/>
-                        <RowConstraints/>
+                        <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0"/>
+                        <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0"/>
                     </rowConstraints>
                     <children>
                         <Label text="Update Engine Settings:" GridPane.columnSpan="3"/>
@@ -86,58 +83,83 @@
                                 <Label fx:id="truncationCheckbox" layoutX="6.0" layoutY="4.0" text="Selection:"
                                        AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="4.0"/>
                                 <RadioButton fx:id="rouletteWheelRadioButton" layoutX="79.0" layoutY="13.0"
-                                             mnemonicParsing="false" text="RouletteWheel" AnchorPane.topAnchor="13.0">
+                                             mnemonicParsing="false" text="RouletteWheel" AnchorPane.leftAnchor="80.0"
+                                             AnchorPane.topAnchor="4.0">
                                     <toggleGroup>
                                         <ToggleGroup fx:id="selectionGroup"/>
                                     </toggleGroup>
                                 </RadioButton>
-                                <TextField fx:id="topPercentTextField" layoutX="238.0" layoutY="34.0" prefHeight="25.0"
-                                           prefWidth="58.0" promptText="\%" AnchorPane.bottomAnchor="33.0"
-                                           AnchorPane.rightAnchor="107.0"/>
-                                <RadioButton fx:id="truncationRadioButton" layoutX="79.0" layoutY="38.0"
+                                <TextField fx:id="topPercentTextField" layoutX="242.0" layoutY="27.0" prefHeight="25.0"
+                                           prefWidth="58.0" promptText="\%" AnchorPane.leftAnchor="242.0"
+                                           AnchorPane.topAnchor="27.0"/>
+                                <RadioButton fx:id="truncationRadioButton" layoutX="81.0" layoutY="41.0"
                                              mnemonicParsing="false" text="Truncation, Top Percent:"
-                                             toggleGroup="$selectionGroup" AnchorPane.bottomAnchor="37.0"
-                                             AnchorPane.leftAnchor="79.0"/>
+                                             toggleGroup="$selectionGroup" AnchorPane.leftAnchor="80.0"
+                                             AnchorPane.topAnchor="30.0"/>
                                 <CheckBox fx:id="elitismCheckbox" layoutX="14.0" layoutY="65.0" mnemonicParsing="false"
-                                          text="Elitism:"/>
-                                <TextField fx:id="elitismTextField" layoutX="79.0" layoutY="61.0" prefHeight="25.0"
-                                           prefWidth="58.0"/>
+                                          text="Elitism:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="65.0"/>
+                                <TextField fx:id="elitismTextField" layoutX="81.0" layoutY="62.0" prefHeight="25.0"
+                                           prefWidth="58.0" AnchorPane.leftAnchor="81.0" AnchorPane.topAnchor="62.0"/>
                             </children>
                         </AnchorPane>
                         <AnchorPane fx:id="crossoverPane" style="-fx-border-color: #A83E32;" GridPane.columnSpan="4"
                                     GridPane.rowIndex="4" GridPane.rowSpan="3">
                             <children>
-                                <Label layoutX="7.0" layoutY="7.0" text="Crossover:"/>
+                                <Label layoutX="7.0" layoutY="7.0" text="Crossover:" AnchorPane.leftAnchor="6.0"
+                                       AnchorPane.topAnchor="4.0"/>
                                 <RadioButton fx:id="dayTimeOrientedRadioButton" layoutX="78.0" layoutY="7.0"
-                                             mnemonicParsing="false" text="DayTimeOriented">
+                                             mnemonicParsing="false" text="DayTimeOriented" AnchorPane.leftAnchor="80.0"
+                                             AnchorPane.topAnchor="4.0">
                                     <toggleGroup>
                                         <ToggleGroup fx:id="crossoverGroup"/>
                                     </toggleGroup>
                                 </RadioButton>
-                                <Label layoutX="78.0" layoutY="34.0" text="AspectOriented:"/>
-                                <RadioButton fx:id="teacherOrientedRadioButton" layoutX="225.0" layoutY="34.0"
-                                             mnemonicParsing="false" text="Teacher" toggleGroup="$crossoverGroup"/>
-                                <RadioButton fx:id="classOrientedRadioButton" layoutX="168.0" layoutY="34.0"
-                                             mnemonicParsing="false" text="Class" toggleGroup="$crossoverGroup"/>
-                                <TextField fx:id="cuttingPointsTextField" layoutX="151.0" layoutY="60.0"
-                                           prefHeight="25.0" prefWidth="82.0"/>
-                                <Label layoutX="11.0" layoutY="64.0" text="Number of Cutting Points:"/>
+                                <Label layoutX="78.0" layoutY="34.0" text="AspectOriented:" AnchorPane.leftAnchor="80.0"
+                                       AnchorPane.topAnchor="30.0"/>
+                                <RadioButton fx:id="teacherOrientedRadioButton" layoutX="179.0" layoutY="31.0"
+                                             mnemonicParsing="false" text="Teacher" toggleGroup="$crossoverGroup"
+                                             AnchorPane.leftAnchor="179.0" AnchorPane.topAnchor="31.0"/>
+                                <RadioButton fx:id="classOrientedRadioButton" layoutX="249.0" layoutY="31.0"
+                                             mnemonicParsing="false" text="Class" toggleGroup="$crossoverGroup"
+                                             AnchorPane.leftAnchor="249.0" AnchorPane.topAnchor="31.0"/>
+                                <TextField fx:id="cuttingPointsTextField" layoutX="154.0" layoutY="62.0"
+                                           prefHeight="25.0" prefWidth="82.0" AnchorPane.leftAnchor="154.0"
+                                           AnchorPane.topAnchor="62.0"/>
+                                <Label layoutX="11.0" layoutY="64.0" text="Number of Cutting Points:"
+                                       AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="65.0"/>
                             </children>
                         </AnchorPane>
-                        <FlowPane fx:id="mutationPane" style="-fx-border-color: #A83E32;" GridPane.columnSpan="4"
+                        <FlowPane hgap="5.0" style="-fx-border-color: #A83E32;" GridPane.columnSpan="4"
                                   GridPane.rowIndex="7" GridPane.rowSpan="2">
                             <children>
                                 <Label text="Mutations:"/>
-                                <Button fx:id="addMutationButton" mnemonicParsing="false" text="Add Mutation"/>
+                                <Button fx:id="addMutationButton" mnemonicParsing="false" onAction="#addMutationAction"
+                                        text="Add Mutation"/>
                             </children>
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                            </padding>
+                            <opaqueInsets>
+                                <Insets/>
+                            </opaqueInsets>
+                            <GridPane.margin>
+                                <Insets/>
+                            </GridPane.margin>
                         </FlowPane>
+                        <VBox fx:id="mutationsBox" GridPane.columnSpan="4" GridPane.rowIndex="10"/>
                     </children>
                 </GridPane>
             </content>
         </ScrollPane>
-        <FlowPane fx:id="progressFlowPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4"
-                  GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.rowSpan="6"/>
-        <Label fx:id="errorLabel" text="Error\Exception" visible="false" GridPane.columnIndex="2"
-               GridPane.rowIndex="2"/>
+        <Label text="Generations" GridPane.columnIndex="4" GridPane.rowIndex="3"/>
+        <ProgressBar id="taskProgressBar" fx:id="generationsProgressBar" maxWidth="1.7976931348623157E308"
+                     progress="0.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4"/>
+        <Label text="Score" GridPane.columnIndex="4" GridPane.rowIndex="5"/>
+        <ProgressBar id="taskProgressBar" fx:id="scoreProgressBar" maxWidth="1.7976931348623157E308" progress="0.0"
+                     GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="6"/>
+        <Label text="Time" GridPane.columnIndex="4" GridPane.rowIndex="7"/>
+        <ProgressBar id="taskProgressBar" fx:id="timeProgressBar" maxWidth="1.7976931348623157E308" progress="0.0"
+                     GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8"/>
+        <Label fx:id="errorLabel" text="Error" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="1"/>
     </children>
 </GridPane>

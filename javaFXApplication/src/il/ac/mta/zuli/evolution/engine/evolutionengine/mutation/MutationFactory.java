@@ -7,27 +7,39 @@ import org.jetbrains.annotations.NotNull;
 
 public class MutationFactory {
     public static Mutation createMutation(ETTMutation ettMutation, TimeTable timeTable) {
-        Mutation mutation;
+        double probability = ettMutation.getProbability();
         switch (ettMutation.getName().toLowerCase()) {
             case "sizer":
-                mutation = createSizerMutation(ettMutation, timeTable);
-                break;
+                int totalTuples = extractTotalTuplesFromString(ettMutation);
+                return createSizerMutation(timeTable, probability, totalTuples);
             case "flipping":
-                mutation = creatFlippingMutation(ettMutation, timeTable);
-                break;
-
+                int maxTuples = extractMaxTuplesFromString(ettMutation);
+                ComponentName component = extractComponentNameFromString(ettMutation);
+                return creatFlippingMutation(timeTable, probability, maxTuples, component);
             default:
                 throw new ValidationException(ettMutation.getName() + " is invalid mutation name ");
         }
+    }
 
-        return mutation;
+    public static Mutation createMutationFromInput(
+            String mutationType,
+            TimeTable timeTable,
+            double probability,
+            int tuples,
+            ComponentName component) {
+        switch (mutationType) {
+            case "sizer":
+                return createSizerMutation(timeTable, probability, tuples);
+            case "flipping":
+                return creatFlippingMutation(timeTable, probability, tuples, component);
+            default:
+                throw new ValidationException(mutationType + " is invalid mutation name ");
+        }
     }
 
     @NotNull
-    private static Mutation createSizerMutation(ETTMutation ettMutation, TimeTable timeTable) {
+    private static Mutation createSizerMutation(TimeTable timeTable, double probability, int totalTuples) {
 //        <ETT-Mutation name="Sizer" probability="0.3" configuration="TotalTupples=7,Component=D"/>
-        int totalTuples = extractTotalTuplesFromString(ettMutation);
-
         if (totalTuples > timeTable.getHours() * timeTable.getDays()) {
             throw new ValidationException("positive-total-tuples must be < (days * hours), invalid value: " + totalTuples);
         }
@@ -36,22 +48,16 @@ public class MutationFactory {
             throw new ValidationException("negative-total-tuples must be > -(days * hours), invalid value: " + totalTuples);
         }
 
-        return new Sizer(ettMutation.getProbability(), totalTuples, timeTable);
+        return new Sizer(probability, totalTuples, timeTable);
     }
 
     @NotNull
-    private static Mutation creatFlippingMutation(ETTMutation ettMutation, TimeTable timeTable) {
-        Mutation mutation;
-        int maxTuples = extractMaxTuplesFromString(ettMutation);
-
+    private static Mutation creatFlippingMutation(TimeTable timeTable, double probability, int maxTuples, ComponentName component) {
         if (maxTuples < 0) {
             throw new ValidationException("max tuples must be >=0, invalid value: " + maxTuples);
         }
 
-        ComponentName component = extractComponentNameFromString(ettMutation);
-        mutation = new Flipping(ettMutation.getProbability(), maxTuples, component, timeTable);
-
-        return mutation;
+        return new Flipping(probability, maxTuples, component, timeTable);
     }
 
     @NotNull
