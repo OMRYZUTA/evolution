@@ -374,7 +374,6 @@ public class RunAlgoController {
 
             return true;
         } catch (Throwable e) {
-            onAlgoFailed.accept(e);
             return false;
         }
     }

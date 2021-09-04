@@ -53,18 +53,25 @@ public class EndConditionsController {
         strideTextField.textProperty().bindBidirectional(strideProperty, new NumberStringConverter());
 
         generationTextField.disableProperty().bind(generationCheckbox.selectedProperty().not());
-        generationTextField.textProperty().bindBidirectional(generationProperty, new NumberStringConverter());
+
 
         fitnessTextField.disableProperty().bind(fitnessCheckbox.selectedProperty().not());
-        fitnessTextField.textProperty().bindBidirectional(fitnessProperty, new NumberStringConverter());
+
 
         minutesTextField.disableProperty().bind(minutesCheckbox.selectedProperty().not());
-        minutesTextField.textProperty().bindBidirectional(minutesProperty, new NumberStringConverter());
+
     }
 
     //region getters
     public int getStride() {
-        return strideProperty.get();
+        int stride = -1;
+        try {
+            stride = Integer.parseInt(strideTextField.textProperty().get());
+
+        } catch (Throwable e) {
+
+        }
+        return stride;
     }
 
     public Map<EndConditionType, Double> getEndConditionTypePerValue() {
@@ -72,16 +79,38 @@ public class EndConditionsController {
     }
 
     private double getFitness() {
-        return fitnessProperty.get();
+        double generations = -1;
+        try {
+            generations = Double.parseDouble(fitnessTextField.textProperty().get());
+
+        } catch (Throwable e) {
+
+        }
+        return generations;
     }
 
     private int getTotalGenerations() {
-        return generationProperty.get();
+        int generations = -1;
+        try {
+            generations = Integer.parseInt(generationTextField.textProperty().get());
+
+        } catch (Throwable e) {
+
+        }
+        return generations;
     }
 
     private int getMinutes() {
-        return minutesProperty.get();
+        int time = -1;
+        try {
+            time = Integer.parseInt(minutesTextField.textProperty().get());
+
+        } catch (Throwable e) {
+
+        }
+        return time;
     }
+
     //endregion
 
     public boolean validateAndStore() {
