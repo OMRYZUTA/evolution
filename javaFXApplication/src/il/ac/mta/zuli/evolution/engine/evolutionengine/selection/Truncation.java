@@ -18,14 +18,13 @@ public class Truncation<S extends Solution> implements Selection<S> {
         this.populationSize = populationSize;
         if (ettSelection.getETTElitism() != null) {
             setElitism(ettSelection.getETTElitism());
-        }// else elitism is initialize to zero anyway
+        }// else elitism is initialized to zero anyway
     }
 
     public Truncation(int topPercent, int populationSize, int elitism) {
         this.populationSize = populationSize;
         setTopPercent(topPercent);
         setElitism(elitism);
-
     }
 
     private void parseConfiguration(ETTSelection ettSelection) {
@@ -45,7 +44,6 @@ public class Truncation<S extends Solution> implements Selection<S> {
 
         setTopPercent(num);
     }
-
 
 
     @Override

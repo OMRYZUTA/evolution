@@ -1,146 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-
-<GridPane fx:id="runAlgoGridPane" alignment="TOP_CENTER" hgap="10.0" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.mta.zuli.evolution.ui.runningAlgorithm.RunAlgoController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane alignment="TOP_CENTER" hgap="5.0" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.171"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="il.ac.mta.zuli.evolution.ui.runningAlgorithm.RunAlgoController">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="30.0" />
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="30.0" />
+        <ColumnConstraints fillWidth="false" hgrow="NEVER"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
     </rowConstraints>
-    <children>
-        <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
-            <children>
-                <Button fx:id="startButton" mnemonicParsing="false" onAction="#startAction" style="-fx-font-weight: 600;" text="Start" />
+    <Label fx:id="errorLabel" text="Error" GridPane.columnSpan="2"/>
+    <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+        <Button fx:id="startButton" mnemonicParsing="false" onAction="#startAction" style="-fx-font-weight: 600;"
+                text="Start"/>
                 <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseAction" text="Pause" />
                 <Button fx:id="resumeButton" mnemonicParsing="false" onAction="#resumeAction" text="Resume" />
                 <Button fx:id="stopButton" mnemonicParsing="false" onAction="#stopAction" text="Stop" />
             </children>
-        </HBox>
-        <ScrollPane fx:id="updateSettingsScrollPane" fitToHeight="true" fitToWidth="true" minHeight="10.0" minWidth="10.0" style="-fx-border-color: #A0B3AA; -fx-background-color: #E1E3D4;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="3" GridPane.rowSpan="8" GridPane.vgrow="SOMETIMES">
-            <content>
-                <GridPane hgap="1.0" style="-fx-background-color: #A0B3AA;" vgap="1.0">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints />
-                        <ColumnConstraints />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
-                        <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
-                    </rowConstraints>
-                    <children>
-                        <Label text="Update Engine Settings:" GridPane.columnSpan="3" />
-                        <Button fx:id="engineSettingsSaveButton" mnemonicParsing="false" onAction="#saveEngineSettingsChangesAction" text="Save Changes" GridPane.columnIndex="3" />
-                        <AnchorPane fx:id="selectionPane" minHeight="40.0" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="3">
-                            <children>
-                                <Label fx:id="truncationCheckbox" layoutX="6.0" layoutY="4.0" text="Selection:" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="4.0" />
-                                <RadioButton fx:id="rouletteWheelRadioButton" layoutX="79.0" layoutY="13.0" mnemonicParsing="false" text="RouletteWheel" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="4.0">
-                                    <toggleGroup>
-                                        <ToggleGroup fx:id="selectionGroup" />
-                                    </toggleGroup>
-                                </RadioButton>
-                                <TextField fx:id="topPercentTextField" layoutX="281.0" layoutY="26.0" prefHeight="25.0" prefWidth="58.0" promptText="\%" AnchorPane.leftAnchor="281.0" AnchorPane.topAnchor="26.0" />
-                                <RadioButton fx:id="truncationRadioButton" layoutX="81.0" layoutY="41.0" mnemonicParsing="false" text="Truncation, Top Percent:" toggleGroup="$selectionGroup" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="30.0" />
-                                <CheckBox fx:id="elitismCheckbox" layoutX="14.0" layoutY="65.0" mnemonicParsing="false" text="Elitism:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="65.0" />
-                                <TextField fx:id="elitismTextField" layoutX="90.0" layoutY="61.0" prefHeight="25.0" prefWidth="58.0" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="61.0" />
-                            </children>
-                        </AnchorPane>
-                        <AnchorPane fx:id="crossoverPane" minHeight="40.0" GridPane.columnSpan="4" GridPane.rowIndex="4" GridPane.rowSpan="3">
-                            <children>
-                                <Label layoutX="7.0" layoutY="7.0" text="Crossover:" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="4.0" />
-                                <RadioButton fx:id="dayTimeOrientedRadioButton" layoutX="78.0" layoutY="7.0" mnemonicParsing="false" text="DayTimeOriented" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="4.0">
-                                    <toggleGroup>
-                                        <ToggleGroup fx:id="crossoverGroup" />
-                                    </toggleGroup>
-                                </RadioButton>
-                                <Label layoutX="78.0" layoutY="34.0" text="AspectOriented:" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="30.0" />
-                                <RadioButton fx:id="teacherOrientedRadioButton" layoutX="212.0" layoutY="33.0" mnemonicParsing="false" text="Teacher" toggleGroup="$crossoverGroup" AnchorPane.leftAnchor="212.0" AnchorPane.topAnchor="33.0" />
-                                <RadioButton fx:id="classOrientedRadioButton" layoutX="317.0" layoutY="32.0" mnemonicParsing="false" text="Class" toggleGroup="$crossoverGroup" AnchorPane.leftAnchor="317.0" AnchorPane.topAnchor="32.0" />
-                                <TextField fx:id="cuttingPointsTextField" layoutX="183.0" layoutY="61.0" prefHeight="25.0" prefWidth="82.0" AnchorPane.leftAnchor="183.0" AnchorPane.topAnchor="61.0" />
-                                <Label layoutX="11.0" layoutY="64.0" text="Number of Cutting Points:" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="65.0" />
-                            </children>
-                        </AnchorPane>
-                        <FlowPane hgap="5.0" GridPane.columnSpan="4" GridPane.rowIndex="7" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS">
-                            <children>
-                                <Label text="Mutations:" />
-                                <Button fx:id="addMutationButton" mnemonicParsing="false" onAction="#addMutationAction" text="Add Mutation" />
-                            </children>
-                            <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </padding>
-                            <opaqueInsets>
-                                <Insets />
-                            </opaqueInsets>
-                            <GridPane.margin>
-                                <Insets />
-                            </GridPane.margin>
-                        </FlowPane>
-                        <VBox fx:id="mutationsBox" GridPane.columnSpan="4" GridPane.rowIndex="10" GridPane.vgrow="ALWAYS" />
-                    </children>
-                </GridPane>
-            </content>
-        </ScrollPane>
-        <Label fx:id="generationsProgressBarLabel" text="Generations" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-        <ProgressBar id="taskProgressBar" fx:id="generationsProgressBar" maxWidth="1.7976931348623157E308" progress="0.0" visible="false" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-        <Label fx:id="fitnessProgressBarLabel" text="Fitness Score" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="5" />
-        <ProgressBar id="taskProgressBar" fx:id="fitnessProgressBar" maxWidth="1.7976931348623157E308" progress="0.0" visible="false" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-        <Label fx:id="timeProgressBarLabel" text="Time" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="7" />
-        <ProgressBar id="taskProgressBar" fx:id="timeProgressBar" maxWidth="1.7976931348623157E308" progress="0.0" visible="false" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-        <Label fx:id="errorLabel" text="Error" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="1" />
-    </children>
+    </HBox>
+    <ScrollPane fx:id="updateSettingsScrollPane" fitToHeight="true" fitToWidth="true" maxHeight="-Infinity"
+                maxWidth="-Infinity" style="-fx-border-color: #A0B3AA; -fx-background-color: #E1E3D4;"
+                GridPane.hgrow="SOMETIMES" GridPane.rowIndex="2" GridPane.rowSpan="3" GridPane.vgrow="SOMETIMES">
+        <GridPane hgap="1.0" style="-fx-background-color: #A0B3AA;" vgap="1.0">
+            <columnConstraints>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0"/>
+                <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0"/>
+            </rowConstraints>
+            <Label text="Update Engine Settings:"/>
+            <Button fx:id="engineSettingsSaveButton" mnemonicParsing="false" onAction="#saveEngineSettingsChangesAction"
+                    text="Save Changes" GridPane.columnIndex="1"/>
+            <AnchorPane minHeight="40.0" style="-fx-border-color: #A83E32;" GridPane.columnSpan="3"
+                        GridPane.rowIndex="1" GridPane.rowSpan="3">
+                <Label layoutX="6.0" layoutY="4.0" text="Selection:" AnchorPane.leftAnchor="6.0"
+                       AnchorPane.topAnchor="4.0"/>
+                <RadioButton fx:id="rouletteWheelRadioButton" layoutX="79.0" layoutY="13.0" mnemonicParsing="false"
+                             text="RouletteWheel" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="4.0">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="selectionGroup"/>
+                    </toggleGroup>
+                </RadioButton>
+                <TextField fx:id="topPercentTextField" layoutX="281.0" layoutY="26.0" prefHeight="25.0" prefWidth="58.0"
+                           promptText="\%" AnchorPane.leftAnchor="281.0" AnchorPane.topAnchor="26.0"/>
+                <RadioButton fx:id="truncationRadioButton" layoutX="81.0" layoutY="41.0" mnemonicParsing="false"
+                             text="Truncation, Top Percent:" toggleGroup="$selectionGroup" AnchorPane.leftAnchor="80.0"
+                             AnchorPane.topAnchor="30.0"/>
+                <CheckBox fx:id="elitismCheckbox" layoutX="14.0" layoutY="65.0" mnemonicParsing="false" text="Elitism:"
+                          AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="65.0"/>
+                <TextField fx:id="elitismTextField" layoutX="90.0" layoutY="61.0" prefHeight="25.0" prefWidth="58.0"
+                           AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="61.0"/>
+            </AnchorPane>
+            <AnchorPane minHeight="40.0" style="-fx-border-color: #A83E32;" GridPane.columnSpan="3"
+                        GridPane.rowIndex="4" GridPane.rowSpan="3">
+                <Label layoutX="7.0" layoutY="7.0" text="Crossover:" AnchorPane.leftAnchor="6.0"
+                       AnchorPane.topAnchor="4.0"/>
+                <RadioButton fx:id="dayTimeOrientedRadioButton" layoutX="78.0" layoutY="7.0" mnemonicParsing="false"
+                             text="DayTimeOriented" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="4.0">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="crossoverGroup"/>
+                    </toggleGroup>
+                </RadioButton>
+                <Label layoutX="78.0" layoutY="34.0" text="AspectOriented:" AnchorPane.leftAnchor="80.0"
+                       AnchorPane.topAnchor="30.0"/>
+                <RadioButton fx:id="teacherOrientedRadioButton" layoutX="212.0" layoutY="33.0" mnemonicParsing="false"
+                             text="Teacher" toggleGroup="$crossoverGroup" AnchorPane.leftAnchor="212.0"
+                             AnchorPane.topAnchor="33.0"/>
+                <RadioButton fx:id="classOrientedRadioButton" layoutX="317.0" layoutY="32.0" mnemonicParsing="false"
+                             text="Class" toggleGroup="$crossoverGroup" AnchorPane.leftAnchor="317.0"
+                             AnchorPane.topAnchor="32.0"/>
+                <TextField fx:id="cuttingPointsTextField" layoutX="183.0" layoutY="61.0" prefHeight="25.0"
+                           prefWidth="82.0" AnchorPane.leftAnchor="183.0" AnchorPane.topAnchor="61.0"/>
+                <Label layoutX="11.0" layoutY="64.0" text="Number of Cutting Points:" AnchorPane.leftAnchor="6.0"
+                       AnchorPane.topAnchor="65.0"/>
+            </AnchorPane>
+            <FlowPane hgap="5.0" style="-fx-border-color: #A83E32;" GridPane.columnSpan="3" GridPane.rowIndex="7"
+                      GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS">
+                <padding>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                </padding>
+                <opaqueInsets>
+                    <Insets/>
+                </opaqueInsets>
+                <GridPane.margin>
+                    <Insets/>
+                </GridPane.margin>
+                <Label text="Mutations:"/>
+                <Button mnemonicParsing="false" onAction="#addMutationAction" text="Add Mutation"/>
+            </FlowPane>
+            <VBox fx:id="mutationsBox" GridPane.columnSpan="3" GridPane.rowIndex="10" GridPane.vgrow="ALWAYS"/>
+        </GridPane>
+    </ScrollPane>
+    <fx:include fx:id="generationProgressComponent" maxWidth="1.7976931348623157E308"
+                source="progress/progressComponent.fxml" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <fx:include fx:id="fitnessProgressComponent" maxWidth="1.7976931348623157E308"
+                source="progress/progressComponent.fxml" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    <fx:include fx:id="timeProgressComponent" maxWidth="1.7976931348623157E308" source="progress/progressComponent.fxml"
+                GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
 </GridPane>

@@ -24,10 +24,6 @@ public class ProgressController {
         return valueLabel.textProperty();
     }
 
-    public StringProperty maxTextProperty() {
-        return maxLabel.textProperty();
-    }
-
     public DoubleProperty progressProperty() {
         return progressBar.progressProperty();
     }
@@ -36,9 +32,14 @@ public class ProgressController {
         titleLabel.setText(title);
     }
 
+    public void setMax(String max) {
+        maxLabel.setText(max);
+    }
+
     @FXML
     private void initialize() {
         slashLabel.visibleProperty().bind(maxLabel.textProperty().isNotEmpty());
         maxLabel.visibleProperty().bind(maxLabel.textProperty().isNotEmpty());
+        progressBar.visibleProperty().bind(maxLabel.textProperty().isNotEmpty());
     }
 }

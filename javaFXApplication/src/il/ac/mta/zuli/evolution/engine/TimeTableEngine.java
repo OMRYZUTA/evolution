@@ -12,6 +12,7 @@ import il.ac.mta.zuli.evolution.engine.tasks.LoadXMLTask;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
 import il.ac.mta.zuli.evolution.engine.timetable.*;
 import il.ac.mta.zuli.evolution.ui.header.HeaderController;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -139,9 +140,11 @@ public class TimeTableEngine implements Engine {
                 currentState,
                 (EvolutionState state) -> {
                     this.currEvolutionState = state;
-                    generationNumProperty.set(state.getGenerationNum());
-                    fitnessProperty.set(state.getBestSolutionSoFar().getTotalFitnessScore());
-                    timeProperty.set(state.getNetRunTime());
+                    Platform.runLater(() -> {
+                        generationNumProperty.set(state.getGenerationNum());
+                        fitnessProperty.set(state.getBestSolutionSoFar().getTotalFitnessScore());
+                        timeProperty.set(state.getNetRunTime());
+                    });
                 },
                 (TimeTableSolution solution) -> {
                     reportBestSolution.accept(createTimeTableSolutionDTO(solution));

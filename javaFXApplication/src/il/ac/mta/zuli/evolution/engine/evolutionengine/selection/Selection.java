@@ -11,4 +11,6 @@ public interface Selection<T extends Solution> {
     String getConfiguration();
 
     int getElitism();
+
+    void setElitism(int elitism);
 }

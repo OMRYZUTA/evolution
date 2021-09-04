@@ -15,15 +15,17 @@ import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
 import il.ac.mta.zuli.evolution.ui.endConditions.EndConditionsController;
 import il.ac.mta.zuli.evolution.ui.runningAlgorithm.mutation.MutationController;
+import il.ac.mta.zuli.evolution.ui.runningAlgorithm.progress.ProgressController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -38,92 +40,45 @@ import java.util.stream.Collectors;
 public class RunAlgoController {
     //#region FXML components
     @FXML
-    private GridPane runAlgoGridPane;
-
-    @FXML
     private Button startButton;
-
     @FXML
     private Button pauseButton;
-
     @FXML
     private Button resumeButton;
-
     @FXML
     private Button stopButton;
-
     @FXML
     private ScrollPane updateSettingsScrollPane;
-
     @FXML
     private Button engineSettingsSaveButton;
-
-    @FXML
-    private AnchorPane selectionPane;
-
-    @FXML
-    private Label truncationCheckbox;
-
     @FXML
     private RadioButton rouletteWheelRadioButton;
-
-    @FXML
-    private ToggleGroup selectionGroup;
-
     @FXML
     private TextField topPercentTextField;
-
     @FXML
     private RadioButton truncationRadioButton;
-
     @FXML
     private CheckBox elitismCheckbox;
-
     @FXML
     private TextField elitismTextField;
-
-    @FXML
-    private AnchorPane crossoverPane;
-
     @FXML
     private RadioButton dayTimeOrientedRadioButton;
-
     @FXML
     private ToggleGroup crossoverGroup;
-
     @FXML
     private RadioButton teacherOrientedRadioButton;
-
     @FXML
     private RadioButton classOrientedRadioButton;
-
     @FXML
     private TextField cuttingPointsTextField;
-
-    @FXML
-    private Button addMutationButton;
-
     @FXML
     private VBox mutationsBox;
-
     @FXML
-    private Label generationsProgressBarLabel;
-
+    private ProgressController generationProgressComponentController;
     @FXML
-    private ProgressBar generationsProgressBar;
-
+    private ProgressController fitnessProgressComponentController;
     @FXML
-    private Label fitnessProgressBarLabel;
-
-    @FXML
-    private ProgressBar fitnessProgressBar;
-
-    @FXML
-    private Label timeProgressBarLabel;
-
-    @FXML
-    private ProgressBar timeProgressBar;
-
+    private ProgressController timeProgressComponentController;
     @FXML
     private Label errorLabel;
     //#endregion FXML components
@@ -166,6 +121,23 @@ public class RunAlgoController {
 
     public void setEngine(Engine engine) {
         this.engine = engine;
+        LongProperty timeProperty = engine.getTimeProperty();
+        StringBinding sb = new StringBinding() {
+            {
+                bind(timeProperty);
+            }
+
+            @Override
+            protected String computeValue() {
+                long value = timeProperty.get() / 1000;
+                long minutes = value / 60;
+                long seconds = value % 60;
+                return String.format("%02d:%02d", minutes, seconds);
+            }
+        };
+        timeProgressComponentController.valueTextProperty().bind(sb);
+        fitnessProgressComponentController.valueTextProperty().bind(Bindings.format("%.2f", engine.getFitnessProperty()));
+        generationProgressComponentController.valueTextProperty().bind(Bindings.format("%d", engine.getGenerationNumProperty()));
     }
 
     public void setAppController(AppController appController) {
@@ -186,6 +158,10 @@ public class RunAlgoController {
 //                event.consume();
 //            }
         });
+
+        generationProgressComponentController.setTitle("Generation:");
+        fitnessProgressComponentController.setTitle("Fitness Score:");
+        timeProgressComponentController.setTitle("Time:");
     }
 
     @FXML
@@ -424,30 +400,19 @@ public class RunAlgoController {
     }
 
     private void bindProgressBars() {
-        //initially setting all 3 bars to be invisible
-        timeProgressBarLabel.setVisible(false);
-        timeProgressBar.setVisible(false);
-        fitnessProgressBarLabel.setVisible(false);
-        fitnessProgressBar.setVisible(false);
-        generationsProgressBarLabel.setVisible(false);
-        generationsProgressBar.setVisible(false);
-
         for (EndPredicate predicate : this.endPredicates) {
             switch (predicate.getType()) {
                 case TIME:
-                    timeProgressBar.setVisible(true);
-                    timeProgressBarLabel.setVisible(true);
-                    timeProgressBar.progressProperty().bind(engine.getTimeProperty().divide(predicate.getParameter() * 60 * 1000F));
+                    timeProgressComponentController.setMax(String.format("%.0f:00m", predicate.getParameter()));
+                    timeProgressComponentController.progressProperty().bind(engine.getTimeProperty().divide(predicate.getParameter() * 60 * 1000F));
                     break;
                 case FITNESS:
-                    fitnessProgressBar.setVisible(true);
-                    fitnessProgressBarLabel.setVisible(true);
-                    fitnessProgressBar.progressProperty().bind(engine.getFitnessProperty().divide(predicate.getParameter()));
+                    fitnessProgressComponentController.setMax(String.format("%.2f", predicate.getParameter()));
+                    fitnessProgressComponentController.progressProperty().bind(engine.getFitnessProperty().divide(predicate.getParameter()));
                     break;
                 case GENERATIONS:
-                    generationsProgressBar.setVisible(true);
-                    generationsProgressBarLabel.setVisible(true);
-                    generationsProgressBar.progressProperty().bind(engine.getGenerationNumProperty().divide(predicate.getParameter()));
+                    generationProgressComponentController.setMax(String.format("%.0f", predicate.getParameter()));
+                    generationProgressComponentController.progressProperty().bind(engine.getGenerationNumProperty().divide(predicate.getParameter()));
                     break;
             }
         }

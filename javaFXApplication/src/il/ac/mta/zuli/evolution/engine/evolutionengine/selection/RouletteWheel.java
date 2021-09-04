@@ -14,15 +14,18 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
 
     private List<Integer> scoreRangePerIndex;
     private int elitism;
+    private final int populationSize;
 
     public RouletteWheel(ETTSelection ettSelection, int populationSize) {
+        this.populationSize = populationSize;
         if (ettSelection.getETTElitism() != null) {
-            setElitism(ettSelection.getETTElitism(), populationSize);
+            setElitism(ettSelection.getETTElitism());
         }// else elitism is initialized to zero anyway
     }
 
     public RouletteWheel(int populationSize, int elitism) {
-        setElitism(elitism, populationSize);
+        this.populationSize = populationSize;
+        setElitism(elitism);
     }
 
     @Override
@@ -66,7 +69,7 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
 
     @Override
     public String getConfiguration() {
-        //this selection has no configuration bur we still need to override the interface method
+        //this selection has no configuration but we still need to override the interface method
         return "-";
     }
 
@@ -75,14 +78,14 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
         return elitism;
     }
 
-    public void setElitism(int elitism, int populationSize) {
+    @Override
+    public void setElitism(int elitism) {
         if (elitism >= 0 && elitism <= populationSize) {
             this.elitism = elitism;
         } else {
             throw new ValidationException("number of elitism given : " + elitism + " is out of range");
         }
     }
-
 
 //    an example to make things more clear:
 //    if there are 3 solutions: solutions[0].score=80, solutions[1].score=20, solutions[2].score=75
