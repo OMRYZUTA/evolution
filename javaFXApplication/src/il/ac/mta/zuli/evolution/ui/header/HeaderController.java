@@ -3,6 +3,7 @@ package il.ac.mta.zuli.evolution.ui.header;
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
+import il.ac.mta.zuli.evolution.ui.FXutils;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -89,11 +90,11 @@ public class HeaderController {
                 throwable -> {
                     if (!fileLoadedProperty.get()) {
                         taskMessageLabel.setText("Failed loading the file." + System.lineSeparator()
-                                + throwable.getMessage() + System.lineSeparator()
+                                + FXutils.getToRootError(throwable) + System.lineSeparator()
                                 + "There is no file loaded to the system.");
                     } else {
                         taskMessageLabel.setText("Failed loading the file." + System.lineSeparator()
-                                + throwable.getMessage() + System.lineSeparator()
+                                + FXutils.getToRootError(throwable) + System.lineSeparator()
                                 + "Reverted to last file that was successfully loaded.");
                     }
                 });

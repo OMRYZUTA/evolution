@@ -1,5 +1,7 @@
 package il.ac.mta.zuli.evolution.ui;
 
+import il.ac.mta.zuli.evolution.engine.MyUtils;
+
 import java.util.List;
 import java.util.Map;
 
@@ -39,5 +41,20 @@ public class FXutils {
         }
 
         return str.trim().isEmpty();
+    }
+
+    public static String getToRootError(Throwable e){
+        StringBuilder sb = new StringBuilder();
+        Throwable root = MyUtils.findThrowableRootCause(e);
+        Throwable currError = e;
+
+        while (!currError.equals(root)) {
+            sb.append(currError.getMessage() + System.lineSeparator());
+            currError = currError.getCause();
+        }
+
+        sb.append(root.getMessage());
+
+        return e.getMessage()+". "+sb.toString();
     }
 }
