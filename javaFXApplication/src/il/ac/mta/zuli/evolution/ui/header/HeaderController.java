@@ -118,7 +118,6 @@ public class HeaderController {
 
     //in the recording about 26 minutes in
     public void bindTaskToUIComponents(Task<?> task) {
-        taskMessageLabel.setText("");
         // task message
         taskMessageLabel.textProperty().bind(task.messageProperty());
     }

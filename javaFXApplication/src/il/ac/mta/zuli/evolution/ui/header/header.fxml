@@ -30,9 +30,10 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <Label fx:id="taskMessageLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="information-label" text="Task message" textFill="#442526" VBox.vgrow="ALWAYS">
+                  <Label fx:id="taskMessageLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                         styleClass="information-label" textFill="#442526" VBox.vgrow="ALWAYS">
                      <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                      </padding>
                   </Label>
                </children>
