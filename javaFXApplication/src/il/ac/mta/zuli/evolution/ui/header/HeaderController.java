@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.ui.header;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
+import il.ac.mta.zuli.evolution.dto.TimeTableDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
@@ -38,11 +39,9 @@ public class HeaderController {
     private final SimpleBooleanProperty fileLoadedProperty;
     private final SimpleBooleanProperty evolutionAlgoCompletedProperty;
     private final SimpleStringProperty selectedFileProperty;
-    private AppController appController;
-    private Stage primaryStage;
-    private Engine engine;
-    private DescriptorDTO descriptor; //the root in the xml hierarchy
     private final TimeTableSolutionDTO solution = null;
+    private AppController appController;
+    private Engine engine;
 
     public HeaderController() {
         selectedFileProperty = new SimpleStringProperty("");
@@ -60,7 +59,6 @@ public class HeaderController {
     }
 
     public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
     }
 
     @FXML
@@ -138,7 +136,9 @@ public class HeaderController {
 
     @FXML
     public void bestSolutionAction() {
-        this.appController.displaySolution(descriptor.getTimeTable());
+        DescriptorDTO descriptorDTO = engine.getDescriptorDTO();
+        TimeTableDTO solutionDTO = descriptorDTO.getTimeTable();
+        this.appController.displaySolution(solutionDTO);
     }
 
     @FXML
