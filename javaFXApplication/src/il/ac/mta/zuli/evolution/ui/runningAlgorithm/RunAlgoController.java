@@ -107,6 +107,7 @@ public class RunAlgoController {
 
         onAlgoFinished = finished -> {
             algoIsRunningProperty.set(false);
+            errorProperty.set("Algorithm finished running");
         };
 
         onAlgoFailed = throwable -> {
@@ -222,6 +223,7 @@ public class RunAlgoController {
                     updatedMutations,
                     engine.getEngineSettings().getInitialPopulationSize());
             engine.setEngineSettings(newEngineSettings); //the timetableEngine holds a descriptor which has engine settings
+            errorProperty.set("Saved changes to settings");
         } catch (Throwable e) {
             errorProperty.set("failed saving engine settings: " + e.getMessage());
         }
@@ -350,6 +352,9 @@ public class RunAlgoController {
     private boolean getEndPredicatesInput() {
         try {
             endPredicates.clear();
+            timeProgressComponentController.setMax("");
+            fitnessProgressComponentController.setMax("");
+            generationProgressComponentController.setMax("");
 
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
