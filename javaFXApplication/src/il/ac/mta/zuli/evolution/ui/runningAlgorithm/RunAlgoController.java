@@ -424,15 +424,17 @@ public class RunAlgoController {
                     timeProgressBar.setVisible(true);
                     timeProgressBarLabel.setVisible(true);
                     timeProgressBar.progressProperty().bind(engine.getTimeProperty().divide(predicate.getParameter() * 60 * 1000F));
+                    break;
                 case FITNESS:
                     fitnessProgressBar.setVisible(true);
                     fitnessProgressBarLabel.setVisible(true);
                     fitnessProgressBar.progressProperty().bind(engine.getFitnessProperty().divide(predicate.getParameter()));
+                    break;
                 case GENERATIONS:
                     generationsProgressBar.setVisible(true);
                     generationsProgressBarLabel.setVisible(true);
-                    //TODO generation progress bar reaches end to soon
                     generationsProgressBar.progressProperty().bind(engine.getGenerationNumProperty().divide(predicate.getParameter()));
+                    break;
             }
         }
     }
