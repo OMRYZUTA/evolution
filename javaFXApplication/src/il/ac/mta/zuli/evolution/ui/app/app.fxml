@@ -2,9 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-
+<?import javafx.scene.layout.*?>
 <ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.mta.zuli.evolution.ui.app.AppController">
    <content>
       <AnchorPane>
@@ -18,9 +16,20 @@
                      <content>
                           <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="100.0">
                               <children>
-                                  <fx:include fx:id="solutionComponent" source="../solution/solutionComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                  <fx:include fx:id="detailsComponent" source="../details/detailsComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                  <fx:include fx:id="runAlgoComponent" source="../runningAlgorithm/runAlgoComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                  <fx:include fx:id="solutionComponent" maxHeight="1.7976931348623157E308"
+                                              maxWidth="1.7976931348623157E308"
+                                              source="../solution/solutionComponent.fxml" AnchorPane.bottomAnchor="0.0"
+                                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                              AnchorPane.topAnchor="0.0"/>
+                                  <fx:include fx:id="detailsComponent" maxHeight="1.7976931348623157E308"
+                                              maxWidth="1.7976931348623157E308"
+                                              source="../details/detailsComponent.fxml" AnchorPane.bottomAnchor="0.0"
+                                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                              AnchorPane.topAnchor="0.0"/>
+                                  <fx:include fx:id="runAlgoComponent" maxHeight="1.7976931348623157E308"
+                                              maxWidth="1.7976931348623157E308"
+                                              source="../runningAlgorithm/runAlgoComponent.fxml"
+                                              AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                               </children>
                           </AnchorPane>
                      </content>

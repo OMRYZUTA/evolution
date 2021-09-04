@@ -32,7 +32,6 @@ public class EngineSettings<T extends Solution> {
         setMutations(ee.getETTMutations().getETTMutation(), timeTable);
     }
 
-    //TODO - use when updating settings after pause (or using public setters)
     public EngineSettings(Selection<T> newSelection,
                           CrossoverInterface<T> newCrossover,
                           List<Mutation<T>> newMutationList, int initialPopulationSize) {

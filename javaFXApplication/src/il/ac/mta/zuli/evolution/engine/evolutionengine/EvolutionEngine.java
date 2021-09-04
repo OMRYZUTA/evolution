@@ -23,8 +23,6 @@ public class EvolutionEngine<T extends Solution> {
         this.numOfElitism = engineSettings.getEliteNumber();
     }
 
-    //TODO setEngineSettings()
-
     public void setRules(@NotNull Set<Rule> rules) {
         if (rules.size() == 0) {
             throw new EmptyCollectionException("Empty rules list in evolution engine");

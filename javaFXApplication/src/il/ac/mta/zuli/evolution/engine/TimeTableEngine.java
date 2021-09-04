@@ -75,7 +75,6 @@ public class TimeTableEngine implements Engine {
 
         currentRunningTask.setOnFailed(value -> {
             controller.onTaskFinished();
-            //TODO figure out how to handle exceptions, with reaching the "root" error as we did in the console
             onFailure.accept(currentRunningTask.getException());
             currentRunningTask = null;
         });
@@ -164,7 +163,6 @@ public class TimeTableEngine implements Engine {
 
         currentRunningTask.setOnFailed(value -> {
             controller.onTaskFinished();
-            //TODO figure out how to handle exceptions, with reaching the "root" error as we did in the console
             onFailure.accept(currentRunningTask.getException());
             currentRunningTask = null;
         });

@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -22,7 +23,7 @@ public class AppController {
     @FXML
     private HeaderController headerComponentController;
     @FXML
-    private ScrollPane detailsComponent;
+    private TabPane detailsComponent;
     @FXML
     private DetailsController detailsComponentController;
     @FXML
@@ -40,7 +41,7 @@ public class AppController {
     private final SimpleStringProperty currentBodyProperty; //TODO set this inside header, based on button clicks
     private TimeTableSolutionDTO solution;
     private TimeTableDTO timetable;
-    private SimpleBooleanProperty doesSolutionExist;
+    private final SimpleBooleanProperty doesSolutionExist;
     public AppController() {
         currentBodyProperty = new SimpleStringProperty("none");
         doesSolutionExist = new SimpleBooleanProperty(false);
