@@ -49,7 +49,7 @@
                 </TabPane>
             </center>
             <left>
-            <ScrollPane minHeight="0.0" minWidth="0.0" BorderPane.alignment="CENTER">
+            <ScrollPane BorderPane.alignment="CENTER">
                <content>
                       <VBox spacing="1.0">
                           <children>
