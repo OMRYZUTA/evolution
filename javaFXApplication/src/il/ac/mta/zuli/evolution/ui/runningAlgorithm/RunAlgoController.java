@@ -146,14 +146,17 @@ public class RunAlgoController {
         errorProperty = new SimpleStringProperty("");
         endPredicates = new ArrayList<>();
         mutations = new ArrayList<>();
+
         onAlgoFinished = finished -> {
             algoIsRunningProperty.set(false);
         };
+
         onAlgoFailed = throwable -> {
             algoIsRunningProperty.set(false);
             errorProperty.set("Failed running the algorithm." + System.lineSeparator()
                     + throwable.getMessage());
         };
+
         reportBestSolution = (TimeTableSolutionDTO solution) -> {
             // this is the current best solution
             appController.updateBestSolution(solution);
@@ -174,11 +177,9 @@ public class RunAlgoController {
         pauseButton.disableProperty().bind(algoIsRunningProperty.not()); // pause is disabled when algo is *not* running
         resumeButton.disableProperty().bind(algoIsPausedProperty.not()); // resume is disabled when the algo is *not* paused
         stopButton.disableProperty().bind(algoIsRunningProperty.not());  // stop is disabled when algo is *not* running
-
         errorLabel.textProperty().bind(errorProperty);
-
         updateSettingsScrollPane.disableProperty().bind(algoIsPausedProperty.not());
-
+        //Todo ask omry
         engineSettingsSaveButton.addEventFilter(ActionEvent.ACTION, event -> {
 //            if (validateAndStoreEngineSettings() == null) {
 //                event.consume();
@@ -281,7 +282,7 @@ public class RunAlgoController {
 
         if (elitismCheckbox.isSelected()) {
             //relevant for both types of selection (if left empty we get 0?)
-            elitism = Integer.parseInt(elitismTextField.getText());
+            elitism = Integer.parseInt(elitismTextField.getText(), 10);
         }
 
         //rouletteWheelRadioButton and truncationRadioButton are in the same toggle-group, one-at-most can be selected
@@ -291,7 +292,7 @@ public class RunAlgoController {
                     previousSettings.getInitialPopulationSize(),
                     elitism, 0); //topPercent NA for rouletteWheel
         } else if (truncationRadioButton.isSelected()) {
-            int topPercent = Integer.parseInt(topPercentTextField.getText());
+            int topPercent = Integer.parseInt(topPercentTextField.getText(), 10);
             updatedSelection = SelectionFactory.createSelectionFromInput(
                     "truncation",
                     previousSettings.getInitialPopulationSize(),
@@ -309,7 +310,7 @@ public class RunAlgoController {
         CrossoverInterface<TimeTableSolution> updatedCrossover = engine.getEngineSettings().getCrossover();
 
         if (crossoverGroup.getSelectedToggle() != null) {
-            int numOfCuttingPoints = Integer.parseInt(cuttingPointsTextField.getText());
+            int numOfCuttingPoints = Integer.parseInt(cuttingPointsTextField.getText(), 10);
 
             //radioButtons in crossover-toggle-group, so only one can be selected
             if (dayTimeOrientedRadioButton.isSelected()) {
