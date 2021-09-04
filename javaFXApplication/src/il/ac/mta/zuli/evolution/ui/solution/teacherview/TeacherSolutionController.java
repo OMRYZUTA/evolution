@@ -13,6 +13,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class TeacherSolutionController {
     Pane solutionBasePane;
     @FXML
     ChoiceBox<TeacherDTO> teacherChoiceBox;
+    @FXML
+    VBox teacherVBox;
 
     private int hours;
     private int days;
@@ -74,16 +77,18 @@ public class TeacherSolutionController {
     }
 
     private void displaySolution(TeacherDTO teacher) {
-        solutionBasePane.getChildren().clear(); //clears any previous solutions from base
-
+//        solutionBasePane.getChildren().clear(); //clears any previous solutions from base
+        if(teacherVBox.getChildren().size()>1) {
+            teacherVBox.getChildren().remove(1);
+        }
         if (teacher == null) {
-            solutionBasePane.getChildren().add(new Label("choice is null"));
+            teacherVBox.getChildren().add(new Label("choice is null"));
             return;
         }
 
         if (!solutionTeacherGroups.containsKey(teacher)) {
             Label nothingToDisplay = new Label(" This teacher is not scheduled in the timetable.");
-            solutionBasePane.getChildren().add(nothingToDisplay);
+            teacherVBox.getChildren().add(nothingToDisplay);
             return;
         }
 
@@ -99,7 +104,7 @@ public class TeacherSolutionController {
             }
         }
 
-        solutionBasePane.getChildren().add(gridPane);
+        teacherVBox.getChildren().add(gridPane);
     }
 
     //TODO make general for different for class and for teacher

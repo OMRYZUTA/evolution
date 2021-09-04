@@ -12,7 +12,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import java.util.ArrayList;
@@ -22,8 +22,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ClassSolutionController {
+
     @FXML
-    Pane solutionBasePane;
+    VBox classVBox;
     @FXML
     ChoiceBox<SchoolClassDTO> classChoiceBox;
 
@@ -74,16 +75,19 @@ public class ClassSolutionController {
     }
 
     private void displaySolution(SchoolClassDTO schoolClass) {
-        solutionBasePane.getChildren().clear(); //clears any previous solutions from base
+        if(classVBox.getChildren().size()>1) {
+            classVBox.getChildren().remove(1);
+        }
+
 
         if (schoolClass == null) {
-            solutionBasePane.getChildren().add(new Label("choice is null"));
+            classVBox.getChildren().add(new Label("choice is null"));
             return;
         }
 
         if (!solutionClassGroups.containsKey(schoolClass)) {
             Label nothingToDisplay = new Label(" This class is not scheduled in the timetable.");
-            solutionBasePane.getChildren().add(nothingToDisplay);
+            classVBox.getChildren().add(nothingToDisplay);
             return;
         }
 
@@ -99,7 +103,7 @@ public class ClassSolutionController {
             }
         }
 
-        solutionBasePane.getChildren().add(gridPane);
+        classVBox.getChildren().add(gridPane);
     }
 
     //TODO make general for different for class and for teacher

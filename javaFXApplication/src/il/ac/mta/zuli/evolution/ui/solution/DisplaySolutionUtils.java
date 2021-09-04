@@ -1,7 +1,6 @@
 package il.ac.mta.zuli.evolution.ui.solution;
 
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -14,7 +13,6 @@ public class DisplaySolutionUtils {
     public static GridPane createGrid(int days, int hours) {
         GridPane gridPane = new GridPane();
         gridPane.setGridLinesVisible(true);
-        gridPane.setAlignment(Pos.CENTER);
         gridPane.prefHeight(Region.USE_COMPUTED_SIZE);
         gridPane.prefWidth(Region.USE_COMPUTED_SIZE);
 
@@ -37,7 +35,7 @@ public class DisplaySolutionUtils {
 
         ColumnConstraints cc = new ColumnConstraints();
         cc.setPercentWidth(100d / columnCount);
-
+        cc.setMinWidth(Region.USE_COMPUTED_SIZE);
         for (int i = 0; i < columnCount; i++) {
             if (i > 0) {
                 Label label = new Label(DayOfWeek.of(i).toString());
