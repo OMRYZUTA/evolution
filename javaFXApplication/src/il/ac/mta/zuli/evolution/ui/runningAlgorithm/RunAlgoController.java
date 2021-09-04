@@ -20,6 +20,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -87,6 +88,7 @@ public class RunAlgoController {
     private final SimpleBooleanProperty algoIsPausedProperty;
     private final SimpleBooleanProperty algoIsRunningProperty;
     private final SimpleStringProperty errorProperty;
+    private final SimpleIntegerProperty elitismProperty;
     private final List<EndPredicate> endPredicates;
     private final List<MutationController> mutations; // mutations added instead of previous mutations in engineSettings
     private final Consumer<Boolean> onAlgoFinished;
@@ -101,6 +103,7 @@ public class RunAlgoController {
         algoIsPausedProperty = new SimpleBooleanProperty(false);
         algoIsRunningProperty = new SimpleBooleanProperty(false);
         errorProperty = new SimpleStringProperty("");
+        elitismProperty = new SimpleIntegerProperty(0);
         endPredicates = new ArrayList<>();
         mutations = new ArrayList<>();
 
@@ -217,24 +220,20 @@ public class RunAlgoController {
 
     @FXML
     public void saveEngineSettingsChangesAction() {
-        EngineSettings newEngineSettings = null;
-
         try {
             Selection<TimeTableSolution> updatedSelection = createSelectionFromInput();
             CrossoverInterface<TimeTableSolution> updatedCrossover = createCrossoverFromInput();
             List<Mutation<TimeTableSolution>> updatedMutations = createMutationListFromInput();
 
-            newEngineSettings = new EngineSettings(
+            EngineSettings newEngineSettings = new EngineSettings(
                     updatedSelection,
                     updatedCrossover,
                     updatedMutations,
                     engine.getEngineSettings().getInitialPopulationSize());
+            engine.setEngineSettings(newEngineSettings); //the timetableEngine holds a descriptor which has engine settings
         } catch (Throwable e) {
-            errorProperty.set(e.getMessage());
-            return;
+            errorProperty.set("failed saving engine settings: " + e.getMessage());
         }
-
-        engine.setEngineSettings(newEngineSettings); //the timetableEngine holds a descriptor which has engine settings
     }
 
     @FXML
@@ -260,7 +259,7 @@ public class RunAlgoController {
 
         if (elitismCheckbox.isSelected()) {
             //relevant for both types of selection (if left empty we get 0?)
-            elitism = Integer.parseInt(elitismTextField.getText(), 10);
+            elitism = Integer.parseInt(elitismTextField.getText());
         }
 
         //rouletteWheelRadioButton and truncationRadioButton are in the same toggle-group, one-at-most can be selected
@@ -270,7 +269,7 @@ public class RunAlgoController {
                     previousSettings.getInitialPopulationSize(),
                     elitism, 0); //topPercent NA for rouletteWheel
         } else if (truncationRadioButton.isSelected()) {
-            int topPercent = Integer.parseInt(topPercentTextField.getText(), 10);
+            int topPercent = Integer.parseInt(topPercentTextField.getText());
             updatedSelection = SelectionFactory.createSelectionFromInput(
                     "truncation",
                     previousSettings.getInitialPopulationSize(),
@@ -288,7 +287,7 @@ public class RunAlgoController {
         CrossoverInterface<TimeTableSolution> updatedCrossover = engine.getEngineSettings().getCrossover();
 
         if (crossoverGroup.getSelectedToggle() != null) {
-            int numOfCuttingPoints = Integer.parseInt(cuttingPointsTextField.getText(), 10);
+            int numOfCuttingPoints = Integer.parseInt(cuttingPointsTextField.getText());
 
             //radioButtons in crossover-toggle-group, so only one can be selected
             if (dayTimeOrientedRadioButton.isSelected()) {
