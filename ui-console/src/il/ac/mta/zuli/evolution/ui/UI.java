@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution.ui;
 
-import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.engine.MyUtils;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
@@ -273,7 +272,7 @@ public class UI {
         System.out.println("Enter the number of generations (greater than 100): ");
 
         try {
-            numOfGenerations = Integer.parseInt(scanner.nextLine());
+            numOfGenerations = Integer.parseInt(scanner.nextLine(), 10);
         } catch (Throwable E) {
             System.out.println("Invalid number of generations entered, must be an integer greater than 100");
             return false;
@@ -294,7 +293,7 @@ public class UI {
         System.out.println("Enter the generation stride you'd like to see while the algorithm runs (a positive integer)");
 
         try {
-            stride = Integer.parseInt(scanner.nextLine());
+            stride = Integer.parseInt(scanner.nextLine(), 10);
         } catch (Throwable E) {
             System.out.println("Invalid stride value entered, the value must be a positive integer");
             return false;

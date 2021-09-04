@@ -74,7 +74,7 @@ public class MutationFactory {
         int commaIndex = ettMutation.getConfiguration().indexOf(",");
         String maxTuplesStr = (ettMutation.getConfiguration()).substring(maxTuplesIndex, commaIndex);
 
-        return Integer.parseInt(maxTuplesStr);
+        return Integer.parseInt(maxTuplesStr, 10);
     }
 
     private static int extractTotalTuplesFromString(ETTMutation ettMutation) {
@@ -82,7 +82,7 @@ public class MutationFactory {
         int totalTuplesIndex = (ettMutation.getConfiguration()).indexOf("TotalTupples=") + "TotalTupples=".length();
         String totalTuplesStr = (ettMutation.getConfiguration()).substring(totalTuplesIndex);
 
-        return Integer.parseInt(totalTuplesStr);
+        return Integer.parseInt(totalTuplesStr, 10);
     }
 }
 

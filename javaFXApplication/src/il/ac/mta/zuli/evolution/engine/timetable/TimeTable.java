@@ -219,7 +219,7 @@ public class TimeTable {
         int hours;
 
         try {
-            hours = Integer.parseInt(configuration.substring(index + 1));
+            hours = Integer.parseInt(configuration.substring(index + 1), 10);
         } catch (Throwable e) {
             throw new ValidationException("Invalid configuration format, total hours value must be number");
         }

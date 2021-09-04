@@ -41,7 +41,7 @@ public class Truncation<S extends Solution> implements Selection<S> {
             throw new ValidationException("missing '=' ");
         }
 
-        int num = Integer.parseInt(configuration.substring(index + 1));
+        int num = Integer.parseInt(configuration.substring(index + 1), 10);
 
         setTopPercent(num);
     }
