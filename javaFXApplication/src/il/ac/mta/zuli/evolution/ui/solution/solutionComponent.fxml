@@ -49,16 +49,20 @@
                 </TabPane>
             </center>
             <left>
-                <VBox spacing="1.0" BorderPane.alignment="CENTER">
-                    <children>
-                        <Label fx:id="scoreLabel" text="Score" />
-                        <Label style="-fx-text-fill: #A83E32;" text="Rules" />
-                        <VBox fx:id="rulePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" />
-                    </children>
-                    <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                    </padding>
-                </VBox>
+            <ScrollPane minHeight="0.0" minWidth="0.0" BorderPane.alignment="CENTER">
+               <content>
+                      <VBox spacing="1.0">
+                          <children>
+                              <Label fx:id="scoreLabel" text="Score" />
+                              <Label style="-fx-text-fill: #A83E32;" text="Rules" />
+                              <VBox fx:id="rulePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" />
+                          </children>
+                          <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                          </padding>
+                      </VBox>
+               </content>
+            </ScrollPane>
             </left>
         </BorderPane>
     </content>
