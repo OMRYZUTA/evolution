@@ -9,13 +9,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-
-import java.util.Optional;
 
 public class HeaderController {
     @FXML
@@ -113,26 +109,11 @@ public class HeaderController {
 
     @FXML
     public void runEngineAction() {
-        if (evolutionAlgoCompletedProperty.get()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Dialog");
-            alert.setHeaderText("The evolution-algorithm previously ran.");
-            alert.setContentText("If you choose to re-run it, the information from the previous run will be lost." + System.lineSeparator() +
-                    "Would you like to re-run the algorithm?");
 
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-
-                // ... user chose OK
-            } else {
-                // ... user chose CANCEL or closed the dialog
-            }
-        }
 
         this.appController.runAlgorithm();
         bestSolutionButton.setDisable(false);
     }
-
 
     @FXML
     public void bestSolutionAction() {

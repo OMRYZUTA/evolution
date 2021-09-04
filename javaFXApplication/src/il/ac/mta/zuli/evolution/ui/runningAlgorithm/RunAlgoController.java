@@ -15,6 +15,7 @@ import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
 import il.ac.mta.zuli.evolution.ui.runningAlgorithm.mutation.MutationController;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +30,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -125,36 +127,37 @@ public class RunAlgoController {
     private Label errorLabel;
     //#endregion FXML components
 
-    private final TimeTableSolutionDTO solution = null;
     private final List<EndPredicate> endPredicates;
     private final List<MutationController> mutations;
-    private final SimpleBooleanProperty isPausedProperty;
-    private final SimpleBooleanProperty runningAlgoProperty;
-    private final Consumer<Boolean> onSuccess;
-    private final Consumer<Throwable> onFailure;
+    private final SimpleBooleanProperty algoIsPausedProperty;
+    private final SimpleBooleanProperty algoIsRunningProperty;
+    private final SimpleStringProperty errorProperty;
+    private final Consumer<Boolean> onAlgoFinished;
+    private final Consumer<Throwable> onAlgoFailed;
     private final Consumer<TimeTableSolutionDTO> reportBestSolution;
     private AppController appController;
     private Engine engine;
     private int stride;
+    private boolean startedRun;
 
     public RunAlgoController() {
         endPredicates = new ArrayList<>();
         mutations = new ArrayList<>();
-        isPausedProperty = new SimpleBooleanProperty(false);
-        runningAlgoProperty = new SimpleBooleanProperty(false);
-        onSuccess = finished -> {
+        algoIsPausedProperty = new SimpleBooleanProperty(false);
+        algoIsRunningProperty = new SimpleBooleanProperty(false);
+        errorProperty = new SimpleStringProperty("");
+        onAlgoFinished = finished -> {
             // if finished -> the run is complete
             // if !finished -> the run was paused
             //TODO - figure it out
             // evolutionAlgoCompletedProperty.set(true); //this is a headerController property
-            runningAlgoProperty.set(false);
+            algoIsRunningProperty.set(false);
             appController.onFinishAlgorithm();
         };
-        onFailure = throwable -> {
-            errorLabel.setVisible(true);
-            errorLabel.setText("Failed running the algorithm." + System.lineSeparator()
+        onAlgoFailed = throwable -> {
+            algoIsRunningProperty.set(false);
+            errorProperty.set("Failed running the algorithm." + System.lineSeparator()
                     + throwable.getMessage());
-            runningAlgoProperty.set(false);
         };
         reportBestSolution = (TimeTableSolutionDTO solution) -> {
             // this is the current best solution
@@ -172,12 +175,14 @@ public class RunAlgoController {
 
     @FXML
     private void initialize() {
-        //initially, only StartButton is an option, the others are disabled
-        pauseButton.setDisable(true);
-        resumeButton.setDisable(true);
-        stopButton.setDisable(true);
+        startButton.disableProperty().bind(algoIsRunningProperty); // start is disabled when the algo is running
+        pauseButton.disableProperty().bind(algoIsRunningProperty.not()); // pause is disabled when algo is *not* running
+        resumeButton.disableProperty().bind(algoIsPausedProperty.not()); // resume is disabled when the algo is *not* paused
+        stopButton.disableProperty().bind(algoIsRunningProperty.not());  // stop is disabled when algo is *not* running
 
-        updateSettingsScrollPane.disableProperty().bind(isPausedProperty.not());
+        errorLabel.textProperty().bind(errorProperty);
+
+        updateSettingsScrollPane.disableProperty().bind(algoIsPausedProperty.not());
 
         engineSettingsSaveButton.addEventFilter(ActionEvent.ACTION, event -> {
 //            if (validateAndStoreEngineSettings() == null) {
@@ -188,53 +193,51 @@ public class RunAlgoController {
 
     @FXML
     void startAction(ActionEvent event) {
+        if (startedRun && !alertUser()) {
+            return;
+        }
+
         if (!getEndPredicatesInput()) {
             return;
         }
 
-        runningAlgoProperty.set(true);
-        stopButton.setDisable(false);
-        pauseButton.setDisable(false);
-        resumeButton.setDisable(true);
+        startedRun = true;
+        algoIsPausedProperty.set(false);
+        algoIsRunningProperty.set(true);
+        errorProperty.set("");
 
         engine.startEvolutionAlgorithm(
                 this.endPredicates,
                 this.stride,
-                onSuccess,
-                onFailure,
+                onAlgoFinished,
+                onAlgoFailed,
                 reportBestSolution);
     }
 
     @FXML
     void stopAction(ActionEvent event) {
-        startButton.setDisable(false);
-        pauseButton.setDisable(true);
-        resumeButton.setDisable(true);
-
+        algoIsRunningProperty.set(false);
         engine.stopEvolutionAlgorithm();
     }
 
     @FXML
     void pauseAction(ActionEvent event) {
-        resumeButton.setDisable(false);
-        stopButton.setDisable(true);
-        startButton.setDisable(true);
-        isPausedProperty.set(true);
+        algoIsPausedProperty.set(true);
+        algoIsRunningProperty.set(false);
         engine.pauseEvolutionAlgorithm();
     }
 
     @FXML
     void resumeAction(ActionEvent event) {
-        runningAlgoProperty.set(true);
-        stopButton.setDisable(false);
-        pauseButton.setDisable(false);
-        startButton.setDisable(true);
+        algoIsPausedProperty.set(false);
+        algoIsRunningProperty.set(true);
+        errorProperty.set("");
 
         engine.resumeEvolutionAlgorithm(
                 this.endPredicates,
                 this.stride,
-                onSuccess,
-                onFailure,
+                onAlgoFinished,
+                onAlgoFailed,
                 reportBestSolution);
     }
 
@@ -344,6 +347,17 @@ public class RunAlgoController {
                 .stream()
                 .map(mutationController -> mutationController.getMutation())
                 .collect(Collectors.toList());
+    }
+
+    private boolean alertUser() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText("The evolution-algorithm previously ran.");
+        alert.setContentText("If you choose to re-run it, the information from the previous run will be lost." + System.lineSeparator() +
+                "Would you like to re-run the algorithm?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
     }
 
     private boolean getEndPredicatesInput() {
