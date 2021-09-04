@@ -13,6 +13,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.SelectionFactor
 import il.ac.mta.zuli.evolution.engine.predicates.EndConditionType;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
+import il.ac.mta.zuli.evolution.ui.endConditions.EndConditionsController;
 import il.ac.mta.zuli.evolution.ui.runningAlgorithm.mutation.MutationController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -362,46 +363,45 @@ public class RunAlgoController {
     private boolean getEndPredicatesInput() {
         try {
             endPredicates.clear();
-            //commented out for faster debugging!!
-//
-//            Dialog<ButtonType> dialog = new Dialog<>();
-//            dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-//            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-//
-//            FXMLLoader loader = new FXMLLoader();
-//            URL mainFXML = getClass().getResource("/il/ac/mta/zuli/evolution/ui/endConditions/endConditionsFormComponent.fxml");
-//            loader.setLocation(mainFXML);
-//            GridPane gridPane = loader.load();
-//            EndConditionsController controller = loader.getController();
-//
-//            dialog.getDialogPane().setContent(gridPane);
-//
-//
-//            final Button btOk = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
-//            btOk.addEventFilter(ActionEvent.ACTION, event -> {
-//                if (!controller.validateAndStore()) {
-//                    event.consume();
-//                }
-//            });
-//
-//            Optional<ButtonType> result = dialog.showAndWait();
-//
-//            if (result.isPresent() && result.get() == ButtonType.CANCEL) {
-//                return false;
-//            }
-//
-//            this.stride = controller.getStride();
-//            setPredicatesAccordingToDialogEndConditions(controller.getEndConditionTypePerValue());
-//
-            stride = 20;
-//            endPredicates.add(new EndPredicate(EndConditionType.GENERATIONS, 2000));
-            endPredicates.add(new EndPredicate(EndConditionType.TIME, 2));
-            endPredicates.add(new EndPredicate(EndConditionType.FITNESS, 96.8));
+
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+
+            FXMLLoader loader = new FXMLLoader();
+            URL mainFXML = getClass().getResource("/il/ac/mta/zuli/evolution/ui/endConditions/endConditionsFormComponent.fxml");
+            loader.setLocation(mainFXML);
+            GridPane gridPane = loader.load();
+            EndConditionsController controller = loader.getController();
+
+            dialog.getDialogPane().setContent(gridPane);
+
+
+            final Button btOk = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+            btOk.addEventFilter(ActionEvent.ACTION, event -> {
+                if (!controller.validateAndStore()) {
+                    event.consume();
+                }
+            });
+
+            Optional<ButtonType> result = dialog.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+                return false;
+            }
+
+            this.stride = controller.getStride();
+            setPredicatesAccordingToDialogEndConditions(controller.getEndConditionTypePerValue());
+
+//            stride = 20;
+////            endPredicates.add(new EndPredicate(EndConditionType.GENERATIONS, 2000));
+//            endPredicates.add(new EndPredicate(EndConditionType.TIME, 2));
+//            endPredicates.add(new EndPredicate(EndConditionType.FITNESS, 96.8));
             bindProgressBars();
 
             return true;
         } catch (Throwable e) {
-            e.printStackTrace(); //TODO: show error message to user
+            onAlgoFailed.accept(e);
             return false;
         }
     }

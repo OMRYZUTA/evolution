@@ -2,7 +2,6 @@ package il.ac.mta.zuli.evolution.ui.header;
 
 import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
 import il.ac.mta.zuli.evolution.dto.TimeTableDTO;
-import il.ac.mta.zuli.evolution.dto.TimeTableSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.Engine;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -11,7 +10,10 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class HeaderController {
     @FXML
@@ -31,9 +33,11 @@ public class HeaderController {
 
     private final SimpleBooleanProperty fileLoadedProperty;
     private final SimpleStringProperty selectedFileProperty;
-    private final TimeTableSolutionDTO solution = null;
     private AppController appController;
     private Engine engine;
+    private Stage primaryStage;
+
+
 
     public HeaderController() {
         selectedFileProperty = new SimpleStringProperty("");
@@ -42,6 +46,7 @@ public class HeaderController {
 
     public void setAppController(AppController appController) {
         this.appController = appController;
+        bestSolutionButton.disableProperty().bind(appController.doesSolutionExistProperty().not());
     }
 
     public void setEngine(Engine engine) {
@@ -50,6 +55,7 @@ public class HeaderController {
     }
 
     public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
 
     @FXML
@@ -58,22 +64,20 @@ public class HeaderController {
         //disabling 2 of the buttons until a file is loaded to the system
         displaySettingsButton.disableProperty().bind(fileLoadedProperty.not());
         runEngineButton.disableProperty().bind(fileLoadedProperty.not());
-//        bestSolutionButton.disableProperty().bind(evolutionAlgoCompletedProperty.not());
-        bestSolutionButton.setDisable(true);
     }
 
     @FXML
     public void loadFileButtonAction() {
-//        FileChooser fileChooser = new FileChooser();
-//        fileChooser.setTitle("Select file");
-//        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
-//        File selectedFile = fileChooser.showOpenDialog(primaryStage);
-//        if (selectedFile == null) {
-//            return;
-//        }
-//
-//        String absolutePath = selectedFile.getAbsolutePath();
-        String absolutePath = "javaFXApplication\\src\\resources\\EX2-small.xml";
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select file");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
+        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+        if (selectedFile == null) {
+            return;
+        }
+
+        String absolutePath = selectedFile.getAbsolutePath();
+//        String absolutePath = "javaFXApplication\\src\\resources\\EX2-small.xml";
 
         // engine.loadXML(String fileToLoad,Consumer<DescriptorDTO> onSuccess,Consumer<Throwable> onFailure)
         engine.loadXML(
@@ -102,10 +106,7 @@ public class HeaderController {
 
     @FXML
     public void runEngineAction() {
-
-
         this.appController.runAlgorithm();
-        bestSolutionButton.setDisable(false);
     }
 
     @FXML

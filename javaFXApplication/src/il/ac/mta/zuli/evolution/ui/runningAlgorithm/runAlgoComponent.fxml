@@ -86,7 +86,7 @@
                     <children>
                         <Label text="Update Engine Settings:" GridPane.columnSpan="3" />
                         <Button fx:id="engineSettingsSaveButton" mnemonicParsing="false" onAction="#saveEngineSettingsChangesAction" text="Save Changes" GridPane.columnIndex="3" />
-                        <AnchorPane fx:id="selectionPane" minHeight="40.0" style="-fx-border-color: #A83E32;" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="3">
+                        <AnchorPane fx:id="selectionPane" minHeight="40.0" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="3">
                             <children>
                                 <Label fx:id="truncationCheckbox" layoutX="6.0" layoutY="4.0" text="Selection:" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="4.0" />
                                 <RadioButton fx:id="rouletteWheelRadioButton" layoutX="79.0" layoutY="13.0" mnemonicParsing="false" text="RouletteWheel" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="4.0">
@@ -100,7 +100,7 @@
                                 <TextField fx:id="elitismTextField" layoutX="90.0" layoutY="61.0" prefHeight="25.0" prefWidth="58.0" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="61.0" />
                             </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="crossoverPane" minHeight="40.0" style="-fx-border-color: #A83E32;" GridPane.columnSpan="4" GridPane.rowIndex="4" GridPane.rowSpan="3">
+                        <AnchorPane fx:id="crossoverPane" minHeight="40.0" GridPane.columnSpan="4" GridPane.rowIndex="4" GridPane.rowSpan="3">
                             <children>
                                 <Label layoutX="7.0" layoutY="7.0" text="Crossover:" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="4.0" />
                                 <RadioButton fx:id="dayTimeOrientedRadioButton" layoutX="78.0" layoutY="7.0" mnemonicParsing="false" text="DayTimeOriented" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="4.0">
@@ -115,7 +115,7 @@
                                 <Label layoutX="11.0" layoutY="64.0" text="Number of Cutting Points:" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="65.0" />
                             </children>
                         </AnchorPane>
-                        <FlowPane hgap="5.0" style="-fx-border-color: #A83E32;" GridPane.columnSpan="4" GridPane.rowIndex="7" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS">
+                        <FlowPane hgap="5.0" GridPane.columnSpan="4" GridPane.rowIndex="7" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS">
                             <children>
                                 <Label text="Mutations:" />
                                 <Button fx:id="addMutationButton" mnemonicParsing="false" onAction="#addMutationAction" text="Add Mutation" />

@@ -9,6 +9,7 @@ import il.ac.mta.zuli.evolution.ui.header.HeaderController;
 import il.ac.mta.zuli.evolution.ui.runningAlgorithm.RunAlgoController;
 import il.ac.mta.zuli.evolution.ui.solution.SolutionController;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
@@ -39,9 +40,10 @@ public class AppController {
     private final SimpleStringProperty currentBodyProperty; //TODO set this inside header, based on button clicks
     private TimeTableSolutionDTO solution;
     private TimeTableDTO timetable;
-
+    private SimpleBooleanProperty doesSolutionExist;
     public AppController() {
         currentBodyProperty = new SimpleStringProperty("none");
+        doesSolutionExist = new SimpleBooleanProperty(false);
     }
 
     public void setEngine(Engine newEngine) {
@@ -84,5 +86,15 @@ public class AppController {
 
     public void updateBestSolution(TimeTableSolutionDTO solution){
         this.solution = solution;
+        doesSolutionExist.set(true);
+    }
+
+    public TimeTableSolutionDTO getSolution() {
+        return solution;
+    }
+
+
+    public SimpleBooleanProperty doesSolutionExistProperty() {
+        return doesSolutionExist;
     }
 }

@@ -1,58 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<BorderPane fx:id="mutationBorderPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="il.ac.mta.zuli.evolution.ui.runningAlgorithm.mutation.MutationController">
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<BorderPane fx:id="mutationBorderPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.mta.zuli.evolution.ui.runningAlgorithm.mutation.MutationController">
     <top>
-        <Label text="Mutation" BorderPane.alignment="CENTER"/>
+        <Label text="Mutation" BorderPane.alignment="CENTER" />
     </top>
     <center>
         <GridPane alignment="CENTER" hgap="10.0" vgap="2.0" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <RadioButton fx:id="flippingRadioButton" contentDisplay="CENTER" mnemonicParsing="false" text="Flipping"
-                             GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <RadioButton fx:id="flippingRadioButton" contentDisplay="CENTER" mnemonicParsing="false" text="Flipping" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <GridPane.margin>
-                        <Insets/>
+                        <Insets />
                     </GridPane.margin>
                     <toggleGroup>
-                        <ToggleGroup fx:id="mutationGroup"/>
+                        <ToggleGroup fx:id="mutationGroup" />
                     </toggleGroup>
                 </RadioButton>
-                <Label alignment="CENTER" text="Propabilty:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                <TextField fx:id="flippingPropabiltyTextField" prefWidth="40.0" GridPane.columnIndex="3"
-                           GridPane.rowIndex="1"/>
-                <Label alignment="CENTER" text="Max Tuples:" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
-                <TextField fx:id="flippingTuplesTextField" prefWidth="40.0" GridPane.columnIndex="5"
-                           GridPane.rowIndex="1"/>
-                <ChoiceBox fx:id="flippingChoiceBox" GridPane.columnIndex="6" GridPane.rowIndex="1"/>
-                <RadioButton fx:id="sizerRadioButton" mnemonicParsing="false" text="Sizer" toggleGroup="$mutationGroup"
-                             GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                <Label text="Propabilty:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-                <TextField fx:id="sizerPropabiltyTextField" prefWidth="40.0" GridPane.columnIndex="3"
-                           GridPane.rowIndex="3"/>
-                <Label alignment="CENTER" text="Total Tuples:" GridPane.columnIndex="4" GridPane.rowIndex="3"/>
-                <TextField fx:id="sizerTuplesTextField" prefWidth="40.0" GridPane.columnIndex="5"
-                           GridPane.rowIndex="3"/>
+                <Label alignment="CENTER" text="Propabilty:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <TextField fx:id="flippingPropabiltyTextField" prefWidth="40.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                <Label alignment="CENTER" text="Max Tuples:" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                <TextField fx:id="flippingTuplesTextField" prefWidth="40.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                <ChoiceBox fx:id="flippingChoiceBox" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                <RadioButton fx:id="sizerRadioButton" mnemonicParsing="false" text="Sizer" toggleGroup="$mutationGroup" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label text="Propabilty:" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                <TextField fx:id="sizerPropabiltyTextField" prefWidth="40.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                <Label alignment="CENTER" text="Total Tuples:" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                <TextField fx:id="sizerTuplesTextField" prefWidth="40.0" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+            <Label text="Component:" GridPane.columnIndex="6" GridPane.rowIndex="1" />
             </children>
         </GridPane>
     </center>
