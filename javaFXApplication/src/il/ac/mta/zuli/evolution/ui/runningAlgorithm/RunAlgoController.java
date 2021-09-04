@@ -127,11 +127,11 @@ public class RunAlgoController {
     private Label errorLabel;
     //#endregion FXML components
 
-    private final List<EndPredicate> endPredicates;
-    private final List<MutationController> mutations;
     private final SimpleBooleanProperty algoIsPausedProperty;
     private final SimpleBooleanProperty algoIsRunningProperty;
     private final SimpleStringProperty errorProperty;
+    private final List<EndPredicate> endPredicates;
+    private final List<MutationController> mutations; // mutations added instead of previous mutations in engineSettings
     private final Consumer<Boolean> onAlgoFinished;
     private final Consumer<Throwable> onAlgoFailed;
     private final Consumer<TimeTableSolutionDTO> reportBestSolution;
@@ -141,18 +141,13 @@ public class RunAlgoController {
     private boolean startedRun;
 
     public RunAlgoController() {
-        endPredicates = new ArrayList<>();
-        mutations = new ArrayList<>();
         algoIsPausedProperty = new SimpleBooleanProperty(false);
         algoIsRunningProperty = new SimpleBooleanProperty(false);
         errorProperty = new SimpleStringProperty("");
+        endPredicates = new ArrayList<>();
+        mutations = new ArrayList<>();
         onAlgoFinished = finished -> {
-            // if finished -> the run is complete
-            // if !finished -> the run was paused
-            //TODO - figure it out
-            // evolutionAlgoCompletedProperty.set(true); //this is a headerController property
             algoIsRunningProperty.set(false);
-            appController.onFinishAlgorithm();
         };
         onAlgoFailed = throwable -> {
             algoIsRunningProperty.set(false);
@@ -193,7 +188,7 @@ public class RunAlgoController {
 
     @FXML
     void startAction(ActionEvent event) {
-        if (startedRun && !alertUser()) {
+        if (startedRun && !alertUserReRun()) {
             return;
         }
 
@@ -256,7 +251,7 @@ public class RunAlgoController {
                     updatedMutations,
                     engine.getEngineSettings().getInitialPopulationSize());
         } catch (Throwable e) {
-            errorLabel.setText(e.getMessage());
+            errorProperty.set(e.getMessage());
             return;
         }
 
@@ -273,9 +268,9 @@ public class RunAlgoController {
             mutationsBox.getChildren().add(mutationComponent);
             MutationController controller = loader.getController();
             controller.setTimeTable(engine.getTimeTable());
-            mutations.add(controller);
+            mutations.add(controller); //keeping a list of controllers
         } catch (IOException e) {
-            e.printStackTrace();
+            errorProperty.set(e.getMessage());
         }
     }
 
@@ -310,46 +305,49 @@ public class RunAlgoController {
     }
 
     private CrossoverInterface<TimeTableSolution> createCrossoverFromInput() {
-        EngineSettings<TimeTableSolution> previousSettings = engine.getEngineSettings();
-        CrossoverInterface<TimeTableSolution> updatedCrossover = null;
+        // if wasn't updated now, it remains unchanged
+        CrossoverInterface<TimeTableSolution> updatedCrossover = engine.getEngineSettings().getCrossover();
 
-        int numOfCuttingPoints = Integer.parseInt(cuttingPointsTextField.getText());
+        if (crossoverGroup.getSelectedToggle() != null) {
+            int numOfCuttingPoints = Integer.parseInt(cuttingPointsTextField.getText());
 
-        //radioButtons in crossover-toggle-group
-        if (dayTimeOrientedRadioButton.isSelected()) {
-            updatedCrossover = CrossoverFactory.createCrossoverFromInput(
-                    "daytimeoriented",
-                    numOfCuttingPoints,
-                    null,
-                    engine.getTimeTable());
-        } else if (teacherOrientedRadioButton.isSelected()) {
-            updatedCrossover = CrossoverFactory.createCrossoverFromInput(
-                    "aspectoriented",
-                    numOfCuttingPoints,
-                    Orientation.TEACHER,
-                    engine.getTimeTable());
-        } else if (classOrientedRadioButton.isSelected()) {
-            updatedCrossover = CrossoverFactory.createCrossoverFromInput(
-                    "aspectoriented",
-                    numOfCuttingPoints,
-                    Orientation.CLASS,
-                    engine.getTimeTable());
-        } else {
-            // if nothing was selected from this toggle-group, it remains unchanged from previous settings
-            updatedCrossover = engine.getEngineSettings().getCrossover();
+            //radioButtons in crossover-toggle-group, so only one can be selected
+            if (dayTimeOrientedRadioButton.isSelected()) {
+                updatedCrossover = CrossoverFactory.createCrossoverFromInput(
+                        "daytimeoriented",
+                        numOfCuttingPoints,
+                        null,
+                        engine.getTimeTable());
+            } else if (teacherOrientedRadioButton.isSelected()) {
+                updatedCrossover = CrossoverFactory.createCrossoverFromInput(
+                        "aspectoriented",
+                        numOfCuttingPoints,
+                        Orientation.TEACHER,
+                        engine.getTimeTable());
+            } else if (classOrientedRadioButton.isSelected()) {
+                updatedCrossover = CrossoverFactory.createCrossoverFromInput(
+                        "aspectoriented",
+                        numOfCuttingPoints,
+                        Orientation.CLASS,
+                        engine.getTimeTable());
+            }
         }
 
         return updatedCrossover;
     }
 
     private List<Mutation<TimeTableSolution>> createMutationListFromInput() {
-        return mutations
+        List<Mutation<TimeTableSolution>> prevMutationList = engine.getEngineSettings().getMutations();
+
+        List<Mutation<TimeTableSolution>> updatedMutationList = mutations
                 .stream()
                 .map(mutationController -> mutationController.getMutation())
                 .collect(Collectors.toList());
+
+        return (updatedMutationList.size() == 0) ? prevMutationList : updatedMutationList;
     }
 
-    private boolean alertUser() {
+    private boolean alertUserReRun() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Dialog");
         alert.setHeaderText("The evolution-algorithm previously ran.");
@@ -394,8 +392,9 @@ public class RunAlgoController {
 //            this.stride = controller.getStride();
 //            setPredicatesAccordingToDialogEndConditions(controller.getEndConditionTypePerValue());
 //
-            stride = 50;
-            endPredicates.add(new EndPredicate(EndConditionType.GENERATIONS, 2000));
+            stride = 20;
+//            endPredicates.add(new EndPredicate(EndConditionType.GENERATIONS, 2000));
+            endPredicates.add(new EndPredicate(EndConditionType.TIME, 2));
             endPredicates.add(new EndPredicate(EndConditionType.FITNESS, 96.8));
             bindProgressBars();
 

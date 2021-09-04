@@ -33,7 +33,6 @@ public class HeaderController {
     private Label taskMessageLabel;
 
     private final SimpleBooleanProperty fileLoadedProperty;
-    private final SimpleBooleanProperty evolutionAlgoCompletedProperty;
     private final SimpleStringProperty selectedFileProperty;
     private final TimeTableSolutionDTO solution = null;
     private AppController appController;
@@ -42,7 +41,6 @@ public class HeaderController {
     public HeaderController() {
         selectedFileProperty = new SimpleStringProperty("");
         fileLoadedProperty = new SimpleBooleanProperty(false);
-        evolutionAlgoCompletedProperty = new SimpleBooleanProperty(false);
     }
 
     public void setAppController(AppController appController) {
@@ -65,8 +63,6 @@ public class HeaderController {
         runEngineButton.disableProperty().bind(fileLoadedProperty.not());
 //        bestSolutionButton.disableProperty().bind(evolutionAlgoCompletedProperty.not());
         bestSolutionButton.setDisable(true);
-        //TODO delete:
-        historyButton.disableProperty().bind(evolutionAlgoCompletedProperty.not());
     }
 
     @FXML
@@ -139,10 +135,8 @@ public class HeaderController {
         this.taskMessageLabel.textProperty().unbind();
     }
 
-    public void onAlgorithmFinished() {
-        evolutionAlgoCompletedProperty.set(true);
-    }
-    //TODO add UIAdaptor and use it in loadXMLTask (better for later use of task in Ex. 3)
+    // NOTE TO SELF:
+    // UIAdaptor and use it in loadXMLTask (better for later use of task in Ex. 3)
     ///uiAdaptor - the way in which the task reports its data back to the UI
     // about 57 minutes into the recording!
 }

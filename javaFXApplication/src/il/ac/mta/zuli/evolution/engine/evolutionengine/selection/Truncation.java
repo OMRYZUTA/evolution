@@ -69,7 +69,7 @@ public class Truncation<S extends Solution> implements Selection<S> {
     }
 
     public void setElitism(int elitism) {
-        if (elitism > 0 && elitism <= populationSize) {
+        if (elitism >= 0 && elitism <= populationSize) {
             this.elitism = elitism;
         } else {
             throw new ValidationException("number of elitism given : " + elitism + " is out of range");

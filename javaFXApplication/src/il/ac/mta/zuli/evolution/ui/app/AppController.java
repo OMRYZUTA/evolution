@@ -85,8 +85,4 @@ public class AppController {
     public void updateBestSolution(TimeTableSolutionDTO solution){
         this.solution = solution;
     }
-
-    public void onFinishAlgorithm() {
-        headerComponentController.onAlgorithmFinished();
-    }
 }
