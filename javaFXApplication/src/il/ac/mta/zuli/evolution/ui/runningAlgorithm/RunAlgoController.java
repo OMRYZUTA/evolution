@@ -49,7 +49,7 @@ public class RunAlgoController {
     @FXML
     private Button stopButton;
     @FXML
-    private ScrollPane updateSettingsScrollPane;
+    private GridPane updateSettingsGridPane;
     @FXML
     private Button engineSettingsSaveButton;
     @FXML
@@ -152,7 +152,7 @@ public class RunAlgoController {
         resumeButton.disableProperty().bind(algoIsPausedProperty.not()); // resume is disabled when the algo is *not* paused
         stopButton.disableProperty().bind(algoIsRunningProperty.not());  // stop is disabled when algo is *not* running
         errorLabel.textProperty().bind(errorProperty);
-        updateSettingsScrollPane.disableProperty().bind(algoIsPausedProperty.not());
+        updateSettingsGridPane.disableProperty().bind(algoIsRunningProperty);
         //Todo ask omry
         engineSettingsSaveButton.addEventFilter(ActionEvent.ACTION, event -> {
 //            if (validateAndStoreEngineSettings() == null) {
