@@ -20,7 +20,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -88,7 +87,6 @@ public class RunAlgoController {
     private final SimpleBooleanProperty algoIsPausedProperty;
     private final SimpleBooleanProperty algoIsRunningProperty;
     private final SimpleStringProperty errorProperty;
-    private final SimpleIntegerProperty elitismProperty;
     private final List<EndPredicate> endPredicates;
     private final List<MutationController> mutations; // mutations added instead of previous mutations in engineSettings
     private final Consumer<Boolean> onAlgoFinished;
@@ -103,7 +101,6 @@ public class RunAlgoController {
         algoIsPausedProperty = new SimpleBooleanProperty(false);
         algoIsRunningProperty = new SimpleBooleanProperty(false);
         errorProperty = new SimpleStringProperty("");
-        elitismProperty = new SimpleIntegerProperty(0);
         endPredicates = new ArrayList<>();
         mutations = new ArrayList<>();
 
@@ -259,7 +256,7 @@ public class RunAlgoController {
 
         if (elitismCheckbox.isSelected()) {
             //relevant for both types of selection (if left empty we get 0?)
-            elitism = Integer.parseInt(elitismTextField.getText());
+            elitism = isNullOrEmpty(elitismTextField.getText()) ? 0 : Integer.parseInt(elitismTextField.getText());
         }
 
         //rouletteWheelRadioButton and truncationRadioButton are in the same toggle-group, one-at-most can be selected
@@ -269,7 +266,7 @@ public class RunAlgoController {
                     previousSettings.getInitialPopulationSize(),
                     elitism, 0); //topPercent NA for rouletteWheel
         } else if (truncationRadioButton.isSelected()) {
-            int topPercent = Integer.parseInt(topPercentTextField.getText());
+            int topPercent = isNullOrEmpty(topPercentTextField.getText()) ? 0 : Integer.parseInt(topPercentTextField.getText());
             updatedSelection = SelectionFactory.createSelectionFromInput(
                     "truncation",
                     previousSettings.getInitialPopulationSize(),
@@ -287,7 +284,7 @@ public class RunAlgoController {
         CrossoverInterface<TimeTableSolution> updatedCrossover = engine.getEngineSettings().getCrossover();
 
         if (crossoverGroup.getSelectedToggle() != null) {
-            int numOfCuttingPoints = Integer.parseInt(cuttingPointsTextField.getText());
+            int numOfCuttingPoints = isNullOrEmpty(cuttingPointsTextField.getText()) ? 0 : Integer.parseInt(cuttingPointsTextField.getText());
 
             //radioButtons in crossover-toggle-group, so only one can be selected
             if (dayTimeOrientedRadioButton.isSelected()) {
@@ -416,5 +413,13 @@ public class RunAlgoController {
                     break;
             }
         }
+    }
+
+    private boolean isNullOrEmpty(String str) {
+        if (str == null) {
+            return true;
+        }
+
+        return str.trim().isEmpty();
     }
 }

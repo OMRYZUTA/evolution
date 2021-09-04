@@ -31,7 +31,7 @@ public class EvolutionState {
     }
 
     public List<TimeTableSolution> getGenerationSolutions() {
-        return Collections.unmodifiableList(solutions);
+        return solutions;
     }
 
     public TimeTableSolution getGenerationBestSolution() {
