@@ -32,4 +32,12 @@ public class FXutils {
 
         return null;
     }
+
+    public static boolean isNullOrEmpty(String str) {
+        if (str == null) {
+            return true;
+        }
+
+        return str.trim().isEmpty();
+    }
 }

@@ -12,6 +12,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.SelectionFactory;
 import il.ac.mta.zuli.evolution.engine.predicates.EndConditionType;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
+import il.ac.mta.zuli.evolution.ui.FXutils;
 import il.ac.mta.zuli.evolution.ui.app.AppController;
 import il.ac.mta.zuli.evolution.ui.endConditions.EndConditionsController;
 import il.ac.mta.zuli.evolution.ui.runningAlgorithm.mutation.MutationController;
@@ -153,13 +154,6 @@ public class RunAlgoController {
         stopButton.disableProperty().bind(algoIsRunningProperty.not());  // stop is disabled when algo is *not* running
         errorLabel.textProperty().bind(errorProperty);
         updateSettingsGridPane.disableProperty().bind(algoIsRunningProperty);
-        //Todo ask omry
-        engineSettingsSaveButton.addEventFilter(ActionEvent.ACTION, event -> {
-//            if (validateAndStoreEngineSettings() == null) {
-//                event.consume();
-//            }
-        });
-
         generationProgressComponentController.setTitle("Generation:");
         fitnessProgressComponentController.setTitle("Fitness Score:");
         timeProgressComponentController.setTitle("Time:");
@@ -231,6 +225,26 @@ public class RunAlgoController {
         } catch (Throwable e) {
             errorProperty.set("failed saving engine settings: " + e.getMessage());
         }
+        clearSettings();
+    }
+
+    private void clearSettings() {
+        //selection
+        elitismCheckbox.setSelected(false);
+        elitismTextField.clear();
+        truncationRadioButton.setSelected(false);
+        topPercentTextField.clear();
+        rouletteWheelRadioButton.setSelected(false);
+
+        //crossover
+        dayTimeOrientedRadioButton.setSelected(false);
+        classOrientedRadioButton.setSelected(false);
+        teacherOrientedRadioButton.setSelected(false);
+        cuttingPointsTextField.clear();
+
+        //mutations
+        mutationsBox.getChildren().clear();
+        mutations.clear();
     }
 
     @FXML
@@ -256,7 +270,7 @@ public class RunAlgoController {
 
         if (elitismCheckbox.isSelected()) {
             //relevant for both types of selection (if left empty we get 0?)
-            elitism = isNullOrEmpty(elitismTextField.getText()) ? 0 : Integer.parseInt(elitismTextField.getText());
+            elitism = FXutils.isNullOrEmpty(elitismTextField.getText()) ? 0 : Integer.parseInt(elitismTextField.getText());
         }
 
         //rouletteWheelRadioButton and truncationRadioButton are in the same toggle-group, one-at-most can be selected
@@ -266,7 +280,7 @@ public class RunAlgoController {
                     previousSettings.getInitialPopulationSize(),
                     elitism, 0); //topPercent NA for rouletteWheel
         } else if (truncationRadioButton.isSelected()) {
-            int topPercent = isNullOrEmpty(topPercentTextField.getText()) ? 0 : Integer.parseInt(topPercentTextField.getText());
+            int topPercent = FXutils.isNullOrEmpty(topPercentTextField.getText()) ? 0 : Integer.parseInt(topPercentTextField.getText());
             updatedSelection = SelectionFactory.createSelectionFromInput(
                     "truncation",
                     previousSettings.getInitialPopulationSize(),
@@ -284,7 +298,7 @@ public class RunAlgoController {
         CrossoverInterface<TimeTableSolution> updatedCrossover = engine.getEngineSettings().getCrossover();
 
         if (crossoverGroup.getSelectedToggle() != null) {
-            int numOfCuttingPoints = isNullOrEmpty(cuttingPointsTextField.getText()) ? 0 : Integer.parseInt(cuttingPointsTextField.getText());
+            int numOfCuttingPoints = FXutils.isNullOrEmpty(cuttingPointsTextField.getText()) ? 0 : Integer.parseInt(cuttingPointsTextField.getText());
 
             //radioButtons in crossover-toggle-group, so only one can be selected
             if (dayTimeOrientedRadioButton.isSelected()) {
@@ -412,13 +426,5 @@ public class RunAlgoController {
                     break;
             }
         }
-    }
-
-    private boolean isNullOrEmpty(String str) {
-        if (str == null) {
-            return true;
-        }
-
-        return str.trim().isEmpty();
     }
 }

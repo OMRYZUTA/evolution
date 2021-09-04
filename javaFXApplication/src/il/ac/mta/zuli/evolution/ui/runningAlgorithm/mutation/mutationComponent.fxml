@@ -16,11 +16,11 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-            <ColumnConstraints hgrow="SOMETIMES" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
@@ -40,13 +40,15 @@
                     </toggleGroup>
                 </RadioButton>
                 <Label alignment="CENTER" text="Propabilty:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                <TextField fx:id="flippingPropabiltyTextField" prefWidth="40.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                <TextField fx:id="flippingProbabilityTextField" prefWidth="40.0" GridPane.columnIndex="3"
+                           GridPane.rowIndex="1"/>
                 <Label alignment="CENTER" text="Max Tuples:" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                 <TextField fx:id="flippingTuplesTextField" prefWidth="40.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                 <ChoiceBox fx:id="flippingChoiceBox" GridPane.columnIndex="7" GridPane.rowIndex="1" />
                 <RadioButton fx:id="sizerRadioButton" mnemonicParsing="false" text="Sizer" toggleGroup="$mutationGroup" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                 <Label text="Propabilty:" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                <TextField fx:id="sizerPropabiltyTextField" prefWidth="40.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                <TextField fx:id="sizerProbabilityTextField" prefWidth="40.0" GridPane.columnIndex="3"
+                           GridPane.rowIndex="3"/>
                 <Label alignment="CENTER" text="Total Tuples:" GridPane.columnIndex="4" GridPane.rowIndex="3" />
                 <TextField fx:id="sizerTuplesTextField" prefWidth="40.0" GridPane.columnIndex="5" GridPane.rowIndex="3" />
             <Label text="Component:" GridPane.columnIndex="6" GridPane.rowIndex="1" />

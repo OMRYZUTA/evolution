@@ -5,12 +5,14 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.ComponentName;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.MutationFactory;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
+import il.ac.mta.zuli.evolution.ui.FXutils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 
 public class MutationController {
@@ -22,19 +24,22 @@ public class MutationController {
     private RadioButton flippingRadioButton;
 
     @FXML
-    private RadioButton sizerRadioButton;
+    private ToggleGroup mutationGroup;
 
     @FXML
     private TextField flippingProbabilityTextField;
-
-    @FXML
-    private TextField sizerProbabilityTextField;
 
     @FXML
     private TextField flippingTuplesTextField;
 
     @FXML
     private ChoiceBox<ComponentName> flippingChoiceBox;
+
+    @FXML
+    private RadioButton sizerRadioButton;
+
+    @FXML
+    private TextField sizerProbabilityTextField;
 
     @FXML
     private TextField sizerTuplesTextField;
@@ -54,14 +59,14 @@ public class MutationController {
 
     public Mutation<TimeTableSolution> getMutation() {
         if (flippingRadioButton.isSelected()) {
-            double probability = Double.parseDouble(flippingProbabilityTextField.getText());
-            int maxTuples = Integer.parseInt(flippingTuplesTextField.getText(), 10);
+            double probability = FXutils.isNullOrEmpty(flippingProbabilityTextField.getText()) ? -1d : Double.parseDouble(flippingProbabilityTextField.getText());
+            int maxTuples = FXutils.isNullOrEmpty(flippingTuplesTextField.getText()) ? -1 : Integer.parseInt(flippingTuplesTextField.getText(), 10);
             return MutationFactory.createMutationFromInput("flipping", timeTable, probability, maxTuples, flippingChoiceBox.getValue());
         }
 
         if (sizerRadioButton.isSelected()) {
-            double probability = Double.parseDouble(sizerProbabilityTextField.getText());
-            int totalTuples = Integer.parseInt(sizerTuplesTextField.getText(), 10);
+            double probability = FXutils.isNullOrEmpty(sizerProbabilityTextField.getText()) ? -1d : Double.parseDouble(sizerProbabilityTextField.getText());
+            int totalTuples = FXutils.isNullOrEmpty(sizerTuplesTextField.getText()) ? -1 : Integer.parseInt(sizerTuplesTextField.getText(), 10);
             return MutationFactory.createMutationFromInput("sizer", timeTable, probability, totalTuples, null);
         }
 
