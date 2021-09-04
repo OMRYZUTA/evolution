@@ -6,7 +6,7 @@ import il.ac.mta.zuli.evolution.ui.app.AppController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import org.fxmisc.cssfx.CSSFX;
 
@@ -27,7 +27,7 @@ public class Program extends Application {
         // load main fxml
         URL mainFXML = getClass().getResource("/il/ac/mta/zuli/evolution/ui/app/app.fxml");
         loader.setLocation(mainFXML);
-        BorderPane root = loader.load();
+        ScrollPane root = loader.load();
 
         // wire up controller
         AppController appController = loader.getController();
