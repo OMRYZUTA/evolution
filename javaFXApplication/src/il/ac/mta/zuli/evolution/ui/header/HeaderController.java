@@ -24,9 +24,6 @@ public class HeaderController {
     private Button bestSolutionButton;
 
     @FXML
-    private Button historyButton;
-
-    @FXML
     private Label selectedFileNameLabel;
 
     @FXML
@@ -116,10 +113,6 @@ public class HeaderController {
         DescriptorDTO descriptorDTO = engine.getDescriptorDTO();
         TimeTableDTO solutionDTO = descriptorDTO.getTimeTable();
         this.appController.displaySolution(solutionDTO);
-    }
-
-    @FXML
-    public void historyAction() {
     }
 
     //in the recording about 26 minutes in
