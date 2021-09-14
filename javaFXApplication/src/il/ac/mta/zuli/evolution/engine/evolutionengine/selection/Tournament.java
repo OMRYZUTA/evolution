@@ -6,6 +6,7 @@ import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTSelection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Tournament<S extends Solution> implements Selection<S> {
     // <ETT-Selection type="Tournament" configuration="pte=0.7">
@@ -15,6 +16,7 @@ public class Tournament<S extends Solution> implements Selection<S> {
     private double PTE; //Predefined tournament equalizer , between 0-1
     private int elitism;
     private final int populationSize;
+    private final Random random;
 
     public Tournament(ETTSelection ettSelection, int populationSize) {
         this.populationSize = populationSize;
@@ -23,12 +25,14 @@ public class Tournament<S extends Solution> implements Selection<S> {
         if (ettSelection.getETTElitism() != null) {
             setElitism(ettSelection.getETTElitism());
         }// else elitism is initialized to zero anyway
+        random = new Random();
     }
 
     public Tournament(double pte, int populationSize, int elitism) {
         this.populationSize = populationSize;
         setPTE(pte);
         setElitism(elitism);
+        random = new Random();
     }
 
     public void setPTE(double pte) {
@@ -60,16 +64,34 @@ public class Tournament<S extends Solution> implements Selection<S> {
 
     @Override
     public List<S> select(List<S> solutions) {
-        //select number of parents as size of population
-        //randomly select 2 parents
-        //generate random number between 0-1
-        //if num > PTE select the parent with higher fitness score
-        // if num < PTE select the parent with lower fitness score
-
+        S parent1, parent2, higherScoreParent, lowerScoreParent;
         List<S> selectedParents = new ArrayList<>();
         int populationSize = solutions.size();
 
-        return null;
+        while (selectedParents.size() < populationSize) {
+            parent1 = randomlySelectParent(solutions);
+            parent2 = randomlySelectParent(solutions);
+
+            if (parent1.getTotalFitnessScore() > parent2.getTotalFitnessScore()) {
+                higherScoreParent = parent1;
+                lowerScoreParent = parent2;
+            } else {
+                higherScoreParent = parent2;
+                lowerScoreParent = parent1;
+            }
+            Double randomNum = random.nextDouble();
+            if (randomNum >= PTE) {
+                selectedParents.add(higherScoreParent);
+            } else {
+                selectedParents.add(lowerScoreParent);
+            }
+        }
+        return selectedParents;
+    }
+
+    private S randomlySelectParent(List<S> solutions) {
+        int randomIndex = new Random().nextInt(solutions.size());
+        return solutions.get(randomIndex);
     }
 
     public void setElitism(int elitism) {

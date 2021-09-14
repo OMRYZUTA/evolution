@@ -280,13 +280,13 @@ public class RunAlgoController {
             updatedSelection = SelectionFactory.createSelectionFromInput(
                     "rouletteWheel",
                     previousSettings.getInitialPopulationSize(),
-                    elitism, 0); //topPercent NA for rouletteWheel
+                    elitism, 0,0); //topPercent NA for rouletteWheel
         } else if (truncationRadioButton.isSelected()) {
             int topPercent = FXutils.isNullOrEmpty(topPercentTextField.getText()) ? 0 : Integer.parseInt(topPercentTextField.getText());
             updatedSelection = SelectionFactory.createSelectionFromInput(
                     "truncation",
                     previousSettings.getInitialPopulationSize(),
-                    elitism, topPercent);
+                    elitism, topPercent,0);
         } else {
             // if nothing was selected from this toggle-group, it remains unchanged from previous settings
             updatedSelection = engine.getEngineSettings().getSelection();

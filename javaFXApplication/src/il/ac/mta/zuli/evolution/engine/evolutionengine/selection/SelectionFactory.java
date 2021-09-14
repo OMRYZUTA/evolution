@@ -11,17 +11,21 @@ public class SelectionFactory<T extends Solution> {
                 return new Truncation(ettSelection, populationSize);
             case "roulettewheel":
                 return new RouletteWheel(ettSelection, populationSize);
+            case "tournament":
+                return new Tournament(ettSelection,populationSize);
             default:
                 throw new ValidationException("Invalid selection type (for ex. 3)");
         }
     }
 
-    public static Selection createSelectionFromInput(String selectionType, int populationSize, int elitism, int topPercent) {
+    public static Selection createSelectionFromInput(String selectionType, int populationSize, int elitism, int topPercent, int pte) {
         switch (selectionType.toLowerCase()) {
             case "truncation":
                 return new Truncation(topPercent, populationSize, elitism);
             case "roulettewheel":
                 return new RouletteWheel(populationSize, elitism);
+            case "tournament":
+                return  new Tournament(pte,populationSize,elitism);
             default:
                 throw new ValidationException("Invalid selection type (for ex. 3)");
         }
