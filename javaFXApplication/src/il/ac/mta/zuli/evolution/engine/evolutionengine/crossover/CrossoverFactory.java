@@ -16,7 +16,7 @@ public class CrossoverFactory {
                 //parseOrientationFromConfiguration method checked for valid orientation
                 return new AspectOriented<TimeTableSolution>(ettCrossover.getCuttingPoints(), orientation, timeTable);
             default:
-                throw new ValidationException("Invalid crossover type for ex. 2");
+                throw new ValidationException("Invalid crossover type for ex. 3");
         }
     }
 
@@ -31,7 +31,7 @@ public class CrossoverFactory {
             case "aspectoriented":
                 return new AspectOriented<TimeTableSolution>(numOfCuttingPoints, orientation, timeTable);
             default:
-                throw new ValidationException("Invalid crossover type for ex. 2");
+                throw new ValidationException("Invalid crossover type for ex. 3");
         }
     }
 

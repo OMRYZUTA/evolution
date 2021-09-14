@@ -65,8 +65,6 @@ public class EngineSettings<T extends Solution> {
             mutations.add(MutationFactory.createMutation(ettMutation, timeTable));
         }
     }
-
-
     //#endregion
 
     //#region getters

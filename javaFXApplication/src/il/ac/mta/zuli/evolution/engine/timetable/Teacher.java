@@ -11,12 +11,24 @@ import java.util.*;
 public class Teacher {
     private int id;
     private String name;
+    private int workingHours;
     private Map<Integer, Subject> subjects; //the subjects the teacher teaches
 
     public Teacher(@NotNull ETTTeacher t, @NotNull Map<Integer, Subject> existingSubjects) {
         setName(t.getETTName());
         setId(t.getId());
+//        setWorkingHours(t.getETTWorkingHours()); //todo: return to this later
         setSubjects(t.getETTTeaching().getETTTeaches(), existingSubjects);
+    }
+
+    private void setWorkingHours(int ettWorkingHours) {
+        if (ettWorkingHours > 0) {
+            this.workingHours = ettWorkingHours;
+        } else {
+            throw new ValidationException("The number of working hours for "
+                    + this.name +
+                    " must be a positive number.");
+        }
     }
 
     public int getId() {
@@ -58,6 +70,11 @@ public class Teacher {
     public Map<Integer, Subject> getSubjects() {
         return Collections.unmodifiableMap(subjects);
     }
+
+    //todo: restore later
+//    public int getWorkingHours() {
+//        return workingHours;
+//    }
 
     @Override
     public String toString() {

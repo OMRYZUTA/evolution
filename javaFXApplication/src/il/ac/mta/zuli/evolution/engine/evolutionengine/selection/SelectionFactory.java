@@ -12,7 +12,7 @@ public class SelectionFactory<T extends Solution> {
             case "roulettewheel":
                 return new RouletteWheel(ettSelection, populationSize);
             default:
-                throw new ValidationException("Invalid selection type (for ex. 2)");
+                throw new ValidationException("Invalid selection type (for ex. 3)");
         }
     }
 
@@ -23,7 +23,7 @@ public class SelectionFactory<T extends Solution> {
             case "roulettewheel":
                 return new RouletteWheel(populationSize, elitism);
             default:
-                throw new ValidationException("Invalid selection type (for ex. 2)");
+                throw new ValidationException("Invalid selection type (for ex. 3)");
         }
     }
 
