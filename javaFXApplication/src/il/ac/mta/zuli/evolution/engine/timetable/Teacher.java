@@ -71,10 +71,9 @@ public class Teacher {
         return Collections.unmodifiableMap(subjects);
     }
 
-    //todo: restore later
-//    public int getWorkingHours() {
-//        return workingHours;
-//    }
+    public int getWorkingHours() {
+        return workingHours;
+    }
 
     @Override
     public String toString() {
