@@ -1,1 +1,1 @@
-xjc -p il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2 ETT-V2.xsd
+xjc -p il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex3 ETT-V3.xsd
