@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/evolution_web_app/evolution_web_app.iml" filepath="$PROJECT_DIR$/evolution_web_app/evolution_web_app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/evolution_web_app/frontend.iml" filepath="$PROJECT_DIR$/evolution_web_app/frontend.iml" />
       <module fileurl="file://$PROJECT_DIR$/javaFXApplication/javaFXApplication.iml" filepath="$PROJECT_DIR$/javaFXApplication/javaFXApplication.iml" />
+      <module fileurl="file://$PROJECT_DIR$/untitled/tomcat.iml" filepath="$PROJECT_DIR$/untitled/tomcat.iml" />
     </modules>
   </component>
 </project>
