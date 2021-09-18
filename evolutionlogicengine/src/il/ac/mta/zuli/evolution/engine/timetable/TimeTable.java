@@ -2,7 +2,8 @@ package il.ac.mta.zuli.evolution.engine.timetable;
 
 import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
-import il.ac.mta.zuli.evolution.engine.rules.*;
+import il.ac.mta.zuli.evolution.engine.rules.Rule;
+import il.ac.mta.zuli.evolution.engine.rules.RuleFactory;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.*;
 import org.jetbrains.annotations.NotNull;
 
