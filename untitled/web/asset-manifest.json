@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/tomcat_Web_exploded/static/css/main.a617e044.chunk.css",
+    "main.js": "/tomcat_Web_exploded/static/js/main.2edfb4b0.chunk.js",
+    "main.js.map": "/tomcat_Web_exploded/static/js/main.2edfb4b0.chunk.js.map",
+    "runtime-main.js": "/tomcat_Web_exploded/static/js/runtime-main.5f9bfc35.js",
+    "runtime-main.js.map": "/tomcat_Web_exploded/static/js/runtime-main.5f9bfc35.js.map",
+    "static/js/2.36c876af.chunk.js": "/tomcat_Web_exploded/static/js/2.36c876af.chunk.js",
+    "static/js/2.36c876af.chunk.js.map": "/tomcat_Web_exploded/static/js/2.36c876af.chunk.js.map",
+    "static/js/3.381493e5.chunk.js": "/tomcat_Web_exploded/static/js/3.381493e5.chunk.js",
+    "static/js/3.381493e5.chunk.js.map": "/tomcat_Web_exploded/static/js/3.381493e5.chunk.js.map",
+    "index.html": "/tomcat_Web_exploded/index.html",
+    "static/css/main.a617e044.chunk.css.map": "/tomcat_Web_exploded/static/css/main.a617e044.chunk.css.map",
+    "static/js/2.36c876af.chunk.js.LICENSE.txt": "/tomcat_Web_exploded/static/js/2.36c876af.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/tomcat_Web_exploded/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5f9bfc35.js",
+    "static/js/2.36c876af.chunk.js",
+    "static/css/main.a617e044.chunk.css",
+    "static/js/main.2edfb4b0.chunk.js"
+  ]
+}
