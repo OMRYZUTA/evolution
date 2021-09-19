@@ -9,6 +9,7 @@
         <webroots>
           <root url="file://$MODULE_DIR$" relative="/" />
         </webroots>
+        <sourceRoots />
       </configuration>
     </facet>
   </component>
@@ -22,6 +23,5 @@
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Tomcat 8.5.23" level="application_server_libraries" />
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
-    <orderEntry type="library" name="gson-2.1-javadoc" level="project" />
   </component>
 </module>
