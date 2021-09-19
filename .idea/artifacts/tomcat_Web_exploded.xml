@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="tomcat:Web exploded">
+  <artifact type="exploded-war" name="tomcat_Web_exploded">
     <output-path>$PROJECT_DIR$/out/artifacts/tomcat_Web_exploded</output-path>
     <root id="root">
       <element id="javaee-facet-resources" facet="tomcat/web/Web" />

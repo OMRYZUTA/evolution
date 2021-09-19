@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     <servlet>
-        <servlet-name>LoginServlet</servlet-name>
+        <servlet-name>loginServlet</servlet-name>
         <servlet-class>servlets.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/api/login</url-pattern>
+        <servlet-name>loginServlet</servlet-name>
+        <url-pattern>/api/login/</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -106,7 +106,7 @@ public class TimeTable {
             }
 
             try {
-                Teacher teacher = new Teacher(t, this.subjects);
+                Teacher teacher = new Teacher(t, this.subjects, days, hours);
                 this.teachers.put(t.getId(), teacher);
             } catch (ValidationException e) {
                 throw new ValidationException("Failed creating teacher " + t.getId() + ", " + t.getETTName(), e);
@@ -174,7 +174,7 @@ public class TimeTable {
         Rule ruleToAdd;
 
         for (ETTRule rule : ruleList) {
-            ruleToAdd = RuleFactory.createRule(rule,days,new ArrayList<>(this.teachers.values()),new ArrayList<>(this.schoolClasses.values()));
+            ruleToAdd = RuleFactory.createRule(rule, days, new ArrayList<>(this.teachers.values()), new ArrayList<>(this.schoolClasses.values()));
             //add returns false if element already exists in set
             if (!this.rules.add(ruleToAdd)) {
                 throw new ValidationException("Failed to add rule " + rule.getETTRuleId() + ". Duplicate rules are not permitted");

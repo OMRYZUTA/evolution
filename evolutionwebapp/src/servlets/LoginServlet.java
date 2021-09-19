@@ -1,11 +1,15 @@
 package servlets;
 
+import com.google.gson.Gson;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-//import com.google.gson.Gson;
+import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Set;
 
 public class LoginServlet extends HttpServlet {
     private final String SIGN_UP_URL = "../signup/signup.html";
@@ -24,13 +28,15 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("application/json");
         System.out.println("in loginServlet processRequest");
 
-//        Gson gson = new Gson();
-//        String jsonResponse = gson.toJson(cav);
-//
-//        try (PrintWriter out = response.getWriter()) {
-//            out.print(jsonResponse);
-//            out.flush();
-//        }
+        Set<String> result =new HashSet<>();
+        result.add("User Exist");
+        Gson gson = new Gson();
+        String jsonResponse = gson.toJson(result);
+
+        try (PrintWriter out = response.getWriter()) {
+            out.print(jsonResponse);
+            out.flush();
+        }
 
 
 //        String usernameFromSession = SessionUtils.getUsername(request);

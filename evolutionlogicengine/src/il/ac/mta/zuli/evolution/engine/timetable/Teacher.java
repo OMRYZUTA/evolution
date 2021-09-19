@@ -13,21 +13,25 @@ public class Teacher {
     private String name;
     private int workingHours;
     private Map<Integer, Subject> subjects; //the subjects the teacher teaches
+    private final int days;
+    private final int hours;
 
-    public Teacher(@NotNull ETTTeacher t, @NotNull Map<Integer, Subject> existingSubjects) {
+    public Teacher(@NotNull ETTTeacher t, @NotNull Map<Integer, Subject> existingSubjects, int days, int hours) {
         setName(t.getETTName());
         setId(t.getId());
 //        setWorkingHours(t.getETTWorkingHours()); //todo: return to this later
         setSubjects(t.getETTTeaching().getETTTeaches(), existingSubjects);
+        this.days = days;
+        this.hours = hours;
     }
 
     private void setWorkingHours(int ettWorkingHours) {
-        if (ettWorkingHours > 0) {
+        if (ettWorkingHours > 0 && ettWorkingHours <= days*hours) {
             this.workingHours = ettWorkingHours;
         } else {
             throw new ValidationException("The number of working hours for "
                     + this.name +
-                    " must be a positive number.");
+                    " must be in the range: 1 -"+days*hours);
         }
     }
 
