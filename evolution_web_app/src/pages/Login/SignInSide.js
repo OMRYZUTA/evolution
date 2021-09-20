@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,6 +11,9 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
+
+import * as UserServices from '../../services/UserServices'
+import axios from "axios";
 
 function Copyright(props) {
     return (
@@ -27,17 +30,21 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignInSide() {
+export default  function SignInSide() {
     const [userName, setUserName] = useState();
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         // eslint-disable-next-line no-console
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        console.log({user: userName});
+        const result = await UserServices.addNew(userName);
+        console.log(result);
     };
+
+    const handleUserNameChanged = (e)=>{
+        console.log(e.target.value);
+        setUserName(e.target.value);
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -83,6 +90,7 @@ export default function SignInSide() {
                                 name="userName"
                                 autoComplete="userName"
                                 autoFocus
+                                onChange = {handleUserNameChanged}
                             />
                             <Button
                                 type="submit"

@@ -20,7 +20,7 @@ export default function App() {
                     <Route exact path="/">
                         <Login />
                     </Route>
-                    <Route path="/login">
+                    <Route path="/userLogin">
                         <Login />
                     </Route>
                     <Route path="/dashboard">
