@@ -30,6 +30,7 @@ public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json");
+
         System.out.println("in loginServlet processRequest");
 
         Set<String> result = new HashSet<>();
