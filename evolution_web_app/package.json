@@ -1,7 +1,8 @@
 {
   "name": "evolution_web_app",
   "version": "0.1.0",
-  "homepage": "/tomcat_Web_exploded",
+  "homepage": "/server_Web_exploded",
+  "proxy": "http://localhost:8080/server_Web_exploded",
   "private": true,
   "dependencies": {
     "@emotion/core": "^10.1.1",

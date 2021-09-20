@@ -23,13 +23,13 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../gson-2.1.jar!/" />
+          <root url="jar://D:/downloads/gson/gson-2.1.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MODULE_DIR$/../../gson-2.1-javadoc.jar!/" />
+          <root url="jar://D:/downloads/gson/gson-2.1-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../gson-2.1-sources.jar!/" />
+          <root url="jar://D:/downloads/gson/gson-2.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
