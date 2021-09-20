@@ -104,3 +104,5 @@ fabric.properties
 node_modules/
 
 server.iml
+
+.idea/artifacts/server_Web_exploded.xml
