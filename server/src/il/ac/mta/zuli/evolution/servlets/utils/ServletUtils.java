@@ -1,6 +1,6 @@
-package utils;
+package il.ac.mta.zuli.evolution.servlets.utils;
 
-import users.UserManager;
+import il.ac.mta.zuli.evolution.users.UserManager;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -19,12 +19,13 @@ public class ServletUtils {
 	private static final Object chatManagerLock = new Object();
 
 	public static UserManager getUserManager(ServletContext servletContext) {
-
+		//UserManager is a singleton
 		synchronized (userManagerLock) {
 			if (servletContext.getAttribute("userManager") == null) {
 				servletContext.setAttribute("userManager", new UserManager());
 			}
 		}
+
 		return (UserManager) servletContext.getAttribute("userManager");
 	}
 

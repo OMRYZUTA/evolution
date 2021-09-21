@@ -1,4 +1,4 @@
-package users;
+package il.ac.mta.zuli.evolution.users;
 
 import java.util.Collections;
 import java.util.HashSet;

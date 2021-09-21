@@ -1,4 +1,4 @@
-package utils;
+package il.ac.mta.zuli.evolution.servlets.utils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

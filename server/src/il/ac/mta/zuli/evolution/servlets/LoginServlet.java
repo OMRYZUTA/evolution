@@ -1,9 +1,9 @@
-package servlets;
+package il.ac.mta.zuli.evolution.servlets;
 
 import com.google.gson.Gson;
-import users.UserManager;
-import utils.ServletUtils;
-import utils.SessionUtils;
+import il.ac.mta.zuli.evolution.servlets.utils.ServletUtils;
+import il.ac.mta.zuli.evolution.servlets.utils.SessionUtils;
+import il.ac.mta.zuli.evolution.users.UserManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -71,15 +71,17 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        processRequest(request, response);
         System.out.println("in loginServlet doPost");
 
         response.setContentType("text/html;charset=UTF-8");
         String usernameFromSession = SessionUtils.getUsername(request);
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
+
         if (usernameFromSession == null) {
             //user is not logged in yet
             String usernameFromParameter = request.getParameter("username");
+            System.out.println("parameter = " + usernameFromParameter);
+
             if (usernameFromParameter == null || usernameFromParameter.isEmpty()) {
                 //no username in session and no username in parameter -
                 //redirect back to the index page
