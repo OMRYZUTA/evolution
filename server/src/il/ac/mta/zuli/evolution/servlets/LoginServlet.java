@@ -20,7 +20,7 @@ import java.util.Set;
 @WebServlet(name = "il.ac.mta.zuli.evolution.servlets.LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
 
-    //    private final String CHAT_ROOM_URL = "../chatroom/chatroom.html";
+    private final String DASHBOARD_URL = "../../../evolution_web_app/src/pages/Dashboard";
     private final String SIGN_UP_URL = "../../../evolution_web_app/src/pages/signup/SignUp.js";
     private final String LOGIN_ERROR_URL = "/pages/loginerror/login_attempt_after_error.jsp";  // must start with '/' since will be used in request dispatcher...
 
@@ -129,13 +129,13 @@ public class LoginServlet extends HttpServlet {
 
                         //redirect the request to the chat room - in order to actually change the URL
                         System.out.println("On login, request URI is: " + request.getRequestURI());
-//                        response.sendRedirect(CHAT_ROOM_URL);
+                        response.sendRedirect(DASHBOARD_URL);
                     }
                 }
             }
         } else {
-            //user is already logged in
-//            response.sendRedirect(CHAT_ROOM_URL);
+//            user is already logged in
+            response.sendRedirect(DASHBOARD_URL);
         }
     }
 
