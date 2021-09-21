@@ -13,7 +13,8 @@ export async function getAll() {
 }
 
 export async function login(user) {
-    const result = await fetch("/login/", {
+    console.log("in login");
+    const result = await fetch("/server_Web_exploded/login", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -27,11 +28,11 @@ export async function login(user) {
 }
 
 export async function addNew(user) {
-    const result = await fetch("/login/", {
+    console.log("in addNew");
+    const result = await fetch("/server_Web_exploded/login", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer',

@@ -34,8 +34,6 @@ export default function SignInSide() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
         console.log({user: userName});
         const result = await UserServices.addNew(userName);
         console.log(result);
