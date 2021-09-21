@@ -34,13 +34,11 @@ export default function SignInSide() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log({user: userName});
         const result = await UserServices.addNew(userName);
         console.log(result);
     };
 
     const handleUserNameChanged = (e)=>{
-        console.log(e.target.value);
         setUserName(e.target.value);
     }
 
@@ -96,7 +94,6 @@ export default function SignInSide() {
                                 variant="contained"
                                 sx={{mt: 3, mb: 2}}
                                 onClick={() => {
-                                    console.log(userName)
                                 }}
                             >
                                 Sign In

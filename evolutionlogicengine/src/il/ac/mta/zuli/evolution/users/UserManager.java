@@ -10,27 +10,26 @@ Note that asking if a user exists (isUserExists) does not participate in the syn
 of the user of this class to handle the synchronization of isUserExists with other methods here on it's own
  */
 public class UserManager {
-//    private Set<User> users; //TODO adapt manager to User
+    private final Set<User> usersSet;
 
-    private final Set<String> usersSet;
 
     public UserManager() {
         usersSet = new HashSet<>();
     }
 
-    public synchronized void addUser(String username) {
-        usersSet.add(username);
+    public synchronized void addUser(User user) { //TODO throw exception if user already exists? (add user only called after isexist check)
+        usersSet.add(user);
     }
 
-    public synchronized void removeUser(String username) {
-        usersSet.remove(username);
+    public synchronized void removeUser(User user) {
+        usersSet.remove(user);
     }
 
-    public synchronized Set<String> getUsers() {
+    public synchronized Set<User> getUsers() {
         return Collections.unmodifiableSet(usersSet);
     }
 
-    public boolean isUserExists(String username) {
-        return usersSet.contains(username);
+    public boolean isUserExists(User user) {
+        return usersSet.contains(user);
     }
 }

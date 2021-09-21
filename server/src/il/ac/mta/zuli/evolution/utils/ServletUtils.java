@@ -67,11 +67,10 @@ public class ServletUtils {
 		return body;
 	}
 
-	public static Object getJson(HttpServletRequest request) throws IOException {
+	public static User getUserFromJson(HttpServletRequest request) throws IOException {
 		Gson g = new Gson();
-		g.fromJson(request.getReader(), User.class); //class of key-values
-
-		return null;
+		User newUser =g.fromJson(request.getReader(), User.class);
+		return newUser;
 	}
 
 //	public static ChatManager getChatManager(ServletContext servletContext) {

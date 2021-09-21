@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.servlets;
 
 import com.google.gson.Gson;
+import il.ac.mta.zuli.evolution.users.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +12,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
+
+import static il.ac.mta.zuli.evolution.utils.ServletUtils.getUserFromJson;
 
 
 @WebServlet(name = "il.ac.mta.zuli.evolution.servlets.LoginServlet", urlPatterns = "/login")
@@ -73,7 +76,18 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         System.out.println("in loginServlet doPost **********************");
         System.out.println(request);
-//        response.setContentType("text/html;charset=UTF-8");
+        User newUser = getUserFromJson(request);
+        System.out.println(newUser);
+        response.setContentType("application/json");
+
+
+        Gson gson = new Gson();
+        String jsonResponse = gson.toJson(newUser);
+
+        try (PrintWriter out = response.getWriter()) {
+            out.print(jsonResponse);
+            out.flush();
+        }
 //        String usernameFromSession = SessionUtils.getUsername(request);
 //        UserManager userManager = ServletUtils.getUserManager(getServletContext());
 //

@@ -16,7 +16,6 @@ public class User {
     // only we want to be able initially to create a descriptor only the Timetable without the enginesettings
 
 
-    //only reaching the User c'tor after validation that the name is unique
     public User(String username) {
         this.username = username;
         userEngines = new ArrayList<>();
@@ -39,5 +38,12 @@ public class User {
 
         User that = (User) obj;
         return username == that.username;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                '}';
     }
 }

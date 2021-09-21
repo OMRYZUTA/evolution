@@ -27,8 +27,8 @@ export async function login(user) {
     return result.data;
 }
 
-export async function addNew(user) {
-    console.log("in addNew");
+export async function addNew(username) {
+    const body = JSON.stringify({"username":username});
     const result = await fetch("/server_Web_exploded/login", {
         method: 'POST',
         headers: {
@@ -36,10 +36,21 @@ export async function addNew(user) {
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
-        body: JSON.stringify(user)
+        body: body
     });
-    console.log(result);
-    return result.data;
+    let responseBody;
+    if(result.headers.get("content-type").includes("application/json")){
+        responseBody = await result.json();
+    }
+    else{
+        responseBody = await result.text();
+    }
+    if (!result.ok){
+        throw  new Error("error") //todo create an exception that get the response.body , status code, status text
+    }
+
+
+    return responseBody ;
 }
 //
 // export async function update(app) {
