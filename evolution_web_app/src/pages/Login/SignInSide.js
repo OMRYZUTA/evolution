@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 
 import * as UserServices from '../../services/UserServices'
-import axios from "axios";
 
 function Copyright(props) {
     return (
@@ -30,8 +29,9 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default  function SignInSide() {
+export default function SignInSide() {
     const [userName, setUserName] = useState();
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -103,6 +103,13 @@ export default  function SignInSide() {
                             >
                                 Sign In
                             </Button>
+                            <Grid container>
+                                <Grid item>
+                                    <Link href="/signup" variant="body2">
+                                        {"Don't have an account? Sign Up"}
+                                    </Link>
+                                </Grid>
+                            </Grid>
                         </Box>
                     </Box>
                 </Grid>
