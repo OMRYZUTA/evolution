@@ -1,9 +1,10 @@
 package il.ac.mta.zuli.evolution.servlets;
 
 import com.google.gson.Gson;
-import il.ac.mta.zuli.evolution.servlets.utils.ServletUtils;
-import il.ac.mta.zuli.evolution.servlets.utils.SessionUtils;
+import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.users.UserManager;
+import il.ac.mta.zuli.evolution.utils.ServletUtils;
+import il.ac.mta.zuli.evolution.utils.SessionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,8 +17,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@WebServlet(name = "LoginServlet", urlPatterns = "/login")
+@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
+
+    //    private final String CHAT_ROOM_URL = "../chatroom/chatroom.html";
+    private final String SIGN_UP_URL = "../../../evolution_web_app/src/pages/signup/SignUp.js";
+    private final String LOGIN_ERROR_URL = "/pages/loginerror/login_attempt_after_error.jsp";  // must start with '/' since will be used in request dispatcher...
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -79,14 +84,14 @@ public class LoginServlet extends HttpServlet {
 
         if (usernameFromSession == null) {
             //user is not logged in yet
-            String usernameFromParameter = request.getParameter("username");
+            String usernameFromParameter = request.getParameter(Constants.USERNAME);
             System.out.println("parameter = " + usernameFromParameter);
 
             if (usernameFromParameter == null || usernameFromParameter.isEmpty()) {
                 //no username in session and no username in parameter -
                 //redirect back to the index page
                 //this return an HTTP code back to the browser telling it to load
-                response.sendRedirect("../../../evolution_web_app/src/pages/signup/SignUp.js");
+                response.sendRedirect(SIGN_UP_URL);
             } else {
                 //normalize the username value
                 usernameFromParameter = usernameFromParameter.trim();
@@ -120,7 +125,7 @@ public class LoginServlet extends HttpServlet {
                         //set the username in a session so it will be available on each request
                         //the true parameter means that if a session object does not exists yet
                         //create a new one
-//                        request.getSession(true).setAttribute(Constants.USERNAME, usernameFromParameter);
+                        request.getSession(true).setAttribute(Constants.USERNAME, usernameFromParameter);
 
                         //redirect the request to the chat room - in order to actually change the URL
                         System.out.println("On login, request URI is: " + request.getRequestURI());

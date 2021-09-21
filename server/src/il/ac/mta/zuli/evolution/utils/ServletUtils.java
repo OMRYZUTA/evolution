@@ -1,4 +1,4 @@
-package il.ac.mta.zuli.evolution.servlets.utils;
+package il.ac.mta.zuli.evolution.utils;
 
 import il.ac.mta.zuli.evolution.users.UserManager;
 
