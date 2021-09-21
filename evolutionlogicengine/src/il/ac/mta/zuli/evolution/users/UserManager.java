@@ -10,6 +10,7 @@ Note that asking if a user exists (isUserExists) does not participate in the syn
 of the user of this class to handle the synchronization of isUserExists with other methods here on it's own
  */
 public class UserManager {
+//    private Set<User> users; //TODO adapt manager to User
 
     private final Set<String> usersSet;
 

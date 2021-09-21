@@ -12,6 +12,20 @@ export async function getAll() {
     // }
 }
 
+export async function login(user) {
+    const result = await fetch("/login/", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(user)
+    });
+    console.log(result);
+    return result.data;
+}
+
 export async function addNew(user) {
     const result = await fetch("/login/", {
         method: 'POST',

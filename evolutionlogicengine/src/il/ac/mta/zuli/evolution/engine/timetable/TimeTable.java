@@ -5,11 +5,13 @@ import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.rules.RuleFactory;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.*;
+import il.ac.mta.zuli.evolution.users.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class TimeTable {
+    private User uploadedBy;
     private int days;
     private int hours;
     private Map<Integer, Teacher> teachers;
