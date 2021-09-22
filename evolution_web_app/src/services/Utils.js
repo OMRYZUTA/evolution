@@ -1,4 +1,4 @@
-export async function fetchWrapper(method, object, url) {
+export async function fetchWrapper(method, url, object) {
     const options = {
         method: method,
         headers: {

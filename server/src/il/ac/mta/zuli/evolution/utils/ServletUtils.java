@@ -36,7 +36,7 @@ public class ServletUtils {
 	}
 
 
-	public static UserManager getUserManager(ServletContext servletContext) {
+	public static UserManager getUserManager(ServletContext servletContext) throws IOException {
 		//UserManager is a singleton
 		synchronized (userManagerLock) {
 			if (servletContext.getAttribute("userManager") == null) {

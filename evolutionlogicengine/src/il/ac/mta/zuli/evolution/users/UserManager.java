@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.users;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -14,8 +15,10 @@ of the user of this class to handle the synchronization of isUserExists with oth
 public class UserManager {
     private final Set<User> usersSet;
 
-    public UserManager() {
+    public UserManager() throws IOException {
         usersSet = new HashSet<>();
+        usersSet.add(new User("Gary12432")); //TODO delete later, also delete all throws IOExceptions
+        usersSet.add(new User("Cupcake12321"));
     }
 
     public synchronized void addUser(User user) { //TODO throw exception if user already exists? (add user only called after isexist check)

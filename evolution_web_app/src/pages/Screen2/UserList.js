@@ -4,6 +4,9 @@ import {makeStyles} from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import {FixedSizeList} from 'react-window';
+import {List, ListItemAvatar} from "@material-ui/core";
+import Avatar from "@mui/material/Avatar";
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -14,29 +17,28 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function renderRow(props) {
-    const { index, style } = props;
 
-    return (
-        <ListItem button style={style} key={index}>
-            <ListItemText primary={`Item ${index + 1}`} />
-        </ListItem>
-    );
-}
-
-renderRow.propTypes = {
-    index: PropTypes.number.isRequired,
-    style: PropTypes.object.isRequired,
-};
-
-export default function VirtualizedList() {
+export default function UserList({users}) {
     const classes = useStyles();
-
+    console.log("in user list ");
+    console.log({users});
     return (
         <div className={classes.root}>
-            <FixedSizeList height={400} width={300} itemSize={46} itemCount={200}>
-                {renderRow}
-            </FixedSizeList>
+            <List>
+                {users.map(user => {
+                        return (<ListItem key = {user}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <PersonOutlinedIcon/>
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={console.log(user)||user}
+                            />
+                        </ListItem>)
+                    }
+                )}
+            </List>
         </div>
     );
 }

@@ -15,8 +15,10 @@ const Index = () => {
                 const [userList] = await Promise.all([
                     Screen2Services.getAll(),
                 ]);
-                setUsers(userList);
+                console.log({userList});
+                setUsers(userList.users);
             } catch (e) {
+                console.log(e);
                 // setAlertText('Failed initializing app, please reload page');
             } finally {
                 // setIsFetching(false);
@@ -24,11 +26,11 @@ const Index = () => {
         };
 
         fetchAllData();
+
     }, []);
 
     return (
-        <UserList/>
+        <UserList users ={users}/>
     )
 }
-
 export default Index;
