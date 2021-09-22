@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution.servlets;
 
-import com.google.gson.Gson;
 import il.ac.mta.zuli.evolution.TimetableManager;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,14 +34,8 @@ public class Screen2Servlet extends HttpServlet {
         Map<String, Object> mapForJSON = new HashMap<>();
         mapForJSON.put("users", usernames);
         mapForJSON.put("timetables", timetableSummaries);
-        response.setContentType("application/json");
-        Gson gson = new Gson();
-        String jsonResponse = gson.toJson(mapForJSON);
 
-        try (PrintWriter out = response.getWriter()) {
-            out.print(jsonResponse);
-            out.flush();
-        }
+        ServletUtils.sendJSONResponse(response, mapForJSON);
     }
 
     private List<TimetableSummary> summarizeTimetables(UserManager userManager, TimetableManager timetableManager) {
@@ -51,7 +43,6 @@ public class Screen2Servlet extends HttpServlet {
         List<TimeTable> timetables = timetableManager.getTimetables();
 
         return null;
-
     }
 
     @Override

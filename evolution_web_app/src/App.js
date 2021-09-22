@@ -2,8 +2,8 @@ import './App.css';
 import React from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Login from './pages/Login';
-import SignUp from './pages/signup/SignUp'
-import Dashboard from './pages/Dashboard'
+import SignUp from './pages/signup/SignUp' //TODO - delete later
+import Screen2 from './pages/Screen2'
 
 export default function App() {
     return (
@@ -27,8 +27,8 @@ export default function App() {
                     <Route path="/signup">
                         <SignUp/>
                     </Route>
-                    <Route path="/dashboard">
-                        <Dashboard/>
+                    <Route path="/screen2">
+                        <Screen2/>
                     </Route>
                 </Switch>
             </div>

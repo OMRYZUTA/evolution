@@ -6,8 +6,11 @@ import il.ac.mta.zuli.evolution.users.User;
 import il.ac.mta.zuli.evolution.users.UserManager;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +22,19 @@ public class ServletUtils {
 	 */
 	private static final Object userManagerLock = new Object();
 	private static final Object timetableManagerLock = new Object();
+
+	public static void sendJSONResponse(HttpServletResponse response, Object obj)
+			throws ServletException, IOException {
+		response.setContentType("application/json");
+		Gson gson = new Gson();
+		String jsonResponse = gson.toJson(obj);
+
+		try (PrintWriter out = response.getWriter()) {
+			out.print(jsonResponse);
+			out.flush();
+		}
+	}
+
 
 	public static UserManager getUserManager(ServletContext servletContext) {
 		//UserManager is a singleton

@@ -1,6 +1,7 @@
 import SignInSide from "./SignInSide";
 
 const Index = () => {
+
     return (
         <SignInSide/>
     )
