@@ -42,7 +42,12 @@ public class Screen2Servlet extends HttpServlet {
         List<TimetableSummary> newList = new ArrayList<>();
         List<TimeTable> timetables = timetableManager.getTimetables();
 
-        return null;
+        for (TimeTable t : timetables) {
+            newList.add(new TimetableSummary(t));
+        }
+
+        //TODO set maxFitness and how many users are solving
+        return newList;
     }
 
     @Override

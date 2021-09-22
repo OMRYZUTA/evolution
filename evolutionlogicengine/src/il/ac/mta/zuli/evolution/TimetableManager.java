@@ -7,7 +7,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class TimetableManager {
-    private final List<TimeTable> timetables; //for each valid xml uploaded, add a timetable to the collection
+//    the index in the array will serve as the ID of the timetable
+private final List<TimeTable> timetables; //for each valid xml uploaded, add a timetable to the collection
 
     public TimetableManager() {
         timetables = new ArrayList<>();
