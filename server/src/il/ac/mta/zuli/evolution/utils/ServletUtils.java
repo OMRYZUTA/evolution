@@ -10,6 +10,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ServletUtils {
@@ -69,8 +71,8 @@ public class ServletUtils {
 
 	public static User getUserFromJson(HttpServletRequest request) throws IOException {
 		Gson g = new Gson();
-		User newUser =g.fromJson(request.getReader(), User.class);
-		return newUser;
+		Map<String, Object> map =g.fromJson(request.getReader(), new HashMap<String,Object>().getClass());
+		return new User((String)map.get("username"));
 	}
 
 //	public static ChatManager getChatManager(ServletContext servletContext) {
