@@ -19,10 +19,8 @@ import java.util.Set;
 
 import static il.ac.mta.zuli.evolution.utils.ServletUtils.getUserFromJson;
 
-
 @WebServlet(name = "il.ac.mta.zuli.evolution.servlets.LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
-
     private final String DASHBOARD_URL = "../../../evolution_web_app/src/pages/Dashboard";
     private final String SIGN_UP_URL = "../../../evolution_web_app/src/pages/signup/SignUp.js";
 
@@ -78,42 +76,35 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String responseMessage=null;
-        try {
-            System.out.println("in loginServlet doPost **********************");
-            User newUser = getUserFromJson(request); //throws an exception , user can be invalid
+        String responseMessage = null;
 
+        try {
+            User newUser = getUserFromJson(request); //throws an exception , user can be invalid
             String usernameFromSession = SessionUtils.getUsername(request);
-            System.out.println("user from session" + usernameFromSession);
 
             if (usernameFromSession == null) {
                 //user is not logged in yet
-
                 UserManager userManager = ServletUtils.getUserManager(getServletContext());
                 synchronized (this) {
                     if (userManager.isUserExists(newUser)) {
                         responseMessage = Constants.USER_NAME_NOT_UNIQUE;
-                        //TODO set response with the error in the body
                     } else {
                         //add the new user to the users list
                         userManager.addUser(newUser);
-                        //set the username in a session so it will be available on each request
-                        //the true parameter means that if a session object does not exists yet
+                        //set the username in a session, so it will be available on each request
+                        //the true parameter means that if a session object does not exist yet
                         //create a new one
                         request.getSession(true).setAttribute(Constants.USERNAME, newUser);
                         responseMessage = Constants.SUCCESSFUL_LOGIN;
-                        //TODO send response with successful login body
                     }
                 }
-
             } else {
-//            user is already logged in
+                // user is already logged in
                 responseMessage = Constants.SUCCESSFUL_LOGIN;
             }
         } catch (IOException e) {
-            responseMessage =Constants.USER_NAME_EMPTY;
-        }
-        finally {
+            responseMessage = Constants.USER_NAME_EMPTY;
+        } finally {
             response.setContentType("application/json");
             Gson gson = new Gson();
             String jsonResponse = gson.toJson(responseMessage);
@@ -123,7 +114,6 @@ public class LoginServlet extends HttpServlet {
                 out.flush();
             }
         }
-
     }
 
     /**

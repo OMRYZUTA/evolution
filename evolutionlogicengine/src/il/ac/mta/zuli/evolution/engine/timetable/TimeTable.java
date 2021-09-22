@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class TimeTable {
-    private User uploadedBy;
+    private User uploadedBy; //TODO update field where necessary
     private int days;
     private int hours;
     private Map<Integer, Teacher> teachers;

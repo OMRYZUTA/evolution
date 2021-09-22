@@ -2,7 +2,9 @@ package il.ac.mta.zuli.evolution.users;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /*
 Adding and retrieving users is synchronized and in that manner - these actions are thread safe
@@ -11,7 +13,6 @@ of the user of this class to handle the synchronization of isUserExists with oth
  */
 public class UserManager {
     private final Set<User> usersSet;
-
 
     public UserManager() {
         usersSet = new HashSet<>();
@@ -31,5 +32,10 @@ public class UserManager {
 
     public boolean isUserExists(User user) {
         return usersSet.contains(user);
+    }
+
+    public List<String> getUserNames() {
+        //gets only the one field from every user
+        return usersSet.stream().map(User::getUsername).collect(Collectors.toList());
     }
 }

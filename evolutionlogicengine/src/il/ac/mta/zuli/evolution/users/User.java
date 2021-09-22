@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class User {
-    private  String username;
-    private final List<EngineSettings> userEngines;
+    private String username;
+    private final List<EngineSettings> userEngines; //defined by the user in screen3
     private final List<Descriptor> userDescriptors; //descriptor is the pair of (TimeTable, EngineSettings)
+    //if user picks a certain timetable in screen2, we'll add it the userDescriptors list, and later assign it with an engine accordingly
 
     //a collection of pairs (TimeTable, EngineSettings)
     // only we want to be able initially to create a descriptor only the Timetable without the enginesettings
@@ -49,6 +50,18 @@ public class User {
 
         User that = (User) obj;
         return username.equals(that.username);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public List<EngineSettings> getUserEngines() {
+        return userEngines;
+    }
+
+    public List<Descriptor> getUserDescriptors() {
+        return userDescriptors;
     }
 
     @Override
