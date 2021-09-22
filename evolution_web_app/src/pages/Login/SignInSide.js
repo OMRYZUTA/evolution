@@ -11,8 +11,11 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-
 import * as UserServices from '../../services/UserServices'
+import { useHistory } from "react-router-dom";
+
+
+
 
 function Copyright(props) {
     return (
@@ -29,15 +32,36 @@ function Copyright(props) {
 const USER_NAME_EMPTY = "empty name";
 const USER_NAME_NOT_UNIQUE = "not unique name";
 const SUCCESSFUL_LOGIN = "successful login";
+const SCREEN2URL = "/screen2";
 
 const theme = createTheme();
 
 export default function SignInSide() {
     const [userName, setUserName] = useState();
+    const history = useHistory();
+
+    const routeChange = () =>{
+        let path = `/screen2`;
+        history.push(path);
+    }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const result = await UserServices.login(userName);
+        switch (result){
+            case SUCCESSFUL_LOGIN:
+                console.log("in switch need to move to screen2 ");
+                routeChange();
+                break;
+            case USER_NAME_EMPTY:
+                console.log("user name is empty");
+                //todo show error
+                break;
+            case USER_NAME_NOT_UNIQUE:
+                console.log("user name is not unique");
+                //todo show error
+                break;
+        }
         console.log({result}); //TODO continue from here - redirect base on result
     };
 
