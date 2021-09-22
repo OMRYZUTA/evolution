@@ -26,6 +26,9 @@ function Copyright(props) {
         </Typography>
     );
 }
+const USER_NAME_EMPTY = "empty name";
+const USER_NAME_NOT_UNIQUE = "not unique name";
+const SUCCESSFUL_LOGIN = "successful login";
 
 const theme = createTheme();
 
@@ -34,8 +37,8 @@ export default function SignInSide() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const result = await UserServices.addNew(userName);
-        console.log(result);
+        const result = await UserServices.login(userName);
+        console.log({result}); //TODO continue from here - redirect base on result
     };
 
     const handleUserNameChanged = (e)=>{
