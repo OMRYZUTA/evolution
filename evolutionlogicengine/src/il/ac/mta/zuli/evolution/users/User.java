@@ -3,8 +3,7 @@ package il.ac.mta.zuli.evolution.users;
 import il.ac.mta.zuli.evolution.engine.Descriptor;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -24,7 +23,7 @@ public class User {
 
     public User(String username) throws IOException {
         setUsername(username);
-        userDescriptors = new ArrayList<>();
+        userDescriptors = new HashMap<>();
     }
 
     //adding a TimeTable to the app will add it to the common collection and add the reference to the user who uploaded it
@@ -59,7 +58,7 @@ public class User {
         return username;
     }
 
-    public List<Descriptor> getUserDescriptors() {
+    public Map<Integer, Descriptor> getUserDescriptors() {
         return userDescriptors;
     }
 
