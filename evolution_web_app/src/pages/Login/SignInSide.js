@@ -13,7 +13,8 @@ import Typography from '@mui/material/Typography';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import * as UserServices from '../../services/UserServices'
 import { useHistory } from "react-router-dom";
-
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
 
 
 
@@ -29,6 +30,15 @@ function Copyright(props) {
         </Typography>
     );
 }
+const renderAlert = (alertText) => {
+    return (
+        <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {alertText}
+        </Alert>
+    );
+}
+
 const USER_NAME_EMPTY = "empty name";
 const USER_NAME_NOT_UNIQUE = "not unique name";
 const SUCCESSFUL_LOGIN = "successful login";
@@ -38,6 +48,7 @@ const theme = createTheme();
 
 export default function SignInSide() {
     const [userName, setUserName] = useState();
+    const [alertText, setAlertText] = React.useState('');
     const history = useHistory();
 
     const routeChange = () =>{
@@ -50,19 +61,15 @@ export default function SignInSide() {
         const result = await UserServices.login(userName);
         switch (result){
             case SUCCESSFUL_LOGIN:
-                console.log("in switch need to move to screen2 ");
                 routeChange();
                 break;
             case USER_NAME_EMPTY:
-                console.log("user name is empty");
-                //todo show error
+                setAlertText('User name cannot be empty, please type at least one character');
                 break;
             case USER_NAME_NOT_UNIQUE:
-                console.log("user name is not unique");
-                //todo show error
+                setAlertText('User name is already exist, please type another name');
                 break;
         }
-        console.log({result}); //TODO continue from here - redirect base on result
     };
 
     const handleUserNameChanged = (e)=>{
@@ -104,6 +111,7 @@ export default function SignInSide() {
                             Sign in
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                            {alertText && renderAlert(alertText)}
                             <TextField
                                 margin="normal"
                                 required
