@@ -3,7 +3,7 @@ package il.ac.mta.zuli.evolution.engine.rules;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import il.ac.mta.zuli.evolution.engine.timetable.Teacher;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTRule;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex3.ETTRule;
 
 import java.util.List;
 

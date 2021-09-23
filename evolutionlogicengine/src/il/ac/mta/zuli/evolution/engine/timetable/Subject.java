@@ -1,6 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.timetable;
 
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTSubject;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex3.ETTSubject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

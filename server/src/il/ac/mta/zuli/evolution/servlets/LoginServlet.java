@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.Set;
 
 import static il.ac.mta.zuli.evolution.utils.ServletUtils.getUserFromJson;
 
@@ -24,47 +22,7 @@ public class LoginServlet extends HttpServlet {
     private final String DASHBOARD_URL = "../../../evolution_web_app/src/pages/Dashboard";
     private final String SIGN_UP_URL = "../../../evolution_web_app/src/pages/signup/SignUp.js";
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request  servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("application/json");
-        System.out.println("in loginServlet processRequest");
-
-        Set<String> result = new HashSet<>();
-        result.add("11111 bla");
-        Gson gson = new Gson();
-        String jsonResponse = gson.toJson(result);
-
-        try (PrintWriter out = response.getWriter()) {
-            out.print(jsonResponse);
-            out.flush();
-        }
-    }
-
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request  servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
+    //no doGet() implemented here
     /**
      * Handles the HTTP <code>POST</code> method.
      *

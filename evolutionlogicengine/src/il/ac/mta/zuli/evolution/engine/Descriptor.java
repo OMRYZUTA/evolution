@@ -4,7 +4,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTDescriptor;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex3.ETTDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

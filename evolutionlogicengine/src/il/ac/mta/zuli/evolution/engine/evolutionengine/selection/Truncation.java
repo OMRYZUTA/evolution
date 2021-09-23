@@ -2,7 +2,6 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine.selection;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTSelection;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,38 +12,11 @@ public class Truncation<S extends Solution> implements Selection<S> {
     private int elitism;
     private final int populationSize;
 
-    public Truncation(ETTSelection ettSelection, int populationSize) {
-        parseConfiguration(ettSelection);
-        this.populationSize = populationSize;
-        if (ettSelection.getETTElitism() != null) {
-            setElitism(ettSelection.getETTElitism());
-        }// else elitism is initialized to zero anyway
-    }
-
     public Truncation(int topPercent, int populationSize, int elitism) {
         this.populationSize = populationSize;
         setTopPercent(topPercent);
         setElitism(elitism);
     }
-
-    private void parseConfiguration(ETTSelection ettSelection) {
-        String configuration = ettSelection.getConfiguration();
-
-        if (configuration.length() == 0) {
-            throw new ValidationException("Empty configuration ");
-        }
-
-        int index = configuration.indexOf('=');
-
-        if (index == -1) {
-            throw new ValidationException("missing '=' ");
-        }
-
-        int num = Integer.parseInt(configuration.substring(index + 1), 10);
-
-        setTopPercent(num);
-    }
-
 
     @Override
     public List<S> select(List<S> solutions) {

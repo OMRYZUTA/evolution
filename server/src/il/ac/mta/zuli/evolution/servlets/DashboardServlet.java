@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @WebServlet(name = "il.ac.mta.zuli.evolution.servlets.Screen2Servlet", urlPatterns = "/api/screen2")
-public class Screen2Servlet extends HttpServlet {
+public class DashboardServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -38,20 +38,13 @@ public class Screen2Servlet extends HttpServlet {
             throws ServletException, IOException {
         //TODO in UI, if user selected existing problem, screen3Servlet will handle it (and not this servlet)
         //If we reached post in this servlet, then it's only in order to add a new problem
-
-        // header of request will include a parameters in header:
-        // TimetableID: integer
-        // and from the session: user's unique-name
-        // Retrieve the parameters from the request:
-
-        //1 get input-stream from body (the file)
-        //2 generate Timetable (if valid file) (including uploadedBy user) (will need engine)
-        //3 add timetable to timetables in dataManager
-
-        //response: notify user in UI: successful or unsuccessful upload
-    }
-
-    private void generateTimetableFromXML() {
-//TODO implement
+        //
+        //        // retrieve from the session: user's unique-name
+        //
+        //        //1 get input-stream from body (the file)
+        //        //2 generate Timetable (if valid file) (including uploadedBy user) (will need engine)
+        //        //3 add timetable to timetables in dataManager
+        //
+        //        //response: notify user in UI: successful upload (otherwise, an exception will cause an alert in UI?)
     }
 }

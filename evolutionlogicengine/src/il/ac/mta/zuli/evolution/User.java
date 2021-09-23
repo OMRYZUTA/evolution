@@ -30,14 +30,18 @@ public class User {
     //adding an engine only happens at the user level
 
 
-    public void setUsername(String username) throws IOException{
+    public void setUsername(String username) throws IOException {
         if (username == null || username.trim().isEmpty()) {
             throw new IOException("username cannot be  null");
-        }else if(username.trim().isEmpty()){
+        } else if (username.trim().isEmpty()) {
             throw new IOException("username cannot be empty string");
         }
         //normalize the username value
         this.username = username.trim();
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override
@@ -54,13 +58,6 @@ public class User {
         return username.equals(that.username);
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public Map<Integer, Descriptor> getUserDescriptors() {
-        return userDescriptors;
-    }
 
     @Override
     public String toString() {

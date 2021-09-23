@@ -2,7 +2,6 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine.selection;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTSelection;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -15,13 +14,6 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
     private List<Integer> scoreRangePerIndex;
     private int elitism;
     private final int populationSize;
-
-    public RouletteWheel(ETTSelection ettSelection, int populationSize) {
-        this.populationSize = populationSize;
-        if (ettSelection.getETTElitism() != null) {
-            setElitism(ettSelection.getETTElitism());
-        }// else elitism is initialized to zero anyway
-    }
 
     public RouletteWheel(int populationSize, int elitism) {
         this.populationSize = populationSize;

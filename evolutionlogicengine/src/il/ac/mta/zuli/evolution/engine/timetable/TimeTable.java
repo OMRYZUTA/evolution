@@ -6,7 +6,7 @@ import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.rules.RuleFactory;
 import il.ac.mta.zuli.evolution.engine.rules.RuleType;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.*;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

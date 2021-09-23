@@ -2,7 +2,7 @@ package il.ac.mta.zuli.evolution.engine.timetable;
 
 import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTStudy;
+import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex3.ETTStudy;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

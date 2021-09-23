@@ -11,11 +11,13 @@ import java.io.IOException;
 public class Screen3Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        // header of request will include a parameter in header: <timetableID: integer>
+        // retrieve from the session: user's unique-name
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+
     }
+
 }

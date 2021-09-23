@@ -2,22 +2,8 @@ package il.ac.mta.zuli.evolution.engine.evolutionengine.selection;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
-import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTSelection;
 
 public class SelectionFactory<T extends Solution> {
-    public static Selection createSelectionFromETT(ETTSelection ettSelection, int populationSize) {
-        switch (ettSelection.getType().toLowerCase()) {
-            case "truncation":
-                return new Truncation(ettSelection, populationSize);
-            case "roulettewheel":
-                return new RouletteWheel(ettSelection, populationSize);
-            case "tournament":
-                return new Tournament(ettSelection,populationSize);
-            default:
-                throw new ValidationException("Invalid selection type (for ex. 3)");
-        }
-    }
-
     public static Selection createSelectionFromInput(String selectionType, int populationSize, int elitism, int topPercent, int pte) {
         switch (selectionType.toLowerCase()) {
             case "truncation":

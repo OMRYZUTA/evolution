@@ -58,7 +58,6 @@ public class TimeTableEngine implements Engine {
     public void loadXML(String fileToLoad,
                         Consumer<Boolean> onSuccess,
                         Consumer<Throwable> onFailure) {
-
         if (currentRunningTask != null) {
             onFailure.accept(new RuntimeException("Failed running task because another task is currently running"));
             return;
