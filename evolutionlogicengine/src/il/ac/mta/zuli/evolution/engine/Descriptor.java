@@ -15,22 +15,45 @@ public class Descriptor {
     //in Ex2 Descriptor==the xml file, in Ex3 only Timetable == file
     private final TimeTable timeTable; //the problem
     private EngineSettings<TimeTableSolution> engineSettings; //the configuration
-
     //Ex3 additions to Descriptor:
     private EvolutionState state;
     private List<EndPredicate> endPredicates;
     private int generationsStride;
-    private Thread thread;
+    private Thread thread; // TODO maybe the Timetable engine should keep the thread
 
     public Descriptor(@NotNull ETTDescriptor d) {
         // only if received another valid file we want to overwrite the previous descriptor instance
         TimeTable tempTimeTable = new TimeTable(d.getETTTimeTable());
-        EngineSettings<TimeTableSolution> tempEngineSetting = new EngineSettings<>(d.getETTEvolutionEngine(), tempTimeTable);
-
-        //only reaching here if TimeTable and EngineSettings ctors didn't throw exceptions
+        //only reaching here if TimeTable c'tor didn't throw exceptions
         this.timeTable = tempTimeTable;
-        this.engineSettings = tempEngineSetting;
     }
+
+    public void setEngineSettings(EngineSettings<TimeTableSolution> newEngineSettings) {
+        this.engineSettings = newEngineSettings;
+    }
+
+    public void setState(EvolutionState state) {
+        this.state = state;
+    }
+
+    public void setEndPredicates(List<EndPredicate> endPredicates) {
+        this.endPredicates = endPredicates;
+    }
+
+    public void setGenerationsStride(int generationsStride) {
+        this.generationsStride = generationsStride;
+    }
+
+    //Ex2 & Ex2 CTOR
+//    public Descriptor(@NotNull ETTDescriptor d) {
+//        // only if received another valid file we want to overwrite the previous descriptor instance
+//        TimeTable tempTimeTable = new TimeTable(d.getETTTimeTable());
+//        EngineSettings<TimeTableSolution> tempEngineSetting = new EngineSettings<>(d.getETTEvolutionEngine(), tempTimeTable);
+//
+//        //only reaching here if TimeTable and EngineSettings ctors didn't throw exceptions
+//        this.timeTable = tempTimeTable;
+//        this.engineSettings = tempEngineSetting;
+//    }
 
     public int getPopulationSize() {
         return this.engineSettings.getInitialPopulationSize();
@@ -38,22 +61,6 @@ public class Descriptor {
 
     public Set<Rule> getRules() {
         return this.timeTable.getRules();
-    }
-
-    public int getTimeTableHours() {
-        return timeTable.getHours();
-    }
-
-    public int getTimeTableDays() {
-        return timeTable.getDays();
-    }
-
-    @Override
-    public String toString() {
-        return "Descriptor{" +
-                "timeTable=" + timeTable + System.lineSeparator() +
-                ", engine=" + engineSettings +
-                '}';
     }
 
     public TimeTable getTimeTable() {
@@ -64,7 +71,11 @@ public class Descriptor {
         return engineSettings;
     }
 
-    public void setValidatedEngineSettings(EngineSettings<TimeTableSolution> newEngineSettings) {
-        this.engineSettings = newEngineSettings;
+    @Override
+    public String toString() {
+        return "Descriptor{" +
+                "timeTable=" + timeTable + System.lineSeparator() +
+                ", engine=" + engineSettings +
+                '}';
     }
 }

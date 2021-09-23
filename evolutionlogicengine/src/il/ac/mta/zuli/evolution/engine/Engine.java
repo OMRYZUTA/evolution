@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 public interface Engine {
     void setController(HeaderController controller);
 
-    void setEngineSettings(EngineSettings settings);
+    void setValidatedEngineSettings(EngineSettings settings);
 
     SimpleIntegerProperty getGenerationNumProperty();
 

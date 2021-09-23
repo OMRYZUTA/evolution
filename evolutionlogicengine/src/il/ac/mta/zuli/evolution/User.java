@@ -1,4 +1,4 @@
-package il.ac.mta.zuli.evolution.users;
+package il.ac.mta.zuli.evolution;
 
 import il.ac.mta.zuli.evolution.engine.Descriptor;
 

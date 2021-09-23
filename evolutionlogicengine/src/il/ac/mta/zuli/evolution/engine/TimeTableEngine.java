@@ -189,8 +189,8 @@ public class TimeTableEngine implements Engine {
     }
 
     @Override
-    public void setEngineSettings(EngineSettings validatedSettings) {
-        this.descriptor.setValidatedEngineSettings(validatedSettings);
+    public void setValidatedEngineSettings(EngineSettings validatedSettings) {
+        this.descriptor.setEngineSettings(validatedSettings);
     }
 
     @Override

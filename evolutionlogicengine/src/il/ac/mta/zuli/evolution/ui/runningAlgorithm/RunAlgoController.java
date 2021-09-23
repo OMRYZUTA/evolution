@@ -222,7 +222,7 @@ public class RunAlgoController {
                     updatedCrossover,
                     updatedMutations,
                     engine.getEngineSettings().getInitialPopulationSize());
-            engine.setEngineSettings(newEngineSettings); //the timetableEngine holds a descriptor which has engine settings
+            engine.setValidatedEngineSettings(newEngineSettings); //the timetableEngine holds a descriptor which has engine settings
             errorProperty.set("Saved changes to settings");
         } catch (Throwable e) {
             errorProperty.set("failed saving engine settings: " + e.getMessage());

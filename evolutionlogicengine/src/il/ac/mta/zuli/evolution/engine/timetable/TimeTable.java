@@ -1,18 +1,18 @@
 package il.ac.mta.zuli.evolution.engine.timetable;
 
+import il.ac.mta.zuli.evolution.User;
 import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.rules.RuleFactory;
 import il.ac.mta.zuli.evolution.engine.rules.RuleType;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.*;
-import il.ac.mta.zuli.evolution.users.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class TimeTable {
-    private int ID; // ID is index in timetableManager TTlist //TODO EX3 addition
+    private int ID; // ID is index in dataManager TT-list //TODO EX3 addition
     private User uploadedBy; //TODO EX3 addition
     private int days;
     private int hours;

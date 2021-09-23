@@ -1,9 +1,8 @@
 package il.ac.mta.zuli.evolution.utils;
 
 import com.google.gson.Gson;
-import il.ac.mta.zuli.evolution.TimetableManager;
-import il.ac.mta.zuli.evolution.users.User;
-import il.ac.mta.zuli.evolution.users.UserManager;
+import il.ac.mta.zuli.evolution.DataManager;
+import il.ac.mta.zuli.evolution.User;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -20,8 +19,7 @@ public class ServletUtils {
 	Note how the synchronization is done only on the question and\or creation of the relevant managers and once they exists -
 	the actual fetch of them is remained un-synchronized for performance POV
 	 */
-	private static final Object userManagerLock = new Object();
-	private static final Object timetableManagerLock = new Object();
+	private static final Object dataManagerLock = new Object();
 
 	public static void sendJSONResponse(HttpServletResponse response, Object obj)
 			throws ServletException, IOException {
@@ -35,19 +33,36 @@ public class ServletUtils {
 		}
 	}
 
+	public static User getUserFromJson(HttpServletRequest request) throws IOException {
+		Gson gson = new Gson();
+		Map<String, Object> map = gson.fromJson(request.getReader(), new HashMap<String, Object>().getClass());
 
-	public static UserManager getUserManager(ServletContext servletContext) throws IOException {
-		//UserManager is a singleton
-		synchronized (userManagerLock) {
-			if (servletContext.getAttribute("userManager") == null) {
-				servletContext.setAttribute("userManager", new UserManager());
+		return new User((String) map.get("username"));
+	}
+
+	public static DataManager getDataManager(ServletContext servletContext) throws IOException {
+		synchronized (dataManagerLock) {
+			if (servletContext.getAttribute("data") == null) {
+				servletContext.setAttribute("data", new DataManager());
 			}
 		}
 
-		return (UserManager) servletContext.getAttribute("userManager");
+		return (DataManager) servletContext.getAttribute("dataManager");
 	}
 
-//	public static String getBody(HttpServletRequest request) throws IOException {
+	public static int getIntParameter(HttpServletRequest request, String name) {
+		String value = request.getParameter(name);
+
+		if (value != null) {
+			try {
+				return Integer.parseInt(value);
+			} catch (NumberFormatException numberFormatException) {
+			}
+		}
+		return Integer.MIN_VALUE;
+	}
+
+	//	public static String getBody(HttpServletRequest request) throws IOException {
 //		String body = null;
 //		StringBuilder stringBuilder = new StringBuilder();
 //		BufferedReader bufferedReader = null;
@@ -78,32 +93,4 @@ public class ServletUtils {
 //		body = stringBuilder.toString();
 //		return body;
 //	}
-
-	public static User getUserFromJson(HttpServletRequest request) throws IOException {
-		Gson gson = new Gson();
-		Map<String, Object> map = gson.fromJson(request.getReader(), new HashMap<String, Object>().getClass());
-
-		return new User((String) map.get("username"));
-	}
-
-	public static TimetableManager getTimetableManager(ServletContext servletContext) {
-		synchronized (timetableManagerLock) {
-			if (servletContext.getAttribute("timetableManager") == null) {
-				servletContext.setAttribute("timetableManager", new TimetableManager());
-			}
-		}
-		return (TimetableManager) servletContext.getAttribute("timetableManager");
-	}
-
-	public static int getIntParameter(HttpServletRequest request, String name) {
-		String value = request.getParameter(name);
-
-		if (value != null) {
-			try {
-				return Integer.parseInt(value);
-			} catch (NumberFormatException numberFormatException) {
-			}
-		}
-		return Integer.MIN_VALUE;
-	}
 }

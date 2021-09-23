@@ -1,9 +1,7 @@
 package il.ac.mta.zuli.evolution.servlets;
 
-import il.ac.mta.zuli.evolution.TimetableManager;
-import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
+import il.ac.mta.zuli.evolution.DataManager;
 import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
-import il.ac.mta.zuli.evolution.users.UserManager;
 import il.ac.mta.zuli.evolution.utils.ServletUtils;
 
 import javax.servlet.ServletException;
@@ -12,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,11 +21,9 @@ public class Screen2Servlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        UserManager userManager = ServletUtils.getUserManager(getServletContext());
-        TimetableManager timetableManager = ServletUtils.getTimetableManager(getServletContext());
-        List<String> usernames = userManager.getUserNames();
-        //TODO complete summarizeTimetables
-        List<TimetableSummary> timetableSummaries = summarizeTimetables(userManager, timetableManager);
+        DataManager dataManager = ServletUtils.getDataManager(getServletContext());
+        List<String> usernames = dataManager.getUserNames();
+        List<TimetableSummary> timetableSummaries = dataManager.getTimetableSummaries();
 
         //preparing the response (no need for DTOs because we already wrap the objects in JSON)
         Map<String, Object> mapForJSON = new HashMap<>();
@@ -51,24 +46,12 @@ public class Screen2Servlet extends HttpServlet {
 
         //1 get input-stream from body (the file)
         //2 generate Timetable (if valid file) (including uploadedBy user) (will need engine)
-        //3 add timetable to timetables in timetableManager
+        //3 add timetable to timetables in dataManager
 
         //response: notify user in UI: successful or unsuccessful upload
     }
 
-    private List<TimetableSummary> summarizeTimetables(UserManager userManager, TimetableManager timetableManager) {
-        List<TimetableSummary> newList = new ArrayList<>();
-        List<TimeTable> timetables = timetableManager.getTimetables();
-
-        for (TimeTable t : timetables) {
-            newList.add(new TimetableSummary(t));
-            //TODO set maxFitness and how many users are solving
-        }
-
-        return newList;
-    }
-
     private void generateTimetableFromXML() {
-
+//TODO implement
     }
 }

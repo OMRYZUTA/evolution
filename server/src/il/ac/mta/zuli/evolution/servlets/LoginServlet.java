@@ -2,8 +2,8 @@ package il.ac.mta.zuli.evolution.servlets;
 
 import com.google.gson.Gson;
 import il.ac.mta.zuli.evolution.Constants;
-import il.ac.mta.zuli.evolution.users.User;
-import il.ac.mta.zuli.evolution.users.UserManager;
+import il.ac.mta.zuli.evolution.DataManager;
+import il.ac.mta.zuli.evolution.User;
 import il.ac.mta.zuli.evolution.utils.ServletUtils;
 import il.ac.mta.zuli.evolution.utils.SessionUtils;
 
@@ -84,13 +84,13 @@ public class LoginServlet extends HttpServlet {
 
             if (usernameFromSession == null) {
                 //user is not logged in yet
-                UserManager userManager = ServletUtils.getUserManager(getServletContext());
+                DataManager dataManager = ServletUtils.getDataManager(getServletContext());
                 synchronized (this) {
-                    if (userManager.isUserExists(newUser)) {
+                    if (dataManager.isUserExists(newUser)) {
                         responseMessage = Constants.USER_NAME_NOT_UNIQUE;
                     } else {
                         //add the new user to the users list
-                        userManager.addUser(newUser);
+                        dataManager.addUser(newUser);
                         //set the username in a session, so it will be available on each request
                         //the true parameter means that if a session object does not exist yet
                         //create a new one
