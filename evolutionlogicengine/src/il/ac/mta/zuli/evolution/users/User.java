@@ -1,26 +1,29 @@
 package il.ac.mta.zuli.evolution.users;
 
 import il.ac.mta.zuli.evolution.engine.Descriptor;
-import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class User {
     private String username;
-    private final List<EngineSettings> userEngines; //defined by the user in screen3
-    private final List<Descriptor> userDescriptors; //descriptor is the pair of (TimeTable, EngineSettings)
+    //TODO - add in readme: the user configs an engine for each problem he decides to run (and not for several problems together)
     //if user picks a certain timetable in screen2, we'll add it the userDescriptors list, and later assign it with an engine accordingly
+    //key of Map is the timetableID (unique per suer)
+    private final Map<Integer, Descriptor> userDescriptors; //descriptor is the pair of (TimeTable, EngineSettings)
+    private Descriptor currDisplayedDescriptor; //the descriptor of which its state is displayed on screen3
+    //multiple descriptors can run in back, but only one is displayed om the front?
 
-    //a collection of pairs (TimeTable, EngineSettings)
-    // only we want to be able initially to create a descriptor only the Timetable without the enginesettings
+    // TODO - think about it: maybe instead of holding a Map<Integer,Descriptor> the user should have a
+    //  Map<Integer, TimeTableEngine>
+    //  the user will instantiate a timetableEngine which will serve as a wrapper for Descriptor
 
 
     public User(String username) throws IOException {
         setUsername(username);
-        userEngines = new ArrayList<>();
         userDescriptors = new ArrayList<>();
     }
 
@@ -54,10 +57,6 @@ public class User {
 
     public String getUsername() {
         return username;
-    }
-
-    public List<EngineSettings> getUserEngines() {
-        return userEngines;
     }
 
     public List<Descriptor> getUserDescriptors() {

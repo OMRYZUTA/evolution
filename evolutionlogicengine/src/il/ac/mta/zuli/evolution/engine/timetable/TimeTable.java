@@ -12,7 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class TimeTable {
-    private User uploadedBy; //TODO update field where necessary
+    private int ID; // ID is index in timetableManager TTlist //TODO EX3 addition
+    private User uploadedBy; //TODO EX3 addition
     private int days;
     private int hours;
     private Map<Integer, Teacher> teachers;
@@ -32,6 +33,10 @@ public class TimeTable {
     }
 
     //#region getters
+    public int getID() {
+        return ID;
+    }
+
     public String getUploadedBy() {
         return uploadedBy.getUsername();
     }

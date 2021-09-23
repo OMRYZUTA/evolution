@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.timetable;
 
 public class TimetableSummary {
+    private final int ID;
     private final String uploadedBy;
     private final int days;
     private final int hours;
@@ -13,6 +14,7 @@ public class TimetableSummary {
     private int numOfUsersSolving;
 
     public TimetableSummary(TimeTable timeTable) {
+        this.ID = timeTable.getID();
         this.uploadedBy = timeTable.getUploadedBy();
         this.days = timeTable.getDays();
         this.hours = timeTable.getHours();

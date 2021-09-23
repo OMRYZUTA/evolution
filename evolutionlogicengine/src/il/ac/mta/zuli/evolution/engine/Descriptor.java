@@ -1,16 +1,26 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
+import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.ETTDescriptor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Set;
 
+//in Ex. 3 descriptor is a run of the algorithm for a certain problem
 public class Descriptor {
-    private final TimeTable timeTable;
-    private EngineSettings<TimeTableSolution> engineSettings;
+    //in Ex2 Descriptor==the xml file, in Ex3 only Timetable == file
+    private final TimeTable timeTable; //the problem
+    private EngineSettings<TimeTableSolution> engineSettings; //the configuration
+
+    //Ex3 additions to Descriptor:
+    private EvolutionState state;
+    private List<EndPredicate> endPredicates;
+    private int generationsStride;
+    private Thread thread;
 
     public Descriptor(@NotNull ETTDescriptor d) {
         // only if received another valid file we want to overwrite the previous descriptor instance

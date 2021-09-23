@@ -141,7 +141,7 @@ public class TimeTableEngine implements Engine {
                     this.currEvolutionState = state;
                     Platform.runLater(() -> {
                         generationNumProperty.set(state.getGenerationNum());
-                        fitnessProperty.set(state.getBestSolutionSoFar().getTotalFitnessScore());
+                        fitnessProperty.set(state.getBestSolutionSoFar().getFitnessScore());
                         timeProperty.set(state.getNetRunTime());
                     });
                 },
@@ -366,7 +366,7 @@ public class TimeTableEngine implements Engine {
             );
         }
 
-        return new TimeTableSolutionDTO(quintets, solution.getSolutionSize(), solution.getTotalFitnessScore(),
+        return new TimeTableSolutionDTO(quintets, solution.getSolutionSize(), solution.getFitnessScore(),
                 fitnessScorePerRuleDTO, createTimeTableDTO());
     }
 

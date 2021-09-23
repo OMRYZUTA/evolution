@@ -6,7 +6,7 @@ public interface Solution extends Comparable<Solution> {
 
     void calculateTotalScore();
 
-    double getTotalFitnessScore();
+    double getFitnessScore();
 
     int compareTo(@NotNull Solution other);
 }
