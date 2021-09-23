@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.Screen2Servlet", urlPatterns = "/screen2")
+@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.Screen2Servlet", urlPatterns = "/api/screen2")
 public class Screen2Servlet extends HttpServlet {
 
     @Override

@@ -21,7 +21,7 @@ export default function App() {
                     <Route exact path="/">
                         <Login/>
                     </Route>
-                    <Route path="/userLogin">
+                    <Route path="/screen1">
                         <Login/>
                     </Route>
                     <Route path="/signup">

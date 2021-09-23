@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.Screen3Servlet", urlPatterns = "/screen3")
+@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.Screen3Servlet", urlPatterns = "/api/screen3")
 public class Screen3Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
