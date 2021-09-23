@@ -31,11 +31,6 @@ public interface Engine {
 
     DescriptorDTO getDescriptorDTO();
 
-    void loadXML(String fileToLoad, Consumer<Boolean> onSuccess, Consumer<Throwable> onFailure);
-
-    //used for the engine to "protect itself" even though the relevant buttons are disabled in the ui
-    boolean isXMLLoaded();
-
     void startEvolutionAlgorithm(
             List<EndPredicate> endConditions,
             int generationsStride,

@@ -8,7 +8,6 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
-import il.ac.mta.zuli.evolution.engine.tasks.LoadXMLTask;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
 import il.ac.mta.zuli.evolution.engine.timetable.*;
 import il.ac.mta.zuli.evolution.ui.header.HeaderController;
@@ -52,35 +51,6 @@ public class TimeTableEngine implements Engine {
 
     public void setController(HeaderController controller) {
         this.controller = controller;
-    }
-
-    @Override
-    public void loadXML(String fileToLoad,
-                        Consumer<Boolean> onSuccess,
-                        Consumer<Throwable> onFailure) {
-        if (currentRunningTask != null) {
-            onFailure.accept(new RuntimeException("Failed running task because another task is currently running"));
-            return;
-        }
-
-        currentRunningTask = new LoadXMLTask(fileToLoad);
-
-        currentRunningTask.setOnSucceeded(value -> {
-            controller.onTaskFinished();
-            this.descriptor = (Descriptor) currentRunningTask.getValue();
-            onSuccess.accept(true);
-            currentRunningTask = null; // clearing task
-        });
-
-        currentRunningTask.setOnFailed(value -> {
-            controller.onTaskFinished();
-            onFailure.accept(currentRunningTask.getException());
-            currentRunningTask = null;
-        });
-
-        controller.bindTaskToUIComponents(currentRunningTask);
-
-        new Thread(currentRunningTask).start();
     }
 
 //    Because the loadXML returned a descriptorDTO to the controller,
@@ -245,8 +215,6 @@ public class TimeTableEngine implements Engine {
         return null;
     }
 
-
-    @Override
     public boolean isXMLLoaded() {
         return descriptor != null;
     }
