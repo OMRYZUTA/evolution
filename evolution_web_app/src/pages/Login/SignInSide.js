@@ -34,12 +34,13 @@ const SCREEN2URL = "/screen2";
 
 const theme = createTheme();
 
-export default function SignInSide() {
+export default function SignInSide({setCurrentUser}) {
     const [userName, setUserName] = useState();
     const [alertText, setAlertText] = React.useState('');
     const history = useHistory();
 
     const routeChange = () =>{
+        setCurrentUser(userName);
         let path = SCREEN2URL;
         history.push(path);
     }
@@ -49,7 +50,7 @@ export default function SignInSide() {
         const result = await UserServices.login(userName);
         switch (result){
             case SUCCESSFUL_LOGIN:
-                routeChange();
+                initUserAndGoToScreen2();
                 break;
             case USER_NAME_EMPTY:
                 setAlertText('User name cannot be empty, please type at least one character');
@@ -62,6 +63,9 @@ export default function SignInSide() {
                 break;
         }
     };
+    const initUserAndGoToScreen2=()=>{
+        routeChange();
+    }
 
     const handleUserNameChanged = (e)=>{
         setUserName(e.target.value);

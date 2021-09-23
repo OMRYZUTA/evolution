@@ -1,9 +1,9 @@
 import SignInSide from "./SignInSide";
 
-const Index = () => {
+const Index = ({setCurrentUser}) => {
 
     return (
-        <SignInSide/>
+        <SignInSide setCurrentUser={setCurrentUser}/>
     )
 }
 export default Index;

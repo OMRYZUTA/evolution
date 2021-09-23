@@ -18,20 +18,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserList({users}) {
     const classes = useStyles();
-    console.log("in user list ");
-    console.log({users});
     return (
         <div className={classes.root}>
             <List>
                 {users.map(user => {
-                        return (<ListItem key = {user}>
+                        return (<ListItem key={user}>
                             <ListItemAvatar>
                                 <Avatar>
                                     <PersonOutlinedIcon/>
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText
-                                primary={console.log(user)||user}
+                                primary={user}
                             />
                         </ListItem>)
                     }
