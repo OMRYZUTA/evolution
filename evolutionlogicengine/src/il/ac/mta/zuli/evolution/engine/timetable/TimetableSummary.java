@@ -12,44 +12,17 @@ public class TimetableSummary {
     private double maxFitnessScore;
     private int numOfUsersSolving;
 
-    public TimetableSummary(String uploadedBy,
-                            int days,
-                            int hours,
-                            int numOfTeachers,
-                            int numOfSubjects,
-                            int numOfClasses,
-                            int numOfSoftRules,
-                            int numOfHardRules,
-                            double maxFitnessScore,
-                            int numOfUsersSolving) {
-        this.uploadedBy = uploadedBy;
-        this.days = days;
-        this.hours = hours;
-        this.numOfTeachers = numOfTeachers;
-        this.numOfSubjects = numOfSubjects;
-        this.numOfClasses = numOfClasses;
-        this.numOfSoftRules = numOfSoftRules;
-        this.numOfHardRules = numOfHardRules;
-        this.maxFitnessScore = maxFitnessScore;
-        this.numOfUsersSolving = numOfUsersSolving;
-    }
+    public TimetableSummary(TimeTable timeTable) {
+        this.uploadedBy = timeTable.getUploadedBy();
+        this.days = timeTable.getDays();
+        this.hours = timeTable.getHours();
+        this.numOfTeachers = timeTable.getNumOfTeachers();
+        this.numOfSubjects = timeTable.getNumOfSubjects();
+        this.numOfClasses = timeTable.getNumOfClasses();
+        this.numOfSoftRules = timeTable.getNumOfSoftRules();
+        this.numOfHardRules = timeTable.getNumOfHardRules();
 
-    public TimetableSummary(String uploadedBy,
-                            int days,
-                            int hours,
-                            int numOfTeachers,
-                            int numOfSubjects,
-                            int numOfClasses,
-                            int numOfSoftRules,
-                            int numOfHardRules) {
-        this.uploadedBy = uploadedBy;
-        this.days = days;
-        this.hours = hours;
-        this.numOfTeachers = numOfTeachers;
-        this.numOfSubjects = numOfSubjects;
-        this.numOfClasses = numOfClasses;
-        this.numOfSoftRules = numOfSoftRules;
-        this.numOfHardRules = numOfHardRules;
+        //after c'tor we'll need to set maxFitness and numOfUsersSolving
     }
 
     public void setMaxFitnessScore(double maxFitnessScore) {

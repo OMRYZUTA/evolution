@@ -4,6 +4,7 @@ import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.rules.RuleFactory;
+import il.ac.mta.zuli.evolution.engine.rules.RuleType;
 import il.ac.mta.zuli.evolution.engine.xmlparser.generated.ex2.*;
 import il.ac.mta.zuli.evolution.users.User;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,10 @@ public class TimeTable {
     }
 
     //#region getters
+    public String getUploadedBy() {
+        return uploadedBy.getUsername();
+    }
+
     public int getDays() {
         return days;
     }
@@ -69,6 +74,30 @@ public class TimeTable {
         }
 
         return subjectTeacherList;
+    }
+
+    public int getNumOfTeachers() {
+        return teachers.size();
+    }
+
+    public int getNumOfSubjects() {
+        return subjects.size();
+    }
+
+    public int getNumOfClasses() {
+        return schoolClasses.size();
+    }
+
+    public int getNumOfSoftRules() {
+        return (int) rules.stream()
+                .filter(rule -> rule.getRuleType() == RuleType.SOFT)
+                .count();
+    }
+
+    public int getNumOfHardRules() {
+        return (int) rules.stream()
+                .filter(rule -> rule.getRuleType() == RuleType.HARD)
+                .count();
     }
     //#endregion
 
