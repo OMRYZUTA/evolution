@@ -19,7 +19,7 @@ import java.util.Set;
 
 import static il.ac.mta.zuli.evolution.utils.ServletUtils.getUserFromJson;
 
-@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.LoginServlet", urlPatterns = "/login")
+@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.LoginServlet", urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
     private final String DASHBOARD_URL = "../../../evolution_web_app/src/pages/Dashboard";
     private final String SIGN_UP_URL = "../../../evolution_web_app/src/pages/signup/SignUp.js";
@@ -39,7 +39,7 @@ public class LoginServlet extends HttpServlet {
         System.out.println("in loginServlet processRequest");
 
         Set<String> result = new HashSet<>();
-        result.add("User Exist");
+        result.add("11111 bla");
         Gson gson = new Gson();
         String jsonResponse = gson.toJson(result);
 
