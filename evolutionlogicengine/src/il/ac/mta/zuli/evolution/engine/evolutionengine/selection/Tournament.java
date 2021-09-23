@@ -72,7 +72,7 @@ public class Tournament<S extends Solution> implements Selection<S> {
             parent1 = randomlySelectParent(solutions);
             parent2 = randomlySelectParent(solutions);
 
-            if (parent1.getTotalFitnessScore() > parent2.getTotalFitnessScore()) {
+            if (parent1.getFitnessScore() > parent2.getFitnessScore()) {
                 higherScoreParent = parent1;
                 lowerScoreParent = parent2;
             } else {

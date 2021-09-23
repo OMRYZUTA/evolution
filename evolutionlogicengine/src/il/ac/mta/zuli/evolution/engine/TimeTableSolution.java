@@ -64,7 +64,7 @@ public class TimeTableSolution implements Solution {
     }
 
     @Override
-    public double getTotalFitnessScore() {
+    public double getFitnessScore() {
         return totalFitnessScore;
     }
 
@@ -202,7 +202,7 @@ public class TimeTableSolution implements Solution {
 
     @Override
     public int compareTo(@NotNull Solution other) {
-        return ((Double) totalFitnessScore).compareTo(other.getTotalFitnessScore());
+        return ((Double) totalFitnessScore).compareTo(other.getFitnessScore());
     }
 
 

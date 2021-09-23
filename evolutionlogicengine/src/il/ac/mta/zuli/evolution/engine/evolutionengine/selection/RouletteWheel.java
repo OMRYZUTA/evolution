@@ -56,7 +56,7 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
         List<Integer> scoreRangePerIndex = new ArrayList<>();
 
         for (int i = 0; i < solutionsSize; i++) {
-            currSolutionScore = solutions.get(i).getTotalFitnessScore();
+            currSolutionScore = solutions.get(i).getFitnessScore();
             sum += currSolutionScore; //the sum-roundedUp is the size of the new list so far
             //add as many elements as solution[i]'s score
             elementsToAdd = (int) Math.ceil(currSolutionScore);

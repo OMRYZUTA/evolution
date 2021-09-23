@@ -77,7 +77,7 @@ public class RunAlgorithmTask extends Task<Boolean> {
 
             TimeTableSolution currBestSolution = currEvolutionState.getGenerationBestSolution();
 
-            if (currBestSolution.getTotalFitnessScore() > bestSolutionEver.getTotalFitnessScore()) {
+            if (currBestSolution.getFitnessScore() > bestSolutionEver.getFitnessScore()) {
                 bestSolutionEver = currBestSolution;
                 reportBestSolution.accept(bestSolutionEver);
             }
@@ -86,11 +86,13 @@ public class RunAlgorithmTask extends Task<Boolean> {
             //with addition of first generation
             int currGenerationNum = currEvolutionState.getGenerationNum();
 
+            //TODO the UI can just pull these 2 numbers from state: generationNum, getFitnessScore()==generation best score
+            //and
             if (currGenerationNum == 1 || (currGenerationNum % generationsStride == 0)) {
                 String message = String.format(
                         "Generation: %d. Top Score: %f",
                         currGenerationNum,
-                        currBestSolution.getTotalFitnessScore());
+                        currBestSolution.getFitnessScore());
                 updateMessage(message);
             }
 
@@ -112,7 +114,7 @@ public class RunAlgorithmTask extends Task<Boolean> {
         for (EndPredicate predicate : endPredicates) {
             switch (predicate.getType()) {
                 case FITNESS:
-                    predicateResult = predicate.test(bestSolutionEver.getTotalFitnessScore());
+                    predicateResult = predicate.test(bestSolutionEver.getFitnessScore());
                     break;
                 case GENERATIONS:
                     predicateResult = predicate.test((double) evolutionState.getGenerationNum());

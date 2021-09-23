@@ -25,9 +25,9 @@ public class Screen2Servlet extends HttpServlet {
             throws ServletException, IOException {
 
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
-        List<String> usernames = userManager.getUserNames();
         TimetableManager timetableManager = ServletUtils.getTimetableManager(getServletContext());
-        //TODO get from timetableManager, and other managers? create here in servlet
+        List<String> usernames = userManager.getUserNames();
+        //TODO complete summarizeTimetables
         List<TimetableSummary> timetableSummaries = summarizeTimetables(userManager, timetableManager);
 
         //preparing the response (no need for DTOs because we already wrap the objects in JSON)
@@ -38,21 +38,37 @@ public class Screen2Servlet extends HttpServlet {
         ServletUtils.sendJSONResponse(response, mapForJSON);
     }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //TODO in UI, if user selected existing problem, screen3Servlet will handle it (and not this servlet)
+        //If we reached post in this servlet, then it's only in order to add a new problem
+
+        // header of request will include a parameters in header:
+        // TimetableID: integer
+        // and from the session: user's unique-name
+        // Retrieve the parameters from the request:
+
+        //1 get input-stream from body (the file)
+        //2 generate Timetable (if valid file) (including uploadedBy user) (will need engine)
+        //3 add timetable to timetables in timetableManager
+
+        //response: notify user in UI: successful or unsuccessful upload
+    }
+
     private List<TimetableSummary> summarizeTimetables(UserManager userManager, TimetableManager timetableManager) {
         List<TimetableSummary> newList = new ArrayList<>();
         List<TimeTable> timetables = timetableManager.getTimetables();
 
         for (TimeTable t : timetables) {
             newList.add(new TimetableSummary(t));
+            //TODO set maxFitness and how many users are solving
         }
 
-        //TODO set maxFitness and how many users are solving
         return newList;
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        //TODO what to do when user picks an existing timetable or adds a new one?
+    private void generateTimetableFromXML() {
+
     }
 }
