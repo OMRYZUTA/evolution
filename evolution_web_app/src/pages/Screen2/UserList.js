@@ -1,9 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import {FixedSizeList} from 'react-window';
 import {List, ListItemAvatar} from "@material-ui/core";
 import Avatar from "@mui/material/Avatar";
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';

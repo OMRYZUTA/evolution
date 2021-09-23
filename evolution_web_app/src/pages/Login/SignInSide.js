@@ -18,18 +18,6 @@ import AlertTitle from '@material-ui/lab/AlertTitle';
 
 
 
-function Copyright(props) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
 const renderAlert = (alertText) => {
     return (
         <Alert severity="error">
@@ -52,7 +40,7 @@ export default function SignInSide() {
     const history = useHistory();
 
     const routeChange = () =>{
-        let path = `/screen2`;
+        let path = SCREEN2URL;
         history.push(path);
     }
 
@@ -68,6 +56,9 @@ export default function SignInSide() {
                 break;
             case USER_NAME_NOT_UNIQUE:
                 setAlertText('User name is already exist, please type another name');
+                break;
+            default:
+                setAlertText('Unexpected Error, please contact support');
                 break;
         }
     };
