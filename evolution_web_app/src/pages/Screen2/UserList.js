@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         height: 400,
         maxWidth: 300,
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: "#D3D3D3", //light gray
     },
 }));
 
