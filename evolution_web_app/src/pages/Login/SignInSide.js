@@ -40,7 +40,7 @@ export default function SignInSide({setCurrentUser}) {
     const history = useHistory();
 
     const routeChange = () =>{
-        setCurrentUser(userName);
+
         let path = SCREEN2URL;
         history.push(path);
     }
@@ -64,6 +64,7 @@ export default function SignInSide({setCurrentUser}) {
         }
     };
     const initUserAndGoToScreen2=()=>{
+        setCurrentUser(userName);
         routeChange();
     }
 

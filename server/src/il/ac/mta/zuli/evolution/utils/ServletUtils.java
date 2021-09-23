@@ -42,8 +42,8 @@ public class ServletUtils {
 
 	public static DataManager getDataManager(ServletContext servletContext) throws IOException {
 		synchronized (dataManagerLock) {
-			if (servletContext.getAttribute("data") == null) {
-				servletContext.setAttribute("data", new DataManager());
+			if (servletContext.getAttribute("dataManager") == null) {
+				servletContext.setAttribute("dataManager", new DataManager());
 			}
 		}
 

@@ -5,6 +5,7 @@ import il.ac.mta.zuli.evolution.engine.Descriptor;
 import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 import il.ac.mta.zuli.evolution.utils.ServletUtils;
+import il.ac.mta.zuli.evolution.utils.SessionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.Screen2Servlet", urlPatterns = "/api/screen2")
+@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.DashboardServlet", urlPatterns = "/api/dashboard")
 public class DashboardServlet extends HttpServlet {
 
     @Override
@@ -41,7 +42,9 @@ public class DashboardServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //If we reached post in this servlet, then it's only in order to add a new problem
-
+        String usernameFromSession = SessionUtils.getUsername(request);
+        System.out.println(usernameFromSession);
+        //todo get xml from request -convert to input stream
         //        //1 get input-stream from body (the file) and user from header
         //        //2 generate Timetable (if valid file) (including uploadedBy user) (will need engine)
         //        //3 add timetable to timetables in dataManager

@@ -7,6 +7,10 @@ import * as Screen2Services from "../../services/Screen2Services";
 import Summary from "./Summary";
 import Navbar from "../../components/Navbar"
 import {UserContext} from "../../components/UserContext";
+import Button from '@material-ui/core/Button'
+import {uploadFile} from "../../services/FileServices";
+import * as FileServices from "../../services/FileServices";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: '50px 70px',
@@ -81,6 +85,7 @@ const Index = () => {
     const classes = useStyles();
     const [users, setUsers] = useState([]);
     const [summaries, setSummaries] = useState(fakeData);
+    const [selectedFile, setSelectedFile] = useState();
 
     //TODO need to get all the information all the time
     //we'll later add a dependency to the useEffect that will change every x seconds and that will create a pull
@@ -104,14 +109,34 @@ const Index = () => {
         fetchAllData();
 
     }, []);
+    const handleFileUpload = async (event) => {
+        setSelectedFile(event.target.files[0]);
+        const result = await FileServices.uploadFile(event.target.files[0]);
+        console.log(result);
+    };
 
     return (
         <Grid container direction={"column"}>
             <Navbar user={user}/>
+            <Grid item>
+                <Button
+                    variant="contained"
+                    component="label"
+                    >
+                    Upload File
+                    <input
+                        type="file"
+                        name={"file"}
+                        onChange={handleFileUpload}
+                        hidden
+                    />
+                </Button>
+            </Grid>
             <Grid container className={classes.root} direction={"row"}>
                 <Grid item xs={12} md={4}>
                     <UserList users={users}/>
                 </Grid>
+
                 <Grid item xs={12} md={8}>
                     <Grid container direction={"row"} className={classes.summaries}>
                         {summaries.map(summary => {
