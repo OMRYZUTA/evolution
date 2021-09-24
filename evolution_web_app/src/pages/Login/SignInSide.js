@@ -43,7 +43,6 @@ export default function SignInSide() {
     const history = useHistory();
 
     const routeChange = () =>{
-
         let path = SCREEN2URL;
         history.push(path);
     }

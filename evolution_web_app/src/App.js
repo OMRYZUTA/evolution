@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import SignUp from './pages/signup/SignUp' //TODO - delete later
 import Screen2 from './pages/Screen2'
 import {UserContext} from "./components/UserContext";
+import Screen3 from "./pages/Screen3";
 
 export default function App() {
     const [currentUser, setCurrentUser] = React.useState(null);
@@ -32,6 +33,9 @@ export default function App() {
                         </Route>
                         <Route path="/server_Web_exploded/screen2">
                             {currentUser?<Screen2/>:<Login/>}
+                        </Route>
+                        <Route path="/server_Web_exploded/screen3">
+                            {currentUser?<Screen3/>:<Login/>}
                         </Route>
                     </Switch>
                 </div>

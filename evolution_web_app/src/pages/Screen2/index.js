@@ -11,6 +11,7 @@ import {uploadFile} from "../../services/FileServices";
 import * as FileServices from "../../services/FileServices";
 import {UserContext} from "../../components/UserContext"
 
+
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: '50px 70px',
@@ -50,12 +51,13 @@ const Index = () => {
     //we'll later add a dependency to the useEffect that will change every x seconds and that will create a pull
 
     useEffect(() => {
+
         const fetchAllData = async () => {
             // calling all API calls in parallel, and waiting until they ALL finish before setting
             try {
                 const dashboardPayload = await Screen2Services.getAll();
                 setUsers(dashboardPayload.users);
-                setSummaries([...fakeData,...dashboardPayload.timetables]);
+                setSummaries([...fakeData, ...dashboardPayload.timetables]);
             } catch (e) {
                 console.log(e);
                 // setAlertText('Failed initializing app, please reload page');
@@ -63,9 +65,10 @@ const Index = () => {
                 // setIsFetching(false);
             }
         };
-
-        fetchAllData();
-
+        const interval = setInterval(() => {
+            fetchAllData();
+        },1000)
+        return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
     }, []);
     const handleFileUpload = async (event) => {
         setSelectedFile(event.target.files[0]);

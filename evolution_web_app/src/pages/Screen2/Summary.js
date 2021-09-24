@@ -5,6 +5,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import {useHistory} from "react-router-dom";
 
 const bull = (
     <Box
@@ -14,8 +15,15 @@ const bull = (
         •
     </Box>
 );
-
+const SCREEN3URL = "/server_Web_exploded/screen3";
 export default function Summary({data}) {
+    const history = useHistory();
+
+    const routeChange = () =>{
+        let path = SCREEN3URL;
+        history.push(path);
+    }
+
     return (
         <Card sx={{ minWidth: 275 }}>
             <CardContent>
@@ -43,7 +51,7 @@ export default function Summary({data}) {
 
             </CardContent>
             <CardActions>
-                <Button size="small">Open</Button>
+                <Button size="small" onClick={routeChange}>Open</Button>
             </CardActions>
         </Card>
     );
