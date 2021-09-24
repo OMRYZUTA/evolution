@@ -1,5 +1,7 @@
 package il.ac.mta.zuli.evolution;
 
+import il.ac.mta.zuli.evolution.engine.Descriptor;
+import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
 
@@ -8,49 +10,97 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class DataManager {
-    private final Set<User> usersSet;
+    private final Map<String, User> users;
     // the index in the array will serve as the ID of the timetable
     private final List<TimeTable> timetables; //for each valid xml uploaded, add a timetable to the collection
 
     public DataManager() throws IOException {
         timetables = new ArrayList<>();
-        usersSet = new HashSet<>();
-        usersSet.add(new User("Gary12432")); //TODO delete later, also delete all throws IOExceptions
-        usersSet.add(new User("Cupcake12321"));
+        users = new HashMap<>();
+        //TODO delete later, also delete all throws IOExceptions
+        users.put("Gary12432", new User("Gary12432"));
+        users.put("Cupcake12321", new User("Cupcake12321"));
+    }
+
+    public synchronized void addTimeTable(Descriptor descriptor, String userName) {
+        descriptor.setTimetableUploadedBy(users.get(userName));
+        timetables.add(descriptor.getTimeTable());
+    }
+
+    public synchronized void addUser(User user) { //TODO throw exception if user already exists? (add user only called after exist check)
+        users.put(user.getUsername(), user);
+    }
+
+    //when do we remove users? delete later
+    public synchronized void removeUser(String username) {
+        users.remove(username);
+    }
+
+    public synchronized Map<String, User> getUsers() {
+        return Collections.unmodifiableMap(users);
+    }
+
+    public List<String> getUserNames() {
+        return users.values()
+                .stream()
+                .map(User::getUsername)
+                .collect(Collectors.toList());
+    }
+
+    public User getUser(String name) {
+        return users.get(name);
+    }
+
+    public boolean doesUserExist(String username) {
+        //User has a unique-name field so that's what we use in equals()
+        return users.containsKey(username);
+    }
+
+    public int getNumOfUsersSolvingProblem(int ttID) {
+        return getUsersSolvingProblem(ttID).size();
+    }
+
+    public List<User> getUsersSolvingProblem(int ttID) {
+        return users.values().stream()
+                .filter(user -> user.isSolvingProblem(ttID))
+                .collect(Collectors.toList());
+    }
+
+    public User getUserWithBestSolutionOfProblem(int ttID) {
+        List<User> usersSolvingProblem = getUsersSolvingProblem(ttID);
+        TimeTableSolution bestSolution = usersSolvingProblem.get(0).getBestSolution(ttID);
+        User userWithBestSolution = null;
+
+        for (User user : usersSolvingProblem) {
+            TimeTableSolution currUserSolution = user.getBestSolution(ttID);
+
+            if (currUserSolution.getFitnessScore() > bestSolution.getFitnessScore()) {
+                bestSolution = currUserSolution;
+                userWithBestSolution = user;
+            }
+        }
+
+        return userWithBestSolution;
+    }
+
+    public TimeTableSolution getBestSolutionOfProblem(int ttID) {
+        return getUserWithBestSolutionOfProblem(ttID).getBestSolution(ttID);
     }
 
     public List<TimeTable> getTimetables() {
         return Collections.unmodifiableList(timetables);
     }
 
-    public synchronized void addUser(User user) { //TODO throw exception if user already exists? (add user only called after isexist check)
-        usersSet.add(user);
-    }
-
-    //when do we remove users? delete later
-    public synchronized void removeUser(User user) {
-        usersSet.remove(user);
-    }
-
-    public synchronized Set<User> getUsers() {
-        return Collections.unmodifiableSet(usersSet);
-    }
-
-    public List<String> getUserNames() {
-        return usersSet.stream().map(User::getUsername).collect(Collectors.toList());
-    }
-
-    public boolean isUserExists(User user) {
-        //User has a unique-name field so that's what we use in equals()
-        return usersSet.contains(user);
-    }
-
     public List<TimetableSummary> getTimetableSummaries() {
         List<TimetableSummary> newList = new ArrayList<>();
+        int numOfUsers;
+        double betsScore;
 
-        for (TimeTable t : timetables) {
-            newList.add(new TimetableSummary(t));
-            //TODO set maxFitness and how many users are solving
+        for (TimeTable tt : timetables) {
+            betsScore = getBestSolutionOfProblem(tt.getID()).getFitnessScore();
+            numOfUsers = getNumOfUsersSolvingProblem(tt.getID());
+            TimetableSummary currTTSummary = new TimetableSummary(tt, betsScore, numOfUsers);
+            newList.add(currTTSummary);
         }
 
         return newList;

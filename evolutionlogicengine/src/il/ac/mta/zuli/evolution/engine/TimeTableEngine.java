@@ -22,14 +22,20 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class TimeTableEngine implements Engine {
-    // used for progress updates
+    private Descriptor descriptor;
+    private EvolutionState currEvolutionState;
+    private Task<?> currentRunningTask; //OR maybe: private Thread thread;
+    //EX3 additions to class:
+    private List<EndPredicate> endPredicates;
+    private int generationsStride;
+    private TimeTableSolution bestSolution;
+
+    //TODO get rid of properties and controller
+    //#region lines to DELETE
+    private HeaderController controller;
     private final SimpleIntegerProperty generationNumProperty;
     private final SimpleDoubleProperty fitnessProperty;
     private final SimpleLongProperty timeProperty;
-    private Descriptor descriptor;
-    private EvolutionState currEvolutionState;
-    private HeaderController controller;
-    private Task<?> currentRunningTask;
 
     public SimpleIntegerProperty getGenerationNumProperty() {
         return generationNumProperty;
@@ -52,10 +58,23 @@ public class TimeTableEngine implements Engine {
     public void setController(HeaderController controller) {
         this.controller = controller;
     }
+//#endregion
 
-//    Because the loadXML returned a descriptorDTO to the controller,
-//    no need for "DescriptorDTO getSystemDetails()" as an engine method
+    //new CTOR for Ex 3 - where was the descriptor set in the previous exercises?
+    public TimeTableEngine(Descriptor descriptor) {
+        this.descriptor = descriptor;
+        //TODO delete properties later:
+        this.generationNumProperty = new SimpleIntegerProperty(0);
+        this.fitnessProperty = new SimpleDoubleProperty(0f);
+        this.timeProperty = new SimpleLongProperty(0L);
 
+    }
+
+    public boolean isXMLLoaded() {
+        return descriptor != null;
+    }
+
+    //#region algorithm-flow methods:
     @Override
     public void startEvolutionAlgorithm(List<EndPredicate> endConditions,
                                         int generationsStride,
@@ -151,25 +170,72 @@ public class TimeTableEngine implements Engine {
         currentRunningTask.cancel();
         this.currEvolutionState = null; //in case of STOP we don't want to save the previous state}
     }
+//#endregion
 
+    //#region setters:
+    @Override
+    public void setValidatedEngineSettings(EngineSettings validatedSettings) {
+        this.descriptor.setEngineSettings(validatedSettings);
+    }
+
+    public void setDescriptor(Descriptor descriptor) {
+        this.descriptor = descriptor;
+    }
+
+    public void setCurrEvolutionState(EvolutionState currEvolutionState) {
+        this.currEvolutionState = currEvolutionState;
+    }
+
+    public void setCurrentRunningTask(Task<?> currentRunningTask) {
+        this.currentRunningTask = currentRunningTask;
+    }
+
+    public void setEndPredicates(List<EndPredicate> endPredicates) {
+        this.endPredicates = endPredicates;
+    }
+
+    public void setGenerationsStride(int generationsStride) {
+        this.generationsStride = generationsStride;
+    }
+    //#endregion
+
+    //#region getters:
     @Override
     public EngineSettings getEngineSettings() {
         return descriptor.getEngineSettings();
     }
 
     @Override
-    public void setValidatedEngineSettings(EngineSettings validatedSettings) {
-        this.descriptor.setEngineSettings(validatedSettings);
-    }
-
-    @Override
-    public DescriptorDTO getDescriptorDTO() {
-        return createDescriptorDTO();
-    }
-
-    @Override
     public TimeTable getTimeTable() {
         return descriptor.getTimeTable();
+    }
+
+    public Descriptor getDescriptor() {
+        return descriptor;
+    }
+
+    public EvolutionState getCurrEvolutionState() {
+        return currEvolutionState;
+    }
+
+    public List<EndPredicate> getEndPredicates() {
+        return endPredicates;
+    }
+
+    public int getGenerationsStride() {
+        return generationsStride;
+    }
+
+    public TimeTableSolution getBestSolution() {
+        return bestSolution;
+    }
+
+    public double getBestScore() {
+        if (bestSolution != null) {
+            return bestSolution.getFitnessScore();
+        } else {
+            return 0;
+        }
     }
 
     @Override
@@ -214,12 +280,15 @@ public class TimeTableEngine implements Engine {
 //        }
         return null;
     }
-
-    public boolean isXMLLoaded() {
-        return descriptor != null;
-    }
+    //#endregion
 
     //#region DTO-related methods
+    @Override
+    public DescriptorDTO getDescriptorDTO() {
+        //TODO change to return Descriptor or maybe delete
+        return createDescriptorDTO();
+    }
+
     private EngineSettingsDTO createEngineSettingsDTO() {
         int initialSize = descriptor.getEngineSettings().getInitialPopulationSize();
         SelectionDTO selectionDTO = createSelectionDTO();
@@ -382,6 +451,5 @@ public class TimeTableEngine implements Engine {
 
         return requirementDTOs;
     }
-
     //#endregion
 }

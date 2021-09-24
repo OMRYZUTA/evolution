@@ -218,7 +218,6 @@ public class TimeTable {
         }
     }
 
-
     private void setHardRulesWeight(int hardRulesWeight) {
         if (0 <= hardRulesWeight && hardRulesWeight <= 100) {
             this.hardRulesWeight = hardRulesWeight;
@@ -226,7 +225,29 @@ public class TimeTable {
             throw new ValidationException("Invalid Hard-Rules Weight: " + hardRulesWeight + ". Weight must be integer in the range 0-100");
         }
     }
-    //#endregion
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public void setUploadedBy(User uploadedBy) {
+        this.uploadedBy = uploadedBy;
+    }
+//#endregion
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TimeTable timeTable = (TimeTable) o;
+        return ID == timeTable.ID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ID);
+    }
 
     @Override
     public String toString() {

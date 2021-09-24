@@ -10,8 +10,14 @@ public class TimetableSummary {
     private final int numOfClasses;
     private final int numOfSoftRules;
     private final int numOfHardRules;
-    private double maxFitnessScore;
+    private double bestScore;
     private int numOfUsersSolving;
+
+    public TimetableSummary(TimeTable timeTable, double bestScore, int numOfUsers) {
+        this(timeTable);
+        this.bestScore = bestScore;
+        this.numOfUsersSolving = numOfUsers;
+    }
 
     public TimetableSummary(TimeTable timeTable) {
         this.ID = timeTable.getID();
@@ -24,11 +30,11 @@ public class TimetableSummary {
         this.numOfSoftRules = timeTable.getNumOfSoftRules();
         this.numOfHardRules = timeTable.getNumOfHardRules();
 
-        //after c'tor we'll need to set maxFitness and numOfUsersSolving
+        //after c'tor we'll need to set BestScore and numOfUsersSolving
     }
 
-    public void setMaxFitnessScore(double maxFitnessScore) {
-        this.maxFitnessScore = maxFitnessScore;
+    public void setBestScore(double bestScore) {
+        this.bestScore = bestScore;
     }
 
     public void setNumOfUsersSolving(int numOfUsersSolving) {

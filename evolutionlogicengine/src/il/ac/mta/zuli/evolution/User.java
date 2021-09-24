@@ -1,6 +1,8 @@
 package il.ac.mta.zuli.evolution;
 
 import il.ac.mta.zuli.evolution.engine.Descriptor;
+import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
+import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -9,26 +11,20 @@ import java.util.Objects;
 
 public class User {
     private String username;
-    //TODO - add in readme: the user configs an engine for each problem he decides to run (and not for several problems together)
-    //if user picks a certain timetable in screen2, we'll add it the userDescriptors list, and later assign it with an engine accordingly
-    //key of Map is the timetableID (unique per suer)
-    private final Map<Integer, Descriptor> userDescriptors; //descriptor is the pair of (TimeTable, EngineSettings)
-    private Descriptor currDisplayedDescriptor; //the descriptor of which its state is displayed on screen3
-    //multiple descriptors can run in back, but only one is displayed om the front?
-
-    // TODO - think about it: maybe instead of holding a Map<Integer,Descriptor> the user should have a
-    //  Map<Integer, TimeTableEngine>
-    //  the user will instantiate a timetableEngine which will serve as a wrapper for Descriptor
-
+    private final Map<Integer, TimeTableEngine> userAlgorithmRuns; //key of Map is the timetableID (unique per User)
+    private TimeTableEngine currDisplayedRun; //currently, displayed on screen3,
+    // multiple descriptors can run in back, but only one is displayed on the front?
 
     public User(String username) throws IOException {
         setUsername(username);
-        userDescriptors = new HashMap<>();
+        userAlgorithmRuns = new HashMap<>();
     }
+
+    //if user picks a certain timetable in screen2, we'll add it the user's map,
+    // and later assign it with an engine accordingly
 
     //adding a TimeTable to the app will add it to the common collection and add the reference to the user who uploaded it
     //adding an engine only happens at the user level
-
 
     public void setUsername(String username) throws IOException {
         if (username == null || username.trim().isEmpty()) {
@@ -44,6 +40,24 @@ public class User {
         return username;
     }
 
+    public void addNewRun(Descriptor descriptor) {
+        TimeTableEngine newRun = new TimeTableEngine(descriptor);
+        //TODO implement
+    }
+
+    public boolean isSolvingProblem(int ttID) {
+        //if currently solving or previously solved a certain timetable
+        return userAlgorithmRuns.containsKey(ttID);
+    }
+
+    public double getBestScore(int ttID) {
+        return userAlgorithmRuns.get(ttID).getBestScore();
+    }
+
+    public TimeTableSolution getBestSolution(int ttID) {
+        return userAlgorithmRuns.get(ttID).getBestSolution();
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(username);
@@ -57,7 +71,6 @@ public class User {
         User that = (User) obj;
         return username.equals(that.username);
     }
-
 
     @Override
     public String toString() {

@@ -42,37 +42,29 @@ public class DashboardServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //If we reached post in this servlet, then it's only in order to add a new problem
+        //adding a new timetable to the dashboard
         String responseMessage = null;
+        Descriptor descriptor = null;
+
         try {
             String usernameFromSession = SessionUtils.getUsername(request);
-            System.out.println("line 51"+usernameFromSession);
+
+            //from file to Timetable (within Descriptor)
             InputStream inputStream = request.getInputStream();
-            Descriptor descriptor = generateTimetableFromFile(inputStream);
+            XMLParser xmlParser = new XMLParser();
+            descriptor = xmlParser.unmarshall(inputStream);
+
+            //adding the new problem to the collection in DataManager
+            DataManager dataManager = ServletUtils.getDataManager(getServletContext());
+            dataManager.addTimeTable(descriptor, usernameFromSession);
+
             responseMessage = "OK";
-        }catch (JAXBException e){
-            responseMessage = "jaxbException";
-        }
-        catch (Throwable e) {
+        } catch (JAXBException e) {
+            responseMessage = "JAXB Exception";
+        } catch (Throwable e) {
             responseMessage = EngineUtils.getToRootError(e);
-            System.out.println(responseMessage);
-            e.printStackTrace();
         } finally {
             ServletUtils.sendJSONResponse(response, responseMessage);
         }
-
-        //        //2 generate Timetable (if valid file) (including uploadedBy user) (will need engine)
-        //        //3 add timetable to timetables in dataManager
-        //
-        //        //response: notify user in UI: successful upload (otherwise, an exception will cause an alert in UI?)
-    }
-
-
-    private Descriptor generateTimetableFromFile(InputStream fileToLoad) throws JAXBException {
-        XMLParser xmlParser = new XMLParser();
-        Descriptor descriptor = xmlParser.unmarshall(fileToLoad);
-        //TODO update in UI if the file was successfully loaded or not
-
-        return descriptor;
     }
 }

@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet {
                 //user is not logged in yet
                 DataManager dataManager = ServletUtils.getDataManager(getServletContext());
                 synchronized (this) {
-                    if (dataManager.isUserExists(newUser)) {
+                    if (dataManager.doesUserExist(newUser.getUsername())) {
                         responseMessage = Constants.USER_NAME_NOT_UNIQUE;
                     } else {
                         //add the new user to the users list
