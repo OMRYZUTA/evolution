@@ -68,6 +68,7 @@ public class DataManager {
 
     public User getUserWithBestSolutionOfProblem(int ttID) {
         List<User> usersSolvingProblem = getUsersSolvingProblem(ttID);
+        //todo consider the case of nobody is trying to solve this problem
         TimeTableSolution bestSolution = usersSolvingProblem.get(0).getBestSolution(ttID);
         User userWithBestSolution = null;
 
@@ -93,16 +94,25 @@ public class DataManager {
 
     public List<TimetableSummary> getTimetableSummaries() {
         List<TimetableSummary> newList = new ArrayList<>();
+        List<User> solvingUsers;
+        double bestScore;
         int numOfUsers;
-        double betsScore;
-
         for (TimeTable tt : timetables) {
-            betsScore = getBestSolutionOfProblem(tt.getID()).getFitnessScore();
-            numOfUsers = getNumOfUsersSolvingProblem(tt.getID());
-            TimetableSummary currTTSummary = new TimetableSummary(tt, betsScore, numOfUsers);
+            solvingUsers= getUsersSolvingProblem(tt.getID());
+            bestScore = getBestScoreForTimeTable(tt.getID(),solvingUsers);
+            numOfUsers = solvingUsers.size();
+            TimetableSummary currTTSummary = new TimetableSummary(tt, bestScore, numOfUsers);
             newList.add(currTTSummary);
         }
 
         return newList;
+    }
+
+    private double getBestScoreForTimeTable(int id, List<User> solvingUsers) {
+        double score =0;
+        if(solvingUsers.size()>0){
+            score = getBestSolutionOfProblem(id).getFitnessScore();
+        }
+        return score;
     }
 }

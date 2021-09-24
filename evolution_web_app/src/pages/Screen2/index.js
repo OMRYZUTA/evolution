@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button'
 import {uploadFile} from "../../services/FileServices";
 import * as FileServices from "../../services/FileServices";
 import {UserContext} from "../../components/UserContext"
+
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: '50px 70px',
@@ -23,60 +24,19 @@ const useStyles = makeStyles((theme) => ({
     },
 
 }))
-const fakeData = [{ //todo delete later
-    username: "Hagit",
-    days: 4,
-    hours: 5,
-    schoolclasses: 3,
-    teachers: 6,
-    hardRules: 3,
-    softRules: 7,
-    solvingUsers: 2,
-    maxFitnessSoFar: 88.2,
-},
+const fakeData = [ //todo delete later
     {
-        username: "Bar",
-        days: 6,
-        hours: 5,
-        schoolclasses: 6,
-        teachers: 12,
-        hardRules: 2,
-        softRules: 9,
-        solvingUsers: 3,
-        maxFitnessSoFar: 89.4,
-    },
-    {
-        username: "Yafa",
-        days: 6,
-        hours: 5,
-        schoolclasses: 6,
-        teachers: 12,
-        hardRules: 2,
-        softRules: 9,
-        solvingUsers: 3,
-        maxFitnessSoFar: 89.4,
-    },
-    {
-        username: "Gad",
-        days: 6,
-        hours: 5,
-        schoolclasses: 6,
-        teachers: 12,
-        hardRules: 2,
-        softRules: 9,
-        solvingUsers: 3,
-        maxFitnessSoFar: 89.4,
-    },
-    {
-        username: "Joseph",
-        days: 6,
-        hours: 5,
-        schoolclasses: 6,
-        teachers: 12,
-        hardRules: 2,
-        softRules: 9,
-        solvingUsers: 3,
-        maxFitnessSoFar: 89.4,
+        ID: 999,
+        bestScore: 100,
+        days: 32,
+        hours: 2323,
+        numOfClasses: 2323,
+        numOfHardRules: 323,
+        numOfSoftRules: 32,
+        numOfSubjects: 55,
+        numOfTeachers: 888,
+        numOfUsersSolving: 999,
+        uploadedBy: "defaultSummary",
     }]
 
 const Index = () => {
@@ -93,10 +53,9 @@ const Index = () => {
         const fetchAllData = async () => {
             // calling all API calls in parallel, and waiting until they ALL finish before setting
             try {
-                const [userList] = await Promise.all([
-                    Screen2Services.getAll(),
-                ]);
-                setUsers(userList.users);
+                const dashboardPayload = await Screen2Services.getAll();
+                setUsers(dashboardPayload.users);
+                setSummaries([...fakeData,...dashboardPayload.timetables]);
             } catch (e) {
                 console.log(e);
                 // setAlertText('Failed initializing app, please reload page');
@@ -111,7 +70,8 @@ const Index = () => {
     const handleFileUpload = async (event) => {
         setSelectedFile(event.target.files[0]);
         const result = await FileServices.uploadFile(event.target.files[0]);
-        console.log(result);
+        console.log(result);//todo handle bad xml
+
     };
 
     return (
@@ -121,7 +81,7 @@ const Index = () => {
                 <Button
                     variant="contained"
                     component="label"
-                    >
+                >
                     Upload File
                     <input
                         type="file"

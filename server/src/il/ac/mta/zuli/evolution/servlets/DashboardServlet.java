@@ -26,16 +26,18 @@ public class DashboardServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        DataManager dataManager = ServletUtils.getDataManager(getServletContext());
-        List<String> usernames = dataManager.getUserNames();
-        List<TimetableSummary> timetableSummaries = dataManager.getTimetableSummaries();
-
-        //preparing the response (no need for DTOs because we already wrap the objects in JSON)
         Map<String, Object> mapForJSON = new HashMap<>();
-        mapForJSON.put("users", usernames);
-        mapForJSON.put("timetables", timetableSummaries);
+        try {
+            DataManager dataManager = ServletUtils.getDataManager(getServletContext());
+            List<String> usernames = dataManager.getUserNames();
+            List<TimetableSummary> timetableSummaries = dataManager.getTimetableSummaries();
 
+            //preparing the response (no need for DTOs because we already wrap the objects in JSON)
+            mapForJSON.put("users", usernames);
+            mapForJSON.put("timetables", timetableSummaries);
+        }catch (Throwable e){
+            mapForJSON.put("error",e.getMessage());
+        }
         ServletUtils.sendJSONResponse(response, mapForJSON);
     }
 
