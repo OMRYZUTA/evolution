@@ -35,6 +35,9 @@ public class RuleFactory {
             case "dayoffclass":
                 newRule = new DayOffClass(rule.getType(), days,classes);
                 break;
+            case "workinghourspreference":
+                newRule = new WorkingHoursPreference(rule.getType(), teachers);
+                break;
             default:
                 throw new ValidationException("Invalid rule for ex.3: " + rule.getETTRuleId());
         }

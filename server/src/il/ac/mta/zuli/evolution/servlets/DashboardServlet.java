@@ -2,6 +2,7 @@ package il.ac.mta.zuli.evolution.servlets;
 
 import il.ac.mta.zuli.evolution.DataManager;
 import il.ac.mta.zuli.evolution.engine.Descriptor;
+import il.ac.mta.zuli.evolution.engine.EngineUtils;
 import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 import il.ac.mta.zuli.evolution.utils.ServletUtils;
@@ -42,10 +43,24 @@ public class DashboardServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //If we reached post in this servlet, then it's only in order to add a new problem
-        String usernameFromSession = SessionUtils.getUsername(request);
-        System.out.println(usernameFromSession);
-        //todo get xml from request -convert to input stream
-        //        //1 get input-stream from body (the file) and user from header
+        String responseMessage = null;
+        try {
+            String usernameFromSession = SessionUtils.getUsername(request);
+            System.out.println("line 51"+usernameFromSession);
+            InputStream inputStream = request.getInputStream();
+            Descriptor descriptor = generateTimetableFromFile(inputStream);
+            responseMessage = "OK";
+        }catch (JAXBException e){
+            responseMessage = "jaxbException";
+        }
+        catch (Throwable e) {
+            responseMessage = EngineUtils.getToRootError(e);
+            System.out.println(responseMessage);
+            e.printStackTrace();
+        } finally {
+            ServletUtils.sendJSONResponse(response, responseMessage);
+        }
+
         //        //2 generate Timetable (if valid file) (including uploadedBy user) (will need engine)
         //        //3 add timetable to timetables in dataManager
         //

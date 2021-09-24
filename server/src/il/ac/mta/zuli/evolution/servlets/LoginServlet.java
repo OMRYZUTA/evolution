@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution.servlets;
 
-import com.google.gson.Gson;
 import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.DataManager;
 import il.ac.mta.zuli.evolution.User;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import static il.ac.mta.zuli.evolution.utils.ServletUtils.getUserFromJson;
 
@@ -52,7 +50,7 @@ public class LoginServlet extends HttpServlet {
                         //set the username in a session, so it will be available on each request
                         //the true parameter means that if a session object does not exist yet
                         //create a new one
-                        request.getSession(true).setAttribute(Constants.USERNAME, newUser);
+                        request.getSession(true).setAttribute(Constants.USERNAME, newUser.getUsername());
                         responseMessage = Constants.SUCCESSFUL_LOGIN;
                     }
                 }
@@ -63,16 +61,11 @@ public class LoginServlet extends HttpServlet {
         } catch (IOException e) {
             responseMessage = Constants.USER_NAME_EMPTY;
         } finally {
-            response.setContentType("application/json");
-            Gson gson = new Gson();
-            String jsonResponse = gson.toJson(responseMessage);
-
-            try (PrintWriter out = response.getWriter()) {
-                out.print(jsonResponse);
-                out.flush();
-            }
+            ServletUtils.sendJSONResponse(response, responseMessage);
         }
     }
+
+
 
     /**
      * Returns a short description of the servlet.

@@ -1,10 +1,34 @@
-package il.ac.mta.zuli.evolution.ui;
+package il.ac.mta.zuli.evolution.engine;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
-public class FXutils {
+public class EngineUtils {
+
+    public static int generateRandomNum(int min, int max) {
+        int result;
+        if (max - min < 0) {
+            throw new RuntimeException("Cannot generate random number since max " + max + " is smaller than min " + min);
+        }
+
+        if (max - min == 0) {
+            result = 1;
+        } else {
+            Random random = new Random();
+            //+1 to include out bound max in randomization
+            result = random.nextInt(max + 1 - min) + min;
+        }
+
+        return result;
+    }
+
+    public static int generateRandomNumZeroBase(int num) {
+        return new Random().nextInt(num);
+
+    }
+
 
     public static <K, V> String myMapToString(Map<K, V> map) {
         StringBuilder sb = new StringBuilder();
@@ -44,7 +68,7 @@ public class FXutils {
 
     public static String getToRootError(Throwable e){
         StringBuilder sb = new StringBuilder();
-        Throwable root = findThrowableRootCause(e);
+        Throwable root = EngineUtils.findThrowableRootCause(e);
         Throwable currError = e;
 
         while (!currError.equals(root)) {
@@ -56,6 +80,7 @@ public class FXutils {
 
         return e.getMessage()+". "+ sb;
     }
+
     private static Throwable findThrowableRootCause(Throwable throwable) {
         Objects.requireNonNull(throwable);
         Throwable rootCause = throwable;

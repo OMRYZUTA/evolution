@@ -12,7 +12,7 @@ import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import java.time.DayOfWeek;
 import java.util.*;
 
-import static il.ac.mta.zuli.evolution.engine.MyUtils.generateRandomNum;
+import static il.ac.mta.zuli.evolution.engine.EngineUtils.generateRandomNum;
 
 public class Flipping<S extends Solution> implements Mutation<S> {
     double probability;

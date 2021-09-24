@@ -67,6 +67,10 @@ public class Descriptor {
         return timeTable;
     }
 
+    public void setUploadedBy(String userName){
+//        timeTable.set
+    }
+
     public EngineSettings<TimeTableSolution> getEngineSettings() {
         return engineSettings;
     }
