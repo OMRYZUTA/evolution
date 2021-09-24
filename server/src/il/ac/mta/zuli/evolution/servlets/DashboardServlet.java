@@ -58,7 +58,7 @@ public class DashboardServlet extends HttpServlet {
 
             //adding the new problem to the collection in DataManager
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
-            dataManager.addTimeTable(descriptor, usernameFromSession);
+            dataManager.addTimetable(descriptor, usernameFromSession);
 
             responseMessage = "OK";
         } catch (JAXBException e) {

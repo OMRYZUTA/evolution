@@ -22,8 +22,9 @@ public class DataManager {
         users.put("Cupcake12321", new User("Cupcake12321"));
     }
 
-    public synchronized void addTimeTable(Descriptor descriptor, String userName) {
+    public synchronized void addTimetable(Descriptor descriptor, String userName) {
         descriptor.setTimetableUploadedBy(users.get(userName));
+        descriptor.setTimtableID(timetables.size()); //the index in the list is the ID of the tt
         timetables.add(descriptor.getTimeTable());
     }
 
