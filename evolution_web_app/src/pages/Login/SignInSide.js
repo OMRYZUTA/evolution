@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,6 +15,7 @@ import * as UserServices from '../../services/UserServices'
 import { useHistory } from "react-router-dom";
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
+import {UserContext} from "../../components/UserContext";
 
 
 
@@ -30,13 +31,15 @@ const renderAlert = (alertText) => {
 const USER_NAME_EMPTY = "empty name";
 const USER_NAME_NOT_UNIQUE = "not unique name";
 const SUCCESSFUL_LOGIN = "successful login";
-const SCREEN2URL = "/screen2";
+const SCREEN2URL = "/server_Web_exploded/screen2";
 
 const theme = createTheme();
 
-export default function SignInSide({setCurrentUser}) {
+export default function SignInSide() {
     const [userName, setUserName] = useState();
     const [alertText, setAlertText] = React.useState('');
+    const {currentUser, setCurrentUser} =useContext(UserContext);
+
     const history = useHistory();
 
     const routeChange = () =>{
@@ -64,7 +67,7 @@ export default function SignInSide({setCurrentUser}) {
         }
     };
     const initUserAndGoToScreen2=()=>{
-        setCurrentUser(userName);
+        setCurrentUser(userName)
         routeChange();
     }
 

@@ -6,11 +6,10 @@ import Grid from '@material-ui/core/Grid';
 import * as Screen2Services from "../../services/Screen2Services";
 import Summary from "./Summary";
 import Navbar from "../../components/Navbar"
-import {UserContext} from "../../components/UserContext";
 import Button from '@material-ui/core/Button'
 import {uploadFile} from "../../services/FileServices";
 import * as FileServices from "../../services/FileServices";
-
+import {UserContext} from "../../components/UserContext"
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: '50px 70px',
@@ -81,7 +80,7 @@ const fakeData = [{ //todo delete later
     }]
 
 const Index = () => {
-    const user = useContext(UserContext);
+    const {currentUser} = useContext(UserContext);
     const classes = useStyles();
     const [users, setUsers] = useState([]);
     const [summaries, setSummaries] = useState(fakeData);
@@ -117,7 +116,7 @@ const Index = () => {
 
     return (
         <Grid container direction={"column"}>
-            <Navbar user={user}/>
+            <Navbar user={currentUser}/>
             <Grid item>
                 <Button
                     variant="contained"
@@ -129,6 +128,7 @@ const Index = () => {
                         name={"file"}
                         onChange={handleFileUpload}
                         hidden
+                        accept={".xml"}
                     />
                 </Button>
             </Grid>
