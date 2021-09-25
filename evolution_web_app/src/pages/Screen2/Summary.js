@@ -30,7 +30,6 @@ export default function Summary({data}) {
     const handleTimeTableClicked= async ()=>{
         console.log(localTimetable)
         await  setCurrentTimetable(localTimetable)
-        console.log("need to see here id: "+currentTimetable);
         routeChange()
 
     }

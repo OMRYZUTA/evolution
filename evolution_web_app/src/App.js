@@ -9,7 +9,7 @@ import Screen3 from "./pages/Screen3";
 import {TimetableContext} from "./components/TimetableContext";
 
 export default function App() {
-    const [currentUser, setCurrentUser] = React.useState(null);
+    const [currentUser, setCurrentUser] = React.useState(document.cookie);
     const [currentTimetable, setCurrentTimetable] = React.useState(null);
     const userProviderValue = useMemo(() => ({currentUser, setCurrentUser}), [currentUser, setCurrentUser]);
     const timetableProviderValue = useMemo(() => ({currentTimetable, setCurrentTimetable}), [currentTimetable, setCurrentTimetable]);

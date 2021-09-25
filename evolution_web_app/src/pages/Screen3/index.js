@@ -40,7 +40,6 @@ const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
     const {currentTimetable} = useContext(TimetableContext);//todo change to id
     const [timetable,setTimetable] = useState();
-    console.log(currentTimetable + "time table id");
     const classes = useStyles();
     const actions = ["start ", "pause ", "resume ", "stop "]
     useEffect(() => {
@@ -48,9 +47,14 @@ const Screen3 = () => {
         const fetchAllData = async () => {
             // calling all API calls in parallel, and waiting until they ALL finish before setting
             try {
-                const timetable = await TimetableServices.getDetails(currentTimetable);
-                console.log({timetable})
-                setTimetable(timetable);
+                const result = await TimetableServices.getDetails(currentTimetable);
+                if(result.data){
+                    setTimetable(result.data);
+                }
+                else{
+                    console.log(result.error);
+                }
+
             } catch (e) {
                 console.log(e);
                 // setAlertText('Failed initializing app, please reload page');

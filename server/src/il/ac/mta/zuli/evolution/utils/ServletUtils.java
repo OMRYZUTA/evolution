@@ -31,7 +31,7 @@ public class ServletUtils {
             jsonResponse = gson.toJson(obj);
         } catch (Throwable e) {
             HashMap<String,String> mapForJSON = new HashMap<>();
-            mapForJSON.put(Constants.ERROR, e.getMessage());
+            mapForJSON.put(Constants.ERROR, Constants.PARSE_JSON_ERROR);
             jsonResponse = gson.toJson(mapForJSON);
         }
         try (PrintWriter out = response.getWriter()) {
