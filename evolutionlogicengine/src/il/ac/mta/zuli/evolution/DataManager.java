@@ -10,8 +10,7 @@ import java.util.stream.Collectors;
 
 public class DataManager {
     private final Map<String, User> users;
-    // the index in the array will serve as the ID of the timetable
-    private final List<TimeTable> timetables; //for each valid xml uploaded, add a timetable to the collection
+    private final List<TimeTable> timetables; // the index in the array will serve as the ID of the timetable
 
     public DataManager() throws IOException {
         timetables = new ArrayList<>();

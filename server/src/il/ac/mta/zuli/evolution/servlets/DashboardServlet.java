@@ -56,7 +56,7 @@ public class DashboardServlet extends HttpServlet {
             XMLParser xmlParser = new XMLParser();
             timeTable = xmlParser.unmarshall(inputStream);
 
-            //adding the new problem to the collection in DataManager
+            //adding the new timetable to the collection in DataManager
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
             dataManager.addTimetable(timeTable, usernameFromSession);
 
