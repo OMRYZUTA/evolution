@@ -1,12 +1,14 @@
 import {Container, Grid,} from '@mui/material';
 import Navbar from "../../components/Navbar";
 import {UserContext} from "../../components/UserContext"
-import {useContext} from "react";
+import {useContext, useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import Paper from "@mui/material/Paper";
 import {TimetableContext} from "../../components/TimetableContext";
 import {ButtonGroup} from "@material-ui/core";
+import * as Screen2Services from "../../services/Screen2Services";
+import * as TimetableServices from "../../services/TimetableServices";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,17 +38,32 @@ const useStyles = makeStyles((theme) => ({
 
 const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
-    const {currentTimetable} = useContext(TimetableContext);
+    const {currentTimetable} = useContext(TimetableContext);//todo change to id
+    const [timetable,setTimetable] = useState();
     console.log(currentTimetable + "time table id");
     const classes = useStyles();
     const actions = ["start ", "pause ", "resume ", "stop "]
+    useEffect(() => {
+
+        const fetchAllData = async () => {
+            // calling all API calls in parallel, and waiting until they ALL finish before setting
+            try {
+                const timetable = await TimetableServices.getDetails(currentTimetable);
+                console.log({timetable})
+                setTimetable(timetable);
+            } catch (e) {
+                console.log(e);
+                // setAlertText('Failed initializing app, please reload page');
+            }
+        };
+        fetchAllData();
+    }, []);
 
     return (
         <Grid>
             <Container maxWidth="xl">
                 <Navbar user={currentUser}/>
                 <Grid container direction={"row"} spacing={2}>
-
                     <Grid item xs={12} md={5}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
                             <Grid item>

@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution.servlets;
 
-import com.google.gson.Gson;
 import il.ac.mta.zuli.evolution.DataManager;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.utils.ServletUtils;
@@ -14,20 +13,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static il.ac.mta.zuli.evolution.Constants.TIMETABLEID;
+
 @WebServlet(name = "il.ac.mta.zuli.evolution.servlets.Screen3Servlet", urlPatterns = "/api/timetable/details")
 public class Screen3Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Map<String, Object> mapForJSON = new HashMap<>();
-
-        // retrieve from request : timetableID
-        Gson gson = new Gson();
-        Map<String, Object> map = gson.fromJson(request.getReader(), new HashMap<String, Object>().getClass());
-        double num = (double) map.get("timetableID");
-        int ttID = (int) Math.ceil(num);
+        String timetableIDFromParameter = request.getParameter(TIMETABLEID);
 
         try {
+            int ttID = Integer.parseInt(timetableIDFromParameter);
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
             TimeTable timeTable = dataManager.getTimetable(ttID);
             mapForJSON.put("timetable", timeTable);

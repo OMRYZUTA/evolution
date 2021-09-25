@@ -25,12 +25,15 @@ public class ServletUtils {
 			throws ServletException, IOException {
 		response.setContentType("application/json");
 		Gson gson = new Gson();
-		String jsonResponse = gson.toJson(obj);
-
 		try (PrintWriter out = response.getWriter()) {
-			out.print(jsonResponse);
-			out.flush();
+			String jsonResponse = gson.toJson(obj);
+
+				out.print(jsonResponse);
+				out.flush();
+		}catch(Throwable e){
+			System.out.println(e);
 		}
+
 	}
 
 	public static User getUserFromJson(HttpServletRequest request) throws IOException {
@@ -49,48 +52,4 @@ public class ServletUtils {
 
 		return (DataManager) servletContext.getAttribute("dataManager");
 	}
-
-	public static int getIntParameter(HttpServletRequest request, String name) {
-		String value = request.getParameter(name);
-
-		if (value != null) {
-			try {
-				return Integer.parseInt(value);
-			} catch (NumberFormatException numberFormatException) {
-			}
-		}
-		return Integer.MIN_VALUE;
-	}
-
-	//	public static String getBody(HttpServletRequest request) throws IOException {
-//		String body = null;
-//		StringBuilder stringBuilder = new StringBuilder();
-//		BufferedReader bufferedReader = null;
-//
-//		try {
-//			InputStream inputStream = request.getInputStream();
-//			if (inputStream != null) {
-//				bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-//				char[] charBuffer = new char[128];
-//				int bytesRead = -1;
-//				while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-//					stringBuilder.append(charBuffer, 0, bytesRead);
-//				}
-//			} else {
-//			}
-//		} catch (IOException ex) {
-//			throw ex;
-//		} finally {
-//			if (bufferedReader != null) {
-//				try {
-//					bufferedReader.close();
-//				} catch (IOException ex) {
-//					throw ex;
-//				}
-//			}
-//		}
-//
-//		body = stringBuilder.toString();
-//		return body;
-//	}
 }
