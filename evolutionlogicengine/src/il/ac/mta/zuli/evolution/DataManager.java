@@ -30,48 +30,57 @@ public class DataManager {
         users.put(user.getUsername(), user);
     }
 
-    //when do we remove users? delete later
-    public synchronized void removeUser(String username) {
-        users.remove(username);
-    }
-
-    public synchronized Map<String, User> getUsers() {
-        return Collections.unmodifiableMap(users);
-    }
-
+    //return value might be an empty list
     public List<String> getUserNames() {
-        return users.values()
-                .stream()
-                .map(User::getUsername)
-                .collect(Collectors.toList());
-    }
-
-    public User getUser(String name) {
-        return users.get(name);
+        if (!users.isEmpty()) {
+            return users.values()
+                    .stream()
+                    .map(User::getUsername)
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     public boolean doesUserExist(String username) {
         //User has a unique-name field so that's what we use in equals()
-        return users.containsKey(username);
+        if (!users.isEmpty()) {
+            return users.containsKey(username);
+        } else {
+            return false; //map is empty
+        }
     }
 
     public int getNumOfUsersSolvingProblem(int ttID) {
-        return getUsersSolvingProblem(ttID).size();
+        if (isSomeoneSolvingProblem(ttID)) {
+            return getUsersSolvingProblem(ttID).size();
+        } else {
+            return 0;
+        }
     }
 
-    //function might return empty list - need to always check
+    //return value might be an empty list
     public List<User> getUsersSolvingProblem(int ttID) {
-        return users.values().stream()
-                .filter(user -> user.isSolvingProblem(ttID))
-                .collect(Collectors.toList());
+        if (!users.isEmpty()) {
+            return users.values().stream()
+                    .filter(user -> user.isSolvingProblem(ttID))
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    //return true if list isn't empty
+    public boolean isSomeoneSolvingProblem(int ttID) {
+        return !getUsersSolvingProblem(ttID).isEmpty();
     }
 
     //return value might be NULL if no users are trying to solve
     public User getUserWithBestSolutionOfProblem(int ttID) {
-        List<User> usersSolvingProblem = getUsersSolvingProblem(ttID);
         User userWithBestSolution = null;
 
         if (isSomeoneSolvingProblem(ttID)) {
+            List<User> usersSolvingProblem = getUsersSolvingProblem(ttID);
             TimeTableSolution bestSolution = usersSolvingProblem.get(0).getBestSolution(ttID);
 
             for (User user : usersSolvingProblem) {
@@ -87,13 +96,27 @@ public class DataManager {
         return userWithBestSolution;
     }
 
-    //return true if list isn't empty
-    public boolean isSomeoneSolvingProblem(int ttID) {
-        return !getUsersSolvingProblem(ttID).isEmpty();
+    //return value might be NULL
+    public TimeTableSolution getBestSolutionOfProblem(int ttID) {
+        User userWithBestSolution = getUserWithBestSolutionOfProblem(ttID);
+        TimeTableSolution bestSolution = null;
+
+        if (userWithBestSolution != null) {
+            bestSolution = userWithBestSolution.getBestSolution(ttID);
+        }
+
+        return bestSolution;
     }
 
-    public TimeTableSolution getBestSolutionOfProblem(int ttID) {
-        return getUserWithBestSolutionOfProblem(ttID).getBestSolution(ttID);
+    private double getBestScoreForProblem(int ttID) {
+        User user = getUserWithBestSolutionOfProblem(ttID);
+        double score = 0;
+
+        if (user != null) {
+            score = user.getBestScore(ttID);
+        }
+
+        return score;
     }
 
     public List<TimeTable> getTimetables() {
@@ -102,29 +125,30 @@ public class DataManager {
 
     public List<TimetableSummary> getTimetableSummaries() {
         List<TimetableSummary> newList = new ArrayList<>();
-        List<User> solvingUsers;
-        double bestScore;
-        int numOfUsers;
 
-        for (TimeTable tt : timetables) {
-            solvingUsers = getUsersSolvingProblem(tt.getID());
-            bestScore = getBestScoreForTimeTable(tt.getID(), solvingUsers);
-            numOfUsers = solvingUsers.size();
-            TimetableSummary currTTSummary = new TimetableSummary(tt, bestScore, numOfUsers);
-            newList.add(currTTSummary);
+        if (!timetables.isEmpty()) {
+            for (TimeTable tt : timetables) {
+                int ttID = tt.getID();
+                int numOfUsers = getNumOfUsersSolvingProblem(ttID);
+                double bestScore = getBestScoreForProblem(ttID);
+
+                newList.add(new TimetableSummary(tt, bestScore, numOfUsers));
+            }
         }
 
         return newList;
     }
 
-    private double getBestScoreForTimeTable(int id, List<User> solvingUsers) {
-        User user = getUserWithBestSolutionOfProblem(id);
-        double score = 0;
+    //when do we remove users? delete later
+    public synchronized void removeUser(String username) {
+        users.remove(username);
+    }
 
-        if (user != null) {
-            score = user.getBestScore(id);
-        }
+    public synchronized Map<String, User> getUsers() {
+        return Collections.unmodifiableMap(users);
+    }
 
-        return score;
+    public User getUser(String name) {
+        return users.get(name);
     }
 }
