@@ -21,7 +21,7 @@ public class DataManager {
     }
 
     public synchronized void addTimetable(TimeTable timeTable, String userName) {
-        timeTable.setUploadedBy(users.get(userName));
+        timeTable.setUploadedBy(userName);
         timeTable.setID(timetables.size()); //the index in the list is the ID of the tt
         timetables.add(timeTable);
     }

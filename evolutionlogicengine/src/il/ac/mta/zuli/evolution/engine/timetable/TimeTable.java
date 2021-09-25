@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution.engine.timetable;
 
-import il.ac.mta.zuli.evolution.User;
 import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
@@ -13,7 +12,7 @@ import java.util.*;
 
 public class TimeTable {
     private int ID; // ID is index in dataManager TT-list //TODO EX3 addition
-    private User uploadedBy; //TODO EX3 addition
+    private String uploadedBy; //TODO EX3 addition
     private int days;
     private int hours;
     private Map<Integer, Teacher> teachers;
@@ -39,7 +38,7 @@ public class TimeTable {
     }
 
     public String getUploadedBy() {
-        return uploadedBy.getUsername();
+        return uploadedBy;
     }
 
     public int getDays() {
@@ -231,7 +230,7 @@ public class TimeTable {
         this.ID = ID;
     }
 
-    public void setUploadedBy(User uploadedBy) {
+    public void setUploadedBy(String uploadedBy) {
         this.uploadedBy = uploadedBy;
     }
 //#endregion

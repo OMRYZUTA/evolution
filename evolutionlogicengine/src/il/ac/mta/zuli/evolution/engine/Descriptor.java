@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution.engine;
 
-import il.ac.mta.zuli.evolution.User;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
@@ -23,14 +22,6 @@ public class Descriptor {
 
     public void setEngineSettings(EngineSettings<TimeTableSolution> newEngineSettings) {
         this.engineSettings = newEngineSettings;
-    }
-
-    public void setTimetableUploadedBy(User user) {
-        timeTable.setUploadedBy(user);
-    }
-
-    public void setTimtableID(int id) {
-        timeTable.setID(id);
     }
 
     public int getPopulationSize() {
