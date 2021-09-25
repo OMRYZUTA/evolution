@@ -59,28 +59,37 @@ public class DataManager {
         return getUsersSolvingProblem(ttID).size();
     }
 
+    //function might return empty list - need to always check
     public List<User> getUsersSolvingProblem(int ttID) {
         return users.values().stream()
                 .filter(user -> user.isSolvingProblem(ttID))
                 .collect(Collectors.toList());
     }
 
+    //return value might be NULL if no users are trying to solve
     public User getUserWithBestSolutionOfProblem(int ttID) {
         List<User> usersSolvingProblem = getUsersSolvingProblem(ttID);
-        //todo consider the case of nobody is trying to solve this problem
-        TimeTableSolution bestSolution = usersSolvingProblem.get(0).getBestSolution(ttID);
         User userWithBestSolution = null;
 
-        for (User user : usersSolvingProblem) {
-            TimeTableSolution currUserSolution = user.getBestSolution(ttID);
+        if (isSomeoneSolvingProblem(ttID)) {
+            TimeTableSolution bestSolution = usersSolvingProblem.get(0).getBestSolution(ttID);
 
-            if (currUserSolution.getFitnessScore() > bestSolution.getFitnessScore()) {
-                bestSolution = currUserSolution;
-                userWithBestSolution = user;
+            for (User user : usersSolvingProblem) {
+                TimeTableSolution currUserSolution = user.getBestSolution(ttID);
+
+                if (currUserSolution.getFitnessScore() > bestSolution.getFitnessScore()) {
+                    bestSolution = currUserSolution;
+                    userWithBestSolution = user;
+                }
             }
         }
 
         return userWithBestSolution;
+    }
+
+    //return true if list isn't empty
+    public boolean isSomeoneSolvingProblem(int ttID) {
+        return !getUsersSolvingProblem(ttID).isEmpty();
     }
 
     public TimeTableSolution getBestSolutionOfProblem(int ttID) {
@@ -96,9 +105,10 @@ public class DataManager {
         List<User> solvingUsers;
         double bestScore;
         int numOfUsers;
+
         for (TimeTable tt : timetables) {
-            solvingUsers= getUsersSolvingProblem(tt.getID());
-            bestScore = getBestScoreForTimeTable(tt.getID(),solvingUsers);
+            solvingUsers = getUsersSolvingProblem(tt.getID());
+            bestScore = getBestScoreForTimeTable(tt.getID(), solvingUsers);
             numOfUsers = solvingUsers.size();
             TimetableSummary currTTSummary = new TimetableSummary(tt, bestScore, numOfUsers);
             newList.add(currTTSummary);
@@ -108,10 +118,13 @@ public class DataManager {
     }
 
     private double getBestScoreForTimeTable(int id, List<User> solvingUsers) {
-        double score =0;
-        if(solvingUsers.size()>0){
-            score = getBestSolutionOfProblem(id).getFitnessScore();
+        User user = getUserWithBestSolutionOfProblem(id);
+        double score = 0;
+
+        if (user != null) {
+            score = user.getBestScore(id);
         }
+
         return score;
     }
 }
