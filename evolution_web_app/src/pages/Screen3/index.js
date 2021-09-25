@@ -5,6 +5,7 @@ import {useContext} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 
 import Paper from "@mui/material/Paper";
+import {TimetableContext} from "../../components/TimetableContext";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,6 +30,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function Screen3() {
     const {currentUser} = useContext(UserContext);
+    const {currentTimetable} = useContext(TimetableContext);
+    console.log(currentTimetable+"time table id");
     const classes = useStyles();
     const actions = ["start ","pause ","resume ","stop "]
     return (

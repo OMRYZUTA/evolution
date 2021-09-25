@@ -6,6 +6,8 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {useHistory} from "react-router-dom";
+import {TimetableContext} from "../../components/TimetableContext";
+import {useContext, useState} from "react";
 
 const bull = (
     <Box
@@ -17,11 +19,20 @@ const bull = (
 );
 const SCREEN3URL = "/server_Web_exploded/screen3";
 export default function Summary({data}) {
+    const [localTimetable,setLocalTimetable] = useState(data.ID);
+    const {currentTimetable, setCurrentTimetable} =useContext(TimetableContext);
     const history = useHistory();
 
     const routeChange = () =>{
         let path = SCREEN3URL;
         history.push(path);
+    }
+    const handleTimeTableClicked= async ()=>{
+        console.log(localTimetable)
+        await  setCurrentTimetable(localTimetable)
+        console.log("need to see here id: "+currentTimetable);
+        routeChange()
+
     }
 
     return (
@@ -51,7 +62,7 @@ export default function Summary({data}) {
 
             </CardContent>
             <CardActions>
-                <Button size="small" onClick={routeChange}>Open</Button>
+                <Button size="small" onClick={handleTimeTableClicked}>Open</Button>
             </CardActions>
         </Card>
     );

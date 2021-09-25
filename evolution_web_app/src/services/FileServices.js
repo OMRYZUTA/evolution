@@ -22,7 +22,6 @@ const fetchXmlWrapper =async  (method, url, file)=> {
     let responseBody;
     if (result.headers.get("content-type").includes("application/json")) {
         responseBody = await result.json();
-        console.log(responseBody);
     } else {
         responseBody = await result.text();
         console.log(responseBody);
