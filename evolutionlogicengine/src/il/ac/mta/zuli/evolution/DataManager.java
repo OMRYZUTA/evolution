@@ -127,15 +127,17 @@ public class DataManager {
         return Collections.unmodifiableList(timetables);
     }
 
+    public boolean doesTimetableExist(int ttID) {
+        return timetables.size() > ttID;
+    }
+
     //return value might be null
     public TimeTable getTimetable(int ttID) {
-        TimeTable timeTable = null;
-
-        if (timetables.size() > ttID) {
-            timeTable = timetables.get(ttID);
+        if (doesTimetableExist(ttID)) {
+            return timetables.get(ttID);
+        } else {
+            throw new RuntimeException("couldn't find timetable");
         }
-
-        return timeTable;
     }
 
     public List<TimetableSummary> getTimetableSummaries() {

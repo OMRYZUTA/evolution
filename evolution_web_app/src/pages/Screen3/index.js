@@ -6,6 +6,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import Paper from "@mui/material/Paper";
 import {TimetableContext} from "../../components/TimetableContext";
+import {ButtonGroup} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,10 +26,15 @@ const useStyles = makeStyles((theme) => ({
         padding: 20,
         margin: 20,
         justifyContent: 'space-evenly',
-
-    }
+    },
+    tempGrid: {
+        padding: 20,
+        margin: 20,
+        backgroundColor: "pink",
+    },
 }));
-export default function Screen3() {
+
+const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
     const {currentTimetable} = useContext(TimetableContext);
     console.log(currentTimetable + "time table id");
@@ -38,24 +44,52 @@ export default function Screen3() {
     return (
         <Grid>
             <Container maxWidth="xl">
-                <Navbar user={currentUser}>
-                    <Button
-                        id="BackToScreen2"
-                        onClick={() => {
-                            console.log("going back to 2");
-                        }}> Back to Screen 2</Button>
-                </Navbar>
-                <Grid container className={classes.root} direction={"row"}>
-                    <Grid item xs={12} md={4}>
-                        <Paper className={classes.settings}/>
+                <Navbar user={currentUser}/>
+                <Grid container direction={"row"} spacing={2}>
+
+                    <Grid item xs={12} md={5}>
+                        <Grid container direction={"column"} className={classes.tempGrid}>
+                            <Grid item>
+                                <Paper>timetable details</Paper>
+                            </Grid>
+                            <Grid item>
+                                <Paper>configuration</Paper>
+                            </Grid>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} md={8}>
-                        <Grid container direction={"row"} className={classes.actions}>
-                            {actions.map(action => {
-                                return (
-                                    <Paper>{action}</Paper>
-                                )
-                            })}
+
+                    <Grid item xs={12} md={5}>
+                        <Grid container direction={"column"} className={classes.tempGrid}>
+                            <Grid item>
+                                <ButtonGroup
+                                    aria-label="outlined primary button group">
+                                    <Button
+                                        id="start">
+                                        start
+                                    </Button>
+                                    <Button id="pause">
+                                        pause
+                                    </Button>
+                                    <Button id="resume">
+                                        resume
+                                    </Button>
+                                    <Button id="stop">
+                                        stop
+                                    </Button>
+                                    <Button id="bestSolution">
+                                        Best Solution
+                                    </Button>
+                                    <Button id="back to screen 2">
+                                        Back to screen 2
+                                    </Button>
+                                </ButtonGroup>
+                            </Grid>
+                            <Grid item>
+                                <Paper>stride details</Paper>
+                            </Grid>
+                            <Grid item>
+                                <Paper>other users solving</Paper>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -63,3 +97,5 @@ export default function Screen3() {
         </Grid>
     );
 }
+
+export default Screen3;

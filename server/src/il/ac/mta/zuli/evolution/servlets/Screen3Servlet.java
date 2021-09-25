@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.Screen3Servlet", urlPatterns = "/api/screen3")
+@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.Screen3Servlet", urlPatterns = "/api/timetable/details")
 public class Screen3Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -24,11 +24,11 @@ public class Screen3Servlet extends HttpServlet {
         // retrieve from request : timetableID
         Gson gson = new Gson();
         Map<String, Object> map = gson.fromJson(request.getReader(), new HashMap<String, Object>().getClass());
-        int ttID = (int) map.get("timetableID");
+        double num = (double) map.get("timetableID");
+        int ttID = (int) Math.ceil(num);
 
         try {
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
-
             TimeTable timeTable = dataManager.getTimetable(ttID);
             mapForJSON.put("timetable", timeTable);
         } catch (Throwable e) {
