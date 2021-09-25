@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution;
 
-import il.ac.mta.zuli.evolution.engine.Descriptor;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
@@ -22,10 +21,10 @@ public class DataManager {
         users.put("Cupcake12321", new User("Cupcake12321"));
     }
 
-    public synchronized void addTimetable(Descriptor descriptor, String userName) {
-        descriptor.setTimetableUploadedBy(users.get(userName));
-        descriptor.setTimtableID(timetables.size()); //the index in the list is the ID of the tt
-        timetables.add(descriptor.getTimeTable());
+    public synchronized void addTimetable(TimeTable timeTable, String userName) {
+        timeTable.setUploadedBy(users.get(userName));
+        timeTable.setID(timetables.size()); //the index in the list is the ID of the tt
+        timetables.add(timeTable);
     }
 
     public synchronized void addUser(User user) { //TODO throw exception if user already exists? (add user only called after exist check)

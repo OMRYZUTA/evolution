@@ -1,8 +1,8 @@
 package il.ac.mta.zuli.evolution.servlets;
 
 import il.ac.mta.zuli.evolution.DataManager;
-import il.ac.mta.zuli.evolution.engine.Descriptor;
 import il.ac.mta.zuli.evolution.engine.EngineUtils;
+import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 import il.ac.mta.zuli.evolution.utils.ServletUtils;
@@ -46,7 +46,7 @@ public class DashboardServlet extends HttpServlet {
             throws ServletException, IOException {
         //adding a new timetable to the dashboard
         String responseMessage = null;
-        Descriptor descriptor = null;
+        TimeTable timeTable = null;
 
         try {
             String usernameFromSession = SessionUtils.getUsername(request);
@@ -54,11 +54,11 @@ public class DashboardServlet extends HttpServlet {
             //from file to Timetable (within Descriptor)
             InputStream inputStream = request.getInputStream();
             XMLParser xmlParser = new XMLParser();
-            descriptor = xmlParser.unmarshall(inputStream);
+            timeTable = xmlParser.unmarshall(inputStream);
 
             //adding the new problem to the collection in DataManager
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
-            dataManager.addTimetable(descriptor, usernameFromSession);
+            dataManager.addTimetable(timeTable, usernameFromSession);
 
             responseMessage = "OK";
         } catch (JAXBException e) {
