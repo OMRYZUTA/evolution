@@ -51,11 +51,19 @@ public class User {
     }
 
     public double getBestScore(int ttID) {
-        return userAlgorithmRuns.get(ttID).getBestScore();
+        if (isSolvingProblem(ttID)) {
+            return userAlgorithmRuns.get(ttID).getBestScore();
+        }
+
+        return 0;
     }
 
     public TimeTableSolution getBestSolution(int ttID) {
-        return userAlgorithmRuns.get(ttID).getBestSolution();
+        if (isSolvingProblem(ttID)) {
+            return userAlgorithmRuns.get(ttID).getBestSolution();
+        }
+
+        return null;
     }
 
     @Override
