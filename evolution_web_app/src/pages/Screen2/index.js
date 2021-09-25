@@ -67,7 +67,8 @@ const Index = () => {
         };
         const interval = setInterval(() => {
             fetchAllData();
-        },1000)
+        },10000) //todo return to 1 sec
+        // fetchAllData()
         return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
     }, []);
     const handleFileUpload = async (event) => {
