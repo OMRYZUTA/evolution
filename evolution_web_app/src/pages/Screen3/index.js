@@ -1,10 +1,9 @@
-import {Box, Grid, Container, Typography} from '@mui/material';
+import { Grid, Container,} from '@mui/material';
 import Navbar from "../../components/Navbar";
 import {UserContext} from "../../components/UserContext"
 import {useContext} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import UserList from "../Screen2/UserList";
-import Summary from "../Screen2/Summary";
+
 import Paper from "@mui/material/Paper";
 
 const useStyles = makeStyles((theme) => ({
