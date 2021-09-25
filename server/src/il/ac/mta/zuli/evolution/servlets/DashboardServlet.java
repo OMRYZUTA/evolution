@@ -27,6 +27,7 @@ public class DashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Map<String, Object> mapForJSON = new HashMap<>();
+
         try {
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
             List<String> usernames = dataManager.getUserNames();
@@ -35,16 +36,18 @@ public class DashboardServlet extends HttpServlet {
             //preparing the response (no need for DTOs because we already wrap the objects in JSON)
             mapForJSON.put("users", usernames);
             mapForJSON.put("timetables", timetableSummaries);
-        }catch (Throwable e){
-            mapForJSON.put("error",e.getMessage());
+        } catch (Throwable e) {
+            mapForJSON.put("error", e.getMessage());
+        } finally {
+            ServletUtils.sendJSONResponse(response, mapForJSON);
         }
-        ServletUtils.sendJSONResponse(response, mapForJSON);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //adding a new timetable to the dashboard
+
         String responseMessage = null;
         TimeTable timeTable = null;
 

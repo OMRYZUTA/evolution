@@ -51,12 +51,9 @@ public class DataManager {
         }
     }
 
-    public int getNumOfUsersSolvingProblem(int ttID) {
-        if (isSomeoneSolvingProblem(ttID)) {
-            return getUsersSolvingProblem(ttID).size();
-        } else {
-            return 0;
-        }
+    //return true if list isn't empty
+    private boolean isSomeoneSolvingProblem(int ttID) {
+        return !getUsersSolvingProblem(ttID).isEmpty();
     }
 
     //return value might be an empty list
@@ -70,9 +67,12 @@ public class DataManager {
         }
     }
 
-    //return true if list isn't empty
-    public boolean isSomeoneSolvingProblem(int ttID) {
-        return !getUsersSolvingProblem(ttID).isEmpty();
+    public int getNumOfUsersSolvingProblem(int ttID) {
+        if (isSomeoneSolvingProblem(ttID)) {
+            return getUsersSolvingProblem(ttID).size();
+        } else {
+            return 0;
+        }
     }
 
     //return value might be NULL if no users are trying to solve
@@ -119,8 +119,23 @@ public class DataManager {
         return score;
     }
 
-    public List<TimeTable> getTimetables() {
+    public synchronized Map<String, User> getUsers() {
+        return Collections.unmodifiableMap(users);
+    }
+
+    private List<TimeTable> getTimetables() {
         return Collections.unmodifiableList(timetables);
+    }
+
+    //return value might be null
+    public TimeTable getTimetable(int ttID) {
+        TimeTable timeTable = null;
+
+        if (timetables.size() > ttID) {
+            timeTable = timetables.get(ttID);
+        }
+
+        return timeTable;
     }
 
     public List<TimetableSummary> getTimetableSummaries() {
@@ -139,13 +154,10 @@ public class DataManager {
         return newList;
     }
 
+
     //when do we remove users? delete later
     public synchronized void removeUser(String username) {
         users.remove(username);
-    }
-
-    public synchronized Map<String, User> getUsers() {
-        return Collections.unmodifiableMap(users);
     }
 
     public User getUser(String name) {
