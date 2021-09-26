@@ -1,3 +1,24 @@
+POST http://localhost:8080/server_Web_exploded/api/actions?action=start
+Content-Type: application/json
+
+{"timetableID":0,
+  "populationSize":32,
+  "stride":2,
+  "endPredicates":[
+{"name":"numOfGeneration",
+"value":300}, {"name":"fitnessScore",
+"value":87.9} , {"name":"time",
+"value":39}],
+  "engineSettings":{
+  "selection":
+{"name":"rouletteWheel"},
+"elitism" :0,
+"crossover": {"name":"datetimeOriented","cuttingPoints": 5},
+"mutations":[{"name":"flipping",
+"probability":0.2, "maxTupples":3,
+"component":"H"}]}}
+
+###
 GET http://localhost:8080/server_Web_exploded/api/timetable/details?timetableid=0
 Accept: application/json
 
