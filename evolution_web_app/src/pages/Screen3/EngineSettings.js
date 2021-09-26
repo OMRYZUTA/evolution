@@ -1,9 +1,9 @@
 import Paper from "@mui/material/Paper";
-import {TextField} from "@material-ui/core";
+import {IconButton, TextField} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import {makeStyles} from "@material-ui/core/styles";
 import DropDown from "../../components/Dropdown";
-
+import AddIcon from '@material-ui/icons/Add';
 const useStyles = makeStyles((theme) => ({
     root: {
         alignItems: "start",
@@ -12,9 +12,17 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#D3D3D3", //light gray
     },
 }));
-const selections = [{name:"Truncation",id:"truncation"},{name:"Roulette Wheel",id:"rouletteWheel"},{name:"Tournament",id:"tournament"}];
-const crossovers = [{name:"Daytime oriented",id:"daytimeOriented"},{name:"Aspect Oriented",id:"aspectOriented"}]
-const orientations = [{name:"Teacher",id:"teacher"},{name:"Class",id:"class"}]
+const selections = [{name: "Truncation", id: "truncation"}, {
+    name: "Roulette Wheel",
+    id: "rouletteWheel"
+}, {name: "Tournament", id: "tournament"}];
+const crossovers = [{name: "Daytime oriented", id: "daytimeOriented"}, {name: "Aspect Oriented", id: "aspectOriented"}];
+const orientations = [{name: "Teacher", id: "teacher"}, {name: "Class", id: "class"}];
+const mutations = [{name: "Flipping", id: "flipping"}, {name: "Sizer", id: "sizer"}];
+const flippingComponent = [{name: "Hour", id: "H"}, {name: "Day", id: "D"}, {name: "Teacher", id: "T"}, {
+    name: "Class",
+    id: "C"
+}, {name: "Subject", id: "S"},]
 const EngineSettings = () => {
     const classes = useStyles();
     return (
@@ -44,7 +52,7 @@ const EngineSettings = () => {
                             currentValue={selections[0].id}
                             keyPropName="id"
                             namePropName="name"
-                            onChange={()=> console.log("selection changed")}
+                            onChange={() => console.log("selection changed")}
                         />
                         <TextField
                             required
@@ -74,7 +82,7 @@ const EngineSettings = () => {
                             currentValue={crossovers[0].id}
                             keyPropName="id"
                             namePropName="name"
-                            onChange={()=> console.log("crossover changed")}
+                            onChange={() => console.log("crossover changed")}
                         />
                         <DropDown
                             label={"Orientation"}
@@ -82,7 +90,7 @@ const EngineSettings = () => {
                             currentValue={orientations[0].id}
                             keyPropName="id"
                             namePropName="name"
-                            onChange={()=> console.log("orientation changed")}
+                            onChange={() => console.log("orientation changed")}
                         />
                         <TextField
                             required
@@ -90,15 +98,53 @@ const EngineSettings = () => {
                             label="CuttingPoints"
                             defaultValue="0"
                         />
-
+                    </Grid>
+                </Grid>
+                <Grid item>
+                    Mutations
+                    <IconButton onClick={()=>{console.log("add new mutation")}} >
+                        <AddIcon />
+                    </IconButton>
+                    <Grid container className={classes.root}>
+                        <DropDown
+                            label={"Mutation"}
+                            options={mutations}
+                            currentValue={mutations[0].id}
+                            keyPropName="id"
+                            namePropName="name"
+                            onChange={() => console.log("mutation changed")}
+                        />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="Probability"
+                        />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="totalTuple"
+                        />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="maxTuples"
+                        />
+                        <DropDown
+                            label={"Component"}
+                            options={flippingComponent}
+                            currentValue={flippingComponent[0].id}
+                            keyPropName="id"
+                            namePropName="name"
+                            onChange={() => console.log("flipping component changed")}
+                        />
                     </Grid>
                 </Grid>
                 <TextField
-                required
-                id="outlined-required"
-                label="Population size"
-                defaultValue="100"
-            /><TextField
+                    required
+                    id="outlined-required"
+                    label="Population size"
+                    defaultValue="100"
+                /><TextField
                 required
                 id="outlined-required"
                 label="Population size"
