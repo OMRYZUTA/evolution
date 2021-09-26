@@ -9,7 +9,6 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterf
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.Orientation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
-import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.SelectionFactory;
 import il.ac.mta.zuli.evolution.engine.predicates.EndConditionType;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.ui.FXutils;
@@ -265,35 +264,6 @@ public class RunAlgoController {
         }
     }
 
-    private Selection<TimeTableSolution> createSelectionFromInput() {
-        EngineSettings<TimeTableSolution> previousSettings = engine.getEngineSettings();
-        Selection<TimeTableSolution> updatedSelection = null;
-        int elitism = 0;
-
-        if (elitismCheckbox.isSelected()) {
-            //relevant for both types of selection (if left empty we get 0?)
-            elitism = FXutils.isNullOrEmpty(elitismTextField.getText()) ? 0 : Integer.parseInt(elitismTextField.getText());
-        }
-
-        //rouletteWheelRadioButton and truncationRadioButton are in the same toggle-group, one-at-most can be selected
-        if (rouletteWheelRadioButton.isSelected()) {
-            updatedSelection = SelectionFactory.createSelectionFromInput(
-                    "rouletteWheel",
-                    previousSettings.getInitialPopulationSize(),
-                    elitism, 0,0); //topPercent NA for rouletteWheel
-        } else if (truncationRadioButton.isSelected()) {
-            int topPercent = FXutils.isNullOrEmpty(topPercentTextField.getText()) ? 0 : Integer.parseInt(topPercentTextField.getText());
-            updatedSelection = SelectionFactory.createSelectionFromInput(
-                    "truncation",
-                    previousSettings.getInitialPopulationSize(),
-                    elitism, topPercent,0);
-        } else {
-            // if nothing was selected from this toggle-group, it remains unchanged from previous settings
-            updatedSelection = engine.getEngineSettings().getSelection();
-        }
-
-        return updatedSelection;
-    }
 
     private CrossoverInterface<TimeTableSolution> createCrossoverFromInput() {
         // if wasn't updated now, it remains unchanged

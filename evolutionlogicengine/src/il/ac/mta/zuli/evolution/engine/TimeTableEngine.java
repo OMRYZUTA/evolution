@@ -10,7 +10,6 @@ import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
 import il.ac.mta.zuli.evolution.engine.timetable.*;
-import il.ac.mta.zuli.evolution.ui.header.HeaderController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -31,43 +30,12 @@ public class TimeTableEngine implements Engine {
     private TimeTableSolution bestSolution;
 
     //TODO get rid of properties and controller
-    //#region lines to DELETE
-    private HeaderController controller;
-    private final SimpleIntegerProperty generationNumProperty;
-    private final SimpleDoubleProperty fitnessProperty;
-    private final SimpleLongProperty timeProperty;
-
-    public SimpleIntegerProperty getGenerationNumProperty() {
-        return generationNumProperty;
-    }
-
-    public SimpleDoubleProperty getFitnessProperty() {
-        return fitnessProperty;
-    }
-
-    public SimpleLongProperty getTimeProperty() {
-        return timeProperty;
-    }
-
-    public TimeTableEngine() {
-        this.generationNumProperty = new SimpleIntegerProperty(0);
-        this.fitnessProperty = new SimpleDoubleProperty(0f);
-        this.timeProperty = new SimpleLongProperty(0L);
-    }
-
-    public void setController(HeaderController controller) {
-        this.controller = controller;
-    }
-//#endregion
+    private SimpleIntegerProperty generationNumProperty;
+    private SimpleDoubleProperty fitnessProperty;
+    private SimpleLongProperty timeProperty;
 
     //new CTOR for Ex 3 - where was the descriptor set in the previous exercises?
-    public TimeTableEngine(Descriptor descriptor) {
-        this.descriptor = descriptor;
-        //TODO delete properties later:
-        this.generationNumProperty = new SimpleIntegerProperty(0);
-        this.fitnessProperty = new SimpleDoubleProperty(0f);
-        this.timeProperty = new SimpleLongProperty(0L);
-
+    public TimeTableEngine(Map<String, Object> engineSettings, Map<String, Object> endPredicates, int stride) {
     }
 
     public boolean isXMLLoaded() {
@@ -137,25 +105,25 @@ public class TimeTableEngine implements Engine {
                     reportBestSolution.accept(createTimeTableSolutionDTO(solution));
                 });
         currentRunningTask.setOnCancelled(event -> {
-            controller.onTaskFinished();
+//            controller.onTaskFinished();
             onSuccess.accept(false);
             currentRunningTask = null; // clearing task
         });
 
         currentRunningTask.setOnSucceeded(event -> {
             this.currEvolutionState = null; // reset state
-            controller.onTaskFinished();
+//            controller.onTaskFinished();
             onSuccess.accept(true); // sending the best solutionDTO to the controller
             currentRunningTask = null; // clearing task
         });
 
         currentRunningTask.setOnFailed(value -> {
-            controller.onTaskFinished();
+//            controller.onTaskFinished();
             onFailure.accept(currentRunningTask.getException());
             currentRunningTask = null;
         });
 
-        controller.bindTaskToUIComponents(currentRunningTask);
+//        controller.bindTaskToUIComponents(currentRunningTask);
 
         new Thread(currentRunningTask).start();
     }
@@ -214,6 +182,10 @@ public class TimeTableEngine implements Engine {
         return descriptor;
     }
 
+    public Integer getTimetableID() {
+        return descriptor.getTimetableID();
+    }
+
     public EvolutionState getCurrEvolutionState() {
         return currEvolutionState;
     }
@@ -236,49 +208,6 @@ public class TimeTableEngine implements Engine {
         } else {
             return 0;
         }
-    }
-
-    @Override
-    public List<GenerationProgressDTO> getEvolutionProgress() {
-//        if (!isXMLLoaded()) {
-//            ErrorEvent e = new ErrorEvent("Failed getting progress history",
-//                    ErrorType.ProgressHistoryError,
-//                    new InvalidOperationException("Can't show evolution progress, file is not loaded"));
-//            fireEvent("error", e);
-//            return null;
-//        }
-//
-//        if (bestSolutionsInGenerationPerStride.size() == 0) {
-//            ErrorEvent e = new ErrorEvent("Failed getting evolution-progress history",
-//                    ErrorType.ProgressHistoryError,
-//                    new InvalidOperationException("Can't show evolution progress, evolution algorithm has not been executed"));
-//            fireEvent("error", e);
-//            return null;
-//        }
-//
-//        try {
-//            List<GenerationProgressDTO> progress = new ArrayList<>();
-//            //we know generation # 1 is the first in the map because it's a treeMap
-//            double previousScore = bestSolutionsInGenerationPerStride.get(1).getTotalFitnessScore();
-//            double delta;
-//            int generation;
-//
-//            for (Map.Entry<Integer, TimeTableSolution> entry : bestSolutionsInGenerationPerStride.entrySet()) {
-//                TimeTableSolutionDTO solutionDTO = createTimeTableSolutionDTO(entry.getValue());
-//                generation = entry.getKey();
-//                double currScore = entry.getValue().getTotalFitnessScore();
-//                delta = currScore - previousScore;
-//                previousScore = currScore;
-//                progress.add(new GenerationProgressDTO(generation, solutionDTO, delta));
-//            }
-//
-//            return progress;
-//        } catch (Throwable e) {
-//            fireEvent("error", new ErrorEvent("Failed getting evolution-progress history",
-//                    ErrorType.ProgressHistoryError, e));
-//            return null;
-//        }
-        return null;
     }
     //#endregion
 

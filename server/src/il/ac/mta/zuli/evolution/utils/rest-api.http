@@ -5,7 +5,6 @@ Content-Type: application/json
   "timetableID": 0,
   "engineSettings": {
     "populationSize": 32,
-    "stride": 2,
     "selection": {
       "name": "rouletteWheel"
     },
@@ -23,6 +22,7 @@ Content-Type: application/json
       }
     ]
   },
+  "stride": 2,
   "endPredicates": [
     {
       "name": "numOfGeneration",
