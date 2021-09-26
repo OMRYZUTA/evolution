@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.selection;
 
+import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 
 import java.util.HashMap;
@@ -8,22 +9,29 @@ import java.util.function.Supplier;
 
 public class SelectionFactory<T extends Solution> {
 
-    public static Selection createSelectionFromMap(Map<String, Object> selectionMap, int populationSize) {
-        Map<String, Supplier<Selection>> selectionBuilder = new HashMap<>();
+    public static <T extends Solution> Selection<T> createSelectionFromMap(Map<String, Object> selectionMap, int populationSize) {
 
-        selectionBuilder.put("truncation", () -> {
-            return new Truncation((int) selectionMap.get("topPercent"), populationSize, (int) selectionMap.get("elitism"));
+        Map<String, Supplier<Selection<T>>> selectionBuilder = new HashMap<>();
+
+        selectionBuilder.put(Constants.TRUNCATION, () -> {
+            return new Truncation<T>(
+                    (int) selectionMap.get(Constants.TOP_PERCENT),
+                    populationSize,
+                    (int) selectionMap.get(Constants.ELITISM));
         });
 
-        selectionBuilder.put("roulettewheel", () -> {
-            return new RouletteWheel(populationSize, (int) selectionMap.get("elitism"));
+        selectionBuilder.put(Constants.ROULETTE_WHEEL, () -> {
+            return new RouletteWheel<T>(populationSize, (int) selectionMap.get(Constants.ELITISM));
         });
 
-        selectionBuilder.put("tournament", () -> {
-            return new Tournament((double) selectionMap.get("pte"), populationSize, (int) selectionMap.get("elitism"));
+        selectionBuilder.put(Constants.TOURNAMENT, () -> {
+            return new Tournament<T>(
+                    (double) selectionMap.get(Constants.PTE),
+                    populationSize,
+                    (int) selectionMap.get(Constants.ELITISM));
         });
 
-        String selectionType = (String) selectionMap.get("name");
+        String selectionType = (String) selectionMap.get(Constants.NAME);
 
         return selectionBuilder.get(selectionType).get();
     }

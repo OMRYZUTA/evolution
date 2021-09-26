@@ -1,29 +1,42 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.crossover;
 
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
+import il.ac.mta.zuli.evolution.Constants;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+
 public class CrossoverFactory {
-    public static Crossover createCrossoverFromInput(
-            String crossoverType,
-            int numOfCuttingPoints,
-            Orientation orientation,
+
+    public static <T extends Solution> Crossover<T> createCrossoverFromMap(
+            Map<String, Object> crossoverMap,
             TimeTable timeTable) {
-        switch (crossoverType.toLowerCase()) {
-            case "daytimeoriented":
-                return new DayTimeOriented<TimeTableSolution>(numOfCuttingPoints, timeTable);
-            case "aspectoriented":
-                return new AspectOriented<TimeTableSolution>(numOfCuttingPoints, orientation, timeTable);
-            default:
-                throw new ValidationException("Invalid crossover type for ex. 3");
-        }
+
+        Map<String, Supplier<Crossover<T>>> crossoverBuilder = new HashMap<>();
+
+        crossoverBuilder.put(Constants.DAY_TIME_ORIENTED, () -> {
+            return new DayTimeOriented<T>((int) crossoverMap.get(Constants.CUTTING_POINTS), timeTable);
+        });
+
+        crossoverBuilder.put(Constants.ASPECT_ORIENTED, () -> {
+            Orientation orientation = parseOrientationFromConfiguration(crossoverMap);
+
+            return new AspectOriented<T>(
+                    (int) crossoverMap.get(Constants.CUTTING_POINTS),
+                    orientation,
+                    timeTable);
+        });
+
+        String crossoverType = (String) crossoverMap.get(Constants.NAME);
+
+        return crossoverBuilder.get(crossoverType).get();
     }
 
-    private static Orientation parseOrientationFromConfiguration(String configuration) {
-//        <ETT-Crossover name="AspectOriented" cutting-points="1" configuration="Orientation=CLASS"/>
-        int orientationIndex = configuration.indexOf("Orientation=") + "Orientation=".length();
-        String OrientationStr = configuration.substring(orientationIndex);
+    private static Orientation parseOrientationFromConfiguration(Map<String, Object> crossoverMap) {
+        String OrientationStr = (String) crossoverMap.get(Constants.ORIENTATION);
         Orientation orientation;
 
         try {

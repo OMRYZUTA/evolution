@@ -1,72 +1,70 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.mutation;
 
+import il.ac.mta.zuli.evolution.Constants;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class MutationFactory {
-    public static Mutation createMutationFromInput(
-            String mutationType,
-            TimeTable timeTable,
-            double probability,
-            int tuples,
-            ComponentName component) {
-        switch (mutationType) {
-            case "sizer":
-                return createSizerMutation(timeTable, probability, tuples);
-            case "flipping":
-                return creatFlippingMutation(timeTable, probability, tuples, component);
-            default:
-                throw new ValidationException(mutationType + " is invalid mutation name ");
-        }
+    public static <T extends Solution> Mutation<T> createMutationFromMap(
+            Map<String, Object> mutationMap,
+            TimeTable timeTable) {
+
+        Map<String, Supplier<Mutation<T>>> mutationBuilder = new HashMap<>();
+
+        mutationBuilder.put(Constants.SIZER, () -> {
+            int totalTuples = (int) mutationMap.get(Constants.TOTAL_TUPLES);
+
+            if (totalTuples > timeTable.getHours() * timeTable.getDays()) {
+                throw new ValidationException("positive-total-tuples must be < (days * hours), invalid value: " + totalTuples);
+            }
+
+            if (totalTuples < (-1) * timeTable.getHours() * timeTable.getDays()) {
+                throw new ValidationException("negative-total-tuples must be > -(days * hours), invalid value: " + totalTuples);
+            }
+
+            return new Sizer<T>(
+                    (double) mutationMap.get(Constants.PROBABILITY),
+                    totalTuples,
+                    timeTable);
+        });
+
+        mutationBuilder.put(Constants.FLIPPING, () -> {
+            int maxTuples = (int) mutationMap.get(Constants.MAX_TUPLES);
+
+            if (maxTuples < 0) {
+                throw new ValidationException("max tuples must be >=0, invalid value: " + maxTuples);
+            }
+
+            ComponentName component = parseComponent(mutationMap);
+
+            return new Flipping<T>(
+                    (double) mutationMap.get(Constants.PROBABILITY),
+                    maxTuples,
+                    component,
+                    timeTable);
+        });
+
+        String mutationType = (String) mutationMap.get(Constants.NAME);
+
+        return mutationBuilder.get(mutationType).get();
     }
 
-    @NotNull
-    private static Mutation createSizerMutation(TimeTable timeTable, double probability, int totalTuples) {
-//        <ETT-Mutation name="Sizer" probability="0.3" configuration="TotalTupples=7,Component=D"/>
-        if (totalTuples > timeTable.getHours() * timeTable.getDays()) {
-            throw new ValidationException("positive-total-tuples must be < (days * hours), invalid value: " + totalTuples);
+    private static ComponentName parseComponent(Map<String, Object> mutationMap) {
+        String ComponentStr = (String) mutationMap.get(Constants.COMPONENT);
+        ComponentName component;
+
+        try {
+            component = ComponentName.valueOf(ComponentStr);
+        } catch (Throwable e) {
+            throw new ValidationException("invalid component");
         }
 
-        if (totalTuples < (-1) * timeTable.getHours() * timeTable.getDays()) {
-            throw new ValidationException("negative-total-tuples must be > -(days * hours), invalid value: " + totalTuples);
-        }
-
-        return new Sizer(probability, totalTuples, timeTable);
+        return component;
     }
-
-    @NotNull
-    private static Mutation creatFlippingMutation(TimeTable timeTable, double probability, int maxTuples, ComponentName component) {
-        if (maxTuples < 0) {
-            throw new ValidationException("max tuples must be >=0, invalid value: " + maxTuples);
-        }
-
-        return new Flipping(probability, maxTuples, component, timeTable);
-    }
-
-//    @NotNull
-//    private static ComponentName extractComponentNameFromString(ETTMutation ettMutation) {
-//        int componentIndex = (ettMutation.getConfiguration()).indexOf("Component=") + "Component=".length();
-//        String componentStr = (ettMutation.getConfiguration()).substring(componentIndex, componentIndex + 1);
-//
-//        return ComponentName.valueOf(componentStr.toUpperCase());
-//    }
-//
-//    private static int extractMaxTuplesFromString(ETTMutation ettMutation) {
-//        //this is how it's spelled in the xml: MaxTupples=3
-//        int maxTuplesIndex = (ettMutation.getConfiguration()).indexOf("MaxTupples=") + "MaxTupples=".length();
-//        int commaIndex = ettMutation.getConfiguration().indexOf(",");
-//        String maxTuplesStr = (ettMutation.getConfiguration()).substring(maxTuplesIndex, commaIndex);
-//
-//        return Integer.parseInt(maxTuplesStr, 10);
-//    }
-//
-//    private static int extractTotalTuplesFromString(ETTMutation ettMutation) {
-//        //<ETT-Mutation name="Sizer" probability="0.3" configuration="TotalTupples=7"/>
-//        int totalTuplesIndex = (ettMutation.getConfiguration()).indexOf("TotalTupples=") + "TotalTupples=".length();
-//        String totalTuplesStr = (ettMutation.getConfiguration()).substring(totalTuplesIndex);
-//
-//        return Integer.parseInt(totalTuplesStr, 10);
-//    }
 }
 

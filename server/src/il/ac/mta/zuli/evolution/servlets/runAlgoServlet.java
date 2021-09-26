@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution.servlets;
 
 import com.google.gson.Gson;
+import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.DataManager;
 import il.ac.mta.zuli.evolution.engine.EngineUtils;
 import il.ac.mta.zuli.evolution.utils.ServletUtils;
@@ -46,14 +47,15 @@ public class runAlgoServlet extends HttpServlet {
         String responseMessage = null;
 
         try {
+            String usernameFromSession = SessionUtils.getUsername(request);
             Gson gson = new Gson();
             Map<String, Object> requestMap = gson.fromJson(request.getReader(), new HashMap<String, Object>().getClass());
-            String usernameFromSession = SessionUtils.getUsername(request);
-            Map<String, Object> engineSettingsMap = (Map<String, Object>) requestMap.get("engineSettings");
-            Map<String, Object> endPredicatesMap = (Map<String, Object>) requestMap.get("endPredicates");
-            int generationStride = (int) requestMap.get("stride");
+            int ttID = (int) requestMap.get(Constants.TIMETABLE_ID);
+            Map<String, Object> engineSettingsMap = (HashMap<String, Object>) requestMap.get(Constants.ENGINE_SETTINGS);
+            Map<String, Object> endPredicatesMap = (HashMap<String, Object>) requestMap.get(Constants.END_PREDICATES);
+            int generationStride = (int) requestMap.get(Constants.STRIDE);
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
-            dataManager.addAlgoRunToUser(usernameFromSession, engineSettingsMap, endPredicatesMap, generationStride);
+            dataManager.addAlgoRunToUser(usernameFromSession, ttID, engineSettingsMap, endPredicatesMap, generationStride);
 
             responseMessage = "OK";
         } catch (Throwable e) {

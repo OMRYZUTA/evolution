@@ -21,12 +21,12 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class TimeTableEngine implements Engine {
-    private Descriptor descriptor;
+    private final Descriptor descriptor;
     private EvolutionState currEvolutionState;
     private Task<?> currentRunningTask; //OR maybe: private Thread thread;
     //EX3 additions to class:
-    private List<EndPredicate> endPredicates;
-    private int generationsStride;
+    private final List<EndPredicate> endPredicates;
+    private final int generationsStride;
     private TimeTableSolution bestSolution;
 
     //TODO get rid of properties and controller
@@ -35,7 +35,20 @@ public class TimeTableEngine implements Engine {
     private SimpleLongProperty timeProperty;
 
     //new CTOR for Ex 3 - where was the descriptor set in the previous exercises?
-    public TimeTableEngine(Map<String, Object> engineSettings, Map<String, Object> endPredicates, int stride) {
+    public TimeTableEngine(TimeTable timetable,
+                           Map<String, Object> engineSettingsMap,
+                           Map<String, Object> endPredicatesMap,
+                           int stride) {
+        EngineSettings<TimeTableSolution> engineSettings = new EngineSettings<>(engineSettingsMap, timetable);
+        this.descriptor = new Descriptor(timetable, engineSettings);
+        this.endPredicates = generatePredicates(endPredicatesMap);
+        this.generationsStride = stride;
+    }
+
+    private List<EndPredicate> generatePredicates(Map<String, Object> endPredicatesMap) {
+        List<EndPredicate> endPredicates = new ArrayList<>();
+        //TODO implement
+        return endPredicates;
     }
 
     public boolean isXMLLoaded() {
@@ -146,24 +159,12 @@ public class TimeTableEngine implements Engine {
         this.descriptor.setEngineSettings(validatedSettings);
     }
 
-    public void setDescriptor(Descriptor descriptor) {
-        this.descriptor = descriptor;
-    }
-
     public void setCurrEvolutionState(EvolutionState currEvolutionState) {
         this.currEvolutionState = currEvolutionState;
     }
 
     public void setCurrentRunningTask(Task<?> currentRunningTask) {
         this.currentRunningTask = currentRunningTask;
-    }
-
-    public void setEndPredicates(List<EndPredicate> endPredicates) {
-        this.endPredicates = endPredicates;
-    }
-
-    public void setGenerationsStride(int generationsStride) {
-        this.generationsStride = generationsStride;
     }
     //#endregion
 
