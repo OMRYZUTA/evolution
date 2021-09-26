@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Paper from "@mui/material/Paper";
 import {TimetableContext} from "../../components/TimetableContext";
 import {ButtonGroup} from "@material-ui/core";
-import * as Screen2Services from "../../services/Screen2Services";
+import InfoTabs from "./InfoTabs";
 import * as TimetableServices from "../../services/TimetableServices";
 import EngineSettings from"./EngineSettings"
 const useStyles = makeStyles((theme) => ({
@@ -68,14 +68,9 @@ const Screen3 = () => {
             <Container maxWidth="xl">
                 <Navbar user={currentUser}/>
                 <Grid container direction={"row"} spacing={2}>
-                    <Grid item xs={12} md={5}>
+                    <Grid item xs={12} md={6}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
-                            <Grid item>
-                                <Paper>timetable details</Paper>
-                            </Grid>
-                            <Grid item>
-                                <EngineSettings/>
-                            </Grid>
+                            <InfoTabs/>
                         </Grid>
                     </Grid>
 

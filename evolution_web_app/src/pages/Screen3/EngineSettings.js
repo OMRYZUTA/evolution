@@ -39,7 +39,7 @@ const EngineSettings = () => {
         <Paper>
             <Accordion>
                 <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
@@ -63,7 +63,7 @@ const EngineSettings = () => {
             </Accordion>
             <Accordion>
                 <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel2a-content"
                     id="panel2a-header"
                 >
@@ -101,7 +101,7 @@ const EngineSettings = () => {
             </Accordion>
             <Accordion>
                 <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel2a-content"
                     id="panel2a-header"
                 >
@@ -136,15 +136,17 @@ const EngineSettings = () => {
             </Accordion>
             <Accordion>
                 <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel2a-content"
                     id="panel2a-header"
                 >
                     <Typography>Mutations</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <IconButton onClick={()=>{console.log("add new mutation")}} >
-                        <AddIcon />
+                    <IconButton onClick={() => {
+                        console.log("add new mutation")
+                    }}>
+                        <AddIcon/>
                     </IconButton>
                     <Grid container className={classes.root}>
                         <DropDown
@@ -183,32 +185,39 @@ const EngineSettings = () => {
             </Accordion>
             <Accordion>
                 <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel2a-content"
                     id="panel2a-header"
                 >
                     <Typography>End conditions</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Grid container className={classes.root}>
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Number of generations" />
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="Number of generations"
-                        />
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Fitness score" />
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="Fitness score"
-                        />
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Time" />
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="Time"
-                        />
+                    <Grid container className={classes.root} direction={"column"}>
+                        <Grid item>
+                            <FormControlLabel control={<Checkbox defaultChecked/>} label="Number of generations"/>
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Number of generations"
+                            />
+                        </Grid>
+                        <Grid item>
+                            <FormControlLabel control={<Checkbox defaultChecked/>} label="Fitness score"/>
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Fitness score"
+                            />
+                        </Grid>
+                        <Grid item>
+
+                                <FormControlLabel control={<Checkbox defaultChecked/>} label="Time"/>
+                                <TextField
+                                    required
+                                    id="outlined-required"
+                                    label="Time"
+                                />
+                        </Grid>
                     </Grid>
                 </AccordionDetails>
             </Accordion>
