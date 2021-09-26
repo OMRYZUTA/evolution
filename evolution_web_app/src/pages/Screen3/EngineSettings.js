@@ -1,62 +1,132 @@
+import Paper from "@mui/material/Paper";
+import {TextField} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import {makeStyles} from "@material-ui/core/styles";
+import DropDown from "../../components/Dropdown";
 
-const EngineSettings = ()=>{
-    return(
+const useStyles = makeStyles((theme) => ({
+    root: {
+        alignItems: "start",
+        justifyContent: "space-between",
+        padding: 20,
+        backgroundColor: "#D3D3D3", //light gray
+    },
+}));
+const selections = [{name:"Truncation",id:"truncation"},{name:"Roulette Wheel",id:"rouletteWheel"},{name:"Tournament",id:"tournament"}];
+const crossovers = [{name:"Daytime oriented",id:"daytimeOriented"},{name:"Aspect Oriented",id:"aspectOriented"}]
+const orientations = [{name:"Teacher",id:"teacher"},{name:"Class",id:"class"}]
+const EngineSettings = () => {
+    const classes = useStyles();
+    return (
         <Paper>
-            <TextField
-                required
-                id="outlined-required"
-                label="Population size"
-                defaultValue="100"
-            />
-            <TextField
-                required
-                id="outlined-required"
-                label="stride"
-                defaultValue="100"
-            />
-            <TextField
-                required
-                id="outlined-required"
-                label="Population size"
-                defaultValue="100"
-            />
-            <TextField
+            <Grid container direction={"column"}>
+                <Grid item>
+                    General Details
+                    <Grid container className={classes.root}>
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="Population size"
+                        />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="stride"
+                        />
+                    </Grid>
+                </Grid>
+                <Grid item>
+                    Selection
+                    <Grid container className={classes.root}>
+                        <DropDown
+                            label={"Selection"}
+                            options={selections}
+                            currentValue={selections[0].id}
+                            keyPropName="id"
+                            namePropName="name"
+                            onChange={()=> console.log("selection changed")}
+                        />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="Elitism"
+                            defaultValue="0"
+                        />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="Top percent"
+                        />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="PTE"
+                            defaultValue="100"
+                        />
+                    </Grid>
+                </Grid>
+                <Grid item>
+                    Crossover
+                    <Grid container className={classes.root}>
+                        <DropDown
+                            label={"Crossover"}
+                            options={crossovers}
+                            currentValue={crossovers[0].id}
+                            keyPropName="id"
+                            namePropName="name"
+                            onChange={()=> console.log("crossover changed")}
+                        />
+                        <DropDown
+                            label={"Orientation"}
+                            options={orientations}
+                            currentValue={orientations[0].id}
+                            keyPropName="id"
+                            namePropName="name"
+                            onChange={()=> console.log("orientation changed")}
+                        />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="CuttingPoints"
+                            defaultValue="0"
+                        />
+
+                    </Grid>
+                </Grid>
+                <TextField
                 required
                 id="outlined-required"
                 label="Population size"
                 defaultValue="100"
             /><TextField
-            required
-            id="outlined-required"
-            label="Population size"
-            defaultValue="100"
-        /><TextField
-            required
-            id="outlined-required"
-            label="Population size"
-            defaultValue="100"
-        /><TextField
-            required
-            id="outlined-required"
-            label="Population size"
-            defaultValue="100"
-        /><TextField
-            required
-            id="outlined-required"
-            label="Population size"
-            defaultValue="100"
-        /><TextField
-            required
-            id="outlined-required"
-            label="Population size"
-            defaultValue="100"
-        />
-            <TextField
+                required
+                id="outlined-required"
+                label="Population size"
+                defaultValue="100"
+            /><TextField
+                required
+                id="outlined-required"
+                label="Population size"
+                defaultValue="100"
+            /><TextField
+                required
+                id="outlined-required"
+                label="Population size"
+                defaultValue="100"
+            /><TextField
                 required
                 id="outlined-required"
                 label="Population size"
                 defaultValue="100"
             />
+                <TextField
+                    required
+                    id="outlined-required"
+                    label="Population size"
+                    defaultValue="100"
+                />
+            </Grid>
         </Paper>
     )
 }
+export default EngineSettings;

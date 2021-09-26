@@ -9,7 +9,7 @@ import {TimetableContext} from "../../components/TimetableContext";
 import {ButtonGroup} from "@material-ui/core";
 import * as Screen2Services from "../../services/Screen2Services";
 import * as TimetableServices from "../../services/TimetableServices";
-
+import EngineSettings from"./EngineSettings"
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: '50px 70px',
@@ -74,7 +74,7 @@ const Screen3 = () => {
                                 <Paper>timetable details</Paper>
                             </Grid>
                             <Grid item>
-                                <Paper>configuration</Paper>
+                                <EngineSettings/>
                             </Grid>
                         </Grid>
                     </Grid>
