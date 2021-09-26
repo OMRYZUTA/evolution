@@ -1,9 +1,18 @@
 import Paper from "@mui/material/Paper";
-import {IconButton, TextField} from "@material-ui/core";
+import {Checkbox, FormControlLabel, IconButton, TextField} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import {makeStyles} from "@material-ui/core/styles";
 import DropDown from "../../components/Dropdown";
 import AddIcon from '@material-ui/icons/Add';
+import * as React from 'react';
+
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+
 const useStyles = makeStyles((theme) => ({
     root: {
         alignItems: "start",
@@ -23,13 +32,21 @@ const flippingComponent = [{name: "Hour", id: "H"}, {name: "Day", id: "D"}, {nam
     name: "Class",
     id: "C"
 }, {name: "Subject", id: "S"},]
+
 const EngineSettings = () => {
     const classes = useStyles();
     return (
         <Paper>
-            <Grid container direction={"column"}>
-                <Grid item>
-                    General Details
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <Typography>General Details</Typography>
+
+                </AccordionSummary>
+                <AccordionDetails>
                     <Grid container className={classes.root}>
                         <TextField
                             required
@@ -42,9 +59,17 @@ const EngineSettings = () => {
                             label="stride"
                         />
                     </Grid>
-                </Grid>
-                <Grid item>
-                    Selection
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel2a-content"
+                    id="panel2a-header"
+                >
+                    <Typography>Selection</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
                     <Grid container className={classes.root}>
                         <DropDown
                             label={"Selection"}
@@ -72,9 +97,17 @@ const EngineSettings = () => {
                             defaultValue="100"
                         />
                     </Grid>
-                </Grid>
-                <Grid item>
-                    Crossover
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel2a-content"
+                    id="panel2a-header"
+                >
+                    <Typography>Crossover</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
                     <Grid container className={classes.root}>
                         <DropDown
                             label={"Crossover"}
@@ -99,9 +132,17 @@ const EngineSettings = () => {
                             defaultValue="0"
                         />
                     </Grid>
-                </Grid>
-                <Grid item>
-                    Mutations
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel2a-content"
+                    id="panel2a-header"
+                >
+                    <Typography>Mutations</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
                     <IconButton onClick={()=>{console.log("add new mutation")}} >
                         <AddIcon />
                     </IconButton>
@@ -138,40 +179,39 @@ const EngineSettings = () => {
                             onChange={() => console.log("flipping component changed")}
                         />
                     </Grid>
-                </Grid>
-                <TextField
-                    required
-                    id="outlined-required"
-                    label="Population size"
-                    defaultValue="100"
-                /><TextField
-                required
-                id="outlined-required"
-                label="Population size"
-                defaultValue="100"
-            /><TextField
-                required
-                id="outlined-required"
-                label="Population size"
-                defaultValue="100"
-            /><TextField
-                required
-                id="outlined-required"
-                label="Population size"
-                defaultValue="100"
-            /><TextField
-                required
-                id="outlined-required"
-                label="Population size"
-                defaultValue="100"
-            />
-                <TextField
-                    required
-                    id="outlined-required"
-                    label="Population size"
-                    defaultValue="100"
-                />
-            </Grid>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel2a-content"
+                    id="panel2a-header"
+                >
+                    <Typography>End conditions</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Grid container className={classes.root}>
+                        <FormControlLabel control={<Checkbox defaultChecked />} label="Number of generations" />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="Number of generations"
+                        />
+                        <FormControlLabel control={<Checkbox defaultChecked />} label="Fitness score" />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="Fitness score"
+                        />
+                        <FormControlLabel control={<Checkbox defaultChecked />} label="Time" />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="Time"
+                        />
+                    </Grid>
+                </AccordionDetails>
+            </Accordion>
         </Paper>
     )
 }
