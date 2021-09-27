@@ -20,7 +20,7 @@ public class EvolutionEngine<T extends Solution> {
     public EvolutionEngine(@NotNull EngineSettings<T> engineSettings, @NotNull Set<Rule> rules) {
         this.engineSettings = engineSettings;
         setRules(rules);
-        this.numOfElitism = engineSettings.getEliteNumber();
+        this.numOfElitism = engineSettings.getNumOfElite();
     }
 
     public void setRules(@NotNull Set<Rule> rules) {

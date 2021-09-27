@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution;
 
+import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
@@ -28,6 +29,16 @@ public class DataManager {
 
     public synchronized void addUser(User user) { //TODO throw exception if user already exists? (add user only called after exist check)
         users.put(user.getUsername(), user);
+    }
+
+    public synchronized void addAlgoRunToUser(String userName,
+                                              int timetableID,
+                                              Map<String, Object> engineSettingsMap,
+                                              Map<String, Object> endPredicatesMap,
+                                              int generationStride) {
+        TimeTable timetable = timetables.get(timetableID);
+        TimeTableEngine engineToAdd = new TimeTableEngine(timetable, engineSettingsMap, endPredicatesMap, generationStride);
+        users.get(userName).addTimetableEngine(engineToAdd);
     }
 
     //return value might be an empty list

@@ -20,6 +20,11 @@ public class Descriptor {
         this.timeTable = tempTimeTable;
     }
 
+    public Descriptor(TimeTable timeTable, EngineSettings engineSettings) {
+        this.timeTable = timeTable;
+        this.engineSettings = engineSettings;
+    }
+
     public void setEngineSettings(EngineSettings<TimeTableSolution> newEngineSettings) {
         this.engineSettings = newEngineSettings;
     }

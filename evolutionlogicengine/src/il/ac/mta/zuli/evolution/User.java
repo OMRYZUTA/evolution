@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution;
 
-import il.ac.mta.zuli.evolution.engine.Descriptor;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 
@@ -20,11 +19,9 @@ public class User {
         userAlgorithmRuns = new HashMap<>();
     }
 
-    //if user picks a certain timetable in screen2, we'll add it the user's map,
-    // and later assign it with an engine accordingly
-
-    //adding a TimeTable to the app will add it to the common collection and add the reference to the user who uploaded it
-    //adding an engine only happens at the user level
+    public void addTimetableEngine(TimeTableEngine ttEngine) {
+        userAlgorithmRuns.put(ttEngine.getTimetableID(), ttEngine);
+    }
 
     public void setUsername(String username) throws IOException {
         if (username == null || username.trim().isEmpty()) {
@@ -38,11 +35,6 @@ public class User {
 
     public String getUsername() {
         return username;
-    }
-
-    public void addNewRun(Descriptor descriptor) {
-        TimeTableEngine newRun = new TimeTableEngine(descriptor);
-        //TODO implement
     }
 
     public boolean isSolvingProblem(int ttID) {
