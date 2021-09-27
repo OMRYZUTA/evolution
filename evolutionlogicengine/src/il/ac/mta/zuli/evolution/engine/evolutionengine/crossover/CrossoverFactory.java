@@ -18,6 +18,7 @@ public class CrossoverFactory {
         Map<String, Supplier<Crossover<T>>> crossoverBuilder = new HashMap<>();
 
         crossoverBuilder.put(Constants.DAY_TIME_ORIENTED, () -> {
+            //TODO add try-catch to casting like in SelectionFactory
             return new DayTimeOriented<T>((int) crossoverMap.get(Constants.CUTTING_POINTS), timeTable);
         });
 

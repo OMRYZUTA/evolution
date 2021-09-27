@@ -38,11 +38,11 @@ public class EngineSettings<T extends Solution> {
         //TODO - is it required to have at least 1 mutation?
         if (mutationsMap.size() > 0) {
             for (Map<String, Object> mutationMap : mutationsMap) {
-                MutationFactory.createMutationFromMap(mutationMap, timetable);
+                mutationList.add(MutationFactory.createMutationFromMap(mutationMap, timetable));
             }
         }
 
-        return null;
+        return mutationList;
     }
 
     private void setInitialPopulationSize(Object objectSize) {

@@ -19,8 +19,9 @@ public class User {
         userAlgorithmRuns = new HashMap<>();
     }
 
-    public void addTimetableEngine(TimeTableEngine ttEngine) {
-        userAlgorithmRuns.put(ttEngine.getTimetableID(), ttEngine);
+    public void addTimetableEngine(TimeTableEngine timeTableEngine) {
+        userAlgorithmRuns.put(timeTableEngine.getTimetableID(), timeTableEngine);
+        currDisplayedRun = timeTableEngine;
     }
 
     public void setUsername(String username) throws IOException {

@@ -27,7 +27,8 @@ public class DataManager {
         timetables.add(timeTable);
     }
 
-    public synchronized void addUser(User user) { //TODO throw exception if user already exists? (add user only called after exist check)
+    public synchronized void addUser(User user) {
+        //TODO throw exception if user already exists? (add user only called after exist check)
         users.put(user.getUsername(), user);
     }
 
@@ -37,12 +38,13 @@ public class DataManager {
                                               List<Map<String, Object>> endPredicatesMap,
                                               Object generationStride) {
 
-        TimeTableEngine engineToAdd = new TimeTableEngine(
+        TimeTableEngine runToAdd = new TimeTableEngine(
                 timetables.get(timetableID),
                 engineSettingsMap,
                 endPredicatesMap,
                 generationStride);
-        users.get(userName).addTimetableEngine(engineToAdd);
+
+        users.get(userName).addTimetableEngine(runToAdd);
     }
 
     //return value might be an empty list

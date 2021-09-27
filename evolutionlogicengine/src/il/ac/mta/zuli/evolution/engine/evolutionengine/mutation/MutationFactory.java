@@ -17,6 +17,7 @@ public class MutationFactory {
         Map<String, Supplier<Mutation<T>>> mutationBuilder = new HashMap<>();
 
         mutationBuilder.put(Constants.SIZER, () -> {
+            //TODO add try-catch to casting like in SelectionFactory
             int totalTuples = (int) mutationMap.get(Constants.TOTAL_TUPLES);
 
             if (totalTuples > timeTable.getHours() * timeTable.getDays()) {

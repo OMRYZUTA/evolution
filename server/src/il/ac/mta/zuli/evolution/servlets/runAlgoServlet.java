@@ -55,7 +55,7 @@ public class runAlgoServlet extends HttpServlet {
             int ttID = (int) requestMap.get(Constants.TIMETABLE_ID); //we know this an integer because we provided it
             Map<String, Object> engineSettingsMap = (HashMap<String, Object>) requestMap.get(Constants.ENGINE_SETTINGS);
             List<Map<String, Object>> endPredicatesMap = (List<Map<String, Object>>) requestMap.get(Constants.END_PREDICATES);
-            Object generationStride = requestMap.get(Constants.STRIDE);
+            Object generationStride = requestMap.get(Constants.STRIDE); //validating we received an int alter on
 
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
             dataManager.addAlgoRunToUser(
