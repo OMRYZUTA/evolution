@@ -4,6 +4,7 @@ import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverFactory;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterface;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.MutationFactory;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.SelectionFactory;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
@@ -20,32 +21,43 @@ public class EngineSettings<T extends Solution> {
     private final CrossoverInterface<T> crossover; //why isn't the interface name simply crossover?
     private final List<Mutation<T>> mutations;
 
-    public EngineSettings(Map<String, Object> engineSettingsMap, TimeTable timeTable) {
-        setInitialPopulationSize((int) engineSettingsMap.get(Constants.POPULATION_SIZE));
+    public EngineSettings(Map<String, Object> engineSettingsMap, TimeTable timetable) {
+        setInitialPopulationSize(engineSettingsMap.get(Constants.POPULATION_SIZE));
 
         Map<String, Object> selectionMap = (Map<String, Object>) engineSettingsMap.get(Constants.SELECTION);
         Map<String, Object> crossoverMap = (Map<String, Object>) engineSettingsMap.get(Constants.CROSSOVER);
-        Map<String, Object> mutationMap = (Map<String, Object>) engineSettingsMap.get(Constants.MUTATIONS);
+        List<Map<String, Object>> mutationsMap = (List<Map<String, Object>>) engineSettingsMap.get(Constants.MUTATIONS);
 
-        selection = SelectionFactory.createSelectionFromMap(selectionMap, initialPopulationSize);
-        crossover = CrossoverFactory.createCrossoverFromMap(crossoverMap, timeTable);
-        mutations = generateMutationList(mutationMap, timeTable);
-
+        this.selection = SelectionFactory.createSelectionFromMap(selectionMap, initialPopulationSize);
+        this.crossover = CrossoverFactory.createCrossoverFromMap(crossoverMap, timetable);
+        this.mutations = generateMutationList(mutationsMap, timetable);
     }
 
-    private List<Mutation<T>> generateMutationList(Map<String, Object> mutationMap, TimeTable timeTable) {
+    private List<Mutation<T>> generateMutationList(List<Map<String, Object>> mutationsMap, TimeTable timetable) {
         List<Mutation<T>> mutationList = new ArrayList<>();
-        //        MutationFactory.createCrossoverFromMap(mutationMap, timetable);
-        //TODO implement: for each "name" in map we need to add another Mutation
-        //same for predicates
+        //TODO - is it required to have at least 1 mutation?
+        if (mutationsMap.size() > 0) {
+            for (Map<String, Object> mutationMap : mutationsMap) {
+                MutationFactory.createMutationFromMap(mutationMap, timetable);
+            }
+        }
+
         return null;
     }
 
-    private void setInitialPopulationSize(int size) {
+    private void setInitialPopulationSize(Object objectSize) {
+        int size;
+
+        try {
+            size = (int) objectSize;
+        } catch (Throwable e) {
+            throw new ValidationException("Population size must be a positive number");
+        }
+
         if (size > 0) {
             this.initialPopulationSize = size;
         } else {
-            throw new ValidationException("Initial population size: " + size + ". Where's the fun in that?");
+            throw new ValidationException("Population size: " + size + ". Where's the fun in that?");
         }
     }
 
@@ -67,6 +79,9 @@ public class EngineSettings<T extends Solution> {
     }
     //#endregion
 
+    public int getNumOfElite() {
+        return selection.getElitism();
+    }
 
     @Override
     public String toString() {
@@ -76,9 +91,5 @@ public class EngineSettings<T extends Solution> {
                 ", crossover=" + crossover + System.lineSeparator() +
                 ", mutations=" + mutations +
                 '}';
-    }
-
-    public int getNumOfElite() {
-        return selection.getElitism();
     }
 }
