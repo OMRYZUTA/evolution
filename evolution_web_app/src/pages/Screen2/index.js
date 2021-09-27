@@ -7,7 +7,6 @@ import * as Screen2Services from "../../services/Screen2Services";
 import Summary from "./Summary";
 import Navbar from "../../components/Navbar"
 import Button from '@material-ui/core/Button'
-import {uploadFile} from "../../services/FileServices";
 import * as FileServices from "../../services/FileServices";
 import {UserContext} from "../../components/UserContext"
 

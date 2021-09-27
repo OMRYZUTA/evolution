@@ -11,6 +11,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {useState} from "react";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +22,18 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#D3D3D3", //light gray
     },
 }));
+const fakeEngineSettings = {
+    timetableID: 0,
+    populationSize: 32,
+    stride: 2,
+    selection: {
+        name: "rouletteWheel",
+        elitism: 0
+    },
+    crossover: {name: "daytimeOriented", "cuttingPoints": 5},
+    mutations: [{name: "flipping", probability: 0.2}],
+    endPredicates: [{"name": "numOfGeneration", value: 300}]
+}
 const selections = [{name: "Truncation", id: "truncation"}, {
     name: "Roulette Wheel",
     id: "rouletteWheel"
@@ -35,6 +48,30 @@ const flippingComponent = [{name: "Hour", id: "H"}, {name: "Day", id: "D"}, {nam
 
 const EngineSettings = () => {
     const classes = useStyles();
+    const [engineSettings, setEngineSettings] = useState(fakeEngineSettings);
+
+    function renderSelectionExtraField() {
+        if (engineSettings.selection.name === "tournament") {
+            return (
+                <TextField
+                    required
+                    id="outlined-required"
+                    label="PTE"
+                    defaultValue={engineSettings.selection.pte}
+                />
+            )
+        } else {
+            return (
+                <TextField
+                    required
+                    id="outlined-required"
+                    label="Top percent"
+                    defaultValue={engineSettings.selection.topPercent}
+                />
+            )
+        }
+    }
+
     return (
         <Paper>
             <Accordion>
@@ -52,11 +89,13 @@ const EngineSettings = () => {
                             required
                             id="outlined-required"
                             label="Population size"
+                            defaultValue={engineSettings.populationSize}
                         />
                         <TextField
                             required
                             id="outlined-required"
                             label="stride"
+                            defaultValue={engineSettings.stride}
                         />
                     </Grid>
                 </AccordionDetails>
@@ -74,7 +113,7 @@ const EngineSettings = () => {
                         <DropDown
                             label={"Selection"}
                             options={selections}
-                            currentValue={selections[0].id}
+                            currentValue={engineSettings.selection.name}
                             keyPropName="id"
                             namePropName="name"
                             onChange={() => console.log("selection changed")}
@@ -83,19 +122,11 @@ const EngineSettings = () => {
                             required
                             id="outlined-required"
                             label="Elitism"
-                            defaultValue="0"
+                            defaultValue={engineSettings.selection.elitism}
                         />
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="Top percent"
-                        />
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="PTE"
-                            defaultValue="100"
-                        />
+                        {engineSettings.selection.name === "rouletteWheel" || renderSelectionExtraField()}
+
+
                     </Grid>
                 </AccordionDetails>
             </Accordion>
@@ -112,25 +143,26 @@ const EngineSettings = () => {
                         <DropDown
                             label={"Crossover"}
                             options={crossovers}
-                            currentValue={crossovers[0].id}
+                            currentValue={engineSettings.crossover.name}
                             keyPropName="id"
                             namePropName="name"
                             onChange={() => console.log("crossover changed")}
-                        />
-                        <DropDown
-                            label={"Orientation"}
-                            options={orientations}
-                            currentValue={orientations[0].id}
-                            keyPropName="id"
-                            namePropName="name"
-                            onChange={() => console.log("orientation changed")}
                         />
                         <TextField
                             required
                             id="outlined-required"
                             label="CuttingPoints"
-                            defaultValue="0"
+                            defaultValue={engineSettings.crossover.cuttingPoints}
                         />
+                        {engineSettings.crossover.name==="datetimeOriented"||
+                        <DropDown
+                            label={"Orientation"}
+                            options={orientations}
+                            currentValue={engineSettings.crossover.orientation}
+                            keyPropName="id"
+                            namePropName="name"
+                            onChange={() => console.log("orientation changed")}
+                        />}
                     </Grid>
                 </AccordionDetails>
             </Accordion>
@@ -211,12 +243,12 @@ const EngineSettings = () => {
                         </Grid>
                         <Grid item>
 
-                                <FormControlLabel control={<Checkbox defaultChecked/>} label="Time"/>
-                                <TextField
-                                    required
-                                    id="outlined-required"
-                                    label="Time"
-                                />
+                            <FormControlLabel control={<Checkbox defaultChecked/>} label="Time"/>
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Time"
+                            />
                         </Grid>
                     </Grid>
                 </AccordionDetails>
