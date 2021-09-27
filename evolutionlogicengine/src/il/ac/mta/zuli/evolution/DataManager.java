@@ -38,13 +38,13 @@ public class DataManager {
                                               List<Map<String, Object>> endPredicatesMap,
                                               Object generationStride) {
 
-        TimeTableEngine runToAdd = new TimeTableEngine(
+        TimeTableEngine timetableEngine = new TimeTableEngine(
                 timetables.get(timetableID),
                 engineSettingsMap,
                 endPredicatesMap,
                 generationStride);
 
-        users.get(userName).addTimetableEngine(runToAdd);
+        users.get(userName).runTimetableEngine(timetableEngine);
     }
 
     //return value might be an empty list
@@ -150,6 +150,7 @@ public class DataManager {
 
     //return value might be null
     public TimeTable getTimetable(int ttID) {
+
         if (doesTimetableExist(ttID)) {
             return timetables.get(ttID);
         } else {
@@ -173,13 +174,8 @@ public class DataManager {
         return newList;
     }
 
-
     //when do we remove users? delete later
     public synchronized void removeUser(String username) {
         users.remove(username);
-    }
-
-    public User getUser(String name) {
-        return users.get(name);
     }
 }

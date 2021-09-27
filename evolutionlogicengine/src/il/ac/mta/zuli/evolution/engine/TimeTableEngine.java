@@ -11,7 +11,6 @@ import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
 import il.ac.mta.zuli.evolution.engine.timetable.*;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -19,7 +18,6 @@ import javafx.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class TimeTableEngine implements Engine {
     private final Descriptor descriptor;
@@ -66,7 +64,6 @@ public class TimeTableEngine implements Engine {
         List<EndPredicate> endPredicates = new ArrayList<>();
 
         if (endPredicatesMap.size() > 0) {
-
             for (Map<String, Object> predicateMap : endPredicatesMap) {
                 endPredicates.add(new EndPredicate(predicateMap, generationsStride));
             }
@@ -83,86 +80,50 @@ public class TimeTableEngine implements Engine {
 
     //#region algorithm-flow methods:
     @Override
-    public void startEvolutionAlgorithm(List<EndPredicate> endConditions,
-                                        int generationsStride,
-                                        Consumer<Boolean> onSuccess,
-                                        Consumer<Throwable> onFailure,
-                                        Consumer<TimeTableSolutionDTO> reportBestSolution) {
+    public void startEvolutionAlgorithm() {
         if (!isXMLLoaded()) {
-            onFailure.accept(new InvalidOperationException("Can't execute Evolution algorithm, file is not loaded"));
-            return;
+            throw new InvalidOperationException("Can not execute Evolution Algorithm, a file is not loaded");
         }
 
-        runEvolutionAlgorithm(endConditions,
-                generationsStride,
-                onSuccess,
-                onFailure,
-                reportBestSolution,
-                null); // sending null as currentState, to start a fresh run
+        runEvolutionAlgorithm(null); // sending null as currentState, to start a fresh run
     }
 
     @Override
-    public void resumeEvolutionAlgorithm(List<EndPredicate> endConditions,
-                                         int generationsStride,
-                                         Consumer<Boolean> onSuccess,
-                                         Consumer<Throwable> onFailure,
-                                         Consumer<TimeTableSolutionDTO> reportBestSolution) {
-
-        runEvolutionAlgorithm(endConditions,
-                generationsStride,
-                onSuccess,
-                onFailure,
-                reportBestSolution,
-                this.currEvolutionState);
+    public void resumeEvolutionAlgorithm() {
+        runEvolutionAlgorithm(this.currEvolutionState);
     }
 
-    private void runEvolutionAlgorithm(List<EndPredicate> endConditions,
-                                       int generationsStride,
-                                       Consumer<Boolean> onSuccess,
-                                       Consumer<Throwable> onFailure,
-                                       Consumer<TimeTableSolutionDTO> reportBestSolution,
-                                       EvolutionState currentState) {
+    private void runEvolutionAlgorithm(EvolutionState currentState) {
         if (currentRunningTask != null) {
-            onFailure.accept(new RuntimeException("Failed running task because another task is currently running"));
-            return;
+            throw new RuntimeException("Failed running task because another task is currently running");
         }
 
         currentRunningTask = new RunAlgorithmTask(
                 this.descriptor,
-                endConditions,
+                endPredicates,
                 generationsStride,
                 currentState,
                 (EvolutionState state) -> {
                     this.currEvolutionState = state;
-                    Platform.runLater(() -> {
-                        generationNumProperty.set(state.getGenerationNum());
-                        fitnessProperty.set(state.getBestSolutionSoFar().getFitnessScore());
-                        timeProperty.set(state.getNetRunTime());
-                    });
                 },
                 (TimeTableSolution solution) -> {
-                    reportBestSolution.accept(createTimeTableSolutionDTO(solution));
+                    bestSolution = solution;
                 });
         currentRunningTask.setOnCancelled(event -> {
-//            controller.onTaskFinished();
-            onSuccess.accept(false);
+            //onSuccess.accept(false);
             currentRunningTask = null; // clearing task
         });
 
         currentRunningTask.setOnSucceeded(event -> {
             this.currEvolutionState = null; // reset state
-//            controller.onTaskFinished();
-            onSuccess.accept(true); // sending the best solutionDTO to the controller
+//            onSuccess.accept(true); // sending the best solutionDTO to the controller
             currentRunningTask = null; // clearing task
         });
 
         currentRunningTask.setOnFailed(value -> {
-//            controller.onTaskFinished();
-            onFailure.accept(currentRunningTask.getException());
+//            onFailure.accept(currentRunningTask.getException());
             currentRunningTask = null;
         });
-
-//        controller.bindTaskToUIComponents(currentRunningTask);
 
         new Thread(currentRunningTask).start();
     }
