@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function IconTabs({ stats }) {
+export default function IconTabs({stats, engineSettings, handleEngineSettingsChanged}) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -60,7 +60,7 @@ export default function IconTabs({ stats }) {
 
     return (
         <div className={classes.root}>
-                <Tabs
+            <Tabs
                     value={value}
                     onChange={handleChange}
                     variant="scrollable"
@@ -76,7 +76,8 @@ export default function IconTabs({ stats }) {
                 Timetable Details
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <EngineSettings/>
+                <EngineSettings engineSettings={engineSettings}
+                                handleEngineSettingsChanged={handleEngineSettingsChanged}/>
             </TabPanel>
         </div>
     );

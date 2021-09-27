@@ -1,15 +1,16 @@
-import {Container, Grid,} from '@mui/material';
-import Navbar from "../../components/Navbar";
-import {UserContext} from "../../components/UserContext"
-import {useContext, useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
+import {ButtonGroup} from "@material-ui/core";
+import {Container, Grid,} from '@mui/material';
+import InfoTabs from "./InfoTabs";
+import {makeStyles} from "@material-ui/core/styles";
+import Navbar from "../../components/Navbar";
 import Paper from "@mui/material/Paper";
 import {TimetableContext} from "../../components/TimetableContext";
-import {ButtonGroup} from "@material-ui/core";
-import InfoTabs from "./InfoTabs";
+import {useCallback, useContext, useEffect, useState} from "react";
+import {UserContext} from "../../components/UserContext"
 import * as TimetableServices from "../../services/TimetableServices";
-import EngineSettings from"./EngineSettings"
+import * as Utils from "../../services/Utils";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: '50px 70px',
@@ -36,31 +37,49 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const fakeEngineSettings = {
+    timetableID: 0,
+    populationSize: 32,
+    stride: 2,
+    selection: {
+        name: "rouletteWheel",
+        elitism: 0
+    },
+    crossover: {name: "daytimeOriented", "cuttingPoints": 5},
+    mutations: [{name: "flipping", probability: 0.2, maxTuples: 4, component: "H"}],
+    endPredicates: [{"name": "numOfGeneration", value: 300}]
+}
+
 const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
     const {currentTimetable} = useContext(TimetableContext);//todo change to id
-    const [timetable,setTimetable] = useState();
+    const [timetable, setTimetable] = useState();
+    const [engineSettings, setEngineSettings] = useState(fakeEngineSettings);
     const classes = useStyles();
-    const actions = ["start ", "pause ", "resume ", "stop "]
-    useEffect(() => {
+    // const actions = ["start ", "pause ", "resume ", "stop "]
 
+    useEffect(() => {
         const fetchAllData = async () => {
-            // calling all API calls in parallel, and waiting until they ALL finish before setting
             try {
                 const result = await TimetableServices.getDetails(currentTimetable);
-                if(result.data){
+                if (result.data) {
                     setTimetable(result.data);
-                }
-                else{
+                } else {
                     console.log(result.error);
                 }
-
             } catch (e) {
                 console.log(e);
                 // setAlertText('Failed initializing app, please reload page');
             }
         };
+
         fetchAllData();
+    }, []);
+
+    const handleStart = useCallback(async () => {
+        const url = `/server_Web_exploded/api/actions?action=start`;
+        const bodyObject = {};
+        const result = await Utils.fetchWrapper('POST', url, bodyObject)
     }, []);
 
     return (
@@ -70,7 +89,7 @@ const Screen3 = () => {
                 <Grid container direction={"row"} spacing={2}>
                     <Grid item xs={12} md={6}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
-                            <InfoTabs/>
+                            <InfoTabs engineSettings={engineSettings} handleEngineSettingsChanged={setEngineSettings}/>
                         </Grid>
                     </Grid>
 
@@ -80,7 +99,7 @@ const Screen3 = () => {
                                 <ButtonGroup
                                     aria-label="outlined primary button group">
                                     <Button
-                                        id="start">
+                                        id="start" onClick={handleStart}>
                                         start
                                     </Button>
                                     <Button id="pause">

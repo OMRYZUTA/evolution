@@ -11,7 +11,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {useState} from "react";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -22,18 +21,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#D3D3D3", //light gray
     },
 }));
-const fakeEngineSettings = {
-    timetableID: 0,
-    populationSize: 32,
-    stride: 2,
-    selection: {
-        name: "rouletteWheel",
-        elitism: 0
-    },
-    crossover: {name: "daytimeOriented", "cuttingPoints": 5},
-    mutations: [{name: "flipping", probability: 0.2,maxTuples:4,component:"H"}],
-    endPredicates: [{"name": "numOfGeneration", value: 300}]
-}
+
 const selections = [{name: "Truncation", id: "truncation"}, {
     name: "Roulette Wheel",
     id: "rouletteWheel"
@@ -46,9 +34,8 @@ const flippingComponent = [{name: "Hour", id: "H"}, {name: "Day", id: "D"}, {nam
     id: "C"
 }, {name: "Subject", id: "S"},]
 
-const EngineSettings = () => {
+const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
     const classes = useStyles();
-    const [engineSettings, setEngineSettings] = useState(fakeEngineSettings);
 
     function renderSelectionExtraField() {
         if (engineSettings.selection.name === "tournament") {
@@ -73,14 +60,14 @@ const EngineSettings = () => {
     }
 
     function renderMutationExtraFields(mutation) {
-        if (mutation.name == "sizer") {
+        if (mutation.name === "sizer") {
             return (<TextField
                 required
                 id="outlined-required"
                 label="totalTuple"
                 defaultValue={mutation.totalTuples}
             />)
-        } else if (mutation.name == "flipping") {
+        } else if (mutation.name === "flipping") {
             return (
                 <Grid container className={classes.root}>
                     <TextField

@@ -1,6 +1,5 @@
 import UserList from "./UserList";
 import {useContext, useEffect, useState} from "react";
-import {useLocation} from 'react-router-dom';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import * as Screen2Services from "../../services/Screen2Services";
@@ -29,14 +28,13 @@ const Index = () => {
     const {currentUser} = useContext(UserContext);
     const classes = useStyles();
     const [users, setUsers] = useState([]);
-    const [summaries, setSummaries] = useState();
+    const [summaries, setSummaries] = useState([]);
     const [selectedFile, setSelectedFile] = useState();
 
     //TODO need to get all the information all the time
     //we'll later add a dependency to the useEffect that will change every x seconds and that will create a pull
 
     useEffect(() => {
-
         const fetchAllData = async () => {
             // calling all API calls in parallel, and waiting until they ALL finish before setting
             try {
@@ -56,11 +54,11 @@ const Index = () => {
         // fetchAllData()
         return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
     }, []);
+
     const handleFileUpload = async (event) => {
         setSelectedFile(event.target.files[0]);
         const result = await FileServices.uploadFile(event.target.files[0]);
         console.log(result);//todo handle bad xml
-
     };
 
     return (
