@@ -34,10 +34,14 @@ public class DataManager {
     public synchronized void addAlgoRunToUser(String userName,
                                               int timetableID,
                                               Map<String, Object> engineSettingsMap,
-                                              Map<String, Object> endPredicatesMap,
-                                              int generationStride) {
-        TimeTable timetable = timetables.get(timetableID);
-        TimeTableEngine engineToAdd = new TimeTableEngine(timetable, engineSettingsMap, endPredicatesMap, generationStride);
+                                              List<Map<String, Object>> endPredicatesMap,
+                                              Object generationStride) {
+
+        TimeTableEngine engineToAdd = new TimeTableEngine(
+                timetables.get(timetableID),
+                engineSettingsMap,
+                endPredicatesMap,
+                generationStride);
         users.get(userName).addTimetableEngine(engineToAdd);
     }
 

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -50,12 +51,19 @@ public class runAlgoServlet extends HttpServlet {
             String usernameFromSession = SessionUtils.getUsername(request);
             Gson gson = new Gson();
             Map<String, Object> requestMap = gson.fromJson(request.getReader(), new HashMap<String, Object>().getClass());
-            int ttID = (int) requestMap.get(Constants.TIMETABLE_ID);
+
+            int ttID = (int) requestMap.get(Constants.TIMETABLE_ID); //we know this an integer because we provided it
             Map<String, Object> engineSettingsMap = (HashMap<String, Object>) requestMap.get(Constants.ENGINE_SETTINGS);
-            Map<String, Object> endPredicatesMap = (HashMap<String, Object>) requestMap.get(Constants.END_PREDICATES);
-            int generationStride = (int) requestMap.get(Constants.STRIDE);
+            List<Map<String, Object>> endPredicatesMap = (List<Map<String, Object>>) requestMap.get(Constants.END_PREDICATES);
+            Object generationStride = requestMap.get(Constants.STRIDE);
+
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
-            dataManager.addAlgoRunToUser(usernameFromSession, ttID, engineSettingsMap, endPredicatesMap, generationStride);
+            dataManager.addAlgoRunToUser(
+                    usernameFromSession,
+                    ttID,
+                    engineSettingsMap,
+                    endPredicatesMap,
+                    generationStride);
 
             responseMessage = "OK";
         } catch (Throwable e) {

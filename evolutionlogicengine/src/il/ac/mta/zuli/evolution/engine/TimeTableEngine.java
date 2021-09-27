@@ -6,6 +6,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterf
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
+import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
@@ -26,7 +27,7 @@ public class TimeTableEngine implements Engine {
     private Task<?> currentRunningTask; //OR maybe: private Thread thread;
     //EX3 additions to class:
     private final List<EndPredicate> endPredicates;
-    private final int generationsStride;
+    private int generationsStride;
     private TimeTableSolution bestSolution;
 
     //TODO get rid of properties and controller
@@ -37,18 +38,43 @@ public class TimeTableEngine implements Engine {
     //new CTOR for Ex 3 - where was the descriptor set in the previous exercises?
     public TimeTableEngine(TimeTable timetable,
                            Map<String, Object> engineSettingsMap,
-                           Map<String, Object> endPredicatesMap,
-                           int stride) {
+                           List<Map<String, Object>> endPredicatesMap,
+                           Object stride) {
         EngineSettings<TimeTableSolution> engineSettings = new EngineSettings<>(engineSettingsMap, timetable);
         this.descriptor = new Descriptor(timetable, engineSettings);
         this.endPredicates = generatePredicates(endPredicatesMap);
-        this.generationsStride = stride;
+        setGenerationsStride(stride);
     }
 
-    private List<EndPredicate> generatePredicates(Map<String, Object> endPredicatesMap) {
+    public void setGenerationsStride(Object generationsStride) {
+        int stride;
+
+        try {
+            stride = (int) generationsStride;
+        } catch (Throwable e) {
+            throw new ValidationException("Stride must be a positive number");
+        }
+
+        if (stride > 0) {
+            this.generationsStride = stride; //we'll check stride < generationNum only if that predicate is applied
+        } else {
+            throw new ValidationException("Stride must be a positive number");
+        }
+    }
+
+    private List<EndPredicate> generatePredicates(List<Map<String, Object>> endPredicatesMap) {
         List<EndPredicate> endPredicates = new ArrayList<>();
-        //TODO implement
-        return endPredicates;
+
+        if (endPredicatesMap.size() > 0) {
+
+            for (Map<String, Object> predicateMap : endPredicatesMap) {
+                endPredicates.add(new EndPredicate(predicateMap, generationsStride));
+            }
+
+            return endPredicates;
+        } else {
+            throw new ValidationException("Please select at least one End Condition");
+        }
     }
 
     public boolean isXMLLoaded() {

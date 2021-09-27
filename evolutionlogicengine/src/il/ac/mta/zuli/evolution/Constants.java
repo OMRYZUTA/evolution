@@ -12,9 +12,10 @@ public class Constants {
     //TimetableEngine:
     public static final String ENGINE_SETTINGS = "engineSettings";
     public static final String END_PREDICATES = "endPredicates";
+    public static final String NAME = "name";
+    public static final String VALUE = "value";
     public static final String STRIDE = "stride";
     public static final String POPULATION_SIZE = "populationSize";
-    public static final String NAME = "name";
     //selection related:
     public static final String SELECTION = "selection";
     public static final String TRUNCATION = "truncation";
