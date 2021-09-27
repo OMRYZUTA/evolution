@@ -24,26 +24,12 @@ const useStyles = makeStyles((theme) => ({
     },
 
 }))
-const fakeData = [ //todo delete later
-    {
-        ID: 999,
-        bestScore: 100,
-        days: 32,
-        hours: 2323,
-        numOfClasses: 2323,
-        numOfHardRules: 323,
-        numOfSoftRules: 32,
-        numOfSubjects: 55,
-        numOfTeachers: 888,
-        numOfUsersSolving: 999,
-        uploadedBy: "defaultSummary",
-    }]
 
 const Index = () => {
     const {currentUser} = useContext(UserContext);
     const classes = useStyles();
     const [users, setUsers] = useState([]);
-    const [summaries, setSummaries] = useState(fakeData);
+    const [summaries, setSummaries] = useState();
     const [selectedFile, setSelectedFile] = useState();
 
     //TODO need to get all the information all the time
@@ -56,7 +42,7 @@ const Index = () => {
             try {
                 const dashboardPayload = await Screen2Services.getAll();
                 setUsers(dashboardPayload.users);
-                setSummaries([...fakeData, ...dashboardPayload.timetables]);
+                setSummaries([ ...dashboardPayload.timetables]);
             } catch (e) {
                 console.log(e);
                 // setAlertText('Failed initializing app, please reload page');

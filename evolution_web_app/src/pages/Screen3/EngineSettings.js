@@ -31,7 +31,7 @@ const fakeEngineSettings = {
         elitism: 0
     },
     crossover: {name: "daytimeOriented", "cuttingPoints": 5},
-    mutations: [{name: "flipping", probability: 0.2}],
+    mutations: [{name: "flipping", probability: 0.2,maxTuples:4,component:"H"}],
     endPredicates: [{"name": "numOfGeneration", value: 300}]
 }
 const selections = [{name: "Truncation", id: "truncation"}, {
@@ -69,6 +69,35 @@ const EngineSettings = () => {
                     defaultValue={engineSettings.selection.topPercent}
                 />
             )
+        }
+    }
+
+    function renderMutationExtraFields(mutation) {
+        if (mutation.name == "sizer") {
+            return (<TextField
+                required
+                id="outlined-required"
+                label="totalTuple"
+                defaultValue={mutation.totalTuples}
+            />)
+        } else if (mutation.name == "flipping") {
+            return (
+                <Grid container className={classes.root}>
+                    <TextField
+                        required
+                        id="outlined-required"
+                        label="maxTuples"
+                        defaultValue={mutation.maxTuples}
+                    />
+                    <DropDown
+                        label={"Component"}
+                        options={flippingComponent}
+                        currentValue={mutation.component}
+                        keyPropName="id"
+                        namePropName="name"
+                        onChange={() => console.log("flipping component changed")}
+                    />
+                </Grid>);
         }
     }
 
@@ -125,8 +154,6 @@ const EngineSettings = () => {
                             defaultValue={engineSettings.selection.elitism}
                         />
                         {engineSettings.selection.name === "rouletteWheel" || renderSelectionExtraField()}
-
-
                     </Grid>
                 </AccordionDetails>
             </Accordion>
@@ -154,7 +181,7 @@ const EngineSettings = () => {
                             label="CuttingPoints"
                             defaultValue={engineSettings.crossover.cuttingPoints}
                         />
-                        {engineSettings.crossover.name==="datetimeOriented"||
+                        {engineSettings.crossover.name === "daytimeOriented" ||
                         <DropDown
                             label={"Orientation"}
                             options={orientations}
@@ -180,39 +207,29 @@ const EngineSettings = () => {
                     }}>
                         <AddIcon/>
                     </IconButton>
-                    <Grid container className={classes.root}>
-                        <DropDown
-                            label={"Mutation"}
-                            options={mutations}
-                            currentValue={mutations[0].id}
-                            keyPropName="id"
-                            namePropName="name"
-                            onChange={() => console.log("mutation changed")}
-                        />
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="Probability"
-                        />
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="totalTuple"
-                        />
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="maxTuples"
-                        />
-                        <DropDown
-                            label={"Component"}
-                            options={flippingComponent}
-                            currentValue={flippingComponent[0].id}
-                            keyPropName="id"
-                            namePropName="name"
-                            onChange={() => console.log("flipping component changed")}
-                        />
-                    </Grid>
+                    {engineSettings.mutations.map(mutation => {
+                        return (
+                            <Grid container className={classes.root}>
+                                <DropDown
+                                    label={"Mutation"}
+                                    options={mutations}
+                                    currentValue={mutation.name}
+                                    keyPropName="id"
+                                    namePropName="name"
+                                    onChange={() => console.log("mutation changed")}
+                                />
+                                <TextField
+                                    required
+                                    id="outlined-required"
+                                    label="Probability"
+                                    defaultValue={mutation.probability}
+                                />
+                                {renderMutationExtraFields(mutation)}
+
+
+                            </Grid>)
+                    })}
+
                 </AccordionDetails>
             </Accordion>
             <Accordion>
