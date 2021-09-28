@@ -8,9 +8,11 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import EngineSettings from "./EngineSettings";
+import Button from "@material-ui/core/Button";
+import {ButtonGroup} from "@material-ui/core";
 
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index, ...other} = props;
 
     return (
         <div
@@ -61,23 +63,31 @@ export default function IconTabs({stats, engineSettings, handleEngineSettingsCha
     return (
         <div className={classes.root}>
             <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    variant="scrollable"
-                    scrollButtons="on"
-                    indicatorColor="primary"
-                    textColor="primary"
-                    aria-label="scrollable force tabs example"
-                >
-                    <Tab label="Timetable details" icon={<DescriptionIcon />} {...a11yProps(0)} />
-                    <Tab label="Engine settings" icon={<EqualizerIcon />} {...a11yProps(1)} />
-                </Tabs>
+                value={value}
+                onChange={handleChange}
+                variant="scrollable"
+                scrollButtons="on"
+                indicatorColor="primary"
+                textColor="primary"
+                aria-label="scrollable force tabs example"
+            >
+                <Tab label="Timetable details" icon={<DescriptionIcon/>} {...a11yProps(0)} />
+                <Tab label="Engine settings" icon={<EqualizerIcon/>} {...a11yProps(1)} />
+            </Tabs>
             <TabPanel value={value} index={0}>
                 Timetable Details
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <EngineSettings engineSettings={engineSettings}
                                 handleEngineSettingsChanged={handleEngineSettingsChanged}/>
+                <ButtonGroup>
+                    <Button onClick={() => {
+                        console.log("onClick save")
+                    }}>Save</Button>
+                    <Button onClick={() => {
+                        console.log("onClick cancel")
+                    }}>Cancel</Button>
+                </ButtonGroup>
             </TabPanel>
         </div>
     );

@@ -1,17 +1,15 @@
-import Paper from "@mui/material/Paper";
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AddIcon from '@material-ui/icons/Add';
 import {Checkbox, FormControlLabel, IconButton, TextField} from "@material-ui/core";
+import DropDown from "../../components/Dropdown";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from "@material-ui/core/Grid";
 import {makeStyles} from "@material-ui/core/styles";
-import DropDown from "../../components/Dropdown";
-import AddIcon from '@material-ui/icons/Add';
-import * as React from 'react';
-
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
+import Paper from "@mui/material/Paper";
+import React, {useState} from 'react';
 import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,29 +32,24 @@ const flippingComponent = [{name: "Hour", id: "H"}, {name: "Day", id: "D"}, {nam
     id: "C"
 }, {name: "Subject", id: "S"},]
 
-const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
+const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
     const classes = useStyles();
+    const [data, setData] = useState(engineSettings);
 
     function renderSelectionExtraField() {
-        if (engineSettings.selection.name === "tournament") {
-            return (
-                <TextField
-                    required
-                    id="outlined-required"
-                    label="PTE"
-                    defaultValue={engineSettings.selection.pte}
-                />
-            )
+        let tempLabel;
+        let tempValue;
+
+        if (data.selection.name === "tournament") {
+            tempLabel = "PTE";
+            tempValue = data.selection.pte;
         } else {
-            return (
-                <TextField
-                    required
-                    id="outlined-required"
-                    label="Top percent"
-                    defaultValue={engineSettings.selection.topPercent}
-                />
-            )
+            // if (data.selection.name === "truncation")
+            tempLabel = "Top Percent";
+            tempValue = data.selection.topPercent;
         }
+
+        return (<TextField required id="outlined-required" label={tempLabel} defaultValue={tempValue}/>)
     }
 
     function renderMutationExtraFields(mutation) {
@@ -64,7 +57,7 @@ const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
             return (<TextField
                 required
                 id="outlined-required"
-                label="totalTuple"
+                label="Total Tuples"
                 defaultValue={mutation.totalTuples}
             />)
         } else if (mutation.name === "flipping") {
@@ -73,7 +66,7 @@ const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
                     <TextField
                         required
                         id="outlined-required"
-                        label="maxTuples"
+                        label="Max Tuples"
                         defaultValue={mutation.maxTuples}
                     />
                     <DropDown
@@ -90,14 +83,14 @@ const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
 
     return (
         <Paper>
+
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
-                    <Typography>General Details</Typography>
-
+                    <Typography>Population and Stride</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Grid container className={classes.root}>
@@ -105,17 +98,56 @@ const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
                             required
                             id="outlined-required"
                             label="Population size"
-                            defaultValue={engineSettings.populationSize}
+                            defaultValue={data.populationSize}
                         />
                         <TextField
                             required
                             id="outlined-required"
-                            label="stride"
-                            defaultValue={engineSettings.stride}
+                            label="Stride"
+                            defaultValue={data.stride}
                         />
                     </Grid>
                 </AccordionDetails>
             </Accordion>
+
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon/>}
+                    aria-controls="panel2a-content"
+                    id="panel2a-header"
+                >
+                    <Typography>End Conditions</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Grid container className={classes.root} direction={"column"}>
+                        <Grid item>
+                            <FormControlLabel control={<Checkbox defaultChecked/>} label="Number of Generations"/>
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Number of Generations"
+                            />
+                        </Grid>
+                        <Grid item>
+                            <FormControlLabel control={<Checkbox defaultChecked/>} label="Fitness Score"/>
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Fitness Score"
+                            />
+                        </Grid>
+                        <Grid item>
+                            <FormControlLabel control={<Checkbox defaultChecked/>} label="Time"/>
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Time"
+                            />
+                        </Grid>
+                    </Grid>
+                </AccordionDetails>
+            </Accordion>
+
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
@@ -129,7 +161,7 @@ const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
                         <DropDown
                             label={"Selection"}
                             options={selections}
-                            currentValue={engineSettings.selection.name}
+                            currentValue={data.selection.name}
                             keyPropName="id"
                             namePropName="name"
                             onChange={() => console.log("selection changed")}
@@ -138,12 +170,13 @@ const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
                             required
                             id="outlined-required"
                             label="Elitism"
-                            defaultValue={engineSettings.selection.elitism}
+                            defaultValue={data.selection.elitism}
                         />
-                        {engineSettings.selection.name === "rouletteWheel" || renderSelectionExtraField()}
+                        {data.selection.name === "rouletteWheel" || renderSelectionExtraField()}
                     </Grid>
                 </AccordionDetails>
             </Accordion>
+
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
@@ -157,7 +190,7 @@ const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
                         <DropDown
                             label={"Crossover"}
                             options={crossovers}
-                            currentValue={engineSettings.crossover.name}
+                            currentValue={data.crossover.name}
                             keyPropName="id"
                             namePropName="name"
                             onChange={() => console.log("crossover changed")}
@@ -165,14 +198,14 @@ const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
                         <TextField
                             required
                             id="outlined-required"
-                            label="CuttingPoints"
-                            defaultValue={engineSettings.crossover.cuttingPoints}
+                            label="Cutting Points"
+                            defaultValue={data.crossover.numOfCuttingPoints}
                         />
-                        {engineSettings.crossover.name === "daytimeOriented" ||
+                        {data.crossover.name === "daytimeoriented" ||
                         <DropDown
                             label={"Orientation"}
                             options={orientations}
-                            currentValue={engineSettings.crossover.orientation}
+                            currentValue={data.crossover.orientation}
                             keyPropName="id"
                             namePropName="name"
                             onChange={() => console.log("orientation changed")}
@@ -180,6 +213,7 @@ const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
                     </Grid>
                 </AccordionDetails>
             </Accordion>
+
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
@@ -194,7 +228,7 @@ const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
                     }}>
                         <AddIcon/>
                     </IconButton>
-                    {engineSettings.mutations.map(mutation => {
+                    {data.mutations.map(mutation => {
                         return (
                             <Grid container className={classes.root}>
                                 <DropDown
@@ -212,51 +246,12 @@ const EngineSettings = ({engineSettings, handleEngineSettingsChange}) => {
                                     defaultValue={mutation.probability}
                                 />
                                 {renderMutationExtraFields(mutation)}
-
-
                             </Grid>)
                     })}
 
                 </AccordionDetails>
             </Accordion>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon/>}
-                    aria-controls="panel2a-content"
-                    id="panel2a-header"
-                >
-                    <Typography>End conditions</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Grid container className={classes.root} direction={"column"}>
-                        <Grid item>
-                            <FormControlLabel control={<Checkbox defaultChecked/>} label="Number of generations"/>
-                            <TextField
-                                required
-                                id="outlined-required"
-                                label="Number of generations"
-                            />
-                        </Grid>
-                        <Grid item>
-                            <FormControlLabel control={<Checkbox defaultChecked/>} label="Fitness score"/>
-                            <TextField
-                                required
-                                id="outlined-required"
-                                label="Fitness score"
-                            />
-                        </Grid>
-                        <Grid item>
 
-                            <FormControlLabel control={<Checkbox defaultChecked/>} label="Time"/>
-                            <TextField
-                                required
-                                id="outlined-required"
-                                label="Time"
-                            />
-                        </Grid>
-                    </Grid>
-                </AccordionDetails>
-            </Accordion>
         </Paper>
     )
 }

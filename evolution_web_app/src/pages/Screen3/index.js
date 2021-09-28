@@ -114,7 +114,9 @@ const Screen3 = () => {
                                     <Button id="bestSolution">
                                         Best Solution
                                     </Button>
-                                    <Button id="back to screen 2">
+                                    <Button id="back to screen 2" onClick={() => {
+                                        console.log("onClick back to Screen2")
+                                    }}>
                                         Back to screen 2
                                     </Button>
                                 </ButtonGroup>
