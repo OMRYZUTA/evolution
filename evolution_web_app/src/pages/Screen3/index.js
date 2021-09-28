@@ -1,3 +1,4 @@
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import Button from '@material-ui/core/Button';
 import {ButtonGroup} from "@material-ui/core";
 import {Container, Grid,} from '@mui/material';
@@ -6,7 +7,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import Navbar from "../../components/Navbar";
 import Paper from "@mui/material/Paper";
 import {TimetableContext} from "../../components/TimetableContext";
-import {useCallback, useContext, useEffect, useState} from "react";
 import {UserContext} from "../../components/UserContext"
 import * as TimetableServices from "../../services/TimetableServices";
 import * as Utils from "../../services/Utils";
@@ -37,24 +37,25 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const fakeEngineSettings = {
+const fakeAlgoConfig = {
     timetableID: 0,
     populationSize: 32,
     stride: 2,
-    selection: {
-        name: "rouletteWheel",
-        elitism: 0
-    },
-    crossover: {name: "daytimeOriented", "cuttingPoints": 5},
-    mutations: [{name: "flipping", probability: 0.2, maxTuples: 4, component: "H"}],
-    endPredicates: [{"name": "numOfGeneration", value: 300}]
+    endPredicates: [{"name": "numOfGeneration", value: 300}],
+    engineSettings: {
+        selection: {
+            name: "rouletteWheel", elitism: 0
+        },
+        crossover: {name: "daytimeOriented", "cuttingPoints": 5},
+        mutations: [{name: "flipping", probability: 0.2, maxTuples: 4, component: "H"}],
+    }
 }
 
 const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
     const {currentTimetable} = useContext(TimetableContext);//todo change to id
     const [timetable, setTimetable] = useState();
-    const [engineSettings, setEngineSettings] = useState(fakeEngineSettings);
+    const [algorithmConfiguration, setAlgorithmConfiguration] = useState(fakeAlgoConfig);
     const classes = useStyles();
     // const actions = ["start ", "pause ", "resume ", "stop "]
 
@@ -89,7 +90,8 @@ const Screen3 = () => {
                 <Grid container direction={"row"} spacing={2}>
                     <Grid item xs={12} md={6}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
-                            <InfoTabs engineSettings={engineSettings} handleEngineSettingsChanged={setEngineSettings}/>
+                            <InfoTabs engineSettings={algorithmConfiguration}
+                                      handleEngineSettingsChanged={setAlgorithmConfiguration}/>
                         </Grid>
                     </Grid>
 

@@ -7,7 +7,7 @@ import EqualizerIcon from '@material-ui/icons/Equalizer';
 import DescriptionIcon from '@material-ui/icons/Description';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import EngineSettings from "./EngineSettings";
+import AlgorithmConfiguration from "./AlgorithmConfiguration";
 import Button from "@material-ui/core/Button";
 import {ButtonGroup} from "@material-ui/core";
 
@@ -78,8 +78,8 @@ export default function IconTabs({stats, engineSettings, handleEngineSettingsCha
                 Timetable Details
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <EngineSettings engineSettings={engineSettings}
-                                handleEngineSettingsChanged={handleEngineSettingsChanged}/>
+                <AlgorithmConfiguration algorithmConfiguration={engineSettings}
+                                        handleEngineSettingsChanged={handleEngineSettingsChanged}/>
                 <ButtonGroup>
                     <Button onClick={() => {
                         console.log("onClick save")

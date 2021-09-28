@@ -26,8 +26,8 @@ const selections = [
     {name: "Tournament", id: "tournament"},
 ];
 const crossovers = [
-    {name: "Daytime Oriented", id: "daytimeoriented"},
-    {name: "Aspect Oriented", id: "aspectoriented"},
+    {name: "Daytime Oriented", id: "daytimeOriented"},
+    {name: "Aspect Oriented", id: "aspectOriented"},
 ];
 const orientations = [{name: "Teacher", id: "teacher"}, {name: "Class", id: "class"}];
 const mutations = [{name: "Flipping", id: "flipping"}, {name: "Sizer", id: "sizer"}];
@@ -39,19 +39,19 @@ const flippingComponent = [
     {name: "Subject", id: "S"},
 ]
 
-const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
+const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCancel}) => {
     const classes = useStyles();
-    const [data, setData] = useState(engineSettings);
+    const [data, setData] = useState(algorithmConfiguration); //currentSettings
 
     function renderSelectionExtraField() {
         let tempLabel;
         let tempID;
 
-        if (data.selection.name === 'tournament') {
+        if (data.engineSettings.selection.name === 'tournament') {
             tempLabel = 'PTE';
             tempID = 'pte';
         } else {
-            // if (data.selection.name === 'truncation')
+            // if (data.engineSettings.selection.name === 'truncation')
             tempLabel = 'Top Percent';
             tempID = 'topPercent';
         }
@@ -60,7 +60,7 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
             required
             id={tempID}
             label={tempLabel}
-            defaultValue={data.selection[tempID]}
+            defaultValue={data.engineSettings.selection[tempID]}
             onChange={handleSelectionChange}/>)
     }
 
@@ -71,6 +71,7 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
                 id='totalTuples'
                 label='Total Tuples'
                 defaultValue={mutation.totalTuples}
+                onChange={handleMutationChange}
             />)
         } else if (mutation.name === 'flipping') {
             return (
@@ -104,29 +105,35 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
 
     const handleSelectionChange = useCallback((e) => {
         const selection = {
-            ...data.selection,
+            ...data.engineSettings.selection,
             [e.target.id]: e.target.value,
         };
 
-        setData({...data, selection});
+        const engineSettings = {...data.engineSettings, selection};
+
+        setData({...data, engineSettings});
     }, [data]);
 
     const handleCrossoverChange = useCallback((e) => {
         const crossover = {
-            ...data.crossover,
+            ...data.engineSettings.crossover,
             [e.target.id]: e.target.value,
         };
 
-        setData({...data, crossover});
+        const engineSettings = {...data.engineSettings, crossover};
+
+        setData({...data, engineSettings});
     }, [data]);
 
     const handleMutationChange = useCallback((e) => {
-        const mutation = {
-            ...data.mutation,
-            [e.target.id]: e.target.value,
-        };
-
-        setData({...data, mutation});
+        // const mutation = {
+        //     ...data.engineSettings.mutation,
+        //     [e.target.id]: e.target.value,
+        // };
+        //
+        // const engineSettings = {...data.engineSettings, mutation};
+        //
+        // setData({...data, engineSettings});
     }, [data]);
 
     const handleSelectionTypeChange = useCallback((e) => {
@@ -135,11 +142,13 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
         })
 
         const selection = {
-            ...data.selection,
+            ...data.engineSettings.selection,
             name: newSelectionType.name,
         }
 
-        setData({...data, selection});
+        const engineSettings = {...data.engineSettings, selection};
+
+        setData({...data, engineSettings});
     }, [data]);
 
     const handleCrossoverTypeChange = useCallback((e) => {
@@ -148,11 +157,28 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
         })
 
         const crossover = {
-            ...data.crossover,
+            ...data.engineSettings.crossover,
             name: newCrossoverType.name,
         }
 
-        setData({...data, crossover});
+        const engineSettings = {...data.engineSettings, crossover};
+
+        setData({...data, engineSettings});
+    }, [data]);
+
+    const handleMutationTypeChange = useCallback((e) => {
+        // const newMutationType = mutations.find(a => {
+        //     return a.id === e.target.value;
+        // })
+        //
+        // const mutation = {
+        //     ...data.engineSettings.mutation,
+        //     name: newMutationType.name,
+        // }
+        //
+        // const engineSettings = {...data.engineSettings, mutation};
+        //
+        // setData({...data, engineSettings});
     }, [data]);
 
     const handleCrossoverOrientationChange = useCallback((e) => {
@@ -161,26 +187,37 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
         })
 
         const crossover = {
-            ...data.crossover,
+            ...data.engineSettings.crossover,
             name: Orientation.name,
         }
 
-        setData({...data, crossover});
+        const engineSettings = {...data.engineSettings, crossover};
+
+        setData({...data, engineSettings});
     }, [data]);
 
     //TODO mutation is part of list of mutations - need to handle change differenly
     const handleMutationComponentChange = useCallback((e) => {
-        const component = flippingComponent.find(a => {
-            return a.id === e.target.value;
-        })
-
-        const mutation = {
-            ...data.mutation,
-            name: component.name,
-        }
-
-        setData({...data, mutation});
+        // const component = flippingComponent.find(a => {
+        //     return a.id === e.target.value;
+        // })
+        //
+        // const mutation = {
+        //     ...data.engineSettings.mutation,
+        //     name: component.name,
+        // }
+        //
+        // const engineSettings = {...data.engineSettings, mutation};
+        //
+        // setData({...data, engineSettings});
     }, [data]);
+
+    // const handleContactsChange = (e, new_contact_set) => {
+    //     setCurrentApplication({
+    //         ...currentApplication,
+    //         contact_set: new_contact_set,
+    //     });
+    // };
 
     return (
         <Paper>
@@ -207,11 +244,12 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
                             id='stride'
                             label='Stride'
                             defaultValue={data.stride}
+                            onChange={handleChange}
                         />
                     </Grid>
                 </AccordionDetails>
             </Accordion>
-
+            {/*TODO maybe make text fields visible only if the box is ticked*/}
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
@@ -223,27 +261,43 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
                 <AccordionDetails>
                     <Grid container className={classes.root} direction={"column"}>
                         <Grid item>
-                            <FormControlLabel control={<Checkbox defaultChecked/>} label='Number of Generations'/>
+                            <FormControlLabel control={<Checkbox defaultChecked onChange={() => {
+                                console.log("end conds list onchange")
+                            }}/>} label='Number of Generations'/>
                             <TextField
                                 required
                                 id='generations'
                                 label='Number of Generations'
+                                onChange={() => {
+                                    console.log("end conds list onchange")
+                                }}
                             />
                         </Grid>
                         <Grid item>
-                            <FormControlLabel control={<Checkbox defaultChecked/>} label="Fitness Score"/>
+                            <FormControlLabel control={<Checkbox defaultChecked onChange={() => {
+                                console.log("end conds list onchange")
+                            }}/>} label="Fitness Score"
+                            />
                             <TextField
                                 required
                                 id='fitness'
                                 label='Fitness Score'
+                                onChange={() => {
+                                    console.log("end conds list onchange")
+                                }}
                             />
                         </Grid>
                         <Grid item>
-                            <FormControlLabel control={<Checkbox defaultChecked/>} label="Time"/>
+                            <FormControlLabel control={<Checkbox defaultChecked onChange={() => {
+                                console.log("end conds list onchange")
+                            }}/>} label="Time"/>
                             <TextField
                                 required
                                 id='time'
                                 label='Time'
+                                onChange={() => {
+                                    console.log("end conds list onchange")
+                                }}
                             />
                         </Grid>
                     </Grid>
@@ -263,7 +317,7 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
                         <DropDown
                             label={"Selection"}
                             options={selections}
-                            currentValue={data.selection.name}
+                            currentValue={data.engineSettings.selection.name}
                             keyPropName="id"
                             namePropName="name"
                             onChange={handleSelectionTypeChange}
@@ -272,10 +326,10 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
                             required
                             id='elitism'
                             label='Elitism'
-                            defaultValue={data.selection.elitism}
+                            defaultValue={data.engineSettings.selection.elitism}
                             onChange={handleSelectionChange}
                         />
-                        {data.selection.name === 'rouletteWheel' || renderSelectionExtraField()}
+                        {data.engineSettings.selection.name === 'rouletteWheel' || renderSelectionExtraField()}
                     </Grid>
                 </AccordionDetails>
             </Accordion>
@@ -293,7 +347,7 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
                         <DropDown
                             label={"Crossover"}
                             options={crossovers}
-                            currentValue={data.crossover.name}
+                            currentValue={data.engineSettings.crossover.name}
                             keyPropName="id"
                             namePropName="name"
                             onChange={handleCrossoverTypeChange}
@@ -302,14 +356,14 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
                             required
                             id='numOfCuttingPoints'
                             label='Cutting Points'
-                            defaultValue={data.crossover.numOfCuttingPoints}
+                            defaultValue={data.engineSettings.crossover.numOfCuttingPoints}
                             onChange={handleCrossoverChange}
                         />
-                        {data.crossover.name === 'daytimeoriented' ||
+                        {data.engineSettings.crossover.name === 'daytimeoriented' ||
                         <DropDown
                             label={"Orientation"}
                             options={orientations}
-                            currentValue={data.crossover.orientation}
+                            currentValue={data.engineSettings.crossover.orientation}
                             keyPropName="id"
                             namePropName="name"
                             onChange={handleCrossoverOrientationChange}
@@ -332,7 +386,7 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
                     }}>
                         <AddIcon/>
                     </IconButton>
-                    {data.mutations.map(mutation => {
+                    {data.engineSettings.mutations.map(mutation => {
                         return (
                             <Grid container className={classes.root}>
                                 <DropDown
@@ -341,13 +395,14 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
                                     currentValue={mutation.name}
                                     keyPropName="id"
                                     namePropName="name"
-                                    onChange={() => console.log("mutation changed")}
+                                    onChange={handleMutationTypeChange}
                                 />
                                 <TextField
                                     required
                                     id='probability'
                                     label="Probability"
                                     defaultValue={mutation.probability}
+                                    onChange={handleMutationChange}
                                 />
                                 {renderMutationExtraFields(mutation)}
                             </Grid>)
@@ -359,4 +414,4 @@ const EngineSettings = ({engineSettings, handleSave, handleCancel}) => {
         </Paper>
     )
 }
-export default EngineSettings;
+export default AlgorithmConfiguration;
