@@ -4,10 +4,10 @@ import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import * as Screen2Services from "../../services/Screen2Services";
 import Summary from "./Summary";
-import Navbar from "../../components/Navbar"
-import Button from '@material-ui/core/Button'
+import Navbar from "../../components/Navbar";
+import Button from '@material-ui/core/Button';
 import * as FileServices from "../../services/FileServices";
-import {UserContext} from "../../components/UserContext"
+import {UserContext} from "../../components/UserContext";
 
 const useStyles = makeStyles((theme) => ({
     root: {

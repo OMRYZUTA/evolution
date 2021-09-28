@@ -38,4 +38,5 @@ public class Constants {
     public static final String TOTAL_TUPLES = "totalTuples";
     public static final String MAX_TUPLES = "maxTuples";
     public static final String COMPONENT = "component";
+    public static final String NUM_OF_GENERATIONS= "numOfGenerations";
 }

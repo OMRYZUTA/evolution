@@ -257,20 +257,24 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
                     id="panel2a-header"
                 >
                     <Typography>End Conditions</Typography>
+                {/*    [{"name":"numOfGenerations", "value":300]*/}
                 </AccordionSummary>
                 <AccordionDetails>
                     <Grid container className={classes.root} direction={"column"}>
                         <Grid item>
-                            <FormControlLabel control={<Checkbox defaultChecked onChange={() => {
+                            {/*jsObjects.filter(obj => {
+  return obj.b === 6*/}
+                            <FormControlLabel control={<Checkbox checked={data.endPredicates.find(endCondition => endCondition.name ==="numOfGenerations")} onChange={() => {
                                 console.log("end conds list onchange")
                             }}/>} label='Number of Generations'/>
                             <TextField
                                 required
-                                id='generations'
+                                id='numOfGenerations'
                                 label='Number of Generations'
                                 onChange={() => {
                                     console.log("end conds list onchange")
                                 }}
+                                defaultValue={data.endPredicates.find(endCondition => endCondition.name ==="numOfGenerations").value}
                             />
                         </Grid>
                         <Grid item>
