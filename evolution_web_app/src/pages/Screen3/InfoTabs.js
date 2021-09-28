@@ -71,13 +71,11 @@ export default function IconTabs({stats, engineSettings, handleEngineSettingsCha
                 textColor="primary"
                 aria-label="scrollable force tabs example"
             >
-                <Tab label="Timetable details" icon={<DescriptionIcon/>} {...a11yProps(0)} />
-                <Tab label="Engine settings" icon={<EqualizerIcon/>} {...a11yProps(1)} />
+                <Tab label="Engine settings" icon={<EqualizerIcon/>} {...a11yProps(0)} />
+                <Tab label="Timetable details" icon={<DescriptionIcon/>} {...a11yProps(1)} />
             </Tabs>
+
             <TabPanel value={value} index={0}>
-                Timetable Details
-            </TabPanel>
-            <TabPanel value={value} index={1}>
                 <AlgorithmConfiguration algorithmConfiguration={engineSettings}
                                         handleEngineSettingsChanged={handleEngineSettingsChanged}/>
                 <ButtonGroup>
@@ -88,6 +86,9 @@ export default function IconTabs({stats, engineSettings, handleEngineSettingsCha
                         console.log("onClick cancel")
                     }}>Cancel</Button>
                 </ButtonGroup>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+                Timetable Details
             </TabPanel>
         </div>
     );

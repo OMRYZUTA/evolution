@@ -41,7 +41,7 @@ const fakeAlgoConfig = {
     timetableID: 0,
     populationSize: 32,
     stride: 2,
-    endPredicates: [{"name": "numOfGenerations", value: 300},{"name": "numOfGenerations", value: 300},{"name": "numOfGenerations", value: 300}],
+    endPredicates: [{"name": "numOfGenerations", value: 300},{"name": "fitnessScore", value: 92.3},{"name": "time", value: 2}],
     engineSettings: {
         selection: {
             name: "rouletteWheel", elitism: 0

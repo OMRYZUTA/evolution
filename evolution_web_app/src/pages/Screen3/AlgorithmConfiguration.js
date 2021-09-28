@@ -10,6 +10,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import Paper from "@mui/material/Paper";
 import React, {useCallback, useState} from 'react';
 import Typography from '@mui/material/Typography';
+import EndPredicates from './EndPredicates'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -218,6 +219,11 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
     //         contact_set: new_contact_set,
     //     });
     // };
+    const handleEndPredicatesChange = useCallback(async (e, endPredicates)=>{
+        console.log(data);
+        await setData(...data,endPredicates);
+        console.log(data);
+    },[]);
 
     return (
         <Paper>
@@ -257,54 +263,10 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
                     id="panel2a-header"
                 >
                     <Typography>End Conditions</Typography>
-                {/*    [{"name":"numOfGenerations", "value":300]*/}
+                    {/*    [{"name":"numOfGenerations", "value":300]*/}
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Grid container className={classes.root} direction={"column"}>
-                        <Grid item>
-                            {/*jsObjects.filter(obj => {
-  return obj.b === 6*/}
-                            <FormControlLabel control={<Checkbox checked={data.endPredicates.find(endCondition => endCondition.name ==="numOfGenerations")} onChange={() => {
-                                console.log("end conds list onchange")
-                            }}/>} label='Number of Generations'/>
-                            <TextField
-                                required
-                                id='numOfGenerations'
-                                label='Number of Generations'
-                                onChange={() => {
-                                    console.log("end conds list onchange")
-                                }}
-                                defaultValue={data.endPredicates.find(endCondition => endCondition.name ==="numOfGenerations").value}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <FormControlLabel control={<Checkbox defaultChecked onChange={() => {
-                                console.log("end conds list onchange")
-                            }}/>} label="Fitness Score"
-                            />
-                            <TextField
-                                required
-                                id='fitness'
-                                label='Fitness Score'
-                                onChange={() => {
-                                    console.log("end conds list onchange")
-                                }}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <FormControlLabel control={<Checkbox defaultChecked onChange={() => {
-                                console.log("end conds list onchange")
-                            }}/>} label="Time"/>
-                            <TextField
-                                required
-                                id='time'
-                                label='Time'
-                                onChange={() => {
-                                    console.log("end conds list onchange")
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
+                    <EndPredicates endPredicates = {data.endPredicates} handleEndPredicatesChange={handleEndPredicatesChange}/>
                 </AccordionDetails>
             </Accordion>
 
