@@ -2,7 +2,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AddIcon from '@material-ui/icons/Add';
-import {Checkbox, FormControlLabel, IconButton, TextField} from "@material-ui/core";
+import {IconButton, TextField} from "@material-ui/core";
 import DropDown from "../../components/Dropdown";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from "@material-ui/core/Grid";
@@ -21,30 +21,38 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const selections = [
+const selectionTypes = [
     {name: "Truncation", id: "truncation"},
     {name: "Roulette Wheel", id: "rouletteWheel"},
     {name: "Tournament", id: "tournament"},
 ];
-const crossovers = [
+const crossoverTypes = [
     {name: "Daytime Oriented", id: "daytimeOriented"},
     {name: "Aspect Oriented", id: "aspectOriented"},
 ];
 const orientations = [{name: "Teacher", id: "teacher"}, {name: "Class", id: "class"}];
-const mutations = [{name: "Flipping", id: "flipping"}, {name: "Sizer", id: "sizer"}];
+const mutationTypes = [{name: "Flipping", id: "flipping"}, {name: "Sizer", id: "sizer"}];
 const flippingComponent = [
     {name: "Hour", id: "H"},
     {name: "Day", id: "D"},
     {name: "Teacher", id: "T"},
     {name: "Class", id: "C"},
     {name: "Subject", id: "S"},
-]
+];
 
 const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCancel}) => {
     const classes = useStyles();
     const [data, setData] = useState(algorithmConfiguration); //currentSettings
 
-    function renderSelectionExtraField() {
+    //for first level fields only
+    const handleChange = useCallback((e) => {
+        setData({
+            ...data,
+            [e.target.id]: e.target.value,
+        })
+    }, [data]);
+
+    const renderSelectionExtraField = () => {
         let tempLabel;
         let tempID;
 
@@ -63,52 +71,28 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
             label={tempLabel}
             defaultValue={data.engineSettings.selection[tempID]}
             onChange={handleSelectionChange}/>)
-    }
-
-    function renderMutationExtraFields(mutation) {
-        if (mutation.name === 'sizer') {
-            return (<TextField
-                required
-                id='totalTuples'
-                label='Total Tuples'
-                defaultValue={mutation.totalTuples}
-                onChange={handleMutationChange}
-            />)
-        } else if (mutation.name === 'flipping') {
-            return (
-                <Grid container className={classes.root}>
-                    <TextField
-                        required
-                        id='maxTuples'
-                        label='Max Tuples'
-                        defaultValue={mutation.maxTuples}
-                        onChange={handleMutationChange}
-                    />
-                    <DropDown
-                        label={'Component'}
-                        options={flippingComponent}
-                        currentValue={mutation.component}
-                        keyPropName='id'
-                        namePropName='name'
-                        onChange={handleMutationComponentChange}
-                    />
-                </Grid>);
-        }
-    }
-
-    //for first level fields only
-    const handleChange = useCallback((e) => {
-        setData({
-            ...data,
-            [e.target.id]: e.target.value,
-        })
-    }, [data]);
+    };
 
     const handleSelectionChange = useCallback((e) => {
         const selection = {
             ...data.engineSettings.selection,
             [e.target.id]: e.target.value,
         };
+
+        const engineSettings = {...data.engineSettings, selection};
+
+        setData({...data, engineSettings});
+    }, [data]);
+
+    const handleSelectionTypeChange = useCallback((e) => {
+        const newSelectionType = selectionTypes.find(a => {
+            return a.id === e.target.value;
+        })
+
+        const selection = {
+            ...data.engineSettings.selection,
+            name: newSelectionType.name,
+        }
 
         const engineSettings = {...data.engineSettings, selection};
 
@@ -126,34 +110,8 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
         setData({...data, engineSettings});
     }, [data]);
 
-    const handleMutationChange = useCallback((e) => {
-        // const mutation = {
-        //     ...data.engineSettings.mutation,
-        //     [e.target.id]: e.target.value,
-        // };
-        //
-        // const engineSettings = {...data.engineSettings, mutation};
-        //
-        // setData({...data, engineSettings});
-    }, [data]);
-
-    const handleSelectionTypeChange = useCallback((e) => {
-        const newSelectionType = selections.find(a => {
-            return a.id === e.target.value;
-        })
-
-        const selection = {
-            ...data.engineSettings.selection,
-            name: newSelectionType.name,
-        }
-
-        const engineSettings = {...data.engineSettings, selection};
-
-        setData({...data, engineSettings});
-    }, [data]);
-
     const handleCrossoverTypeChange = useCallback((e) => {
-        const newCrossoverType = crossovers.find(a => {
+        const newCrossoverType = crossoverTypes.find(a => {
             return a.id === e.target.value;
         })
 
@@ -165,21 +123,6 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
         const engineSettings = {...data.engineSettings, crossover};
 
         setData({...data, engineSettings});
-    }, [data]);
-
-    const handleMutationTypeChange = useCallback((e) => {
-        // const newMutationType = mutations.find(a => {
-        //     return a.id === e.target.value;
-        // })
-        //
-        // const mutation = {
-        //     ...data.engineSettings.mutation,
-        //     name: newMutationType.name,
-        // }
-        //
-        // const engineSettings = {...data.engineSettings, mutation};
-        //
-        // setData({...data, engineSettings});
     }, [data]);
 
     const handleCrossoverOrientationChange = useCallback((e) => {
@@ -197,33 +140,87 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
         setData({...data, engineSettings});
     }, [data]);
 
-    //TODO mutation is part of list of mutations - need to handle change differenly
-    const handleMutationComponentChange = useCallback((e) => {
-        // const component = flippingComponent.find(a => {
-        //     return a.id === e.target.value;
-        // })
-        //
-        // const mutation = {
-        //     ...data.engineSettings.mutation,
-        //     name: component.name,
-        // }
-        //
-        // const engineSettings = {...data.engineSettings, mutation};
-        //
-        // setData({...data, engineSettings});
+    const handleMutationChange = useCallback((e, index, propName) => {
+        const mutationsArray = data.engineSettings.mutations;
+
+        const mutation = {
+            ...mutationsArray[index],
+            [propName]: e.target.value,
+        };
+
+        const newMutationsArray = [...mutationsArray.slice(0, index), mutation, ...mutationsArray.slice(index + 1)];
+        const engineSettings = {...data.engineSettings, mutations: newMutationsArray};
+
+        setData({...data, engineSettings});
     }, [data]);
 
-    // const handleContactsChange = (e, new_contact_set) => {
-    //     setCurrentApplication({
-    //         ...currentApplication,
-    //         contact_set: new_contact_set,
-    //     });
-    // };
-    const handleEndPredicatesChange = useCallback(async (e, endPredicates)=>{
+    const handleAddMutation = useCallback(() => {
+        const mutationsArray = data.engineSettings.mutations;
+        const newEmptyMutation = {
+            name: mutationTypes[0].id,
+        };
+
+        const newMutationsArray = [...mutationsArray, newEmptyMutation];
+        const engineSettings = {...data.engineSettings, mutations: newMutationsArray};
+
+        setData({...data, engineSettings});
+    }, [data]);
+
+    const handleEndPredicatesChange = useCallback(async (e, endPredicates) => {
         console.log(data);
-        await setData(...data,endPredicates);
+        await setData(...data, endPredicates);
         console.log(data);
-    },[]);
+    }, []);
+
+    const renderMutation = (mutation, index) => {
+        return (
+            <Grid container className={classes.root}>
+                <DropDown
+                    label={"Mutation"}
+                    options={mutationTypes}
+                    currentValue={mutation.name}
+                    keyPropName="id"
+                    namePropName="name"
+                    onChange={(e) => handleMutationChange(e, index, 'name')}
+                />
+                <TextField
+                    required
+                    label="Probability"
+                    defaultValue={mutation.probability}
+                    onChange={(e) => handleMutationChange(e, index, 'probability')}
+                />
+                {renderMutationExtraFields(mutation, index)}
+            </Grid>);
+    };
+
+    const renderMutationExtraFields = (mutation, index) => {
+        if (mutation.name === 'sizer') {
+            return (<TextField
+                required
+                label='Total Tuples'
+                defaultValue={mutation.totalTuples}
+                onChange={(e) => handleMutationChange(e, index, 'totalTuples')}
+            />)
+        } else if (mutation.name === 'flipping') {
+            return (
+                <Grid container className={classes.root}>
+                    <TextField
+                        required
+                        label='Max Tuples'
+                        defaultValue={mutation.maxTuples}
+                        onChange={(e) => handleMutationChange(e, index, 'maxTuples')}
+                    />
+                    <DropDown
+                        label={'Component'}
+                        options={flippingComponent}
+                        currentValue={mutation.component}
+                        keyPropName='id'
+                        namePropName='name'
+                        onChange={(e) => handleMutationChange(e, index, 'component')}
+                    />
+                </Grid>);
+        }
+    };
 
     return (
         <Paper>
@@ -266,7 +263,8 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
                     {/*    [{"name":"numOfGenerations", "value":300]*/}
                 </AccordionSummary>
                 <AccordionDetails>
-                    <EndPredicates endPredicates = {data.endPredicates} handleEndPredicatesChange={handleEndPredicatesChange}/>
+                    <EndPredicates endPredicates={data.endPredicates}
+                                   handleEndPredicatesChange={handleEndPredicatesChange}/>
                 </AccordionDetails>
             </Accordion>
 
@@ -282,7 +280,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
                     <Grid container className={classes.root}>
                         <DropDown
                             label={"Selection"}
-                            options={selections}
+                            options={selectionTypes}
                             currentValue={data.engineSettings.selection.name}
                             keyPropName="id"
                             namePropName="name"
@@ -312,7 +310,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
                     <Grid container className={classes.root}>
                         <DropDown
                             label={"Crossover"}
-                            options={crossovers}
+                            options={crossoverTypes}
                             currentValue={data.engineSettings.crossover.name}
                             keyPropName="id"
                             namePropName="name"
@@ -347,37 +345,15 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
                     <Typography>Mutations</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <IconButton onClick={() => {
-                        console.log("add new mutation")
-                    }}>
+                    <IconButton onClick={handleAddMutation}>
                         <AddIcon/>
                     </IconButton>
-                    {data.engineSettings.mutations.map(mutation => {
-                        return (
-                            <Grid container className={classes.root}>
-                                <DropDown
-                                    label={"Mutation"}
-                                    options={mutations}
-                                    currentValue={mutation.name}
-                                    keyPropName="id"
-                                    namePropName="name"
-                                    onChange={handleMutationTypeChange}
-                                />
-                                <TextField
-                                    required
-                                    id='probability'
-                                    label="Probability"
-                                    defaultValue={mutation.probability}
-                                    onChange={handleMutationChange}
-                                />
-                                {renderMutationExtraFields(mutation)}
-                            </Grid>)
-                    })}
-
+                    {data.engineSettings.mutations.map(renderMutation)}
                 </AccordionDetails>
             </Accordion>
 
         </Paper>
-    )
-}
+    );
+};
+
 export default AlgorithmConfiguration;
