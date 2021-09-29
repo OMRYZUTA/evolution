@@ -1,9 +1,9 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
 import Button from '@material-ui/core/Button';
 import {ButtonGroup} from "@material-ui/core";
 import {Container, Grid,} from '@mui/material';
 import InfoTabs from "./InfoTabs";
 import {makeStyles} from "@material-ui/core/styles";
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import Navbar from "../../components/Navbar";
 import Paper from "@mui/material/Paper";
 import {TimetableContext} from "../../components/TimetableContext";
@@ -41,7 +41,10 @@ const fakeAlgoConfig = {
     timetableID: 0,
     populationSize: 32,
     stride: 2,
-    endPredicates: [{"name": "numOfGenerations", value: 300},{"name": "fitnessScore", value: 92.3},{"name": "time", value: 2}],
+    endPredicates: [{"name": "numOfGenerations", value: 300}, {"name": "fitnessScore", value: 92.3}, {
+        "name": "time",
+        value: 2
+    }],
     engineSettings: {
         selection: {
             name: "rouletteWheel", elitism: 0
@@ -51,12 +54,28 @@ const fakeAlgoConfig = {
     }
 }
 
+const SCREEN2URL = "/server_Web_exploded/screen2";
+
 const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
     const {currentTimetable} = useContext(TimetableContext);//todo change to id
     const [timetable, setTimetable] = useState();
-    const [algorithmConfiguration, setAlgorithmConfiguration] = useState(fakeAlgoConfig);
+    const emptyAlgoConfig = {
+        timetableID: currentTimetable,
+        populationSize: undefined,
+        stride: undefined,
+        endPredicates: [],
+        engineSettings: {
+            selection: {
+                name: "rouletteWheel", elitism: undefined
+            },
+            crossover: {name: "daytimeOriented", "cuttingPoints": undefined},
+            mutations: [{name: "flipping", probability: undefined, maxTuples: undefined, component: undefined}],
+        }
+    }
+    const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
     const classes = useStyles();
+    // const history = useHistory();
     // const actions = ["start ", "pause ", "resume ", "stop "]
 
     useEffect(() => {
@@ -79,49 +98,61 @@ const Screen3 = () => {
 
     const handleStart = useCallback(async () => {
         const url = `/server_Web_exploded/api/actions?action=start`;
-        const bodyObject = {};
+        //TODO send the algorithmConfig (only on START click, save button will only save it in the frontend)
+        console.log("screen3 handleStart: " + algorithmConfiguration);
+        const bodyObject = {algorithmConfiguration};
         const result = await Utils.fetchWrapper('POST', url, bodyObject)
     }, []);
+
+    // const routeChange = () => {
+    //     history.push(SCREEN2URL);
+    // }
+
+    const renderButtonGroup = () => {
+        return (<ButtonGroup
+            aria-label="outlined primary button group">
+            <Button
+                id="start" onClick={handleStart}>
+                start
+            </Button>
+            <Button id="pause">
+                pause
+            </Button>
+            <Button id="resume">
+                resume
+            </Button>
+            <Button id="stop">
+                stop
+            </Button>
+            <Button id="bestSolution">
+                Best Solution
+            </Button>
+            <Button id="back to screen 2" onClick={() => console.log("screen3 routeChange() to screen2")}>
+                Back to screen 2
+            </Button>
+        </ButtonGroup>);
+    }
 
     return (
         <Grid>
             <Container maxWidth="xl">
                 <Navbar user={currentUser}/>
+
                 <Grid container direction={"row"} spacing={2}>
+
                     <Grid item xs={12} md={6}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
-                            <InfoTabs engineSettings={algorithmConfiguration}
-                                      handleEngineSettingsChanged={setAlgorithmConfiguration}/>
+                            {/*const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange})*/}
+                            <InfoTabs algorithmConfiguration={algorithmConfiguration}
+                                      handleAlgorithmConfigChange={setAlgorithmConfiguration}
+                                      timetable={currentTimetable}/>
                         </Grid>
                     </Grid>
 
                     <Grid item xs={12} md={5}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
                             <Grid item>
-                                <ButtonGroup
-                                    aria-label="outlined primary button group">
-                                    <Button
-                                        id="start" onClick={handleStart}>
-                                        start
-                                    </Button>
-                                    <Button id="pause">
-                                        pause
-                                    </Button>
-                                    <Button id="resume">
-                                        resume
-                                    </Button>
-                                    <Button id="stop">
-                                        stop
-                                    </Button>
-                                    <Button id="bestSolution">
-                                        Best Solution
-                                    </Button>
-                                    <Button id="back to screen 2" onClick={() => {
-                                        console.log("onClick back to Screen2")
-                                    }}>
-                                        Back to screen 2
-                                    </Button>
-                                </ButtonGroup>
+                                {renderButtonGroup()}
                             </Grid>
                             <Grid item>
                                 <Paper>stride details</Paper>
@@ -131,6 +162,7 @@ const Screen3 = () => {
                             </Grid>
                         </Grid>
                     </Grid>
+
                 </Grid>
             </Container>
         </Grid>

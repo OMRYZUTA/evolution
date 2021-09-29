@@ -1,5 +1,6 @@
 import {makeStyles} from "@material-ui/core/styles";
-import {Typography} from "@mui/material";
+import Paper from "@mui/material/Paper";
+import React from 'react';
 import Typography from "@mui/material/Typography";
 
 const useStyles = makeStyles((theme) => ({
@@ -22,9 +23,12 @@ const TimetableDetails = ({timetable}) => {
     //days, hours subjects, teachers, classes, rules
     return (
         <Paper>
-            {timetable.subjects.map(subject => <Typography>{subject.id} {subject.name}</Typography>)}
-
-
+            <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                Days
+                {/*{timetable.days}*/}
+            </Typography>
+            <Typography>Hours </Typography>
+            {/*{timetable.subjects.map(subject => <Typography>{subject.id} {subject.name}</Typography>)}*/}
         </Paper>
     );
 }

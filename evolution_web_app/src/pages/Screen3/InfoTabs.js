@@ -1,15 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {makeStyles} from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
-import DescriptionIcon from '@material-ui/icons/Description';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import AlgorithmConfiguration from "./AlgorithmConfiguration";
-import Button from "@material-ui/core/Button";
-import {ButtonGroup} from "@material-ui/core";
+import Box from '@material-ui/core/Box';
+import DescriptionIcon from '@material-ui/icons/Description';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
+import {makeStyles} from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import React from 'react';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import TimetableDetails from "./TimetableDetails";
+import Typography from '@material-ui/core/Typography';
+
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+};
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -31,13 +36,7 @@ function TabPanel(props) {
     );
 }
 
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
+const a11yProps = (index) => {
     return {
         id: `scrollable-force-tab-${index}`,
         'aria-controls': `scrollable-force-tabpanel-${index}`,
@@ -52,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function IconTabs({stats, engineSettings, handleEngineSettingsChanged}) {
+const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange, timetable}) => {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -71,25 +70,22 @@ export default function IconTabs({stats, engineSettings, handleEngineSettingsCha
                 textColor="primary"
                 aria-label="scrollable force tabs example"
             >
-                <Tab label="Engine settings" icon={<EqualizerIcon/>} {...a11yProps(0)} />
-                <Tab label="Timetable details" icon={<DescriptionIcon/>} {...a11yProps(1)} />
+                <Tab label="Algorithm Configuration" icon={<EqualizerIcon/>} {...a11yProps(0)} />
+                <Tab label="Timetable Details" icon={<DescriptionIcon/>} {...a11yProps(1)} />
             </Tabs>
 
             <TabPanel value={value} index={0}>
-                <AlgorithmConfiguration algorithmConfiguration={engineSettings}
-                                        handleEngineSettingsChanged={handleEngineSettingsChanged}/>
-                <ButtonGroup>
-                    <Button onClick={() => {
-                        console.log("onClick save")
-                    }}>Save</Button>
-                    <Button onClick={() => {
-                        console.log("onClick cancel")
-                    }}>Cancel</Button>
-                </ButtonGroup>
+                <AlgorithmConfiguration algorithmConfiguration={algorithmConfiguration}
+                                        handleSave={handleAlgorithmConfigChange}
+                                        andleCancel={() => console.log("cancel algoConfig change")}/>
             </TabPanel>
+
             <TabPanel value={value} index={1}>
-                Timetable Details
+                <TimetableDetails timetable={timetable}/>
             </TabPanel>
+
         </div>
     );
 }
+
+export default InfoTabs;

@@ -2,7 +2,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AddIcon from '@material-ui/icons/Add';
-import {IconButton, TextField} from "@material-ui/core";
+import {ButtonGroup, IconButton, TextField} from "@material-ui/core";
 import DropDown from "../../components/Dropdown";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from "@material-ui/core/Grid";
@@ -11,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import React, {useCallback, useState} from 'react';
 import Typography from '@mui/material/Typography';
 import EndPredicates from './EndPredicates'
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,6 +54,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
     }, [data]);
 
     const handleEndPredicatesChange = useCallback((e, index, propName) => {
+        //TODO need to figure out the checkboxes
         const predicateArray = data.engineSettings.mutations;
 
         const predicate = {
@@ -361,6 +363,11 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
                     {data.engineSettings.mutations.map(renderMutation)}
                 </AccordionDetails>
             </Accordion>
+
+            <ButtonGroup>
+                <Button onClick={handleSave}>Save</Button>
+                <Button onClick={handleCancel}>Cancel</Button>
+            </ButtonGroup>
 
         </Paper>
     );

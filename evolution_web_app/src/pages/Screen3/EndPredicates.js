@@ -1,7 +1,7 @@
+import {Checkbox, TextField} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import {Checkbox, FormControlLabel, TextField} from "@material-ui/core";
-import React, {useCallback, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
+import React, {useCallback, useState} from "react";
 import {Typography} from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
@@ -15,25 +15,26 @@ const useStyles = makeStyles((theme) => ({
 
 const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
     const classes = useStyles();
-    const [numOfGenerations, setNumOfGenerations] = useState(endPredicates.find(endCondition => endCondition.name === "numOfGenerations")||false);
-    const [fitnessScore, setFitnessScore] = useState(endPredicates.find(endCondition => endCondition.name === "fitnessScore")||false);
-    const [time, setTime] = useState(endPredicates.find(endCondition => endCondition.name === "time")||false);
+    const [numOfGenerations, setNumOfGenerations] = useState(endPredicates.find(endCondition => endCondition.name === "numOfGenerations") || false);
+    const [fitnessScore, setFitnessScore] = useState(endPredicates.find(endCondition => endCondition.name === "fitnessScore") || false);
+    const [time, setTime] = useState(endPredicates.find(endCondition => endCondition.name === "time") || false);
 
-    const endConditionsInitializer = {
+    const endPredicatesInitializer = {
+        //TODO remove hardcoded later
         "numOfGenerations": () => setNumOfGenerations({"name": "numOfGenerations", value: "100"}),
         "fitnessScore": () => setFitnessScore({"name": "fitnessScore", value: "90"}),
         "time": () => setTime({"name": "time", value: "5"})
     }
 
     const endConditionsDestroyer = {
-        "numOfGenerations": () => setNumOfGenerations({name:"numOfGenerations",value:""}),
-        "fitnessScore": () => setFitnessScore({name:"numOfGenerations",value:""}),
-        "time": () => setTime({name:"numOfGenerations",value:""})
+        "numOfGenerations": () => setNumOfGenerations({name: "numOfGenerations", value: ""}),
+        "fitnessScore": () => setFitnessScore({name: "numOfGenerations", value: ""}),
+        "time": () => setTime({name: "numOfGenerations", value: ""})
     }
 
     const handleCheckBoxChanged = useCallback((e) => {
         if (e.target.checked) {
-            endConditionsInitializer[e.target.name]();
+            endPredicatesInitializer[e.target.name]();
         } else {
             endConditionsDestroyer[e.target.name]();
         }
