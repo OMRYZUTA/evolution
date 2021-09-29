@@ -22,7 +22,7 @@ const SCREEN3URL = "/server_Web_exploded/screen3";
 
 export default function Summary({data}) {
     const [localTimetable, setLocalTimetable] = useState(data.ID);
-    const {currentTimetable, setCurrentTimetable} = useContext(TimetableContext);
+    const {currentTimetableID, setCurrentTimetableID} = useContext(TimetableContext);
     const history = useHistory();
 
     const routeChange = () => {
@@ -31,8 +31,9 @@ export default function Summary({data}) {
     }
 
     const handleTimeTableClicked = async () => {
-        console.log(localTimetable)
-        await setCurrentTimetable(localTimetable)
+        console.log(localTimetable);
+        document.cookie= `timetableid=${localTimetable};path=/`
+        await setCurrentTimetableID(localTimetable)
         routeChange()
     }
 

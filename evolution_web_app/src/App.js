@@ -8,11 +8,27 @@ import {UserContext} from "./components/UserContext";
 import Screen3 from "./pages/Screen3";
 import {TimetableContext} from "./components/TimetableContext";
 
+const getCookieDetail=(name)=>{
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            console.log(c.substring(name.length+1, c.length));
+            return c.substring(name.length+1, c.length);
+        }
+    }
+    return "";
+}
+
 export default function App() {
-    const [currentUser, setCurrentUser] = React.useState(document.cookie);
-    const [currentTimetableID, setCurrentTimetableID] = React.useState(null);
+    const [currentUser, setCurrentUser] = React.useState(getCookieDetail("username"));
+    const [currentTimetableID, setCurrentTimetableID] = React.useState(getCookieDetail("timetableid"));
     const userProviderValue = useMemo(() => ({currentUser, setCurrentUser}), [currentUser, setCurrentUser]);
-    const timetableProviderValue = useMemo(() => ({currentTimetable: currentTimetableID, setCurrentTimetable: setCurrentTimetableID}), [currentTimetableID, setCurrentTimetableID]);
+    const timetableProviderValue = useMemo(() => ({ currentTimetableID, setCurrentTimetableID}), [currentTimetableID, setCurrentTimetableID]);
     return (
         <TimetableContext.Provider value={timetableProviderValue}>
             <UserContext.Provider value={userProviderValue}>

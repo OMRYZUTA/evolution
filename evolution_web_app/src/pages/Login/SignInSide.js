@@ -66,7 +66,7 @@ export default function SignInSide() {
         }
     };
     const initUserAndGoToScreen2=()=>{
-        document.cookie= userName;
+        document.cookie= `username=${userName};path=/`
         setCurrentUser(userName)
         routeChange();
     }

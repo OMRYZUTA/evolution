@@ -58,10 +58,10 @@ const SCREEN2URL = "/server_Web_exploded/screen2";
 
 const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
-    const {currentTimetable} = useContext(TimetableContext);//todo change to id
+    const { currentTimetableID} = useContext(TimetableContext);
     const [timetable, setTimetable] = useState();
     const emptyAlgoConfig = {
-        timetableID: currentTimetable,
+        timetableID: currentTimetableID,
         populationSize: undefined,
         stride: undefined,
         endPredicates: [],
@@ -81,7 +81,7 @@ const Screen3 = () => {
     useEffect(() => {
         const fetchAllData = async () => {
             try {
-                const result = await TimetableServices.getDetails(currentTimetable);
+                const result = await TimetableServices.getDetails(currentTimetableID);
                 if (result.data) {
                     setTimetable(result.data);
                 } else {
@@ -149,7 +149,7 @@ const Screen3 = () => {
                             <InfoTabs algorithmConfiguration={algorithmConfiguration}
                                       handleAlgorithmConfigSave={(data)=>{setAlgorithmConfiguration(data)
                                       console.log({data})}}
-                                      timetable={currentTimetable}/>
+                                      timetable={currentTimetableID}/>
                         </Grid>
                     </Grid>
 
