@@ -52,6 +52,20 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
         })
     }, [data]);
 
+    const handleEndPredicatesChange = useCallback((e, index, propName) => {
+        const predicateArray = data.engineSettings.mutations;
+
+        const predicate = {
+            ...predicateArray[index],
+            [propName]: e.target.value,
+        };
+
+        const newPredicateArray = [...predicateArray.slice(0, index), predicate, ...predicateArray.slice(index + 1)];
+
+        setData({...data, endPredicates: newPredicateArray});
+    }, [data]);
+
+    //selection related
     const renderSelectionExtraField = () => {
         let tempLabel;
         let tempID;
@@ -99,6 +113,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
         setData({...data, engineSettings});
     }, [data]);
 
+    //crossover related
     const handleCrossoverChange = useCallback((e) => {
         const crossover = {
             ...data.engineSettings.crossover,
@@ -140,6 +155,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
         setData({...data, engineSettings});
     }, [data]);
 
+    //mutation related
     const handleMutationChange = useCallback((e, index, propName) => {
         const mutationsArray = data.engineSettings.mutations;
 
@@ -165,12 +181,6 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
 
         setData({...data, engineSettings});
     }, [data]);
-
-    const handleEndPredicatesChange = useCallback(async (e, endPredicates) => {
-        console.log(data);
-        await setData(...data, endPredicates);
-        console.log(data);
-    }, []);
 
     const renderMutation = (mutation, index) => {
         return (
