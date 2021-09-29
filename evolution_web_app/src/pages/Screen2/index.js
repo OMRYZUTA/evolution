@@ -1,11 +1,11 @@
 import UserList from "./UserList";
 import React, {useContext, useEffect, useState} from "react";
-import {makeStyles} from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import {makeStyles} from '@mui/styles';
+import Grid from '@mui/material/Grid';
 import * as Screen2Services from "../../services/Screen2Services";
 import Summary from "./Summary";
 import Navbar from "../../components/Navbar";
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import * as FileServices from "../../services/FileServices";
 import {UserContext} from "../../components/UserContext";
 

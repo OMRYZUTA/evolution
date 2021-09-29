@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import {makeStyles} from "@mui/styles";
 import Paper from "@mui/material/Paper";
 import React from 'react';
 import Typography from "@mui/material/Typography";

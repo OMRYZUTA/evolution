@@ -1,14 +1,14 @@
 import AlgorithmConfiguration from "./AlgorithmConfiguration";
-import Box from '@material-ui/core/Box';
-import DescriptionIcon from '@material-ui/icons/Description';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
-import {makeStyles} from '@material-ui/core/styles';
+import Box from '@mui/material/Box';
+import DescriptionIcon from '@mui/icons-material/Description';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import {makeStyles} from '@mui/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import TimetableDetails from "./TimetableDetails";
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 
 TabPanel.propTypes = {
     children: PropTypes.node,

@@ -1,17 +1,17 @@
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import AddIcon from '@material-ui/icons/Add';
-import {ButtonGroup, IconButton, TextField} from "@material-ui/core";
+import AddIcon from '@mui/icons-material/Add';
+import {ButtonGroup, IconButton, TextField} from "@mui/material";
 import DropDown from "../../components/Dropdown";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Grid from "@material-ui/core/Grid";
-import {makeStyles} from "@material-ui/core/styles";
+import Grid from "@mui/material/Grid";
+import {makeStyles} from "@mui/styles";
 import Paper from "@mui/material/Paper";
 import React, {useCallback, useState} from 'react';
 import Typography from '@mui/material/Typography';
 import EndPredicates from './EndPredicates'
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,18 +53,9 @@ const AlgorithmConfiguration = ({algorithmConfiguration,  handleAlgorithmConfigS
         })
     }, [data]);
 
-    const handleEndPredicatesChange = useCallback((e, index, propName) => {
-        //TODO need to figure out the checkboxes
-        const predicateArray = data.engineSettings.mutations;
-
-        const predicate = {
-            ...predicateArray[index],
-            [propName]: e.target.value,
-        };
-
-        const newPredicateArray = [...predicateArray.slice(0, index), predicate, ...predicateArray.slice(index + 1)];
-
-        setData({...data, endPredicates: newPredicateArray});
+    const handleEndPredicatesChange = useCallback((endPredicates) => {
+        console.log('handle end predicates change', endPredicates);
+        setData({...data, endPredicates});
     }, [data]);
 
     //selection related
@@ -116,7 +107,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration,  handleAlgorithmConfigS
     }, [data]);
 
     //crossover related
-    const handleCrossoverChange = useCallback((e,propName) => {
+    const handleCrossoverChange = useCallback((e, propName) => {
         const crossover = {
             ...data.engineSettings.crossover,
             [propName]: e.target.value,
@@ -269,10 +260,8 @@ const AlgorithmConfiguration = ({algorithmConfiguration,  handleAlgorithmConfigS
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel2a-content"
-                    id="panel2a-header"
-                >
+                    id="panel2a-header">
                     <Typography>End Conditions</Typography>
-                    {/*    [{"name":"numOfGenerations", "value":300]*/}
                 </AccordionSummary>
                 <AccordionDetails>
                     <EndPredicates endPredicates={data.endPredicates}
@@ -325,13 +314,13 @@ const AlgorithmConfiguration = ({algorithmConfiguration,  handleAlgorithmConfigS
                             currentValue={data.engineSettings.crossover.name}
                             keyPropName="id"
                             namePropName="name"
-                            onChange={(e)=>handleCrossoverChange(e,'name')}
+                            onChange={(e) => handleCrossoverChange(e, 'name')}
                         />
                         <TextField
                             required
                             label='Cutting Points'
                             defaultValue={data.engineSettings.crossover.numOfCuttingPoints}
-                            onChange={(e)=>handleCrossoverChange(e,'numOfCuttingPoints')}
+                            onChange={(e) => handleCrossoverChange(e, 'numOfCuttingPoints')}
                         />
                         {data.engineSettings.crossover.name === 'daytimeOriented' ||
                         <DropDown
@@ -340,7 +329,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration,  handleAlgorithmConfigS
                             currentValue={data.engineSettings.crossover.orientation}
                             keyPropName="id"
                             namePropName="name"
-                            onChange={(e)=>handleCrossoverChange(e,'orientation')}
+                            onChange={(e) => handleCrossoverChange(e, 'orientation')}
                         />}
                     </Grid>
                 </AccordionDetails>

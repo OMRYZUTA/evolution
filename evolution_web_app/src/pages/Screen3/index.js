@@ -1,8 +1,7 @@
-import Button from '@material-ui/core/Button';
-import {ButtonGroup} from "@material-ui/core";
-import {Container, Grid,} from '@mui/material';
+import Button from '@mui/material/Button';
+import {ButtonGroup, Container, Grid} from "@mui/material";
 import InfoTabs from "./InfoTabs";
-import {makeStyles} from "@material-ui/core/styles";
+import {makeStyles} from "@mui/styles";
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import Navbar from "../../components/Navbar";
 import Paper from "@mui/material/Paper";
@@ -39,19 +38,17 @@ const useStyles = makeStyles((theme) => ({
 
 const fakeAlgoConfig = {
     timetableID: 0,
-    populationSize: 32,
-    stride: 2,
-    endPredicates: [{"name": "numOfGenerations", value: 300}, {"name": "fitnessScore", value: 92.3}, {
-        "name": "time",
-        value: 2
-    }],
+    populationSize: 60,
+    stride: 10,
+    endPredicates: {numOfGenerations: 120, fitnessScore: 92.3, time: 2},
     engineSettings: {
-        selection: {
-            name: "rouletteWheel", elitism: 0
-        },
+        selection: {name: "rouletteWheel", elitism: 0},
         crossover: {name: "daytimeOriented", "cuttingPoints": 5},
-        mutations: [{name: "flipping", probability: 0.2, maxTuples: 4, component: "H"}],
-    }
+        mutations: [
+            {name: "flipping", probability: 0.2, maxTuples: 4, component: "H"},
+            {name: "flipping", probability: 0.7, maxTuples: 5, component: "T"},
+        ],
+    },
 }
 
 const SCREEN2URL = "/server_Web_exploded/screen2";
@@ -64,11 +61,9 @@ const Screen3 = () => {
         timetableID: currentTimetableID,
         populationSize: undefined,
         stride: undefined,
-        endPredicates: [],
+        endPredicates: {numOfGenerations: undefined, fitnessScore: undefined, time: undefined},
         engineSettings: {
-            selection: {
-                name: "rouletteWheel", elitism: undefined
-            },
+            selection: {name: "rouletteWheel", elitism: undefined},
             crossover: {name: "daytimeOriented", "cuttingPoints": undefined},
             mutations: [{name: "flipping", probability: undefined, maxTuples: undefined, component: undefined}],
         }

@@ -12,11 +12,10 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import * as UserServices from '../../services/UserServices'
-import { useHistory } from "react-router-dom";
-import Alert from '@material-ui/lab/Alert';
-import AlertTitle from '@material-ui/lab/AlertTitle';
+import {useHistory} from "react-router-dom";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import {UserContext} from "../../components/UserContext";
-
 
 
 const renderAlert = (alertText) => {

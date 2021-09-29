@@ -1,8 +1,8 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import {List, ListItemAvatar} from "@material-ui/core";
+import {makeStyles} from '@mui/styles';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import {List, ListItemAvatar} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 
