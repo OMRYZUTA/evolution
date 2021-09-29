@@ -23,14 +23,16 @@ const TimetableDetails = ({timetable}) => {
     //days, hours subjects, teachers, classes, rules
     return (
         <Paper>
-            <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                Days
-                {/*{timetable.days}*/}
-            </Typography>
-            <Typography>Hours </Typography>
+            <Typography>Days Hours</Typography>
+            {/*<Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>*/}
+            {/*    Days: {timetable.days} Hours {timetable.hours}*/}
+            {/*</Typography>*/}
+
             {/*{timetable.subjects.map(subject => <Typography>{subject.id} {subject.name}</Typography>)}*/}
+
         </Paper>
-    );
+    )
+        ;
 }
 
 export default TimetableDetails;

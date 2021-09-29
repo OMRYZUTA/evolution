@@ -335,7 +335,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
                             defaultValue={data.engineSettings.crossover.numOfCuttingPoints}
                             onChange={handleCrossoverChange}
                         />
-                        {data.engineSettings.crossover.name === 'daytimeoriented' ||
+                        {data.engineSettings.crossover.name === 'daytimeOriented' ||
                         <DropDown
                             label={"Orientation"}
                             options={orientations}

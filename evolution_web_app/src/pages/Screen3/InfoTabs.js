@@ -77,7 +77,7 @@ const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange, t
             <TabPanel value={value} index={0}>
                 <AlgorithmConfiguration algorithmConfiguration={algorithmConfiguration}
                                         handleSave={handleAlgorithmConfigChange}
-                                        andleCancel={() => console.log("cancel algoConfig change")}/>
+                                        handleCancel={() => console.log("cancel algoConfig change")}/>
             </TabPanel>
 
             <TabPanel value={value} index={1}>
