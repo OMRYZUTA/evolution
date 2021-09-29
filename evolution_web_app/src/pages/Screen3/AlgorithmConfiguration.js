@@ -41,7 +41,7 @@ const flippingComponent = [
     {name: "Subject", id: "S"},
 ];
 
-const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCancel}) => {
+const AlgorithmConfiguration = ({algorithmConfiguration,  handleAlgorithmConfigSave, handleCancel}) => {
     const classes = useStyles();
     const [data, setData] = useState(algorithmConfiguration); //currentSettings
 
@@ -363,7 +363,10 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
             </Accordion>
 
             <ButtonGroup>
-                <Button onClick={handleSave}>Save</Button>
+                <Button onClick={()=>{
+                    console.log({data});
+                    handleAlgorithmConfigSave(data)
+                }}>Save</Button>
                 <Button onClick={handleCancel}>Cancel</Button>
             </ButtonGroup>
 

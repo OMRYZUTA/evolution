@@ -15,57 +15,59 @@ const useStyles = makeStyles((theme) => ({
 
 const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
     const classes = useStyles();
-    const [numOfGenerations, setNumOfGenerations] = useState(endPredicates.find(endCondition => endCondition.name === "numOfGenerations" ));
-    const [fitnessScore, setFitnessScore] = useState(endPredicates.find(endCondition => endCondition.name === "fitnessScore") );
-    const [time, setTime] = useState(endPredicates.find(endCondition => endCondition.name === "time"));
+    const [data,setData]= useState(endPredicates);
+    const [numOfGenerations, setNumOfGenerations] = useState(data.find(endCondition => endCondition.name === "numOfGenerations" ));
+    const [fitnessScore, setFitnessScore] = useState(data.find(endCondition => endCondition.name === "fitnessScore") );
+    const [time, setTime] = useState(data.find(endCondition => endCondition.name === "time"));
     const [showGeneration,setShowGeneration] =useState(numOfGenerations !==undefined);
     const [showFitness,setShowFitness] =useState(fitnessScore !==undefined);
     const [showTime,setShowTime] =useState(time !==undefined);
-
+    console.log({endPredicates});
+    console.log({data})
     const endPredicatesInitializer = {
-        "numOfGenerations": () => {
-            setNumOfGenerations({"name": "numOfGenerations", value: ""});
-        setShowGeneration(true);
+        "numOfGenerations":async () => {
+             setNumOfGenerations({"name": "numOfGenerations", value: ""});
+             setShowGeneration(true);
+            setData([...data,{"name": "numOfGenerations", value: ""}]);
         },
         "fitnessScore": () => {
             setFitnessScore({"name": "fitnessScore", value: ""});
             setShowFitness(true);
+            setData([...data,{"name": "fitnessScore", value: ""}]);
             },
         "time": () => {
             setTime({"name": "time", value: ""});
             setShowTime(true);
+            setData([...data,{"name": "time", value: ""}]);
         }
     }
 
     const endConditionsDestroyer = {
         "numOfGenerations": () => {
-            setNumOfGenerations({name: "numOfGenerations", value: ""});
+            setNumOfGenerations(undefined);
             setShowGeneration(false);
             },
         "fitnessScore": () => {
-            setFitnessScore({name: "numOfGenerations", value: ""});
+            setFitnessScore(undefined);
             setShowFitness(false);
         },
         "time": () => {
-            setTime({name: "numOfGenerations", value: ""});
+            setTime(undefined);
             setShowTime(false);
         }
     }
 
     const handleCheckBoxChanged = useCallback((e) => {
         if (e.target.checked) {
-            endPredicatesInitializer[e.target.name]();
+             endPredicatesInitializer[e.target.name]();
         } else {
             endConditionsDestroyer[e.target.name]();
         }
+        console.log("data :"+data);
         // handleEndPredicatesChange(e,buildEndPredicatesResult());
     },[]);
 
-    const buildEndPredicatesResult = useCallback(() => {
-        const endPredicates = [numOfGenerations, fitnessScore, time].filter(endPredicate => endPredicate !== undefined);
-        console.log(endPredicates);
-        return endPredicates;
-    },[]);
+
 
     return (
         <Grid container className={classes.root} direction={"column"}>

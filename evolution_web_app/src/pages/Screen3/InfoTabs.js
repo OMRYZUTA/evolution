@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange, timetable}) => {
+const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigSave, timetable}) => {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -76,7 +76,7 @@ const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange, t
 
             <TabPanel value={value} index={0}>
                 <AlgorithmConfiguration algorithmConfiguration={algorithmConfiguration}
-                                        handleSave={handleAlgorithmConfigChange}
+                                        handleAlgorithmConfigSave={handleAlgorithmConfigSave}
                                         handleCancel={() => console.log("cancel algoConfig change")}/>
             </TabPanel>
 

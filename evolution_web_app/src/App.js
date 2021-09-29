@@ -10,9 +10,9 @@ import {TimetableContext} from "./components/TimetableContext";
 
 export default function App() {
     const [currentUser, setCurrentUser] = React.useState(document.cookie);
-    const [currentTimetable, setCurrentTimetable] = React.useState(null);
+    const [currentTimetableID, setCurrentTimetableID] = React.useState(null);
     const userProviderValue = useMemo(() => ({currentUser, setCurrentUser}), [currentUser, setCurrentUser]);
-    const timetableProviderValue = useMemo(() => ({currentTimetable, setCurrentTimetable}), [currentTimetable, setCurrentTimetable]);
+    const timetableProviderValue = useMemo(() => ({currentTimetable: currentTimetableID, setCurrentTimetable: setCurrentTimetableID}), [currentTimetableID, setCurrentTimetableID]);
     return (
         <TimetableContext.Provider value={timetableProviderValue}>
             <UserContext.Provider value={userProviderValue}>

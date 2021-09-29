@@ -97,11 +97,14 @@ const Screen3 = () => {
     }, []);
 
     const handleStart = useCallback(async () => {
+        const endPredicates =[{name: "numOfGenerations",value: "100"}];
+        setAlgorithmConfiguration({...algorithmConfiguration,endPredicates});
         const url = `/server_Web_exploded/api/actions?action=start`;
         //TODO send the algorithmConfig (only on START click, save button will only save it in the frontend)
         console.log("screen3 handleStart: " + algorithmConfiguration);
+        console.log({algorithmConfiguration});
         const bodyObject = {algorithmConfiguration};
-        const result = await Utils.fetchWrapper('POST', url, bodyObject)
+       // const result = await Utils.fetchWrapper('POST', url, bodyObject)
     }, []);
 
     // const routeChange = () => {
@@ -144,7 +147,8 @@ const Screen3 = () => {
                         <Grid container direction={"column"} className={classes.tempGrid}>
                             {/*const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange})*/}
                             <InfoTabs algorithmConfiguration={algorithmConfiguration}
-                                      handleAlgorithmConfigChange={setAlgorithmConfiguration}
+                                      handleAlgorithmConfigSave={(data)=>{setAlgorithmConfiguration(data)
+                                      console.log({data})}}
                                       timetable={currentTimetable}/>
                         </Grid>
                     </Grid>
