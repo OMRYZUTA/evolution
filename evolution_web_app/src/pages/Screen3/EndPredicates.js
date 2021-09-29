@@ -15,21 +15,41 @@ const useStyles = makeStyles((theme) => ({
 
 const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
     const classes = useStyles();
-    const [numOfGenerations, setNumOfGenerations] = useState(endPredicates.find(endCondition => endCondition.name === "numOfGenerations") || false);
-    const [fitnessScore, setFitnessScore] = useState(endPredicates.find(endCondition => endCondition.name === "fitnessScore") || false);
-    const [time, setTime] = useState(endPredicates.find(endCondition => endCondition.name === "time") || false);
+    const [numOfGenerations, setNumOfGenerations] = useState(endPredicates.find(endCondition => endCondition.name === "numOfGenerations" ));
+    const [fitnessScore, setFitnessScore] = useState(endPredicates.find(endCondition => endCondition.name === "fitnessScore") );
+    const [time, setTime] = useState(endPredicates.find(endCondition => endCondition.name === "time"));
+    const [showGeneration,setShowGeneration] =useState(numOfGenerations !==undefined);
+    const [showFitness,setShowFitness] =useState(fitnessScore !==undefined);
+    const [showTime,setShowTime] =useState(time !==undefined);
 
     const endPredicatesInitializer = {
-        //TODO remove hardcoded later
-        "numOfGenerations": () => setNumOfGenerations({"name": "numOfGenerations", value: "100"}),
-        "fitnessScore": () => setFitnessScore({"name": "fitnessScore", value: "90"}),
-        "time": () => setTime({"name": "time", value: "5"})
+        "numOfGenerations": () => {
+            setNumOfGenerations({"name": "numOfGenerations", value: ""});
+        setShowGeneration(true);
+        },
+        "fitnessScore": () => {
+            setFitnessScore({"name": "fitnessScore", value: ""});
+            setShowFitness(true);
+            },
+        "time": () => {
+            setTime({"name": "time", value: ""});
+            setShowTime(true);
+        }
     }
 
     const endConditionsDestroyer = {
-        "numOfGenerations": () => setNumOfGenerations({name: "numOfGenerations", value: ""}),
-        "fitnessScore": () => setFitnessScore({name: "numOfGenerations", value: ""}),
-        "time": () => setTime({name: "numOfGenerations", value: ""})
+        "numOfGenerations": () => {
+            setNumOfGenerations({name: "numOfGenerations", value: ""});
+            setShowGeneration(false);
+            },
+        "fitnessScore": () => {
+            setFitnessScore({name: "numOfGenerations", value: ""});
+            setShowFitness(false);
+        },
+        "time": () => {
+            setTime({name: "numOfGenerations", value: ""});
+            setShowTime(false);
+        }
     }
 
     const handleCheckBoxChanged = useCallback((e) => {
@@ -53,12 +73,12 @@ const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
                 <Grid container>
                     <Checkbox
                         name='numOfGenerations'
-                        checked={numOfGenerations.value!==""}
+                        checked={showGeneration}
                         onChange={handleCheckBoxChanged}/>
                     <Typography>
                         Num Of Generations
                     </Typography>
-                    {numOfGenerations.value && <TextField
+                    {showGeneration && <TextField
                         required
                         name='numOfGenerations'
                         label='Number of Generations'
@@ -73,10 +93,10 @@ const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
                 <Grid container>
                     <Checkbox
                         name={"fitnessScore"}
-                        checked={fitnessScore.value!==""}
+                        checked={showFitness}
                         onChange={handleCheckBoxChanged}/>
                     <Typography> Fitness Score</Typography>
-                    {fitnessScore.value && <TextField
+                    {showFitness && <TextField
                         required
                         id='fitness'
                         label='Fitness Score'
@@ -89,11 +109,11 @@ const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
             </Grid>
             <Grid item>
                 <Grid container spacing={2}>
-                    <Checkbox checked={time.value!==""}
+                    <Checkbox checked={showTime}
                               name="time"
                               onChange={handleCheckBoxChanged}/>
                     <Typography>Time</Typography>
-                    {time.value && <TextField
+                    {showTime && <TextField
                         required
                         name='time'
                         label='Time'

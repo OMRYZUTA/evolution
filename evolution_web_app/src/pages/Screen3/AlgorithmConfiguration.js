@@ -116,10 +116,10 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
     }, [data]);
 
     //crossover related
-    const handleCrossoverChange = useCallback((e) => {
+    const handleCrossoverChange = useCallback((e,propName) => {
         const crossover = {
             ...data.engineSettings.crossover,
-            [e.target.id]: e.target.value,
+            [propName]: e.target.value,
         };
 
         const engineSettings = {...data.engineSettings, crossover};
@@ -309,7 +309,6 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
                     </Grid>
                 </AccordionDetails>
             </Accordion>
-
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
@@ -326,14 +325,13 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
                             currentValue={data.engineSettings.crossover.name}
                             keyPropName="id"
                             namePropName="name"
-                            onChange={handleCrossoverTypeChange}
+                            onChange={(e)=>handleCrossoverChange(e,'name')}
                         />
                         <TextField
                             required
-                            id='numOfCuttingPoints'
                             label='Cutting Points'
                             defaultValue={data.engineSettings.crossover.numOfCuttingPoints}
-                            onChange={handleCrossoverChange}
+                            onChange={(e)=>handleCrossoverChange(e,'numOfCuttingPoints')}
                         />
                         {data.engineSettings.crossover.name === 'daytimeOriented' ||
                         <DropDown
@@ -342,7 +340,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleSave, handleCance
                             currentValue={data.engineSettings.crossover.orientation}
                             keyPropName="id"
                             namePropName="name"
-                            onChange={handleCrossoverOrientationChange}
+                            onChange={(e)=>handleCrossoverChange(e,'orientation')}
                         />}
                     </Grid>
                 </AccordionDetails>
