@@ -8,7 +8,6 @@ import Paper from "@mui/material/Paper";
 import {TimetableContext} from "../../components/TimetableContext";
 import {UserContext} from "../../components/UserContext"
 import * as TimetableServices from "../../services/TimetableServices";
-import * as Utils from "../../services/Utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,7 +54,7 @@ const SCREEN2URL = "/server_Web_exploded/screen2";
 
 const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
-    const { currentTimetableID} = useContext(TimetableContext);
+    const {currentTimetableID} = useContext(TimetableContext);
     const [timetable, setTimetable] = useState();
     const emptyAlgoConfig = {
         timetableID: currentTimetableID,
@@ -93,14 +92,12 @@ const Screen3 = () => {
     }, []);
 
     const handleStart = useCallback(async () => {
-        const endPredicates =[{name: "numOfGenerations",value: "100"}];
-        setAlgorithmConfiguration({...algorithmConfiguration,endPredicates});
         const url = `/server_Web_exploded/api/actions?action=start`;
         //TODO send the algorithmConfig (only on START click, save button will only save it in the frontend)
         console.log("screen3 handleStart: " + algorithmConfiguration);
         console.log({algorithmConfiguration});
         const bodyObject = {algorithmConfiguration};
-       // const result = await Utils.fetchWrapper('POST', url, bodyObject)
+        // const result = await Utils.fetchWrapper('POST', url, bodyObject)
     }, []);
 
     // const routeChange = () => {
@@ -143,8 +140,10 @@ const Screen3 = () => {
                         <Grid container direction={"column"} className={classes.tempGrid}>
                             {/*const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange})*/}
                             <InfoTabs algorithmConfiguration={algorithmConfiguration}
-                                      handleAlgorithmConfigSave={(data)=>{setAlgorithmConfiguration(data)
-                                      console.log({data})}}
+                                      handleAlgorithmConfigSave={(data) => {
+                                          setAlgorithmConfiguration(data)
+                                          console.log({data})
+                                      }}
                                       timetable={timetable}/>
                         </Grid>
                     </Grid>

@@ -41,7 +41,7 @@ const flippingComponent = [
     {name: "Subject", id: "S"},
 ];
 
-const AlgorithmConfiguration = ({algorithmConfiguration,  handleAlgorithmConfigSave, handleCancel}) => {
+const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSave, handleCancel}) => {
     const classes = useStyles();
     const [data, setData] = useState(algorithmConfiguration); //currentSettings
 
@@ -56,6 +56,17 @@ const AlgorithmConfiguration = ({algorithmConfiguration,  handleAlgorithmConfigS
     const handleEndPredicatesChange = useCallback((endPredicates) => {
         console.log('handle end predicates change', endPredicates);
         setData({...data, endPredicates});
+    }, [data]);
+
+    const handleCrossoverChange = useCallback((e, propName) => {
+        const crossover = {
+            ...data.engineSettings.crossover,
+            [propName]: e.target.value,
+        };
+
+        const engineSettings = {...data.engineSettings, crossover};
+
+        setData({...data, engineSettings});
     }, [data]);
 
     //selection related
@@ -80,70 +91,13 @@ const AlgorithmConfiguration = ({algorithmConfiguration,  handleAlgorithmConfigS
             onChange={handleSelectionChange}/>)
     };
 
-    const handleSelectionChange = useCallback((e) => {
+    const handleSelectionChange = useCallback((e, propName) => {
         const selection = {
             ...data.engineSettings.selection,
-            [e.target.id]: e.target.value,
-        };
-
-        const engineSettings = {...data.engineSettings, selection};
-
-        setData({...data, engineSettings});
-    }, [data]);
-
-    const handleSelectionTypeChange = useCallback((e) => {
-        const newSelectionType = selectionTypes.find(a => {
-            return a.id === e.target.value;
-        })
-
-        const selection = {
-            ...data.engineSettings.selection,
-            name: newSelectionType.name,
-        }
-
-        const engineSettings = {...data.engineSettings, selection};
-
-        setData({...data, engineSettings});
-    }, [data]);
-
-    //crossover related
-    const handleCrossoverChange = useCallback((e, propName) => {
-        const crossover = {
-            ...data.engineSettings.crossover,
             [propName]: e.target.value,
         };
 
-        const engineSettings = {...data.engineSettings, crossover};
-
-        setData({...data, engineSettings});
-    }, [data]);
-
-    const handleCrossoverTypeChange = useCallback((e) => {
-        const newCrossoverType = crossoverTypes.find(a => {
-            return a.id === e.target.value;
-        })
-
-        const crossover = {
-            ...data.engineSettings.crossover,
-            name: newCrossoverType.name,
-        }
-
-        const engineSettings = {...data.engineSettings, crossover};
-
-        setData({...data, engineSettings});
-    }, [data]);
-
-    const handleCrossoverOrientationChange = useCallback((e) => {
-        const Orientation = orientations.find(a => {
-            return a.id === e.target.value;
-        })
-
-        const crossover = {
-            ...data.engineSettings.crossover,
-            name: Orientation.name,
-        }
-
-        const engineSettings = {...data.engineSettings, crossover};
+        const engineSettings = {...data.engineSettings, selection};
 
         setData({...data, engineSettings});
     }, [data]);
@@ -285,14 +239,13 @@ const AlgorithmConfiguration = ({algorithmConfiguration,  handleAlgorithmConfigS
                             currentValue={data.engineSettings.selection.name}
                             keyPropName="id"
                             namePropName="name"
-                            onChange={handleSelectionTypeChange}
+                            onChange={(e) => handleSelectionChange(e, 'name')}
                         />
                         <TextField
                             required
-                            id='elitism'
                             label='Elitism'
                             defaultValue={data.engineSettings.selection.elitism}
-                            onChange={handleSelectionChange}
+                            onChange={(e) => handleSelectionChange(e, 'elitism')}
                         />
                         {data.engineSettings.selection.name === 'rouletteWheel' || renderSelectionExtraField()}
                     </Grid>
@@ -352,7 +305,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration,  handleAlgorithmConfigS
             </Accordion>
 
             <ButtonGroup>
-                <Button onClick={()=>{
+                <Button onClick={() => {
                     console.log({data});
                     handleAlgorithmConfigSave(data)
                 }}>Save</Button>
