@@ -1,19 +1,17 @@
 package il.ac.mta.zuli.evolution.engine.predicates;
 
-import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.function.Predicate;
 
 public class EndPredicate implements Predicate<Double> {
     private EndConditionType type;
     private double benchmark;
 
-    public EndPredicate(Map<String, Object> predicateMap, int generationStride) {
-        setType((String) predicateMap.get(Constants.NAME));
-        setBenchmark(predicateMap.get(Constants.VALUE), generationStride);
+    public EndPredicate(String predicateType, double value, int generationStride) {
+        setType(predicateType);
+        setBenchmark(value, generationStride);
     }
 
     public void setType(String type) {
@@ -24,16 +22,8 @@ public class EndPredicate implements Predicate<Double> {
         }
     }
 
-    public void setBenchmark(Object benchmark, int stride) {
-        double value;
-        //1) validating we received a double
-        try {
-            value = (double) benchmark;
-        } catch (Throwable e) {
-            throw new ValidationException("Value for end condition must be number");
-        }
-
-        //2) validating the double received fits the constraints of relavent conditionType
+    public void setBenchmark(double value, int stride) {
+        //validating the double received fits the constraints of relavent conditionType
         switch (type) {
             case GENERATIONS:
                 setGenerationNum(value, stride);

@@ -53,7 +53,14 @@ public class SelectionFactory<T extends Solution> {
             return new Tournament<T>(pte, populationSize, elitism);
         });
 
-        String selectionType = (String) selectionMap.get(Constants.NAME);
+        String selectionType;
+
+        try {
+            selectionType = (String) selectionMap.get(Constants.NAME);
+        } catch (Throwable e) {
+            throw new ValidationException("Invalid Selection type. " + e.getMessage());
+        }
+
         return selectionBuilder.get(selectionType).get();
     }
 }

@@ -1,5 +1,6 @@
 package il.ac.mta.zuli.evolution.engine;
 
+import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterface;
@@ -36,7 +37,7 @@ public class TimeTableEngine implements Engine {
     //new CTOR for Ex 3 - where was the descriptor set in the previous exercises?
     public TimeTableEngine(TimeTable timetable,
                            Map<String, Object> engineSettingsMap,
-                           List<Map<String, Object>> endPredicatesMap,
+                           Map<String, Object> endPredicatesMap,
                            Object stride) {
         EngineSettings<TimeTableSolution> engineSettings = new EngineSettings<>(engineSettingsMap, timetable);
         this.descriptor = new Descriptor(timetable, engineSettings);
@@ -60,12 +61,42 @@ public class TimeTableEngine implements Engine {
         }
     }
 
-    private List<EndPredicate> generatePredicates(List<Map<String, Object>> endPredicatesMap) {
+    private List<EndPredicate> generatePredicates(Map<String, Object> endPredicatesMap) {
+        // for example: endPredicatesMap = {numOfGenerations: 120, fitnessScore: 92.3, time: 2}
         List<EndPredicate> endPredicates = new ArrayList<>();
 
-        if (endPredicatesMap.size() > 0) {
-            for (Map<String, Object> predicateMap : endPredicatesMap) {
-                endPredicates.add(new EndPredicate(predicateMap, generationsStride));
+        if (endPredicatesMap != null) {
+            if (endPredicatesMap.containsKey(Constants.NUM_OF_GENERATIONS)) {
+                try {
+                    double generationNum = (double) endPredicatesMap.get(Constants.NUM_OF_GENERATIONS);
+                    endPredicates.add(
+                            new EndPredicate(Constants.NUM_OF_GENERATIONS, generationNum, generationsStride)
+                    );
+                } catch (Throwable e) {
+                    throw new ValidationException("Invalid generation number. " + e.getMessage());
+                }
+            }
+
+            if (endPredicatesMap.containsKey(Constants.SCORE)) {
+                try {
+                    double score = (double) endPredicatesMap.get(Constants.SCORE);
+                    endPredicates.add(
+                            new EndPredicate(Constants.SCORE, score, generationsStride)
+                    );
+                } catch (Throwable e) {
+                    throw new ValidationException("Invalid score. " + e.getMessage());
+                }
+            }
+
+            if (endPredicatesMap.containsKey(Constants.TIME)) {
+                try {
+                    double time = (double) endPredicatesMap.get(Constants.TIME);
+                    endPredicates.add(
+                            new EndPredicate(Constants.TIME, time, generationsStride)
+                    );
+                } catch (Throwable e) {
+                    throw new ValidationException("Invalid time. " + e.getMessage());
+                }
             }
 
             return endPredicates;
