@@ -16,6 +16,10 @@ public class Constants {
     public static final String VALUE = "value";
     public static final String STRIDE = "stride";
     public static final String POPULATION_SIZE = "populationSize";
+    //end predicate related:
+    public static final String NUM_OF_GENERATIONS = "numOfGenerations";
+    public static final String SCORE = "fitnessScore";
+    public static final String TIME = "time";
     //selection related:
     public static final String SELECTION = "selection";
     public static final String TRUNCATION = "truncation";
@@ -38,5 +42,4 @@ public class Constants {
     public static final String TOTAL_TUPLES = "totalTuples";
     public static final String MAX_TUPLES = "maxTuples";
     public static final String COMPONENT = "component";
-    public static final String NUM_OF_GENERATIONS= "numOfGenerations";
 }

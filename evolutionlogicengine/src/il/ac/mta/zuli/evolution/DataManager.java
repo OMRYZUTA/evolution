@@ -35,7 +35,7 @@ public class DataManager {
     public synchronized void addAlgoRunToUser(String userName,
                                               int timetableID,
                                               Map<String, Object> engineSettingsMap,
-                                              List<Map<String, Object>> endPredicatesMap,
+                                              Map<String, Object> endPredicatesMap,
                                               Object generationStride) {
 
         TimeTableEngine timetableEngine = new TimeTableEngine(

@@ -1,7 +1,7 @@
+import CheckedTextBox from './CheckedTextBox'
 import {Grid} from "@mui/material";
 import {makeStyles} from "@mui/styles";
 import React from "react";
-import CheckedTextBox from './CheckedTextBox'
 
 const useStyles = makeStyles(() => ({
     root: {

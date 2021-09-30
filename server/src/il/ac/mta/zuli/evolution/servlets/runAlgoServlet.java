@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -46,7 +45,7 @@ public class runAlgoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String responseMessage = null;
-
+        //TODO currently only handling Start
         try {
             String usernameFromSession = SessionUtils.getUsername(request);
             Gson gson = new Gson();
@@ -54,7 +53,7 @@ public class runAlgoServlet extends HttpServlet {
 
             int ttID = (int) requestMap.get(Constants.TIMETABLE_ID); //we know this an integer because we provided it
             Map<String, Object> engineSettingsMap = (HashMap<String, Object>) requestMap.get(Constants.ENGINE_SETTINGS);
-            List<Map<String, Object>> endPredicatesMap = (List<Map<String, Object>>) requestMap.get(Constants.END_PREDICATES);
+            Map<String, Object> endPredicatesMap = (Map<String, Object>) requestMap.get(Constants.END_PREDICATES);
             Object generationStride = requestMap.get(Constants.STRIDE); //validating we received an int alter on
 
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
