@@ -8,6 +8,7 @@ import Paper from "@mui/material/Paper";
 import {TimetableContext} from "../../components/TimetableContext";
 import {UserContext} from "../../components/UserContext"
 import * as TimetableServices from "../../services/TimetableServices";
+import * as Utils from "../../services/Utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -91,19 +92,18 @@ const Screen3 = () => {
         fetchAllData();
     }, []);
 
-    const handleAlgorithmConfigSave = async (data) => {
+    const handleAlgorithmConfigSave = useCallback(async (data) => {
         await setAlgorithmConfiguration(data);
         console.log("after setAlgorithmConfiguration in screen3 index");
-        console.log({data});
-    }
+        console.log({algorithmConfiguration});
+    }, [algorithmConfiguration]);
 
     const handleStart = useCallback(async () => {
         const url = `/server_Web_exploded/api/actions?action=start`;
         //TODO send the algorithmConfig (only on START click, save button will only save it in the frontend)
-        console.log("screen3 handleStart: " + algorithmConfiguration);
+        console.log("screen3 handleStart: ");
         console.log({algorithmConfiguration});
-        const bodyObject = {algorithmConfiguration};
-        // const result = await Utils.fetchWrapper('POST', url, bodyObject)
+        const result = await Utils.fetchWrapper('POST', url, algorithmConfiguration)
     }, []);
 
     // const routeChange = () => {
