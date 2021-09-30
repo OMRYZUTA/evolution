@@ -16,19 +16,19 @@ import java.util.List;
 import java.util.Map;
 
 public class EngineSettings<T extends Solution> {
-    private int initialPopulationSize;
+    private int populationSize;
     private final Selection<T> selection;
     private final CrossoverInterface<T> crossover; //why isn't the interface name simply crossover?
     private final List<Mutation<T>> mutations;
 
     public EngineSettings(Map<String, Object> engineSettingsMap, TimeTable timetable) {
-        setInitialPopulationSize(engineSettingsMap.get(Constants.POPULATION_SIZE));
+        setPopulationSize(engineSettingsMap.get(Constants.POPULATION_SIZE));
 
         Map<String, Object> selectionMap = (Map<String, Object>) engineSettingsMap.get(Constants.SELECTION);
         Map<String, Object> crossoverMap = (Map<String, Object>) engineSettingsMap.get(Constants.CROSSOVER);
         List<Map<String, Object>> mutationsMap = (List<Map<String, Object>>) engineSettingsMap.get(Constants.MUTATIONS);
 
-        this.selection = SelectionFactory.createSelectionFromMap(selectionMap, initialPopulationSize);
+        this.selection = SelectionFactory.createSelectionFromMap(selectionMap, populationSize);
         this.crossover = CrossoverFactory.createCrossoverFromMap(crossoverMap, timetable);
         this.mutations = generateMutationList(mutationsMap, timetable);
     }
@@ -45,25 +45,27 @@ public class EngineSettings<T extends Solution> {
         return mutationList;
     }
 
-    private void setInitialPopulationSize(Object objectSize) {
+    private void setPopulationSize(Object objectSize) {
         int size;
 
         try {
+            System.out.println("setInitialPopulationSize");
+            System.out.println(objectSize);
             size = (int) objectSize;
         } catch (Throwable e) {
             throw new ValidationException("Population size must be a positive number");
         }
 
         if (size > 0) {
-            this.initialPopulationSize = size;
+            this.populationSize = size;
         } else {
             throw new ValidationException("Population size: " + size + ". Where's the fun in that?");
         }
     }
 
     //#region getters
-    public int getInitialPopulationSize() {
-        return initialPopulationSize;
+    public int getPopulationSize() {
+        return populationSize;
     }
 
     public Selection<T> getSelection() {
@@ -86,7 +88,7 @@ public class EngineSettings<T extends Solution> {
     @Override
     public String toString() {
         return "EngineSettings{" +
-                "initialPopulationSize=" + initialPopulationSize +
+                "initialPopulationSize=" + populationSize +
                 ", selection='" + selection + System.lineSeparator() +
                 ", crossover=" + crossover + System.lineSeparator() +
                 ", mutations=" + mutations +

@@ -57,6 +57,11 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
         setData({...data, endPredicates});
     }, [data]);
 
+    const handlePopulationSizeChange = useCallback((e, propName) => {
+        const engineSettings = {...data.engineSettings, [propName]: e.target.value};
+        setData({...data, engineSettings});
+    }, [data]);
+
     const handleCrossoverChange = useCallback((e, propName) => {
         const crossover = {
             ...data.engineSettings.crossover,
@@ -193,10 +198,10 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     <Grid container className={classes.root}>
                         <TextField
                             required
-                            id='populationSize'
                             label='Population size'
                             defaultValue={data.populationSize}
-                            onChange={handleChange}
+                            onChange={(e) =>
+                                handlePopulationSizeChange(e, 'populationSizeChange')}
                         />
                         <TextField
                             required

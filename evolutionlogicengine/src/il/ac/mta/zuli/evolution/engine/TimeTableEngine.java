@@ -39,6 +39,7 @@ public class TimeTableEngine implements Engine {
                            Map<String, Object> engineSettingsMap,
                            Map<String, Object> endPredicatesMap,
                            Object stride) {
+
         EngineSettings<TimeTableSolution> engineSettings = new EngineSettings<>(engineSettingsMap, timetable);
         this.descriptor = new Descriptor(timetable, engineSettings);
         this.endPredicates = generatePredicates(endPredicatesMap);
@@ -238,7 +239,7 @@ public class TimeTableEngine implements Engine {
     }
 
     private EngineSettingsDTO createEngineSettingsDTO() {
-        int initialSize = descriptor.getEngineSettings().getInitialPopulationSize();
+        int initialSize = descriptor.getEngineSettings().getPopulationSize();
         SelectionDTO selectionDTO = createSelectionDTO();
         CrossoverDTO crossoverDTO = createCrossoverDTO();
         List<MutationDTO> mutationDTOS = createMutationDTOList();

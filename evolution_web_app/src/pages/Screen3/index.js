@@ -39,10 +39,10 @@ const useStyles = makeStyles((theme) => ({
 
 const fakeAlgoConfig = {
     timetableID: 0,
-    populationSize: 60,
     stride: 10,
     endPredicates: {numOfGenerations: 120, fitnessScore: 92.3, time: 2},
     engineSettings: {
+        populationSize: 60,
         selection: {name: "rouletteWheel", elitism: 0},
         crossover: {name: "daytimeOriented", "cuttingPoints": 5},
         mutations: [
@@ -60,10 +60,10 @@ const Screen3 = () => {
     const [timetable, setTimetable] = useState();
     const emptyAlgoConfig = {
         timetableID: currentTimetableID,
-        populationSize: undefined,
         stride: undefined,
         endPredicates: {numOfGenerations: undefined, fitnessScore: undefined, time: undefined},
         engineSettings: {
+            populationSize: undefined,
             selection: {name: "rouletteWheel", elitism: undefined},
             crossover: {name: "daytimeOriented", "cuttingPoints": undefined},
             mutations: [{name: "flipping", probability: undefined, maxTuples: undefined, component: undefined}],

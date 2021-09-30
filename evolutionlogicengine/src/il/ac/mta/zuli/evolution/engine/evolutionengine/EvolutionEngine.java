@@ -77,7 +77,7 @@ public class EvolutionEngine<T extends Solution> {
     private List<T> crossoverNewGeneration(List<T> parents) {
         // crossover to create next generation (repeat crossover until we receive generation big enough)
         List<T> newGeneration = new ArrayList<>();
-        int populationSize = engineSettings.getInitialPopulationSize();
+        int populationSize = engineSettings.getPopulationSize();
         while (newGeneration.size() < (populationSize - numOfElitism)) {
             newGeneration.addAll(engineSettings.getCrossover().crossover(parents));
         }

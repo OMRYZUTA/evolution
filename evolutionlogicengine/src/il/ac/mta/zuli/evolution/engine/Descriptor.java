@@ -30,7 +30,7 @@ public class Descriptor {
     }
 
     public int getPopulationSize() {
-        return this.engineSettings.getInitialPopulationSize();
+        return this.engineSettings.getPopulationSize();
     }
 
     public Set<Rule> getRules() {
