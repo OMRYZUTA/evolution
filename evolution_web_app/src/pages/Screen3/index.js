@@ -66,7 +66,7 @@ const Screen3 = () => {
             populationSize: undefined,
             selection: {name: "rouletteWheel", elitism: undefined},
             crossover: {name: "daytimeOriented", "cuttingPoints": undefined},
-            mutations: [{name: "flipping", probability: undefined, maxTuples: undefined, component: undefined}],
+            mutations: [],
         }
     }
     const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
@@ -98,11 +98,14 @@ const Screen3 = () => {
         console.log({algorithmConfiguration});
         let result;
         try {
-             result = await Utils.fetchWrapper('POST', `/server_Web_exploded/api/actions?action=start`, algorithmConfiguration)
-        }catch(e){
+            result = await Utils.fetchWrapper(
+                'POST',
+                `/server_Web_exploded/api/actions?action=start`,
+                algorithmConfiguration)
+            console.log({result});
+        } catch (e) {
             console.log(e);
         }
-        console.log({result});
         return result;
     }, [algorithmConfiguration]);
 
@@ -137,37 +140,37 @@ const Screen3 = () => {
 
     return (
         <Grid>
-        <Container maxWidth="xl">
-            <Navbar user={currentUser}/>
+            <Container maxWidth="xl">
+                <Navbar user={currentUser}/>
 
-            <Grid container direction={"row"} spacing={2}>
+                <Grid container direction={"row"} spacing={2}>
 
-                <Grid item xs={12} md={6}>
-                    <Grid container direction={"column"} className={classes.tempGrid}>
-                        {/*const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange})*/}
-                        <InfoTabs algorithmConfiguration={algorithmConfiguration}
-                                  handleAlgorithmConfigSave={setAlgorithmConfiguration}
-                                  timetable={timetable}/>
-                    </Grid>
-                </Grid>
-
-                <Grid item xs={12} md={5}>
-                    <Grid container direction={"column"} className={classes.tempGrid}>
-                        <Grid item>
-                            {renderButtonGroup()}
-                        </Grid>
-                        <Grid item>
-                            <Paper>stride details</Paper>
-                        </Grid>
-                        <Grid item>
-                            <Paper>other users solving</Paper>
+                    <Grid item xs={12} md={6}>
+                        <Grid container direction={"column"} className={classes.tempGrid}>
+                            {/*const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange})*/}
+                            <InfoTabs algorithmConfiguration={algorithmConfiguration}
+                                      handleAlgorithmConfigSave={setAlgorithmConfiguration}
+                                      timetable={timetable}/>
                         </Grid>
                     </Grid>
+
+                    <Grid item xs={12} md={5}>
+                        <Grid container direction={"column"} className={classes.tempGrid}>
+                            <Grid item>
+                                {renderButtonGroup()}
+                            </Grid>
+                            <Grid item>
+                                <Paper>stride details</Paper>
+                            </Grid>
+                            <Grid item>
+                                <Paper>other users solving</Paper>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </Container>
-</Grid>
-)
+            </Container>
+        </Grid>
+    )
 }
 
 export default Screen3;

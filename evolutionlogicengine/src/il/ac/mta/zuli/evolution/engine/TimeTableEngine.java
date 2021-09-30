@@ -9,6 +9,7 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
+import il.ac.mta.zuli.evolution.engine.predicates.EndPredicateType;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
 import il.ac.mta.zuli.evolution.engine.timetable.*;
@@ -42,15 +43,16 @@ public class TimeTableEngine implements Engine {
 
         EngineSettings<TimeTableSolution> engineSettings = new EngineSettings<>(engineSettingsMap, timetable);
         this.descriptor = new Descriptor(timetable, engineSettings);
-        this.endPredicates = generatePredicates(endPredicatesMap);
         setGenerationsStride(stride);
+        this.endPredicates = generatePredicates(endPredicatesMap);
+
     }
 
     public void setGenerationsStride(Object generationsStride) {
         int stride;
 
         try {
-            stride = (int) generationsStride;
+            stride = Integer.parseInt((String) generationsStride);
         } catch (Throwable e) {
             throw new ValidationException("Stride must be a positive number");
         }
@@ -68,41 +70,52 @@ public class TimeTableEngine implements Engine {
 
         if (endPredicatesMap != null) {
             if (endPredicatesMap.containsKey(Constants.NUM_OF_GENERATIONS)) {
-                try {
-                    double generationNum = (double) endPredicatesMap.get(Constants.NUM_OF_GENERATIONS);
-                    endPredicates.add(
-                            new EndPredicate(Constants.NUM_OF_GENERATIONS, generationNum, generationsStride)
-                    );
-                } catch (Throwable e) {
-                    throw new ValidationException("Invalid generation number. " + e.getMessage());
-                }
+                addPredicateToList(
+                        endPredicatesMap,
+                        endPredicates,
+                        EndPredicateType.GENERATIONS,
+                        Constants.NUM_OF_GENERATIONS);
             }
 
             if (endPredicatesMap.containsKey(Constants.SCORE)) {
-                try {
-                    double score = (double) endPredicatesMap.get(Constants.SCORE);
-                    endPredicates.add(
-                            new EndPredicate(Constants.SCORE, score, generationsStride)
-                    );
-                } catch (Throwable e) {
-                    throw new ValidationException("Invalid score. " + e.getMessage());
-                }
+                addPredicateToList(
+                        endPredicatesMap,
+                        endPredicates,
+                        EndPredicateType.SCORE,
+                        Constants.SCORE);
             }
 
             if (endPredicatesMap.containsKey(Constants.TIME)) {
-                try {
-                    double time = (double) endPredicatesMap.get(Constants.TIME);
-                    endPredicates.add(
-                            new EndPredicate(Constants.TIME, time, generationsStride)
-                    );
-                } catch (Throwable e) {
-                    throw new ValidationException("Invalid time. " + e.getMessage());
-                }
+                addPredicateToList(
+                        endPredicatesMap,
+                        endPredicates,
+                        EndPredicateType.TIME,
+                        Constants.TIME);
+            }
+
+            if (endPredicates.size() == 0) {
+                throw new ValidationException("Please select at least one End Condition");
             }
 
             return endPredicates;
         } else {
             throw new ValidationException("Please select at least one End Condition");
+        }
+    }
+
+    private void addPredicateToList(
+            Map<String, Object> endPredicatesMap,
+            List<EndPredicate> endPredicates,
+            EndPredicateType type,
+            String constantName) {
+
+        try {
+            double value = Double.parseDouble((String) endPredicatesMap.get(constantName));
+            endPredicates.add(
+                    new EndPredicate(type, value, generationsStride)
+            );
+        } catch (Throwable e) {
+            throw new ValidationException("Invalid predicate parameter. " + e.getMessage());
         }
     }
 

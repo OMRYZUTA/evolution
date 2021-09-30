@@ -6,29 +6,25 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 
 public class EndPredicate implements Predicate<Double> {
-    private EndConditionType type;
+    private EndPredicateType type;
     private double benchmark;
 
-    public EndPredicate(String predicateType, double value, int generationStride) {
+    public EndPredicate(EndPredicateType predicateType, double value, int generationStride) {
         setType(predicateType);
         setBenchmark(value, generationStride);
     }
 
-    public void setType(String type) {
-        try {
-            this.type = EndConditionType.valueOf(type);
-        } catch (Throwable e) {
-            throw new ValidationException("Invalid EndPredicate type");
-        }
+    public void setType(EndPredicateType type) {
+        this.type = type;
     }
 
     public void setBenchmark(double value, int stride) {
-        //validating the double received fits the constraints of relavent conditionType
+        //validating the double received fits the constraints of relevant conditionType
         switch (type) {
             case GENERATIONS:
                 setGenerationNum(value, stride);
                 break;
-            case FITNESS:
+            case SCORE:
                 setFitnessScore(value);
                 break;
             case TIME:
@@ -62,7 +58,7 @@ public class EndPredicate implements Predicate<Double> {
         }
     }
 
-    public EndConditionType getType() {
+    public EndPredicateType getType() {
         return type;
     }
 

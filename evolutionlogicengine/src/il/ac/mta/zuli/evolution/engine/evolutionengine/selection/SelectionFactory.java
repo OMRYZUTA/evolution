@@ -12,55 +12,56 @@ public class SelectionFactory<T extends Solution> {
 
     public static <T extends Solution> Selection<T> createSelectionFromMap(Map<String, Object> selectionMap, int populationSize) {
 
+        final int elitism = parseElitism(selectionMap);
+
         Map<String, Supplier<Selection<T>>> selectionBuilder = new HashMap<>();
 
+        selectionBuilder.put(Constants.ROULETTE_WHEEL, () -> new RouletteWheel<T>(populationSize, elitism));
+
         selectionBuilder.put(Constants.TRUNCATION, () -> {
-            int topPercent, elitism;
+            int topPercent;
 
             try {
-                topPercent = (int) selectionMap.get(Constants.TOP_PERCENT);
-                elitism = (int) selectionMap.get(Constants.ELITISM);
+                topPercent = Integer.parseInt((String) selectionMap.get(Constants.TOP_PERCENT));
             } catch (Throwable e) {
-                throw new ValidationException("Invalid Selection parameters (must be Integers)." + e.getMessage());
+                throw new ValidationException("Invalid Selection parameter." + e.getMessage());
             }
 
             return new Truncation<T>(topPercent, populationSize, elitism);
         });
 
-        selectionBuilder.put(Constants.ROULETTE_WHEEL, () -> {
-            int elitism;
-
-            try {
-                elitism = (int) selectionMap.get(Constants.ELITISM);
-            } catch (Throwable e) {
-                throw new ValidationException("Invalid Selection elitism (must be Integer). " + e.getMessage());
-            }
-
-            return new RouletteWheel<T>(populationSize, elitism);
-        });
-
         selectionBuilder.put(Constants.TOURNAMENT, () -> {
             double pte;
-            int elitism;
 
             try {
-                pte = (double) selectionMap.get(Constants.PTE);
-                elitism = (int) selectionMap.get(Constants.ELITISM);
+                pte = Double.parseDouble((String) selectionMap.get(Constants.PTE));
             } catch (Throwable e) {
-                throw new ValidationException("Invalid Selection parameters. " + e.getMessage());
+                throw new ValidationException("Invalid Selection parameter. " + e.getMessage());
             }
 
             return new Tournament<T>(pte, populationSize, elitism);
         });
 
-        String selectionType;
-
         try {
-            selectionType = (String) selectionMap.get(Constants.NAME);
+            String selectionType = (String) selectionMap.get(Constants.NAME);
+            return selectionBuilder.get(selectionType).get();
         } catch (Throwable e) {
             throw new ValidationException("Invalid Selection type. " + e.getMessage());
         }
+    }
 
-        return selectionBuilder.get(selectionType).get();
+    private static int parseElitism(Map<String, Object> selectionMap) {
+        int elitism = 0;
+
+        if (selectionMap.containsKey(Constants.ELITISM)) {
+            try {
+                String elitismStr = (String) selectionMap.get(Constants.ELITISM);
+                elitism = Integer.parseInt(elitismStr);
+            } catch (Throwable e) {
+                throw new ValidationException("Invalid value. Selection elitism must be Integer. " + e.getMessage());
+            }
+        }
+
+        return elitism;
     }
 }

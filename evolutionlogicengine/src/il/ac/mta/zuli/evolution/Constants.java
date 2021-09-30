@@ -23,7 +23,7 @@ public class Constants {
     //selection related:
     public static final String SELECTION = "selection";
     public static final String TRUNCATION = "truncation";
-    public static final String ROULETTE_WHEEL = "roulettewheel";
+    public static final String ROULETTE_WHEEL = "rouletteWheel";
     public static final String TOURNAMENT = "tournament";
     public static final String ELITISM = "elitism";
     public static final String TOP_PERCENT = "topPercent";

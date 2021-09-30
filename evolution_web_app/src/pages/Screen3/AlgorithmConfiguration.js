@@ -58,7 +58,9 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     }, [data]);
 
     const handlePopulationSizeChange = useCallback((e, propName) => {
-        const engineSettings = {...data.engineSettings, [propName]: e.target.value};
+        const engineSettings = {...data.engineSettings, [propName]: e.target.value,};
+        console.log("in handlePopulationSizeChange: ");
+        console.log(engineSettings);
         setData({...data, engineSettings});
     }, [data]);
 
@@ -201,7 +203,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                             label='Population size'
                             defaultValue={data.populationSize}
                             onChange={(e) =>
-                                handlePopulationSizeChange(e, 'populationSizeChange')}
+                                handlePopulationSizeChange(e, 'populationSize')}
                         />
                         <TextField
                             required
@@ -246,7 +248,6 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                             onChange={(e) => handleSelectionChange(e, 'name')}
                         />
                         <TextField
-                            required
                             label='Elitism'
                             defaultValue={data.engineSettings.selection.elitism}
                             onChange={(e) => handleSelectionChange(e, 'elitism')}

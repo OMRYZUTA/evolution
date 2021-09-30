@@ -18,33 +18,49 @@ public class CrossoverFactory {
         Map<String, Supplier<Crossover<T>>> crossoverBuilder = new HashMap<>();
 
         crossoverBuilder.put(Constants.DAY_TIME_ORIENTED, () -> {
-            //TODO add try-catch to casting like in SelectionFactory
-            return new DayTimeOriented<T>((int) crossoverMap.get(Constants.CUTTING_POINTS), timeTable);
+            int cuttingPoints;
+
+            try {
+                cuttingPoints = Integer.parseInt((String) crossoverMap.get(Constants.CUTTING_POINTS));
+            } catch (Throwable e) {
+                throw new ValidationException("Invalid Crossover parameter." + e.getMessage());
+            }
+
+            return new DayTimeOriented<T>(cuttingPoints, timeTable);
         });
 
         crossoverBuilder.put(Constants.ASPECT_ORIENTED, () -> {
+            int cuttingPoints;
+
+            try {
+                cuttingPoints = Integer.parseInt((String) crossoverMap.get(Constants.CUTTING_POINTS));
+            } catch (Throwable e) {
+                throw new ValidationException("Invalid Crossover parameter." + e.getMessage());
+            }
+
             Orientation orientation = parseOrientationFromConfiguration(crossoverMap);
 
-            return new AspectOriented<T>(
-                    (int) crossoverMap.get(Constants.CUTTING_POINTS),
-                    orientation,
-                    timeTable);
+            return new AspectOriented<T>(cuttingPoints, orientation, timeTable);
         });
 
-        String crossoverType = (String) crossoverMap.get(Constants.NAME);
-
-        return crossoverBuilder.get(crossoverType).get();
+        try {
+            String crossoverType = (String) crossoverMap.get(Constants.NAME);
+            return crossoverBuilder.get(crossoverType).get();
+        } catch (Throwable e) {
+            throw new ValidationException("Invalid Crossover type. " + e.getMessage());
+        }
     }
 
     private static Orientation parseOrientationFromConfiguration(Map<String, Object> crossoverMap) {
-        String OrientationStr = (String) crossoverMap.get(Constants.ORIENTATION);
         Orientation orientation;
 
         try {
+            String OrientationStr = (String) crossoverMap.get(Constants.ORIENTATION);
             orientation = Orientation.valueOf(OrientationStr);
         } catch (Throwable e) {
             throw new ValidationException("invalid orientation, must be a either TEACHER or CLASS");
         }
+
         return orientation;
     }
 }

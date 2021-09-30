@@ -52,6 +52,8 @@ public class RunAlgorithmTask extends Task<Boolean> {
         EvolutionState prevEvolutionState = inEvolutionState; //our way to resume after pause
         EvolutionState currEvolutionState = null;
 
+        System.out.println("in RunAlgoTask call");
+
         if (inEvolutionState == null) {
             //if we're just now starting the task, and not resuming after pause
             prevEvolutionState = createFirstGenerationState();
@@ -102,6 +104,7 @@ public class RunAlgorithmTask extends Task<Boolean> {
         } //end of for loop
 
 //        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
+        System.out.println(bestSolutionEver);
 
         return true;
     }
@@ -113,7 +116,7 @@ public class RunAlgorithmTask extends Task<Boolean> {
         //we know (validation in header controller, that there's at least one predicate (max of 3)
         for (EndPredicate predicate : endPredicates) {
             switch (predicate.getType()) {
-                case FITNESS:
+                case SCORE:
                     predicateResult = predicate.test(bestSolutionEver.getFitnessScore());
                     break;
                 case GENERATIONS:

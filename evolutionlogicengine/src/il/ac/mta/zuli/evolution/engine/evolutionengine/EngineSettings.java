@@ -22,6 +22,7 @@ public class EngineSettings<T extends Solution> {
     private final List<Mutation<T>> mutations;
 
     public EngineSettings(Map<String, Object> engineSettingsMap, TimeTable timetable) {
+
         setPopulationSize(engineSettingsMap.get(Constants.POPULATION_SIZE));
 
         Map<String, Object> selectionMap = (Map<String, Object>) engineSettingsMap.get(Constants.SELECTION);
@@ -35,7 +36,9 @@ public class EngineSettings<T extends Solution> {
 
     private List<Mutation<T>> generateMutationList(List<Map<String, Object>> mutationsMap, TimeTable timetable) {
         List<Mutation<T>> mutationList = new ArrayList<>();
+        System.out.println(mutationsMap); //TODO delte later
         //TODO - is it required to have at least 1 mutation?
+
         if (mutationsMap.size() > 0) {
             for (Map<String, Object> mutationMap : mutationsMap) {
                 mutationList.add(MutationFactory.createMutationFromMap(mutationMap, timetable));
@@ -45,13 +48,11 @@ public class EngineSettings<T extends Solution> {
         return mutationList;
     }
 
-    private void setPopulationSize(Object objectSize) {
+    private void setPopulationSize(Object sizeString) {
         int size;
 
         try {
-            System.out.println("setInitialPopulationSize");
-            System.out.println(objectSize);
-            size = (int) objectSize;
+            size = Integer.parseInt((String) sizeString);
         } catch (Throwable e) {
             throw new ValidationException("Population size must be a positive number");
         }
