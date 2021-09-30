@@ -271,8 +271,8 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         <TextField
                             required
                             label='Cutting Points'
-                            defaultValue={data.engineSettings.crossover.numOfCuttingPoints}
-                            onChange={(e) => handleCrossoverChange(e, 'numOfCuttingPoints')}
+                            defaultValue={data.engineSettings.crossover.cuttingPoints}
+                            onChange={(e) => handleCrossoverChange(e, 'cuttingPoints')}
                         />
                         {data.engineSettings.crossover.name === 'daytimeOriented' ||
                         <DropDown

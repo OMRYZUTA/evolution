@@ -94,11 +94,13 @@ const Screen3 = () => {
     }, []);
 
     const handleStart = useCallback(async () => {
-        console.log("screen3 handleStart: ");
         console.log({algorithmConfiguration});
-
-        const url = `/server_Web_exploded/api/actions?action=start`;
-        const result = await Utils.fetchWrapper('POST', url, algorithmConfiguration)
+        let result;
+        try {
+             result = await Utils.fetchWrapper('POST', `/server_Web_exploded/api/actions?action=start`, algorithmConfiguration)
+        }catch(e){
+            console.log(e);
+        }
         console.log({result});
         return result;
     }, [algorithmConfiguration]);
@@ -133,7 +135,7 @@ const Screen3 = () => {
     }
 
     return (
-        <Grid
+        <Grid>
         <Container maxWidth="xl">
             <Navbar user={currentUser}/>
 
@@ -144,27 +146,26 @@ const Screen3 = () => {
                         {/*const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange})*/}
                         <InfoTabs algorithmConfiguration={algorithmConfiguration}
                                   handleAlgorithmConfigSave={setAlgorithmConfiguration}
-                                      timetable={timetable}/>
-                        </Grid>
+                                  timetable={timetable}/>
                     </Grid>
-
-                    <Grid item xs={12} md={5}>
-                        <Grid container direction={"column"} className={classes.tempGrid}>
-                            <Grid item>
-                                {renderButtonGroup()}
-                            </Grid>
-                            <Grid item>
-                                <Paper>stride details</Paper>
-                            </Grid>
-                            <Grid item>
-                                <Paper>other users solving</Paper>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-
                 </Grid>
-            </Container>
-        </Grid>
+
+                <Grid item xs={12} md={5}>
+                    <Grid container direction={"column"} className={classes.tempGrid}>
+                        <Grid item>
+                            {renderButtonGroup()}
+                        </Grid>
+                        <Grid item>
+                            <Paper>stride details</Paper>
+                        </Grid>
+                        <Grid item>
+                            <Paper>other users solving</Paper>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Container>
+</Grid>
 )
 }
 

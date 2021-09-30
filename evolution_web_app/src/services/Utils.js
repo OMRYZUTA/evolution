@@ -10,8 +10,8 @@ export async function fetchWrapper(method, url, object) {
     if (object) {
         options.body = JSON.stringify(object);
     }
-
     const result = await fetch(url, options);
+
     let responseBody;
     if (result.headers.get("content-type").includes("application/json")) {
         responseBody = await result.json();

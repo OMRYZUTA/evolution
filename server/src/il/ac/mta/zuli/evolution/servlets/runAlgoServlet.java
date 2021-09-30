@@ -16,8 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
-@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.DashboardServlet", urlPatterns = "api/actions?action")
+@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.runAlgoServlet", urlPatterns = "/api/actions")
 public class runAlgoServlet extends HttpServlet {
 //    POST http://localhost:8080/server_Web_exploded/api/actions?action=start
 

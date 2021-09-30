@@ -30,10 +30,10 @@ public class Constants {
     public static final String PTE = "pte";
     //crossover related:
     public static final String CROSSOVER = "crossover";
-    public static final String CUTTING_POINTS = "numOfCuttingPoints";
+    public static final String CUTTING_POINTS = "cuttingPoints";
     public static final String ORIENTATION = "orientation";
-    public static final String DAY_TIME_ORIENTED = "daytimeoriented";
-    public static final String ASPECT_ORIENTED = "aspectoriented";
+    public static final String DAY_TIME_ORIENTED = "daytimeOriented";
+    public static final String ASPECT_ORIENTED = "aspectOriented";
     //mutation related:
     public static final String MUTATIONS = "mutations";
     public static final String SIZER = "sizer";
