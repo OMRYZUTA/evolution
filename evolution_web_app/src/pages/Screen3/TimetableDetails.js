@@ -15,6 +15,8 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "space-between"
     },
     settings: {
+        spacing: 2,
+        justifyContent: "space-between",
         backgroundColor: "#D3D3D3", //light gray
     },
 }));
@@ -67,15 +69,21 @@ const TimetableDetails = ({timetable}) => {
                     <Typography>Rules</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Grid container direction={"column"}>
+                    <Grid container direction={"column"} className={classes.root}>
                         {timetable.rules.map(rule=>{
-                            console.log(rule);
-
                             return(
                                 <Grid item>
+                                    <Grid container className={classes.settings}>
                                     <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                        Days: {} Hours {timetable.hours}
+                                        Rule Name: {rule.ruleName}
                                     </Typography>
+                                        {rule.ruleName==="Sequentiality"&& <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                            Total Hours: {rule.totalHours}
+                                        </Typography> }
+                                        <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                            Rule Type: {rule.ruleType}
+                                        </Typography>
+                                    </Grid>
                                 </Grid>
                             )
                         })}
