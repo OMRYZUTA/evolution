@@ -13,14 +13,17 @@ import java.util.Objects;
 
 //rule meaning: teachers only teach subjects from their subject-collection
 public class Knowledgeable extends Rule {
+    private final String ruleName;
     public Knowledgeable(@NotNull String ruleType) {
         super(ruleType);
+        this.ruleName="Knowledgeable";
     }
 
     @Override
     public void fitnessEvaluation(@NotNull Solution solution) {
         if (!(solution instanceof TimeTableSolution)) {
             throw new RuntimeException("solution must be TimeTableSolution");
+
         }
 
         TimeTableSolution timeTableSolution = (TimeTableSolution) solution;

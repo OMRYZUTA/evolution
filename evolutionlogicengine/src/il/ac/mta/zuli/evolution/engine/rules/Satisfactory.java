@@ -13,9 +13,10 @@ import java.util.*;
 public class Satisfactory extends Rule {
     //satisfactory rule - each class gets the exact number of hours-per-subject (the class' requirements are met)
     private Map<Integer, SchoolClass> schoolClasses;
-
+    private final String ruleName;
     public Satisfactory(@NotNull String ruleType, @NotNull List<SchoolClass> schoolClasses) {
         super(ruleType);
+        this.ruleName="Satisfactory";
         setSchoolClasses(schoolClasses);
     }
 

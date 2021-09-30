@@ -13,10 +13,11 @@ import java.util.stream.Collectors;
 
 public class WorkingHoursPreference extends Rule {
     private final List<Teacher> teachers;
-
+    private final String ruleName;
     public WorkingHoursPreference(@NotNull String ruleType, List<Teacher> teachers) {
         super(ruleType);
         this.teachers = teachers;
+        this.ruleName="WorkingHoursPreference";
     }
 
     @Override

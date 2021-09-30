@@ -15,11 +15,13 @@ import java.util.stream.Collectors;
 public class Sequentiality extends Rule {
     private int totalHours;
     private final List<SchoolClass> schoolClasses;
-
+    private final String ruleName;
     public Sequentiality(@NotNull String ruleType, int totalHours, List<SchoolClass> schoolClasses) {
         super(ruleType);
+        this.ruleName="Sequentiality";
         setTotalHours(totalHours);
         this.schoolClasses = schoolClasses;
+
     }
 
     @Override

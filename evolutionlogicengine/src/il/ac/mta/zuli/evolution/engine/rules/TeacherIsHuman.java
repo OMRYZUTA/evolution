@@ -9,8 +9,10 @@ import java.util.HashSet;
 import java.util.Objects;
 
 public class TeacherIsHuman extends Rule {
+    private final String ruleName;
     public TeacherIsHuman(@NotNull String ruleType) {
         super(ruleType);
+        this.ruleName="TeacherIsHuman";
     }
 
     @Override

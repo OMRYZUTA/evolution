@@ -9,8 +9,10 @@ import java.util.HashSet;
 import java.util.Objects;
 
 public class Singularity extends Rule {
+    private final String ruleName;
     public Singularity(@NotNull String ruleType) {
         super(ruleType);
+        this.ruleName="Singularity";
     }
 
     @Override

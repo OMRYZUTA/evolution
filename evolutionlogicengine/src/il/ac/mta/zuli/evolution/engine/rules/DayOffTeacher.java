@@ -15,9 +15,10 @@ import java.util.stream.Collectors;
 public class DayOffTeacher extends Rule {
     private final int days;
     private final List<Teacher> teachers;
-
+    private final String ruleName;
     public DayOffTeacher(@NotNull String ruleType, int days, List<Teacher> teachers) {
         super(ruleType);
+        this.ruleName="DayOffTeacher";
         this.days = days;
         this.teachers = teachers;
     }
