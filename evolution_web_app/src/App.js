@@ -17,7 +17,6 @@ const getCookieDetail=(name)=>{
             c = c.substring(1);
         }
         if (c.indexOf(name) == 0) {
-            console.log(c.substring(name.length+1, c.length));
             return c.substring(name.length+1, c.length);
         }
     }

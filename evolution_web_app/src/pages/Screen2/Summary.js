@@ -31,7 +31,6 @@ export default function Summary({data}) {
     }
 
     const handleTimeTableClicked = async () => {
-        console.log(localTimetable);
         document.cookie= `timetableid=${localTimetable};path=/`
         await setCurrentTimetableID(localTimetable)
         routeChange()

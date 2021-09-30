@@ -78,6 +78,7 @@ const Screen3 = () => {
             try {
                 const result = await TimetableServices.getDetails(currentTimetableID);
                 if (result.data) {
+                    console.log(result.data);
                     setTimetable(result.data);
                 } else {
                     console.log(result.error);
@@ -144,7 +145,7 @@ const Screen3 = () => {
                             <InfoTabs algorithmConfiguration={algorithmConfiguration}
                                       handleAlgorithmConfigSave={(data)=>{setAlgorithmConfiguration(data)
                                       console.log({data})}}
-                                      timetable={currentTimetableID}/>
+                                      timetable={timetable}/>
                         </Grid>
                     </Grid>
 
