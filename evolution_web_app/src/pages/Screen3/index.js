@@ -75,6 +75,7 @@ const Screen3 = () => {
 
     useEffect(() => {
         const fetchAllData = async () => {
+            //TODO fetch timetable too
             try {
                 const result = await TimetableServices.getDetails(currentTimetableID);
                 if (result.data) {
@@ -93,11 +94,13 @@ const Screen3 = () => {
     }, []);
 
     const handleStart = useCallback(async () => {
-        const url = `/server_Web_exploded/api/actions?action=start`;
-        //TODO send the algorithmConfig (only on START click, save button will only save it in the frontend)
         console.log("screen3 handleStart: ");
         console.log({algorithmConfiguration});
+
+        const url = `/server_Web_exploded/api/actions?action=start`;
         const result = await Utils.fetchWrapper('POST', url, algorithmConfiguration)
+        console.log({result});
+        return result;
     }, [algorithmConfiguration]);
 
     // const routeChange = () => {
@@ -130,17 +133,17 @@ const Screen3 = () => {
     }
 
     return (
-        <Grid>
-            <Container maxWidth="xl">
-                <Navbar user={currentUser}/>
+        <Grid
+        <Container maxWidth="xl">
+            <Navbar user={currentUser}/>
 
-                <Grid container direction={"row"} spacing={2}>
+            <Grid container direction={"row"} spacing={2}>
 
-                    <Grid item xs={12} md={6}>
-                        <Grid container direction={"column"} className={classes.tempGrid}>
-                            {/*const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange})*/}
-                            <InfoTabs algorithmConfiguration={algorithmConfiguration}
-                                      handleAlgorithmConfigSave={setAlgorithmConfiguration}
+                <Grid item xs={12} md={6}>
+                    <Grid container direction={"column"} className={classes.tempGrid}>
+                        {/*const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange})*/}
+                        <InfoTabs algorithmConfiguration={algorithmConfiguration}
+                                  handleAlgorithmConfigSave={setAlgorithmConfiguration}
                                       timetable={timetable}/>
                         </Grid>
                     </Grid>
@@ -162,7 +165,7 @@ const Screen3 = () => {
                 </Grid>
             </Container>
         </Grid>
-    );
+)
 }
 
 export default Screen3;

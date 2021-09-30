@@ -305,8 +305,8 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
 
             <ButtonGroup>
                 <Button onClick={() => {
-                    console.log({data});
                     handleAlgorithmConfigSave(data)
+                    // TODO notify user Save was successful
                 }}>Save</Button>
                 <Button onClick={handleCancel}>Cancel</Button>
             </ButtonGroup>
