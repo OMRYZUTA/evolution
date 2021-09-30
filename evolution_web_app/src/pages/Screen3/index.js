@@ -91,6 +91,12 @@ const Screen3 = () => {
         fetchAllData();
     }, []);
 
+    const handleAlgorithmConfigSave = async (data) => {
+        await setAlgorithmConfiguration(data);
+        console.log("after setAlgorithmConfiguration in screen3 index");
+        console.log({data});
+    }
+
     const handleStart = useCallback(async () => {
         const url = `/server_Web_exploded/api/actions?action=start`;
         //TODO send the algorithmConfig (only on START click, save button will only save it in the frontend)
@@ -140,10 +146,7 @@ const Screen3 = () => {
                         <Grid container direction={"column"} className={classes.tempGrid}>
                             {/*const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange})*/}
                             <InfoTabs algorithmConfiguration={algorithmConfiguration}
-                                      handleAlgorithmConfigSave={(data) => {
-                                          setAlgorithmConfiguration(data)
-                                          console.log({data})
-                                      }}
+                                      handleAlgorithmConfigSave={handleAlgorithmConfigSave}
                                       timetable={timetable}/>
                         </Grid>
                     </Grid>

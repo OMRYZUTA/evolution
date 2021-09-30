@@ -54,7 +54,6 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     }, [data]);
 
     const handleEndPredicatesChange = useCallback((endPredicates) => {
-        console.log('handle end predicates change', endPredicates);
         setData({...data, endPredicates});
     }, [data]);
 
