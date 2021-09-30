@@ -40,7 +40,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8080/server_Web_exploded/api/timetable/details?timetableid=0
+GET http://localhost:8080/server_Web_exploded/api/timetable/details?timetableID=0
 Accept: application/json
 
 ###

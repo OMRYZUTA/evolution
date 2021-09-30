@@ -9,6 +9,7 @@ import {TimetableContext} from "../../components/TimetableContext";
 import {UserContext} from "../../components/UserContext"
 import * as TimetableServices from "../../services/TimetableServices";
 import * as Utils from "../../services/Utils";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -70,7 +71,7 @@ const Screen3 = () => {
     }
     const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
     const classes = useStyles();
-    // const history = useHistory();
+    const history = useHistory();
     // const actions = ["start ", "pause ", "resume ", "stop "]
 
     useEffect(() => {
@@ -105,9 +106,9 @@ const Screen3 = () => {
         return result;
     }, [algorithmConfiguration]);
 
-    // const routeChange = () => {
-    //     history.push(SCREEN2URL);
-    // }
+    const routeChange = () => {
+        history.push(SCREEN2URL);
+    }
 
     const renderButtonGroup = () => {
         return (<ButtonGroup
@@ -128,7 +129,7 @@ const Screen3 = () => {
             <Button id="bestSolution">
                 Best Solution
             </Button>
-            <Button id="back to screen 2" onClick={() => console.log("screen3 routeChange() to screen2")}>
+            <Button id="back to screen 2" onClick={routeChange}>
                 Back to screen 2
             </Button>
         </ButtonGroup>);

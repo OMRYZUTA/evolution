@@ -49,8 +49,9 @@ public class runAlgoServlet extends HttpServlet {
             String usernameFromSession = SessionUtils.getUsername(request);
             Gson gson = new Gson();
             Map<String, Object> requestMap = gson.fromJson(request.getReader(), new HashMap<String, Object>().getClass());
-
-            int ttID = (int) requestMap.get(Constants.TIMETABLE_ID); //we know this an integer because we provided it
+            Object tempObj =requestMap.get(Constants.TIMETABLE_ID);
+            double tempdouble =(double)tempObj;
+            int ttID = (int) Math.ceil(tempdouble); //we know this an integer because we provided it
             Map<String, Object> engineSettingsMap = (HashMap<String, Object>) requestMap.get(Constants.ENGINE_SETTINGS);
             Map<String, Object> endPredicatesMap = (Map<String, Object>) requestMap.get(Constants.END_PREDICATES);
             Object generationStride = requestMap.get(Constants.STRIDE); //validating we received an int alter on
