@@ -9,6 +9,7 @@ public class Constants {
     public static final String SUCCESSFUL_LOGIN = "successful login";
     public static final String TIMETABLE_ID = "timetableID";
     public static final String PARSE_JSON_ERROR = "parse json error";
+    public static final String ALGO_ACTION = "action";
     //TimetableEngine:
     public static final String ENGINE_SETTINGS = "engineSettings";
     public static final String END_PREDICATES = "endPredicates";

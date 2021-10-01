@@ -16,10 +16,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.runAlgoServlet", urlPatterns = "/api/actions")
-public class runAlgoServlet extends HttpServlet {
-//    POST http://localhost:8080/server_Web_exploded/api/actions?action=start
-
+@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.RunAlgoServlet", urlPatterns = "/api/actions")
+public class RunAlgoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -44,6 +42,10 @@ public class runAlgoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String responseMessage = null;
+
+        String actionType = request.getParameter(Constants.ALGO_ACTION);
+
+        //    POST http://localhost:8080/server_Web_exploded/api/actions?action=start
         //TODO currently only handling Start
         try {
             String usernameFromSession = SessionUtils.getUsername(request);
