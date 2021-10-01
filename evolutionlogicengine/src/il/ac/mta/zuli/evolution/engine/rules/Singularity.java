@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
+import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.Quintet;
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,11 +17,11 @@ public class Singularity extends Rule {
 
     @Override
     public void fitnessEvaluation(@NotNull Solution solution) {
-        if (!(solution instanceof TimeTableSolution)) {
+        if (!(solution instanceof Double)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
 
-        TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+        Double timeTableSolution = (Double) solution;
 
         int numOfQuintets = timeTableSolution.getSolutionSize();
         int collisions = 0;

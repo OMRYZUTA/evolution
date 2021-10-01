@@ -1,28 +1,30 @@
 package il.ac.mta.zuli.evolution.engine.tasks;
 
 import il.ac.mta.zuli.evolution.engine.Descriptor;
+import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.EvolutionState;
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
+import il.ac.mta.zuli.evolution.engine.StrideData;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class RunAlgorithmTask extends Task<Boolean> {
+public class RunAlgorithmTask implements Runnable {
     private final Descriptor descriptor;
     private final List<EndPredicate> endPredicates;
     private final int generationsStride;
     private final EvolutionState inEvolutionState;
-    private EvolutionState outEvolutionState;
-    private final Consumer<TimeTableSolution> reportBestSolution;
+    private final Consumer<Double> reportBestSolution;
     private final Consumer<EvolutionState> reportState;
-    private TimeTableSolution bestSolutionEver;
-    private final EvolutionEngine<TimeTableSolution> evolutionEngine;
+    private final Consumer<StrideData> reportStrideData;
+    private Double bestSolutionEver;
+    private final EvolutionEngine<Double> evolutionEngine;
+    private boolean done;
+    private boolean cancelled;
+    private Throwable exception;
 
     public RunAlgorithmTask(
             Descriptor descriptor,
@@ -30,83 +32,100 @@ public class RunAlgorithmTask extends Task<Boolean> {
             int generationsStride,
             EvolutionState evolutionState,
             Consumer<EvolutionState> reportState,
-            Consumer<TimeTableSolution> reportBestSolution) {
+            Consumer<Double> reportBestSolution,
+            Consumer<StrideData> reportStrideData) {
         this.descriptor = descriptor;
         this.endPredicates = endPredicates;
         this.generationsStride = generationsStride;
         // we either receive a generation to resume from, or create an initial one
         this.inEvolutionState = evolutionState;
-        this.evolutionEngine = new EvolutionEngine<TimeTableSolution>(descriptor.getEngineSettings(), descriptor.getRules());
+        this.evolutionEngine = new EvolutionEngine<Double>(
+                descriptor.getEngineSettings(), descriptor.getRules());
         this.reportState = reportState;
-        this.reportBestSolution = (TimeTableSolution bestSolution) -> {
-            Platform.runLater(() -> {
-                reportBestSolution.accept(bestSolution);
-            });
+        this.reportStrideData = reportStrideData;
+        this.reportBestSolution = (Double bestSolution) -> {
+            reportBestSolution.accept(bestSolution);
         };
+        this.cancelled = false;
+        this.done = false;
     }
 
     @Override
-    protected Boolean call() throws Exception {
-        //initialGeneration is either null or not, depending on if we're resuming from pause or starting
-        long startTime = System.currentTimeMillis();
-        EvolutionState prevEvolutionState = inEvolutionState; //our way to resume after pause
-        EvolutionState currEvolutionState = null;
+    public void run() {
+        try {
+            //initialGeneration is either null or not, depending on if we're resuming from pause or starting
+            long startTime = System.currentTimeMillis();
+            EvolutionState prevEvolutionState = inEvolutionState; //our way to resume after pause
+            EvolutionState currEvolutionState = null;
 
-        System.out.println("in RunAlgoTask call");
-
-        if (inEvolutionState == null) {
-            //if we're just now starting the task, and not resuming after pause
-            prevEvolutionState = createFirstGenerationState();
-            bestSolutionEver = prevEvolutionState.getGenerationBestSolution();
-        } else {
-            bestSolutionEver = prevEvolutionState.getBestSolutionSoFar();
-        }
-
-        reportBestSolution.accept(bestSolutionEver);
-
-        //while the user didn't click Pause or Stop, and we haven't reached any of the end-conditions yet
-        while (!isCancelled() && checkAllPredicates(prevEvolutionState)) {
-            List<TimeTableSolution> currSolutions = evolutionEngine.execute(prevEvolutionState.getGenerationSolutions());
-            // building the current EvolutionState
-            long timeFromStart = System.currentTimeMillis() - startTime;
-            long elapsedTime = inEvolutionState == null ? timeFromStart : inEvolutionState.getNetRunTime() + timeFromStart;
-
-            currEvolutionState = new EvolutionState(
-                    prevEvolutionState.getGenerationNum() + 1,
-                    elapsedTime, //the generation time param is when we started the 1st generation
-                    currSolutions,
-                    bestSolutionEver);
-
-            TimeTableSolution currBestSolution = currEvolutionState.getGenerationBestSolution();
-
-            if (currBestSolution.getFitnessScore() > bestSolutionEver.getFitnessScore()) {
-                bestSolutionEver = currBestSolution;
-                reportBestSolution.accept(bestSolutionEver);
+            if (inEvolutionState == null) {
+                //if we're just now starting the task, and not resuming after pause
+                prevEvolutionState = createFirstGenerationState();
+                bestSolutionEver = prevEvolutionState.getGenerationBestSolution();
+            } else {
+                bestSolutionEver = prevEvolutionState.getBestSolutionSoFar();
             }
 
-            //stride for purposes of info-display and to save a stride-generation history
-            //with addition of first generation
-            int currGenerationNum = currEvolutionState.getGenerationNum();
+            reportBestSolution.accept(bestSolutionEver);
 
-            //TODO the UI can just pull these 2 numbers from state: generationNum, getFitnessScore()==generation best score
-            //and
-            if (currGenerationNum == 1 || (currGenerationNum % generationsStride == 0)) {
-                String message = String.format(
-                        "Generation: %d. Top Score: %f",
-                        currGenerationNum,
-                        currBestSolution.getFitnessScore());
-                updateMessage(message);
-            }
+            //while the user didn't click Pause or Stop, and we haven't reached any of the end-conditions yet
+            while (!isCancelled() && checkAllPredicates(prevEvolutionState)) {
+                List<Double> currSolutions = evolutionEngine.execute(prevEvolutionState.getGenerationSolutions());
+                // building the current EvolutionState
+                long timeFromStart = System.currentTimeMillis() - startTime;
+                long elapsedTime = inEvolutionState == null ? timeFromStart : inEvolutionState.getNetRunTime() + timeFromStart;
 
-            prevEvolutionState = currEvolutionState;
-            outEvolutionState = currEvolutionState;
-            reportState.accept(outEvolutionState);
-        } //end of for loop
+                currEvolutionState = new EvolutionState(
+                        prevEvolutionState.getGenerationNum() + 1,
+                        elapsedTime, //the generation time param is when we started the 1st generation
+                        currSolutions,
+                        bestSolutionEver);
 
+                Double currBestSolution = currEvolutionState.getGenerationBestSolution();
+
+                if (currBestSolution.getFitnessScore() > bestSolutionEver.getFitnessScore()) {
+                    bestSolutionEver = currBestSolution;
+                    reportBestSolution.accept(bestSolutionEver);
+                }
+
+                //stride for purposes of info-display and to save a stride-generation history
+                //with addition of first generation
+                int currGenerationNum = currEvolutionState.getGenerationNum();
+
+                if (currGenerationNum == 1 || (currGenerationNum % generationsStride == 0)) {
+                    reportStrideData.accept(
+                            new StrideData(currGenerationNum, currBestSolution.getFitnessScore()));
+//                updateMessage(message); TODO replace updateMessage
+                }
+
+                prevEvolutionState = currEvolutionState;
+                EvolutionState outEvolutionState = currEvolutionState;
+                reportState.accept(outEvolutionState);
+            } //end of for loop
+
+            //TODO how de we handle the update for the last generation? (since it's not necessarily the number of generations in the endPredicates)
 //        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
-        System.out.println(bestSolutionEver);
+        } catch (Throwable e) {
+            exception = e;
+        } finally {
+            done = true;
+        }
+    }
 
-        return true;
+    public synchronized void cancel() {
+        cancelled = true;
+    }
+
+    public synchronized boolean isCancelled() {
+        return cancelled;
+    }
+
+    public synchronized boolean isDone() {
+        return done;
+    }
+
+    public synchronized Throwable getException() {
+        return exception;
     }
 
     private boolean checkAllPredicates(EvolutionState evolutionState) {
@@ -140,16 +159,14 @@ public class RunAlgorithmTask extends Task<Boolean> {
     }
 
     @NotNull
-    private List<TimeTableSolution> getInitialPopulation() {
+    private List<Double> getInitialPopulation() {
         int initialPopulationSize = descriptor.getPopulationSize();
-        List<TimeTableSolution> initialPopulation = new ArrayList<>();
+        List<Double> initialPopulation = new ArrayList<>();
 
         for (int i = 0; i < initialPopulationSize; i++) {
-            initialPopulation.add(new TimeTableSolution(descriptor.getTimeTable()));
+            initialPopulation.add(new Double(descriptor.getTimeTable()));
         }
         evolutionEngine.evaluateSolutions(initialPopulation);
         return initialPopulation;
     }
-
-
 }

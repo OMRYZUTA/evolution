@@ -7,15 +7,15 @@ import java.util.stream.Collectors;
 
 public class EvolutionState {
     private final int generationNum;
-    private final List<TimeTableSolution> solutions;
-    private final TimeTableSolution bestSolutionSoFar;
+    private final List<Double> solutions;
+    private final Double bestSolutionSoFar;
     //the way we save the state (for pause/resume), this is the time elapsed since the beginning of the task-call
     private final long netRunTime;
 
     public EvolutionState(int generationNum,
                           long time,
-                          List<TimeTableSolution> generationSolutions,
-                          TimeTableSolution bestSolutionSoFar) {
+                          List<Double> generationSolutions,
+                          Double bestSolutionSoFar) {
         this.generationNum = generationNum;
         this.solutions = generationSolutions;
         this.netRunTime = time;
@@ -30,17 +30,17 @@ public class EvolutionState {
         return netRunTime;
     }
 
-    public List<TimeTableSolution> getGenerationSolutions() {
+    public List<Double> getGenerationSolutions() {
         return solutions;
     }
 
-    public TimeTableSolution getGenerationBestSolution() {
+    public Double getGenerationBestSolution() {
         return solutions.stream().
                 sorted(Collections.reverseOrder())
                 .limit(1).collect(Collectors.toList()).get(0);
     }
 
-    public TimeTableSolution getBestSolutionSoFar() {
+    public Double getBestSolutionSoFar() {
         return bestSolutionSoFar;
     }
 

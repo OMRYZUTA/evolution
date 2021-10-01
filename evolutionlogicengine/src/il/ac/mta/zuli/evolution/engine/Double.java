@@ -16,15 +16,15 @@ import java.util.stream.Collectors;
 import static il.ac.mta.zuli.evolution.engine.EngineUtils.generateRandomNum;
 import static il.ac.mta.zuli.evolution.engine.EngineUtils.generateRandomNumZeroBase;
 
-public class TimeTableSolution implements Solution {
+public class Double implements Solution {
     private List<Quintet> solutionQuintets;
     private final int solutionSize; //number of quintets
     private double totalFitnessScore;
-    private final Map<Rule, Double> fitnessScorePerRule;
+    private final Map<Rule, java.lang.Double> fitnessScorePerRule;
     TimeTable timeTable;
 
     //#region ctors
-    public TimeTableSolution(@NotNull TimeTable timeTable) {
+    public Double(@NotNull TimeTable timeTable) {
         fitnessScorePerRule = new HashMap<>();
         this.timeTable = timeTable;
         solutionSize = generateRandomNum(1, calculateTotalRequiredHours());
@@ -32,7 +32,7 @@ public class TimeTableSolution implements Solution {
         randomlyGenerateSolutionQuintets();
     }
 
-    public TimeTableSolution(@NotNull List<Quintet> quintets, @NotNull TimeTable timeTable) {
+    public Double(@NotNull List<Quintet> quintets, @NotNull TimeTable timeTable) {
 
         this.timeTable = timeTable;
         fitnessScorePerRule = new HashMap<>();
@@ -43,9 +43,9 @@ public class TimeTableSolution implements Solution {
     }
 
     //for testing purposes
-    public TimeTableSolution(List<Quintet> solutionQuintets,
-                             int solutionSize, //number of quintets
-                             TimeTable timeTable) {
+    public Double(List<Quintet> solutionQuintets,
+                  int solutionSize, //number of quintets
+                  TimeTable timeTable) {
         this.solutionQuintets = solutionQuintets;
         this.fitnessScorePerRule = new HashMap<>();
         this.timeTable = timeTable;
@@ -68,7 +68,7 @@ public class TimeTableSolution implements Solution {
         return totalFitnessScore;
     }
 
-    public Map<Rule, Double> getFitnessScorePerRule() {
+    public Map<Rule, java.lang.Double> getFitnessScorePerRule() {
         return Collections.unmodifiableMap(fitnessScorePerRule);
     }
 
@@ -163,7 +163,7 @@ public class TimeTableSolution implements Solution {
         double softRuleSum = 0, hardRuleSum = 0;
         int numOfSoftRules = 0, numOfHardRules = 0;
 
-        for (Map.Entry<Rule, Double> entry : fitnessScorePerRule.entrySet()) {
+        for (Map.Entry<Rule, java.lang.Double> entry : fitnessScorePerRule.entrySet()) {
             if (entry.getKey().isHardRule()) {
                 numOfHardRules++;
                 hardRuleSum += entry.getValue();
@@ -202,7 +202,7 @@ public class TimeTableSolution implements Solution {
 
     @Override
     public int compareTo(@NotNull Solution other) {
-        return ((Double) totalFitnessScore).compareTo(other.getFitnessScore());
+        return ((java.lang.Double) totalFitnessScore).compareTo(other.getFitnessScore());
     }
 
 

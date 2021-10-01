@@ -13,10 +13,6 @@ import il.ac.mta.zuli.evolution.engine.predicates.EndPredicateType;
 import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
 import il.ac.mta.zuli.evolution.engine.timetable.*;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -24,44 +20,24 @@ import java.util.*;
 public class TimeTableEngine implements Engine {
     private final Descriptor descriptor;
     private EvolutionState currEvolutionState;
-    private Task<?> currentRunningTask; //OR maybe: private Thread thread;
+    private RunAlgorithmTask currentRunningTask; //in Ex2 was Task<?>
     //EX3 additions to class:
     private final List<EndPredicate> endPredicates;
     private int generationsStride;
-    private TimeTableSolution bestSolution;
+    private Double bestSolution;
+    private StrideData strideData; //so the UI can poll the GenerationNum and BestScore in that Generation
 
-    //TODO get rid of properties and controller
-    private SimpleIntegerProperty generationNumProperty;
-    private SimpleDoubleProperty fitnessProperty;
-    private SimpleLongProperty timeProperty;
-
-    //new CTOR for Ex 3 - where was the descriptor set in the previous exercises?
+    //new CTOR for Ex 3 - TODO where was the descriptor set in the previous exercises?
     public TimeTableEngine(TimeTable timetable,
                            Map<String, Object> engineSettingsMap,
                            Map<String, Object> endPredicatesMap,
                            Object stride) {
 
-        EngineSettings<TimeTableSolution> engineSettings = new EngineSettings<>(engineSettingsMap, timetable);
+        EngineSettings<Double> engineSettings = new EngineSettings<>(engineSettingsMap, timetable);
         this.descriptor = new Descriptor(timetable, engineSettings);
         setGenerationsStride(stride);
         this.endPredicates = generatePredicates(endPredicatesMap);
 
-    }
-
-    public void setGenerationsStride(Object generationsStride) {
-        int stride;
-
-        try {
-            stride = Integer.parseInt((String) generationsStride);
-        } catch (Throwable e) {
-            throw new ValidationException("Stride must be a positive number");
-        }
-
-        if (stride > 0) {
-            this.generationsStride = stride; //we'll check stride < generationNum only if that predicate is applied
-        } else {
-            throw new ValidationException("Stride must be a positive number");
-        }
     }
 
     private List<EndPredicate> generatePredicates(Map<String, Object> endPredicatesMap) {
@@ -110,7 +86,7 @@ public class TimeTableEngine implements Engine {
             String constantName) {
 
         try {
-            double value = Double.parseDouble((String) endPredicatesMap.get(constantName));
+            double value = java.lang.Double.parseDouble((String) endPredicatesMap.get(constantName));
             endPredicates.add(
                     new EndPredicate(type, value, generationsStride)
             );
@@ -143,49 +119,79 @@ public class TimeTableEngine implements Engine {
             throw new RuntimeException("Failed running task because another task is currently running");
         }
 
-        currentRunningTask = new RunAlgorithmTask(
+        System.out.println("******* starting runEvolutionAlgorithm()********");
+        RunAlgorithmTask currentRunningTask = new RunAlgorithmTask(
                 this.descriptor,
                 endPredicates,
                 generationsStride,
                 currentState,
-                (EvolutionState state) -> {
-                    this.currEvolutionState = state;
-                },
-                (TimeTableSolution solution) -> {
-                    bestSolution = solution;
-                });
-        currentRunningTask.setOnCancelled(event -> {
-            //onSuccess.accept(false);
-            currentRunningTask = null; // clearing task
-        });
+                (EvolutionState state) -> this.currEvolutionState = state,
+                (Double solution) -> bestSolution = solution,
+                (StrideData data) -> strideData = data);
 
-        currentRunningTask.setOnSucceeded(event -> {
-            this.currEvolutionState = null; // reset state
-//            onSuccess.accept(true); // sending the best solutionDTO to the controller
-            currentRunningTask = null; // clearing task
-        });
+        if (currentRunningTask.isDone()) {
+            Throwable e = currentRunningTask.getException();
 
-        currentRunningTask.setOnFailed(value -> {
-//            onFailure.accept(currentRunningTask.getException());
+            if (e != null) {
+                System.out.println(e.getMessage());
+                throw new RuntimeException("Algorithm failed running. " + e.getMessage());
+            } else if (!currentRunningTask.isCancelled()) {
+                //if succeeded but not cancelled? TODO figure out when
+                System.out.println(strideData);
+                this.currEvolutionState = null; // reset state
+            }
+
             currentRunningTask = null;
-        });
+        }
+        //TODO replace
+//        currentRunningTask.setOnCancelled(event -> {
+//            //onSuccess.accept(false);
+//            currentRunningTask = null; // clearing task
+//        });//
+//        currentRunningTask.setOnSucceeded(event -> {
+//            this.currEvolutionState = null; // reset state
+////            onSuccess.accept(true); // sending the best solutionDTO to the controller
+//            currentRunningTask = null; // clearing task
+//        });//
+//        currentRunningTask.setOnFailed(value -> {
+//            System.out.println("********setOnFailed");
+//            System.out.println(currentRunningTask.getException());
+//            currentRunningTask = null;
+//        });
 
-        new Thread(currentRunningTask).start();
+        System.out.println("******* runEvolutionAlgorithm() before new Thread********");
+        new Thread(currentRunningTask, "EvolutionAlgorithmThread").start();
     }
 
     @Override
-    public void pauseEvolutionAlgorithm() {
+    public synchronized void pauseEvolutionAlgorithm() {
         currentRunningTask.cancel();
     }
 
     @Override
     public void stopEvolutionAlgorithm() {
         currentRunningTask.cancel();
-        this.currEvolutionState = null; //in case of STOP we don't want to save the previous state}
+        this.currEvolutionState = null; //in case of STOP we don't want to save the previous state
     }
 //#endregion
 
     //#region setters:
+    public void setGenerationsStride(Object generationsStride) {
+        int stride;
+
+        try {
+            stride = Integer.parseInt((String) generationsStride);
+        } catch (Throwable e) {
+            throw new ValidationException("Stride must be a positive number");
+        }
+
+        if (stride > 0) {
+            this.generationsStride = stride; //we'll check stride < generationNum only if that predicate is applied
+        } else {
+            throw new ValidationException("Stride must be a positive number");
+        }
+    }
+
     @Override
     public void setValidatedEngineSettings(EngineSettings validatedSettings) {
         this.descriptor.setEngineSettings(validatedSettings);
@@ -195,7 +201,7 @@ public class TimeTableEngine implements Engine {
         this.currEvolutionState = currEvolutionState;
     }
 
-    public void setCurrentRunningTask(Task<?> currentRunningTask) {
+    public void setCurrentRunningTask(RunAlgorithmTask currentRunningTask) {
         this.currentRunningTask = currentRunningTask;
     }
     //#endregion
@@ -231,7 +237,7 @@ public class TimeTableEngine implements Engine {
         return generationsStride;
     }
 
-    public TimeTableSolution getBestSolution() {
+    public Double getBestSolution() {
         return bestSolution;
     }
 
@@ -277,7 +283,7 @@ public class TimeTableEngine implements Engine {
 
     @NotNull
     private CrossoverDTO createCrossoverDTO() {
-        CrossoverInterface<TimeTableSolution> crossover = descriptor.getEngineSettings().getCrossover();
+        CrossoverInterface<Double> crossover = descriptor.getEngineSettings().getCrossover();
 
         return new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getNumOfCuttingPoints());
     }
@@ -291,7 +297,7 @@ public class TimeTableEngine implements Engine {
 
     @NotNull
     private SelectionDTO createSelectionDTO() {
-        Selection<TimeTableSolution> selection = descriptor.getEngineSettings().getSelection();
+        Selection<Double> selection = descriptor.getEngineSettings().getSelection();
 
         return new SelectionDTO(selection);
     }
@@ -352,11 +358,11 @@ public class TimeTableEngine implements Engine {
         return quintetDTOList;
     }
 
-    private TimeTableSolutionDTO createTimeTableSolutionDTO(@NotNull TimeTableSolution solution) {
+    private TimeTableSolutionDTO createTimeTableSolutionDTO(@NotNull Double solution) {
         List<QuintetDTO> quintets = createQuintetDTOList(solution.getSolutionQuintets());
-        Map<RuleDTO, Double> fitnessScorePerRuleDTO = new HashMap<>();
+        Map<RuleDTO, java.lang.Double> fitnessScorePerRuleDTO = new HashMap<>();
 
-        for (Map.Entry<Rule, Double> entry : solution.getFitnessScorePerRule().entrySet()) {
+        for (Map.Entry<Rule, java.lang.Double> entry : solution.getFitnessScorePerRule().entrySet()) {
             Rule rule = entry.getKey();
             fitnessScorePerRuleDTO.put(
                     new RuleDTO(rule.getClass().getSimpleName(), rule.getRuleType().toString(), rule.getParams()),

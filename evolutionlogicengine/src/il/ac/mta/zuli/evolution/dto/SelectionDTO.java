@@ -1,6 +1,6 @@
 package il.ac.mta.zuli.evolution.dto;
 
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
+import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 
 public class SelectionDTO {
@@ -8,7 +8,7 @@ public class SelectionDTO {
     private final String configuration;
     private final int elitism;
 
-    public SelectionDTO(Selection<TimeTableSolution> selection) {
+    public SelectionDTO(Selection<Double> selection) {
         this.type = selection.getClass().getSimpleName();
         this.configuration = selection.getConfiguration();
         this.elitism = selection.getElitism();

@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.mutation;
 
+import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.Quintet;
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
@@ -35,11 +35,11 @@ public class Flipping<S extends Solution> implements Mutation<S> {
             return solution;
         }
 
-        if (!(solution instanceof TimeTableSolution)) {
+        if (!(solution instanceof Double)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
 
-        TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+        Double timeTableSolution = (Double) solution;
 
         if (timeTableSolution.getSolutionSize() == 0) {
             return solution;
@@ -63,7 +63,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
             quintetSet.add(tempQuintet);
         }
 
-        return (S) new TimeTableSolution(new ArrayList<>(quintetSet), timeTable);
+        return (S) new Double(new ArrayList<>(quintetSet), timeTable);
     }
 
     private Quintet mutateComponent(Quintet quintet) {

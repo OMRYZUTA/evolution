@@ -49,8 +49,8 @@ const Index = () => {
         };
         const interval = setInterval(() => {
             fetchAllData();
-        },10000) //todo return to 1 sec
-        // fetchAllData()
+        }, 10000) //todo return to 1 sec
+        fetchAllData()//and initially
         return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
     }, []);
 

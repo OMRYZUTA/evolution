@@ -59,8 +59,6 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
 
     const handlePopulationSizeChange = useCallback((e, propName) => {
         const engineSettings = {...data.engineSettings, [propName]: e.target.value,};
-        console.log("in handlePopulationSizeChange: ");
-        console.log(engineSettings);
         setData({...data, engineSettings});
     }, [data]);
 
@@ -94,7 +92,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
             id={tempID}
             label={tempLabel}
             defaultValue={data.engineSettings.selection[tempID]}
-            onChange={handleSelectionChange}/>)
+            onChange={(e) => handleSelectionChange(e, tempID)}/>)
     };
 
     const handleSelectionChange = useCallback((e, propName) => {

@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution;
 
+import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
 
@@ -98,10 +98,10 @@ public class DataManager {
 
         if (isSomeoneSolvingProblem(ttID)) {
             List<User> usersSolvingProblem = getUsersSolvingProblem(ttID);
-            TimeTableSolution bestSolution = usersSolvingProblem.get(0).getBestSolution(ttID);
+            Double bestSolution = usersSolvingProblem.get(0).getBestSolution(ttID);
 
             for (User user : usersSolvingProblem) {
-                TimeTableSolution currUserSolution = user.getBestSolution(ttID);
+                Double currUserSolution = user.getBestSolution(ttID);
 
                 if (currUserSolution.getFitnessScore() > bestSolution.getFitnessScore()) {
                     bestSolution = currUserSolution;
@@ -114,9 +114,9 @@ public class DataManager {
     }
 
     //return value might be NULL
-    public TimeTableSolution getBestSolutionOfProblem(int ttID) {
+    public Double getBestSolutionOfProblem(int ttID) {
         User userWithBestSolution = getUserWithBestSolutionOfProblem(ttID);
-        TimeTableSolution bestSolution = null;
+        Double bestSolution = null;
 
         if (userWithBestSolution != null) {
             bestSolution = userWithBestSolution.getBestSolution(ttID);

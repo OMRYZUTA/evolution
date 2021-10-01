@@ -39,17 +39,15 @@ const useStyles = makeStyles((theme) => ({
 
 const fakeAlgoConfig = {
     timetableID: 0,
-    stride: 10,
-    endPredicates: {numOfGenerations: 120, fitnessScore: 92.3, time: 2},
+    stride: "10",
+    endPredicates: {numOfGenerations: "120", fitnessScore: "97.1", time: "2"},
     engineSettings: {
-        populationSize: 60,
-        selection: {name: "rouletteWheel", elitism: 0},
-        crossover: {name: "daytimeOriented", "cuttingPoints": 5},
+        populationSize: "60",
+        selection: {name: "rouletteWheel", elitism: "5"},
+        crossover: {name: "daytimeOriented", "cuttingPoints": "5"},
         mutations: [
-            {name: "flipping", probability: 0.2, maxTuples: 4, component: "H"},
-            {name: "flipping", probability: 0.7, maxTuples: 5, component: "T"},
-        ],
-    },
+            {name: "flipping", probability: "0.2", maxTuples: "4", component: "H"}],
+    }
 }
 
 const SCREEN2URL = "/server_Web_exploded/screen2";
@@ -69,7 +67,8 @@ const Screen3 = () => {
             mutations: [],
         }
     }
-    const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
+    // const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
+    const [algorithmConfiguration, setAlgorithmConfiguration] = useState(fakeAlgoConfig);
     const classes = useStyles();
     const history = useHistory();
     // const actions = ["start ", "pause ", "resume ", "stop "]

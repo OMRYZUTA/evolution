@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution;
 
+import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -53,7 +53,7 @@ public class User {
         return 0;
     }
 
-    public TimeTableSolution getBestSolution(int ttID) {
+    public Double getBestSolution(int ttID) {
         if (isSolvingProblem(ttID)) {
             return userAlgorithmRuns.get(ttID).getBestSolution();
         }

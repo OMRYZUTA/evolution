@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
+import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.Quintet;
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
@@ -26,11 +26,11 @@ public class Sequentiality extends Rule {
 
     @Override
     public void fitnessEvaluation(Solution solution) {
-        if (!(solution instanceof TimeTableSolution)) {
+        if (!(solution instanceof Double)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
 
-        TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+        Double timeTableSolution = (Double) solution;
         double score = 0;
 
         if (timeTableSolution.getSolutionSize() > 0) {
@@ -45,12 +45,12 @@ public class Sequentiality extends Rule {
         return String.format("totalHours=%d", totalHours);
     }
 
-    private double calculateScoreSequentiality(TimeTableSolution timeTableSolution) {
+    private double calculateScoreSequentiality(Double timeTableSolution) {
 
         Map<SchoolClass, List<Quintet>> classSubSolutions = timeTableSolution.getSolutionQuintets().stream()
                 .collect(Collectors.groupingBy(Quintet::getSchoolClass));
 
-        List<Double> classScores = new ArrayList();
+        List<java.lang.Double> classScores = new ArrayList();
 
         for (SchoolClass schoolClass : schoolClasses) {
             calculateClassScore(classSubSolutions, classScores, schoolClass);
@@ -70,7 +70,7 @@ public class Sequentiality extends Rule {
         return score;
     }
 
-    private void calculateClassScore(Map<SchoolClass, List<Quintet>> classSubSolutions, List<Double> classScores, SchoolClass schoolClass) {
+    private void calculateClassScore(Map<SchoolClass, List<Quintet>> classSubSolutions, List<java.lang.Double> classScores, SchoolClass schoolClass) {
         List<Quintet> classSolution = classSubSolutions.get(schoolClass);
 
         if (classSolution != null) {

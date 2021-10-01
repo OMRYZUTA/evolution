@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
+import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.Quintet;
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.timetable.Requirement;
@@ -34,11 +34,11 @@ public class Satisfactory extends Rule {
 
     @Override
     public void fitnessEvaluation(@NotNull Solution solution) {
-        if (!(solution instanceof TimeTableSolution)) {
+        if (!(solution instanceof Double)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
 
-        TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+        Double timeTableSolution = (Double) solution;
 
         double score = 0;
         double[] classScores = new double[schoolClasses.size()]; //classID will be used as index (a sort of bucket)

@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
+import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.Quintet;
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
 import org.jetbrains.annotations.NotNull;
@@ -25,11 +25,11 @@ public class DayOffClass extends Rule {
 
     @Override
     public void fitnessEvaluation(Solution solution) {
-        if (!(solution instanceof TimeTableSolution)) {
+        if (!(solution instanceof Double)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
 
-        TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+        Double timeTableSolution = (Double) solution;
         double score = 0;
 
         if (timeTableSolution.getSolutionSize() > 0) {
@@ -40,7 +40,7 @@ public class DayOffClass extends Rule {
 
     }
 
-    private double calculateScoreDayOff(TimeTableSolution timeTableSolution) {
+    private double calculateScoreDayOff(Double timeTableSolution) {
         Map<SchoolClass, List<Quintet>> classSubSolutions = timeTableSolution.getSolutionQuintets().stream()
                 .collect(Collectors.groupingBy(Quintet::getSchoolClass));
         int classesWithDayOff = 0;

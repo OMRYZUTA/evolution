@@ -2,18 +2,26 @@ package il.ac.mta.zuli.evolution.engine;
 
 public class StrideData {
     private final int generationNum;
-    private final TimeTableSolution solution;
+    private final double bestScoreInGeneration;
 
-    public StrideData(int generationNum, TimeTableSolution solution) {
+    public StrideData(int generationNum, double solution) {
         this.generationNum = generationNum;
-        this.solution = solution;
+        this.bestScoreInGeneration = solution;
     }
 
     public int getGenerationNum() {
         return generationNum;
     }
 
-    public TimeTableSolution getSolution() {
-        return solution;
+    public double getBestScoreInGeneration() {
+        return bestScoreInGeneration;
+    }
+
+    @Override
+    public String toString() {
+        return "StrideData{" +
+                "generationNum=" + generationNum +
+                ", bestScoreInGeneration=" + bestScoreInGeneration +
+                '}';
     }
 }

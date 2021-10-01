@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.crossover;
 
+import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.Quintet;
-import il.ac.mta.zuli.evolution.engine.TimeTableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
@@ -41,7 +41,7 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
         //organize every solution in selectedParents as a map of dh-matrix-per-aspect (map<aspect, list <list<q>>>)
         List<Map<T, List<List<Quintet>>>> parentsAsAspectMatrix = organizeSolutionsPerAspect(selectedParents);
 
-        List<TimeTableSolution> newGeneration = new ArrayList<>();
+        List<Double> newGeneration = new ArrayList<>();
         Map<T, List<List<Quintet>>> parent1;
         Map<T, List<List<Quintet>>> parent2;
         List<List<Quintet>> child1ToUnite;
@@ -136,10 +136,10 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
 
         for (S solution : selectedParents) {
 
-            if (!(solution instanceof TimeTableSolution)) {
+            if (!(solution instanceof Double)) {
                 throw new RuntimeException("solution must be TimeTableSolution");
             }
-            TimeTableSolution timeTableSolution = (TimeTableSolution) solution;
+            Double timeTableSolution = (Double) solution;
 
             //grouping solution-quintets by aspect (either teacher or class)
             Map<T, List<Quintet>> solutionQuintetsGroupedByAspect;
