@@ -115,11 +115,21 @@ public class Flipping<S extends Solution> implements Mutation<S> {
     }
 
     @Override
-    public String toString() {
-        return "Mutation: " + this.getClass().getSimpleName() +
-                "probability=" + probability +
-                ", maxTuples=" + maxTuples +
-                ", component=" + component;
+    public String getMutationType() {
+        return getClass().getSimpleName().toLowerCase();
+    }
+
+    @Override
+    public double getProbability() {
+        return probability;
+    }
+
+    public int getMaxTuples() {
+        return maxTuples;
+    }
+
+    public ComponentName getComponent() {
+        return component;
     }
 
     @Override
@@ -128,7 +138,10 @@ public class Flipping<S extends Solution> implements Mutation<S> {
     }
 
     @Override
-    public double getProbability() {
-        return probability;
+    public String toString() {
+        return "Mutation: " + this.getClass().getSimpleName() +
+                "probability=" + probability +
+                ", maxTuples=" + maxTuples +
+                ", component=" + component;
     }
 }

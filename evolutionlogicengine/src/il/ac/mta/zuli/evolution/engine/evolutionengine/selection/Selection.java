@@ -13,4 +13,6 @@ public interface Selection<T extends Solution> {
     int getElitism();
 
     void setElitism(int elitism);
+
+    String getSelectionType();
 }

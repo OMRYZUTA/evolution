@@ -67,6 +67,10 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         return numOfCuttingPoints;
     }
 
+    public String getCrossoverType() {
+        return getClass().getSimpleName();
+    }
+
     protected void randomlyGenerateCuttingPoints() {
         Set<Integer> tempSetOfPoints = new HashSet<>();
 

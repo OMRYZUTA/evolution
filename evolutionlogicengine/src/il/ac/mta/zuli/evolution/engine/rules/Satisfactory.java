@@ -14,9 +14,10 @@ public class Satisfactory extends Rule {
     //satisfactory rule - each class gets the exact number of hours-per-subject (the class' requirements are met)
     private Map<Integer, SchoolClass> schoolClasses;
     private final String ruleName;
+
     public Satisfactory(@NotNull String ruleType, @NotNull List<SchoolClass> schoolClasses) {
         super(ruleType);
-        this.ruleName="Satisfactory";
+        this.ruleName = "Satisfactory";
         setSchoolClasses(schoolClasses);
     }
 
@@ -25,8 +26,8 @@ public class Satisfactory extends Rule {
             throw new EmptyCollectionException("Empty school-classes-list in satisfactory-rule");
         }
         Map<Integer, SchoolClass> integerSchoolClassMap = new HashMap<>();
-        for (SchoolClass schoolClass: schoolClasses) {
-            integerSchoolClassMap.put(schoolClass.getId(),schoolClass);
+        for (SchoolClass schoolClass : schoolClasses) {
+            integerSchoolClassMap.put(schoolClass.getId(), schoolClass);
         }
 
         this.schoolClasses = integerSchoolClassMap;

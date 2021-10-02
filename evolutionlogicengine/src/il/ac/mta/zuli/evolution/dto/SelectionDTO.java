@@ -8,11 +8,11 @@ import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Truncation;
 
 public class SelectionDTO {
     private final String type;
-    private final int elitism;
-    private int topPercent = Constants.UNDEFINED;
+    private final Integer elitism;
+    private Integer topPercent = null;
 
     public SelectionDTO(Selection<TimetableSolution> selection) {
-        this.type = selection.getClass().getSimpleName(); //TODO needs to be exactly as in Constants
+        this.type = selection.getSelectionType(); //TODO needs to be exactly as in Constants
         System.out.println("in selectionDTO ctor, type: " + type);
         this.elitism = selection.getElitism();
 
@@ -29,8 +29,12 @@ public class SelectionDTO {
     }
 
 
-    public int getElitism() {
+    public Integer getElitism() {
         return elitism;
+    }
+
+    public Integer getTopPercent() {
+        return topPercent;
     }
 
     @Override

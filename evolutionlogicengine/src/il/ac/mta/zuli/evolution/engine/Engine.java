@@ -1,6 +1,5 @@
 package il.ac.mta.zuli.evolution.engine;
 
-import il.ac.mta.zuli.evolution.dto.DescriptorDTO;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 
@@ -11,7 +10,6 @@ public interface Engine {
 
     TimeTable getTimeTable();
 
-    DescriptorDTO getDescriptorDTO();
 
     void startEvolutionAlgorithm();
 

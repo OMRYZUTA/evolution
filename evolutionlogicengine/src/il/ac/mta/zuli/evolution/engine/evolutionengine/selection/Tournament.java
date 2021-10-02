@@ -20,15 +20,6 @@ public class Tournament<S extends Solution> implements Selection<S> {
         random = new Random();
     }
 
-    public void setPTE(double pte) {
-        //between 0-1
-        if (pte >= 0 && pte <= 1) {
-            this.PTE = pte;
-        } else {
-            throw new ValidationException("Invalid PTE value :" + pte + ". Must be between 0-1");
-        }
-    }
-
     @Override
     public List<S> select(List<S> solutions) {
         S parent1, parent2, higherScoreParent, lowerScoreParent;
@@ -61,6 +52,15 @@ public class Tournament<S extends Solution> implements Selection<S> {
         return solutions.get(randomIndex);
     }
 
+    public void setPTE(double pte) {
+        //between 0-1
+        if (pte >= 0 && pte <= 1) {
+            this.PTE = pte;
+        } else {
+            throw new ValidationException("Invalid PTE value :" + pte + ". Must be between 0-1");
+        }
+    }
+
     public void setElitism(int elitism) {
         if (elitism >= 0 && elitism <= populationSize) {
             this.elitism = elitism;
@@ -70,12 +70,21 @@ public class Tournament<S extends Solution> implements Selection<S> {
     }
 
     @Override
-    public String getConfiguration() {
-        return String.format("PTE = %f", PTE);
+    public String getSelectionType() {
+        return getClass().getSimpleName();
     }
 
     @Override
     public int getElitism() {
         return elitism;
+    }
+
+    public double getPTE() {
+        return PTE;
+    }
+
+    @Override
+    public String getConfiguration() {
+        return String.format("PTE = %f", PTE);
     }
 }

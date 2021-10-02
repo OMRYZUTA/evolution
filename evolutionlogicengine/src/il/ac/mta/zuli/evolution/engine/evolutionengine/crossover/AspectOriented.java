@@ -218,4 +218,8 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
             }
         }
     }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
 }

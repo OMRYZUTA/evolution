@@ -1,7 +1,6 @@
 package il.ac.mta.zuli.evolution;
 
 public class Constants {
-    public static final int UNDEFINED = -1; //for extra fields not necessarily relevant
     public static final String USERNAME = "username";
     public static final String DATA = "data";
     public static final String ERROR = "error";
@@ -36,6 +35,8 @@ public class Constants {
     public static final String ORIENTATION = "orientation";
     public static final String DAY_TIME_ORIENTED = "daytimeOriented";
     public static final String ASPECT_ORIENTED = "aspectOriented";
+    public static final String TEACHER_ORIENTATION = "teacher";
+    public static final String CLASS_ORIENTATION = "class";
     //mutation related:
     public static final String MUTATIONS = "mutations";
     public static final String SIZER = "sizer";

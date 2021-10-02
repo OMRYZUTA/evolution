@@ -27,4 +27,16 @@ public class EndPredicatesDTO {
             }
         }
     }
+
+    public Double getNumOfGenerations() {
+        return numOfGenerations;
+    }
+
+    public Double getFitnessScore() {
+        return fitnessScore;
+    }
+
+    public Double getTime() {
+        return time;
+    }
 }

@@ -24,7 +24,6 @@ public class RunAlgorithmTask implements Runnable {
     private final EvolutionEngine<TimetableSolution> evolutionEngine;
     private boolean stillRunning;
     private boolean cancelled;
-    private Throwable exception;
 
     public RunAlgorithmTask(
             Descriptor descriptor,
@@ -52,6 +51,8 @@ public class RunAlgorithmTask implements Runnable {
 
     @Override
     public void run() {
+        //we'll either report this state on successful exit from the loop or with an exception in the catch-block
+        EvolutionState outEvolutionState = null;
         try {
             System.out.println("**********in Runnable******");
             stillRunning = true;
@@ -101,7 +102,7 @@ public class RunAlgorithmTask implements Runnable {
                 }
 
                 prevEvolutionState = currEvolutionState;
-                EvolutionState outEvolutionState = currEvolutionState;
+                outEvolutionState = currEvolutionState;
                 reportState.accept(outEvolutionState);
             } //end of for loop
 
@@ -111,6 +112,9 @@ public class RunAlgorithmTask implements Runnable {
         } catch (Throwable e) {
             System.out.println(e.getMessage());
             //TODO add exception field to EvolutionState, also add is RunnableDone flag
+            // maybe keep a Thread reference as a field in TimetableEngine (instead of runnable), then we can use Thread.State.Terminated
+            outEvolutionState.setException(e);// TODO needs to be async?
+            reportState.accept(outEvolutionState);
         } finally {
             stillRunning = false;
         }
@@ -126,10 +130,6 @@ public class RunAlgorithmTask implements Runnable {
 
     public synchronized boolean isStillRunning() {
         return stillRunning;
-    }
-
-    public synchronized Throwable getException() {
-        return exception;
     }
 
     private boolean checkAllPredicates(EvolutionState evolutionState) {

@@ -3,8 +3,6 @@ package il.ac.mta.zuli.evolution.engine;
 import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
-import il.ac.mta.zuli.evolution.engine.evolutionengine.crossover.CrossoverInterface;
-import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
@@ -27,7 +25,7 @@ public class TimeTableEngine implements Engine {
     private TimetableSolution bestSolution;
     private StrideData strideData; //so the UI can poll the GenerationNum and BestScore in that Generation
 
-    //new CTOR for Ex 3 - TODO where was the descriptor set in the previous exercises?
+    //new CTOR for Ex 3 - TODO  - where was the descriptor set in the previous exercises?
     public TimeTableEngine(TimeTable timetable,
                            Map<String, Object> engineSettingsMap,
                            Map<String, Object> endPredicatesMap,
@@ -37,7 +35,6 @@ public class TimeTableEngine implements Engine {
         this.descriptor = new Descriptor(timetable, engineSettings);
         setGenerationsStride(stride);
         this.endPredicates = generatePredicates(endPredicatesMap);
-
     }
 
     private List<EndPredicate> generatePredicates(Map<String, Object> endPredicatesMap) {
@@ -130,11 +127,11 @@ public class TimeTableEngine implements Engine {
                 },
                 (TimetableSolution solution) -> bestSolution = solution,
                 (StrideData data) -> strideData = data);
+        //TODO figure out what consumers to send or what consumers to change (with new fields in EvolutionState)
 
-        //TODO replace
 //        currentRunningTask.setOnCancelled(event -> {
 //            //onSuccess.accept(false);
-//            currentRunningTask = null; // clearing task
+//            currentRunningTask = null; // clearing task - no need to clear task in Ex3
 //        });//
 //        currentRunningTask.setOnSucceeded(event -> {
 //            this.currEvolutionState = null; // reset state
@@ -147,10 +144,7 @@ public class TimeTableEngine implements Engine {
 //            currentRunningTask = null;
 //        });
 
-        System.out.println("******* runEvolutionAlgorithm() before new Thread********");
         new Thread(currentRunningTask, "EvolutionAlgorithmThread").start();
-
-
     }
 
     @Override
@@ -161,6 +155,7 @@ public class TimeTableEngine implements Engine {
     @Override
     public void stopEvolutionAlgorithm() {
         currentRunningTask.cancel();
+        // no need for this in Ex 3 because each timetableEngine only runs for a single timeTable
 //        this.currEvolutionState = null; //in case of STOP we don't want to save the previous state
     }
 //#endregion
@@ -185,14 +180,6 @@ public class TimeTableEngine implements Engine {
     @Override
     public void setValidatedEngineSettings(EngineSettings validatedSettings) {
         this.descriptor.setEngineSettings(validatedSettings);
-    }
-
-    public void setCurrEvolutionState(EvolutionState currEvolutionState) {
-        this.currEvolutionState = currEvolutionState;
-    }
-
-    public void setCurrentRunningTask(RunAlgorithmTask currentRunningTask) {
-        this.currentRunningTask = currentRunningTask;
     }
     //#endregion
 
@@ -241,50 +228,6 @@ public class TimeTableEngine implements Engine {
     //#endregion
 
     //#region DTO-related methods
-    @Override
-    public DescriptorDTO getDescriptorDTO() {
-        //TODO change to return Descriptor or maybe delete
-        return createDescriptorDTO();
-    }
-
-    private EngineSettingsDTO createEngineSettingsDTO() {
-        int initialSize = descriptor.getEngineSettings().getPopulationSize();
-        SelectionDTO selectionDTO = createSelectionDTO();
-        CrossoverDTO crossoverDTO = createCrossoverDTO();
-        List<MutationDTO> mutationDTOS = createMutationDTOList();
-
-        return new EngineSettingsDTO(initialSize, selectionDTO, crossoverDTO, mutationDTOS);
-    }
-
-    private List<MutationDTO> createMutationDTOList() {
-        List<MutationDTO> mutationDTOS = new ArrayList<>();
-
-        for (Object mutation : descriptor.getEngineSettings().getMutations()) {
-            //it's safe to cast to Mutation since we're receiving data from within the engineSettings
-            Mutation currMutation = (Mutation) mutation;
-            String name = currMutation.getClass().getSimpleName();
-            double probability = currMutation.getProbability();
-            String configuration = currMutation.getConfiguration();
-            mutationDTOS.add(new MutationDTO(name, probability, configuration));
-        }
-
-        return mutationDTOS;
-    }
-
-    @NotNull
-    private CrossoverDTO createCrossoverDTO() {
-        CrossoverInterface<TimetableSolution> crossover = descriptor.getEngineSettings().getCrossover();
-
-        return new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getNumOfCuttingPoints());
-    }
-
-    private DescriptorDTO createDescriptorDTO() {
-        TimeTableDTO timeTableDTO = createTimeTableDTO();
-        EngineSettingsDTO engineSettingsDTO = createEngineSettingsDTO();
-
-        return new DescriptorDTO(timeTableDTO, engineSettingsDTO);
-    }
-
     @NotNull
     private SelectionDTO createSelectionDTO() {
         Selection<TimetableSolution> selection = descriptor.getEngineSettings().getSelection();

@@ -17,17 +17,17 @@ import static il.ac.mta.zuli.evolution.engine.EngineUtils.generateRandomNumZeroB
 
 public class Sizer<S extends Solution> implements Mutation<S> {
     double probability;
-    final int totalTuple; // number of tuples to add or remove
+    final int totalTuples; // number of tuples to add or remove
     final TimeTable timeTable;
 
     public Sizer(double probability, int totalTuple, TimeTable timeTable) {
         setProbability(probability);
-        this.totalTuple = totalTuple;
+        this.totalTuples = totalTuple;
         this.timeTable = timeTable;
     }
 
-    public int getTotalTuple() {
-        return totalTuple;
+    public int getTotalTuples() {
+        return totalTuples;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Sizer<S extends Solution> implements Mutation<S> {
         TimetableSolution timeTableSolution = (TimetableSolution) solution;
         S mutatedSolution;
 
-        if (totalTuple < 0) {
+        if (totalTuples < 0) {
             mutatedSolution = removeQuintetsFromSolution(timeTableSolution);
         } else {
             mutatedSolution = addQuintetsToSolution(timeTableSolution);
@@ -56,7 +56,7 @@ public class Sizer<S extends Solution> implements Mutation<S> {
 
     @Override
     public String getConfiguration() {
-        return String.format("Total Tuple = %d ", totalTuple);
+        return String.format("Total Tuple = %d ", totalTuples);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class Sizer<S extends Solution> implements Mutation<S> {
     }
 
     private S addQuintetsToSolution(TimetableSolution solution) {
-        int numOfQuintetsToAdd = generateRandomNum(1, totalTuple);
+        int numOfQuintetsToAdd = generateRandomNum(1, totalTuples);
         S result = null;
 
         if (solution.getSolutionSize() + numOfQuintetsToAdd > timeTable.getHours() * timeTable.getDays()) {
@@ -84,7 +84,7 @@ public class Sizer<S extends Solution> implements Mutation<S> {
     }
 
     private S removeQuintetsFromSolution(TimetableSolution solution) {
-        int quintetsToRemove = generateRandomNum(1, -totalTuple); // -total tuple because in this case total tuple will be negative
+        int quintetsToRemove = generateRandomNum(1, -totalTuples); // -total tuple because in this case total tuple will be negative
         S result = null;
 
         if (solution.getSolutionSize() - quintetsToRemove < timeTable.getDays()) {
@@ -109,5 +109,10 @@ public class Sizer<S extends Solution> implements Mutation<S> {
         } else {
             throw new ValidationException("probability must be between 0 -1, invalid value: " + probability);
         }
+    }
+
+    @Override
+    public String getMutationType() {
+        return getClass().getSimpleName();
     }
 }

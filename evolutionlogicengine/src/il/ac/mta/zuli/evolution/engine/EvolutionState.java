@@ -11,6 +11,9 @@ public class EvolutionState {
     private final TimetableSolution bestSolutionSoFar;
     //the way we save the state (for pause/resume), this is the time elapsed since the beginning of the task-call
     private final long netRunTime;
+    //Ex 3 additions:
+    private boolean done; //for when Runnable is done running
+    private Throwable exception;
 
     public EvolutionState(int generationNum,
                           long time,
@@ -42,6 +45,19 @@ public class EvolutionState {
 
     public TimetableSolution getBestSolutionSoFar() {
         return bestSolutionSoFar;
+    }
+
+    public boolean isDone() {
+        //TODO async
+        return done;
+    }
+
+    public void setException(Throwable exception) {
+        this.exception = exception;
+    }
+
+    public Throwable getException() {
+        return exception;
     }
 
     @Override

@@ -60,6 +60,11 @@ public class RouletteWheel<S extends Solution> implements Selection<S> {
     }
 
     @Override
+    public String getSelectionType() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
     public String getConfiguration() {
         //this selection has no configuration but we still need to override the interface method
         return "-";

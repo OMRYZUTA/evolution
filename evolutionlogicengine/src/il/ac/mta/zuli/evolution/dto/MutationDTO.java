@@ -1,43 +1,56 @@
 package il.ac.mta.zuli.evolution.dto;
 
+import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.engine.TimetableSolution;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Flipping;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Sizer;
 
 public class MutationDTO {
-    private final String name;
+    private final String type;
     private final double probability;
-    private String configuration;
+    private Integer maxTuples = null;
+    private Integer totalTuples = null;
+    private String component = null;
 
-    public MutationDTO(String name, double probability, String configuration) {
-        this.name = name;
-        this.probability = probability;
-        this.configuration = configuration;
-    }
 
     public MutationDTO(Mutation<TimetableSolution> mutation) {
-        this.name = mutation.getClass().getSimpleName(); //TODO - needs to be exactly as in Constants
+        this.type = mutation.getMutationType(); //TODO - needs to be exactly as in Constants
         this.probability = mutation.getProbability();
-// maxTuples;
-// totalTuples;
-// orientation;
+
+        if (type.equals(Constants.FLIPPING)) {
+            Flipping<TimetableSolution> flipping = (Flipping<TimetableSolution>) mutation;
+            this.maxTuples = flipping.getMaxTuples();
+            this.component = flipping.getComponent().name();
+        } else if (type.equals(Constants.SIZER)) {
+            Sizer<TimetableSolution> sizer = (Sizer<TimetableSolution>) mutation;
+            this.totalTuples = sizer.getTotalTuples();
+        }
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
     public double getProbability() {
         return probability;
     }
 
-    public String getConfiguration() {
-        return configuration;
+    public Integer getMaxTuples() {
+        return maxTuples;
+    }
+
+    public Integer getTotalTuples() {
+        return totalTuples;
+    }
+
+    public String getComponent() {
+        return component;
     }
 
     @Override
     public String toString() {
-        return "Mutation: " + name +
-                ", probability " + probability +
-                ", configuration: " + configuration;
+        return "Mutation: " + type +
+                ", probability " + probability;
     }
 }

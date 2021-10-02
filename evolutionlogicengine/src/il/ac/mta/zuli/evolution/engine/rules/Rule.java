@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 public abstract class Rule implements RuleInterface {
     private final RuleType ruleType; //hard or soft
 
-
     protected Rule(@NotNull String ruleType) {
         switch (ruleType.toLowerCase()) {
             case "soft":
@@ -18,6 +17,11 @@ public abstract class Rule implements RuleInterface {
             default:
                 throw new ValidationException("Invalid rule type: " + ruleType);
         }
+    }
+
+    @Override
+    public String getRuleName() {
+        return getClass().getSimpleName();
     }
 
     public RuleType getRuleType() {
