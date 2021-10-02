@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
-import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.Quintet;
+import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.SchoolClass;
@@ -26,11 +26,11 @@ public class Sequentiality extends Rule {
 
     @Override
     public void fitnessEvaluation(Solution solution) {
-        if (!(solution instanceof Double)) {
+        if (!(solution instanceof TimetableSolution)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
 
-        Double timeTableSolution = (Double) solution;
+        TimetableSolution timeTableSolution = (TimetableSolution) solution;
         double score = 0;
 
         if (timeTableSolution.getSolutionSize() > 0) {
@@ -45,7 +45,7 @@ public class Sequentiality extends Rule {
         return String.format("totalHours=%d", totalHours);
     }
 
-    private double calculateScoreSequentiality(Double timeTableSolution) {
+    private double calculateScoreSequentiality(TimetableSolution timeTableSolution) {
 
         Map<SchoolClass, List<Quintet>> classSubSolutions = timeTableSolution.getSolutionQuintets().stream()
                 .collect(Collectors.groupingBy(Quintet::getSchoolClass));

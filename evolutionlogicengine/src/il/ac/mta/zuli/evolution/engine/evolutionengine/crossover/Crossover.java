@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.crossover;
 
-import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.Quintet;
+import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
@@ -87,11 +87,11 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
 
     //#region quintet-list to matrix and back methods:
     protected List<List<Quintet>> convertSolutionToMatrixDH(S solution) {
-        if (!(solution instanceof Double)) {
+        if (!(solution instanceof TimetableSolution)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
 
-        Double timeTableSolution = (Double) solution;
+        TimetableSolution timeTableSolution = (TimetableSolution) solution;
 
         List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();
 
@@ -132,8 +132,8 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         return solutionMatrix;
     }
 
-    protected List<Double> convertMatrixToSolutions(List<List<Quintet>> child1, List<List<Quintet>> child2) {
-        List<Double> twoNewSolutions = new ArrayList<>(2);
+    protected List<TimetableSolution> convertMatrixToSolutions(List<List<Quintet>> child1, List<List<Quintet>> child2) {
+        List<TimetableSolution> twoNewSolutions = new ArrayList<>(2);
 
         twoNewSolutions.add(convertSingleMatrixToSolution(child1));
         twoNewSolutions.add(convertSingleMatrixToSolution(child2));
@@ -141,13 +141,13 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         return twoNewSolutions;
     }
 
-    protected Double convertSingleMatrixToSolution(List<List<Quintet>> quintetMatrix) {
+    protected TimetableSolution convertSingleMatrixToSolution(List<List<Quintet>> quintetMatrix) {
         List<Quintet> quintets = flattenSolutionMatrix(quintetMatrix);
         if (quintets.size() > 1000) {
             System.out.println("too many quintets " + quintets.size());
         }
 
-        return new Double(quintets, timeTable);
+        return new TimetableSolution(quintets, timeTable);
     }
 
     @NotNull

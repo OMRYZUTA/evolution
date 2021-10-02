@@ -1,26 +1,33 @@
 package il.ac.mta.zuli.evolution.dto;
 
-import il.ac.mta.zuli.evolution.engine.Double;
+import il.ac.mta.zuli.evolution.Constants;
+import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Selection;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Tournament;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.selection.Truncation;
 
 public class SelectionDTO {
     private final String type;
-    private final String configuration;
     private final int elitism;
+    private int topPercent = Constants.UNDEFINED;
 
-    public SelectionDTO(Selection<Double> selection) {
-        this.type = selection.getClass().getSimpleName();
-        this.configuration = selection.getConfiguration();
+    public SelectionDTO(Selection<TimetableSolution> selection) {
+        this.type = selection.getClass().getSimpleName(); //TODO needs to be exactly as in Constants
+        System.out.println("in selectionDTO ctor, type: " + type);
         this.elitism = selection.getElitism();
+
+        if (type.equals(Constants.TRUNCATION)) {
+            Truncation truncation = (Truncation) selection;
+            topPercent = truncation.getTopPercent();
+        } else if (type.equals(Constants.TOURNAMENT)) {
+            Tournament<TimetableSolution> tournament = (Tournament) selection;
+        }
     }
 
     public String getType() {
         return type;
     }
 
-    public String getConfiguration() {
-        return configuration;
-    }
 
     public int getElitism() {
         return elitism;
@@ -29,7 +36,6 @@ public class SelectionDTO {
     @Override
     public String toString() {
         return "Selection: " + type +
-                ", elitism: " + elitism +
-                ", configuration: " + configuration;
+                ", elitism: " + elitism;
     }
 }

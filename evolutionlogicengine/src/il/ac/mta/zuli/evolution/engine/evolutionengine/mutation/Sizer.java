@@ -1,8 +1,8 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.mutation;
 
 
-import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.Quintet;
+import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
@@ -38,11 +38,11 @@ public class Sizer<S extends Solution> implements Mutation<S> {
             return solution;
         }
 
-        if (!(solution instanceof Double)) {
+        if (!(solution instanceof TimetableSolution)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
 
-        Double timeTableSolution = (Double) solution;
+        TimetableSolution timeTableSolution = (TimetableSolution) solution;
         S mutatedSolution;
 
         if (totalTuple < 0) {
@@ -64,7 +64,7 @@ public class Sizer<S extends Solution> implements Mutation<S> {
         return probability;
     }
 
-    private S addQuintetsToSolution(Double solution) {
+    private S addQuintetsToSolution(TimetableSolution solution) {
         int numOfQuintetsToAdd = generateRandomNum(1, totalTuple);
         S result = null;
 
@@ -77,13 +77,13 @@ public class Sizer<S extends Solution> implements Mutation<S> {
                 quintetsWithAddition.add(solution.generateRandomQuintet());
             }
 
-            result = (S) new Double(new ArrayList<>(quintetsWithAddition), timeTable);
+            result = (S) new TimetableSolution(new ArrayList<>(quintetsWithAddition), timeTable);
         }
 
         return result;
     }
 
-    private S removeQuintetsFromSolution(Double solution) {
+    private S removeQuintetsFromSolution(TimetableSolution solution) {
         int quintetsToRemove = generateRandomNum(1, -totalTuple); // -total tuple because in this case total tuple will be negative
         S result = null;
 
@@ -97,7 +97,7 @@ public class Sizer<S extends Solution> implements Mutation<S> {
                 solutionQuintets.remove(randomQuintetToRemove);
             }
 
-            result = (S) new Double(solutionQuintets, timeTable);
+            result = (S) new TimetableSolution(solutionQuintets, timeTable);
         }
 
         return result;

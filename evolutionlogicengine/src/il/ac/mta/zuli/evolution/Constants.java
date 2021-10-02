@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution;
 
 public class Constants {
+    public static final int UNDEFINED = -1; //for extra fields not necessarily relevant
     public static final String USERNAME = "username";
     public static final String DATA = "data";
     public static final String ERROR = "error";

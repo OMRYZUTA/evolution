@@ -1,9 +1,9 @@
 package il.ac.mta.zuli.evolution.engine.tasks;
 
 import il.ac.mta.zuli.evolution.engine.Descriptor;
-import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.EvolutionState;
 import il.ac.mta.zuli.evolution.engine.StrideData;
+import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import org.jetbrains.annotations.NotNull;
@@ -17,12 +17,12 @@ public class RunAlgorithmTask implements Runnable {
     private final List<EndPredicate> endPredicates;
     private final int generationsStride;
     private final EvolutionState inEvolutionState;
-    private final Consumer<Double> reportBestSolution;
+    private final Consumer<TimetableSolution> reportBestSolution;
     private final Consumer<EvolutionState> reportState;
     private final Consumer<StrideData> reportStrideData;
-    private Double bestSolutionEver;
-    private final EvolutionEngine<Double> evolutionEngine;
-    private boolean done;
+    private TimetableSolution bestSolutionEver;
+    private final EvolutionEngine<TimetableSolution> evolutionEngine;
+    private boolean stillRunning;
     private boolean cancelled;
     private Throwable exception;
 
@@ -32,28 +32,29 @@ public class RunAlgorithmTask implements Runnable {
             int generationsStride,
             EvolutionState evolutionState,
             Consumer<EvolutionState> reportState,
-            Consumer<Double> reportBestSolution,
+            Consumer<TimetableSolution> reportBestSolution,
             Consumer<StrideData> reportStrideData) {
         this.descriptor = descriptor;
         this.endPredicates = endPredicates;
         this.generationsStride = generationsStride;
         // we either receive a generation to resume from, or create an initial one
         this.inEvolutionState = evolutionState;
-        this.evolutionEngine = new EvolutionEngine<Double>(
+        this.evolutionEngine = new EvolutionEngine<TimetableSolution>(
                 descriptor.getEngineSettings(), descriptor.getRules());
         this.reportState = reportState;
         this.reportStrideData = reportStrideData;
-        this.reportBestSolution = (Double bestSolution) -> {
+        this.reportBestSolution = (TimetableSolution bestSolution) -> {
             reportBestSolution.accept(bestSolution);
         };
         this.cancelled = false;
-        this.done = false;
+        this.stillRunning = false;
     }
 
     @Override
     public void run() {
         try {
             System.out.println("**********in Runnable******");
+            stillRunning = true;
             //initialGeneration is either null or not, depending on if we're resuming from pause or starting
             long startTime = System.currentTimeMillis();
             EvolutionState prevEvolutionState = inEvolutionState; //our way to resume after pause
@@ -71,7 +72,7 @@ public class RunAlgorithmTask implements Runnable {
 
             //while the user didn't click Pause or Stop, and we haven't reached any of the end-conditions yet
             while (!isCancelled() && checkAllPredicates(prevEvolutionState)) {
-                List<Double> currSolutions = evolutionEngine.execute(prevEvolutionState.getGenerationSolutions());
+                List<TimetableSolution> currSolutions = evolutionEngine.execute(prevEvolutionState.getGenerationSolutions());
                 // building the current EvolutionState
                 long timeFromStart = System.currentTimeMillis() - startTime;
                 long elapsedTime = inEvolutionState == null ? timeFromStart : inEvolutionState.getNetRunTime() + timeFromStart;
@@ -82,7 +83,7 @@ public class RunAlgorithmTask implements Runnable {
                         currSolutions,
                         bestSolutionEver);
 
-                Double currBestSolution = currEvolutionState.getGenerationBestSolution();
+                TimetableSolution currBestSolution = currEvolutionState.getGenerationBestSolution();
 
                 if (currBestSolution.getFitnessScore() > bestSolutionEver.getFitnessScore()) {
                     bestSolutionEver = currBestSolution;
@@ -108,9 +109,10 @@ public class RunAlgorithmTask implements Runnable {
             //TODO how de we handle the update for the last generation? (since it's not necessarily the number of generations in the endPredicates)
 //        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
         } catch (Throwable e) {
-            exception = e;
+            System.out.println(e.getMessage());
+            //TODO add exception field to EvolutionState, also add is RunnableDone flag
         } finally {
-            done = true;
+            stillRunning = false;
         }
     }
 
@@ -122,8 +124,8 @@ public class RunAlgorithmTask implements Runnable {
         return cancelled;
     }
 
-    public synchronized boolean isDone() {
-        return done;
+    public synchronized boolean isStillRunning() {
+        return stillRunning;
     }
 
     public synchronized Throwable getException() {
@@ -161,12 +163,12 @@ public class RunAlgorithmTask implements Runnable {
     }
 
     @NotNull
-    private List<Double> getInitialPopulation() {
+    private List<TimetableSolution> getInitialPopulation() {
         int initialPopulationSize = descriptor.getPopulationSize();
-        List<Double> initialPopulation = new ArrayList<>();
+        List<TimetableSolution> initialPopulation = new ArrayList<>();
 
         for (int i = 0; i < initialPopulationSize; i++) {
-            initialPopulation.add(new Double(descriptor.getTimeTable()));
+            initialPopulation.add(new TimetableSolution(descriptor.getTimeTable()));
         }
         evolutionEngine.evaluateSolutions(initialPopulation);
         return initialPopulation;

@@ -10,6 +10,22 @@ import {UserContext} from "../../components/UserContext"
 import * as TimetableServices from "../../services/TimetableServices";
 import * as Utils from "../../services/Utils";
 import {useHistory} from "react-router-dom";
+import * as Screen3Services from "../../services/Screen3Services";
+
+const fakeAlgoConfig = {
+    timetableID: 0,
+    stride: "10",
+    endPredicates: {numOfGenerations: "120", fitnessScore: "97.1", time: "2"},
+    engineSettings: {
+        populationSize: "60",
+        selection: {name: "rouletteWheel", elitism: "5"},
+        crossover: {name: "daytimeOriented", "cuttingPoints": "5"},
+        mutations: [
+            {name: "flipping", probability: "0.2", maxTuples: "4", component: "H"}],
+    }
+}
+
+const SCREEN2URL = "/server_Web_exploded/screen2";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,25 +53,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const fakeAlgoConfig = {
-    timetableID: 0,
-    stride: "10",
-    endPredicates: {numOfGenerations: "120", fitnessScore: "97.1", time: "2"},
-    engineSettings: {
-        populationSize: "60",
-        selection: {name: "rouletteWheel", elitism: "5"},
-        crossover: {name: "daytimeOriented", "cuttingPoints": "5"},
-        mutations: [
-            {name: "flipping", probability: "0.2", maxTuples: "4", component: "H"}],
-    }
-}
-
-const SCREEN2URL = "/server_Web_exploded/screen2";
-
 const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
     const {currentTimetableID} = useContext(TimetableContext);
     const [timetable, setTimetable] = useState();
+    const [] = useState();
     const emptyAlgoConfig = {
         timetableID: currentTimetableID,
         stride: undefined,
@@ -74,14 +76,23 @@ const Screen3 = () => {
     // const actions = ["start ", "pause ", "resume ", "stop "]
 
     useEffect(() => {
+        //get timetable full details
+        // algorithmConfiguration, if already exists
+        // info about other users solving the problem
+        // calling all API calls in parallel, and waiting until they ALL finish before setting
         const fetchAllData = async () => {
-            //TODO fetch timetable too
             try {
+                const [timetable, algoConfig, otherUsersInfo] = await Promise.all([
+                    Screen3Services.getTimetableDetails(currentTimetableID),
+                    Screen3Services.getAlgoConfig(currentTimetableID),
+                    Screen3Services.getOtherUsersInfoSolving(currentTimetableID),
+                ]);
                 const result = await TimetableServices.getDetails(currentTimetableID);
                 if (result.data) {
                     console.log(result.data);
                     setTimetable(result.data);
                 } else {
+                    // setAlertText('Failed initializing app, please reload page');
                     console.log(result.error);
                 }
             } catch (e) {

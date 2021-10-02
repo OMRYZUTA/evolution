@@ -1,22 +1,39 @@
 package il.ac.mta.zuli.evolution.dto;
 
+import il.ac.mta.zuli.evolution.engine.TimetableSolution;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
+import il.ac.mta.zuli.evolution.engine.evolutionengine.mutation.Mutation;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class EngineSettingsDTO {
-    private final int initialPopulationSize;
+    private final int populationSize;
     private final SelectionDTO selection;
     private final CrossoverDTO crossover;
     private final List<MutationDTO> mutations;
 
     public EngineSettingsDTO(int initialPopulationSize, SelectionDTO selection, CrossoverDTO crossover, List<MutationDTO> mutations) {
-        this.initialPopulationSize = initialPopulationSize;
+        this.populationSize = initialPopulationSize;
         this.selection = selection;
         this.crossover = crossover;
         this.mutations = mutations;
     }
 
-    public int getInitialPopulationSize() {
-        return initialPopulationSize;
+    public EngineSettingsDTO(EngineSettings<TimetableSolution> engineSettings) {
+        this.populationSize = engineSettings.getPopulationSize();
+        this.selection = new SelectionDTO(engineSettings.getSelection());
+        this.crossover = new CrossoverDTO(engineSettings.getCrossover());
+        this.mutations = new ArrayList<>();
+
+        List<Mutation<TimetableSolution>> mutations = engineSettings.getMutations();
+        for (Mutation<TimetableSolution> mutation : mutations) {
+            this.mutations.add(new MutationDTO(mutation));
+        }
+    }
+
+    public int getPopulationSize() {
+        return populationSize;
     }
 
     public SelectionDTO getSelection() {
@@ -34,7 +51,7 @@ public class EngineSettingsDTO {
     @Override
     public String toString() {
         return "EngineSettingsDTO{" +
-                "initialPopulationSize=" + initialPopulationSize +
+                "initialPopulationSize=" + populationSize +
                 ", selection=" + selection +
                 ", crossover=" + crossover +
                 ", mutations=" + mutations +

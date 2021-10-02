@@ -54,6 +54,10 @@ public class Truncation<S extends Solution> implements Selection<S> {
         }
     }
 
+    public int getTopPercent() {
+        return topPercent;
+    }
+
     @Override
     public String toString() {
         return "Selection: " + this.getClass().getSimpleName() +

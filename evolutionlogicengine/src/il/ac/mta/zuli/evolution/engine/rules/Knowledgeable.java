@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
-import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.Quintet;
+import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.timetable.Subject;
 import org.jetbrains.annotations.NotNull;
@@ -21,12 +21,12 @@ public class Knowledgeable extends Rule {
 
     @Override
     public void fitnessEvaluation(@NotNull Solution solution) {
-        if (!(solution instanceof Double)) {
+        if (!(solution instanceof TimetableSolution)) {
             throw new RuntimeException("solution must be TimeTableSolution");
 
         }
 
-        Double timeTableSolution = (Double) solution;
+        TimetableSolution timeTableSolution = (TimetableSolution) solution;
         double score = 0;
 
         if (timeTableSolution.getSolutionSize() > 0) {
@@ -36,7 +36,7 @@ public class Knowledgeable extends Rule {
         timeTableSolution.addScoreToRule(this, score);
     }
 
-    private double calculateScoreBySubjectsFitToTeachers(Double timeTableSolution) {
+    private double calculateScoreBySubjectsFitToTeachers(TimetableSolution timeTableSolution) {
         double score = 0;
         int qualifiedQuintets = 0;
         List<Quintet> solutionQuintets = timeTableSolution.getSolutionQuintets();

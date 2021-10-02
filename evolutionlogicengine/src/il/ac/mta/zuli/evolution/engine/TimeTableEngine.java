@@ -24,7 +24,7 @@ public class TimeTableEngine implements Engine {
     //EX3 additions to class:
     private final List<EndPredicate> endPredicates;
     private int generationsStride;
-    private Double bestSolution;
+    private TimetableSolution bestSolution;
     private StrideData strideData; //so the UI can poll the GenerationNum and BestScore in that Generation
 
     //new CTOR for Ex 3 - TODO where was the descriptor set in the previous exercises?
@@ -33,7 +33,7 @@ public class TimeTableEngine implements Engine {
                            Map<String, Object> endPredicatesMap,
                            Object stride) {
 
-        EngineSettings<Double> engineSettings = new EngineSettings<>(engineSettingsMap, timetable);
+        EngineSettings<TimetableSolution> engineSettings = new EngineSettings<>(engineSettingsMap, timetable);
         this.descriptor = new Descriptor(timetable, engineSettings);
         setGenerationsStride(stride);
         this.endPredicates = generatePredicates(endPredicatesMap);
@@ -125,24 +125,12 @@ public class TimeTableEngine implements Engine {
                 endPredicates,
                 generationsStride,
                 currentState,
-                (EvolutionState state) -> this.currEvolutionState = state,
-                (Double solution) -> bestSolution = solution,
+                (EvolutionState state) -> {
+                    this.currEvolutionState = state;
+                },
+                (TimetableSolution solution) -> bestSolution = solution,
                 (StrideData data) -> strideData = data);
 
-        if (currentRunningTask.isDone()) {
-            Throwable e = currentRunningTask.getException();
-
-            if (e != null) {
-                System.out.println(e.getMessage());
-                throw new RuntimeException("Algorithm failed running. " + e.getMessage());
-            } else if (!currentRunningTask.isCancelled()) {
-                //if succeeded but not cancelled? TODO figure out when
-                System.out.println(strideData);
-                this.currEvolutionState = null; // reset state
-            }
-
-            currentRunningTask = null;
-        }
         //TODO replace
 //        currentRunningTask.setOnCancelled(event -> {
 //            //onSuccess.accept(false);
@@ -161,6 +149,8 @@ public class TimeTableEngine implements Engine {
 
         System.out.println("******* runEvolutionAlgorithm() before new Thread********");
         new Thread(currentRunningTask, "EvolutionAlgorithmThread").start();
+
+
     }
 
     @Override
@@ -171,7 +161,7 @@ public class TimeTableEngine implements Engine {
     @Override
     public void stopEvolutionAlgorithm() {
         currentRunningTask.cancel();
-        this.currEvolutionState = null; //in case of STOP we don't want to save the previous state
+//        this.currEvolutionState = null; //in case of STOP we don't want to save the previous state
     }
 //#endregion
 
@@ -237,7 +227,7 @@ public class TimeTableEngine implements Engine {
         return generationsStride;
     }
 
-    public Double getBestSolution() {
+    public TimetableSolution getBestSolution() {
         return bestSolution;
     }
 
@@ -283,7 +273,7 @@ public class TimeTableEngine implements Engine {
 
     @NotNull
     private CrossoverDTO createCrossoverDTO() {
-        CrossoverInterface<Double> crossover = descriptor.getEngineSettings().getCrossover();
+        CrossoverInterface<TimetableSolution> crossover = descriptor.getEngineSettings().getCrossover();
 
         return new CrossoverDTO(crossover.getClass().getSimpleName(), crossover.getNumOfCuttingPoints());
     }
@@ -297,7 +287,7 @@ public class TimeTableEngine implements Engine {
 
     @NotNull
     private SelectionDTO createSelectionDTO() {
-        Selection<Double> selection = descriptor.getEngineSettings().getSelection();
+        Selection<TimetableSolution> selection = descriptor.getEngineSettings().getSelection();
 
         return new SelectionDTO(selection);
     }
@@ -358,7 +348,7 @@ public class TimeTableEngine implements Engine {
         return quintetDTOList;
     }
 
-    private TimeTableSolutionDTO createTimeTableSolutionDTO(@NotNull Double solution) {
+    private TimeTableSolutionDTO createTimeTableSolutionDTO(@NotNull TimetableSolution solution) {
         List<QuintetDTO> quintets = createQuintetDTOList(solution.getSolutionQuintets());
         Map<RuleDTO, java.lang.Double> fitnessScorePerRuleDTO = new HashMap<>();
 

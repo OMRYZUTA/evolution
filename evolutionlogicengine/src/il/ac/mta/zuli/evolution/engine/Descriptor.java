@@ -11,7 +11,7 @@ import java.util.Set;
 //in Ex. 3 descriptor is a run of the algorithm for a certain problem
 public class Descriptor {
     private final TimeTable timeTable; //the problem (in Ex2 Descriptor==the xml file, in Ex3 only Timetable == file)
-    private EngineSettings<Double> engineSettings; //the configuration
+    private EngineSettings<TimetableSolution> engineSettings; //the configuration
 
     public Descriptor(@NotNull ETTDescriptor d) {
         // only if received another valid file we want to overwrite the previous descriptor instance
@@ -25,7 +25,7 @@ public class Descriptor {
         this.engineSettings = engineSettings;
     }
 
-    public void setEngineSettings(EngineSettings<Double> newEngineSettings) {
+    public void setEngineSettings(EngineSettings<TimetableSolution> newEngineSettings) {
         this.engineSettings = newEngineSettings;
     }
 
@@ -41,7 +41,7 @@ public class Descriptor {
         return timeTable;
     }
 
-    public EngineSettings<Double> getEngineSettings() {
+    public EngineSettings<TimetableSolution> getEngineSettings() {
         return engineSettings;
     }
 

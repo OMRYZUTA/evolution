@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static il.ac.mta.zuli.evolution.engine.EngineUtils.generateRandomNum;
 import static il.ac.mta.zuli.evolution.engine.EngineUtils.generateRandomNumZeroBase;
 
-public class Double implements Solution {
+public class TimetableSolution implements Solution {
     private List<Quintet> solutionQuintets;
     private final int solutionSize; //number of quintets
     private double totalFitnessScore;
@@ -24,7 +24,7 @@ public class Double implements Solution {
     TimeTable timeTable;
 
     //#region ctors
-    public Double(@NotNull TimeTable timeTable) {
+    public TimetableSolution(@NotNull TimeTable timeTable) {
         fitnessScorePerRule = new HashMap<>();
         this.timeTable = timeTable;
         solutionSize = generateRandomNum(1, calculateTotalRequiredHours());
@@ -32,7 +32,7 @@ public class Double implements Solution {
         randomlyGenerateSolutionQuintets();
     }
 
-    public Double(@NotNull List<Quintet> quintets, @NotNull TimeTable timeTable) {
+    public TimetableSolution(@NotNull List<Quintet> quintets, @NotNull TimeTable timeTable) {
 
         this.timeTable = timeTable;
         fitnessScorePerRule = new HashMap<>();
@@ -43,9 +43,9 @@ public class Double implements Solution {
     }
 
     //for testing purposes
-    public Double(List<Quintet> solutionQuintets,
-                  int solutionSize, //number of quintets
-                  TimeTable timeTable) {
+    public TimetableSolution(List<Quintet> solutionQuintets,
+                             int solutionSize, //number of quintets
+                             TimeTable timeTable) {
         this.solutionQuintets = solutionQuintets;
         this.fitnessScorePerRule = new HashMap<>();
         this.timeTable = timeTable;

@@ -1,7 +1,8 @@
 package il.ac.mta.zuli.evolution;
 
-import il.ac.mta.zuli.evolution.engine.Double;
+import il.ac.mta.zuli.evolution.dto.AlgorithmConfigDTO;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
+import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
 
@@ -98,10 +99,10 @@ public class DataManager {
 
         if (isSomeoneSolvingProblem(ttID)) {
             List<User> usersSolvingProblem = getUsersSolvingProblem(ttID);
-            Double bestSolution = usersSolvingProblem.get(0).getBestSolution(ttID);
+            TimetableSolution bestSolution = usersSolvingProblem.get(0).getBestSolution(ttID);
 
             for (User user : usersSolvingProblem) {
-                Double currUserSolution = user.getBestSolution(ttID);
+                TimetableSolution currUserSolution = user.getBestSolution(ttID);
 
                 if (currUserSolution.getFitnessScore() > bestSolution.getFitnessScore()) {
                     bestSolution = currUserSolution;
@@ -114,9 +115,9 @@ public class DataManager {
     }
 
     //return value might be NULL
-    public Double getBestSolutionOfProblem(int ttID) {
+    public TimetableSolution getBestSolutionOfProblem(int ttID) {
         User userWithBestSolution = getUserWithBestSolutionOfProblem(ttID);
-        Double bestSolution = null;
+        TimetableSolution bestSolution = null;
 
         if (userWithBestSolution != null) {
             bestSolution = userWithBestSolution.getBestSolution(ttID);
@@ -177,5 +178,21 @@ public class DataManager {
     //when do we remove users? delete later
     public synchronized void removeUser(String username) {
         users.remove(username);
+    }
+
+    //return value might be NULL
+    public TimeTableEngine getTimetableEngine(String userName, int ttID) {
+        //TODO figure out what will I receive if there are no users or no ttID for that user?
+        return users.get(userName).getTimetableEngine(ttID);
+    }
+
+    public AlgorithmConfigDTO getAlgoConfig(String userName, int ttID) {
+        TimeTableEngine ttEngine = getTimetableEngine(userName, ttID);
+
+        return new AlgorithmConfigDTO(
+                ttID,
+                ttEngine.getGenerationsStride(),
+                ttEngine.getEndPredicates(),
+                ttEngine.getEngineSettings());
     }
 }

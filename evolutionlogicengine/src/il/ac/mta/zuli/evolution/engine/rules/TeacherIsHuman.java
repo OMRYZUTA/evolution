@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.rules;
 
-import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.Quintet;
+import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,11 +17,11 @@ public class TeacherIsHuman extends Rule {
 
     @Override
     public void fitnessEvaluation(@NotNull Solution solution) {
-        if (!(solution instanceof Double)) {
+        if (!(solution instanceof TimetableSolution)) {
             throw new RuntimeException("solution must be TimeTableSolution");
         }
 
-        Double timeTableSolution = (Double) solution;
+        TimetableSolution timeTableSolution = (TimetableSolution) solution;
 
         int numOfQuintets = timeTableSolution.getSolutionSize();
         int collisions = 0;

@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine.evolutionengine.crossover;
 
-import il.ac.mta.zuli.evolution.engine.Double;
 import il.ac.mta.zuli.evolution.engine.Quintet;
+import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.Solution;
 import il.ac.mta.zuli.evolution.engine.exceptions.EmptyCollectionException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
@@ -31,17 +31,17 @@ public class DayTimeOriented<S extends Solution> extends Crossover<S> {
 
         List<List<List<Quintet>>> selectedSolutionsAsMatrix = organizeSolutionsAsDayHourMatrix(selectedParents);
 
-        List<Double> newGeneration = createNewGenerationFromParents(selectedSolutionsAsMatrix);
+        List<TimetableSolution> newGeneration = createNewGenerationFromParents(selectedSolutionsAsMatrix);
 
         return (List<S>) newGeneration;
     }
 
     @NotNull
-    private List<Double> createNewGenerationFromParents(List<List<List<Quintet>>> selectedSolutionsAsMatrix) {
+    private List<TimetableSolution> createNewGenerationFromParents(List<List<List<Quintet>>> selectedSolutionsAsMatrix) {
         //  randomly select 2 parents to "mate" and remove them from the pool of parents
         // for every 2-parents-couple apply crossoverBetween2Parents()
         // add the 2 children to the new generation
-        List<Double> newGeneration = new ArrayList<>();
+        List<TimetableSolution> newGeneration = new ArrayList<>();
 
         List<List<Quintet>> parent1;
         List<List<Quintet>> parent2;
@@ -55,14 +55,14 @@ public class DayTimeOriented<S extends Solution> extends Crossover<S> {
 
             List<List<List<Quintet>>> twoMatrixChildren = crossoverBetween2Parents(parent1, parent2);
             //flattening-back from the hierarchy of solutionMatrix to List<Quintets> field in TimeTablesolution
-            List<Double> twoSolutionChildren = convertMatrixToSolutions(twoMatrixChildren.get(0), twoMatrixChildren.get(1));
+            List<TimetableSolution> twoSolutionChildren = convertMatrixToSolutions(twoMatrixChildren.get(0), twoMatrixChildren.get(1));
             newGeneration.addAll(twoSolutionChildren);
         }
 
         // if there is one parent left, need to add it to new generations
         if (selectedSolutionsAsMatrix.size() == 1) {
             List<Quintet> quintets = flattenSolutionMatrix(selectedSolutionsAsMatrix.get(0));
-            newGeneration.add(new Double(quintets, timeTable));
+            newGeneration.add(new TimetableSolution(quintets, timeTable));
         }
 
         return newGeneration;
