@@ -8,6 +8,8 @@ import Navbar from "../../components/Navbar";
 import Button from '@mui/material/Button';
 import * as FileServices from "../../services/FileServices";
 import {UserContext} from "../../components/UserContext";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,6 +24,14 @@ const useStyles = makeStyles((theme) => ({
     },
 
 }))
+const renderAlert = (alertText) => {
+    return (
+        <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {alertText}
+        </Alert>
+    );
+}
 
 const Index = () => {
     const {currentUser} = useContext(UserContext);
@@ -29,7 +39,7 @@ const Index = () => {
     const [users, setUsers] = useState([]);
     const [summaries, setSummaries] = useState([]);
     const [selectedFile, setSelectedFile] = useState();
-
+    const [alertText, setAlertText] = React.useState('');
     //TODO need to get all the information all the time
     //we'll later add a dependency to the useEffect that will change every x seconds and that will create a pull
 
@@ -57,6 +67,9 @@ const Index = () => {
     const handleFileUpload = async (event) => {
         setSelectedFile(event.target.files[0]);
         const result = await FileServices.uploadFile(event.target.files[0]);
+        if(result !=="OK"){
+            setAlertText(result);
+        }
         console.log(result);//todo handle bad xml
     };
 
@@ -77,6 +90,7 @@ const Index = () => {
                         accept={".xml"}
                     />
                 </Button>
+                {alertText && renderAlert(alertText)}
             </Grid>
             <Grid container className={classes.root} direction={"row"}>
                 <Grid item xs={12} md={4}>
