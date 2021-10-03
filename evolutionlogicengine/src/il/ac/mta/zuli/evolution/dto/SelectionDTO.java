@@ -12,8 +12,7 @@ public class SelectionDTO {
     private Integer topPercent = null;
 
     public SelectionDTO(Selection<TimetableSolution> selection) {
-        this.type = selection.getSelectionType(); //TODO needs to be exactly as in Constants
-        System.out.println("in selectionDTO ctor, type: " + type);
+        this.type = selection.getSelectionType();
         this.elitism = selection.getElitism();
 
         if (type.equals(Constants.TRUNCATION)) {

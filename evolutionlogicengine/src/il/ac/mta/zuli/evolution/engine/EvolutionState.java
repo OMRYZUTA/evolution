@@ -12,8 +12,8 @@ public class EvolutionState {
     //the way we save the state (for pause/resume), this is the time elapsed since the beginning of the task-call
     private final long netRunTime;
     //Ex 3 additions:
-    private boolean done; //for when Runnable is done running
-    private Throwable exception;
+    private boolean taskDone; //for when Runnable completed its run
+    private Throwable exception; // for exception from Runnable
 
     public EvolutionState(int generationNum,
                           long time,
@@ -23,6 +23,23 @@ public class EvolutionState {
         this.solutions = generationSolutions;
         this.netRunTime = time;
         this.bestSolutionSoFar = bestSolutionSoFar;
+        this.taskDone = false;
+    }
+
+    public synchronized void setTaskDone() {
+        taskDone = true;
+    }
+
+    public synchronized boolean isTaskDone() {
+        return taskDone;
+    }
+
+    public synchronized void setException(Throwable exception) {
+        this.exception = exception;
+    }
+
+    public synchronized Throwable getException() {
+        return exception;
     }
 
     public int getGenerationNum() {
@@ -45,19 +62,6 @@ public class EvolutionState {
 
     public TimetableSolution getBestSolutionSoFar() {
         return bestSolutionSoFar;
-    }
-
-    public boolean isDone() {
-        //TODO async
-        return done;
-    }
-
-    public void setException(Throwable exception) {
-        this.exception = exception;
-    }
-
-    public Throwable getException() {
-        return exception;
     }
 
     @Override

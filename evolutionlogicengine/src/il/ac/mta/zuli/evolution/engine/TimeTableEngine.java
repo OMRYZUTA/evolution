@@ -17,15 +17,15 @@ import java.util.*;
 
 public class TimeTableEngine implements Engine {
     private final Descriptor descriptor;
-    private EvolutionState currEvolutionState;
-    private RunAlgorithmTask currentRunningTask; //in Ex2 was Task<?>
+    private EvolutionState currEvolutionState; // includes taskDone flag and exception-from-task fields
+    private RunAlgorithmTask currentRunningTask; //in Ex2 this field was Task<?>
     //EX3 additions to class:
     private final List<EndPredicate> endPredicates;
     private int generationsStride;
     private TimetableSolution bestSolution;
     private StrideData strideData; //so the UI can poll the GenerationNum and BestScore in that Generation
 
-    //new CTOR for Ex 3 - TODO  - where was the descriptor set in the previous exercises?
+    //new CTOR for Ex 3
     public TimeTableEngine(TimeTable timetable,
                            Map<String, Object> engineSettingsMap,
                            Map<String, Object> endPredicatesMap,
@@ -112,11 +112,10 @@ public class TimeTableEngine implements Engine {
     }
 
     private void runEvolutionAlgorithm(EvolutionState currentState) {
-        if (currentRunningTask != null) {
-            throw new RuntimeException("Failed running task because another task is currently running");
-        }
+//        if (currentRunningTask != null) {
+//            throw new RuntimeException("Failed running task because another task is currently running");
+//        }
 
-        System.out.println("******* starting runEvolutionAlgorithm()********");
         RunAlgorithmTask currentRunningTask = new RunAlgorithmTask(
                 this.descriptor,
                 endPredicates,
@@ -127,7 +126,6 @@ public class TimeTableEngine implements Engine {
                 },
                 (TimetableSolution solution) -> bestSolution = solution,
                 (StrideData data) -> strideData = data);
-        //TODO figure out what consumers to send or what consumers to change (with new fields in EvolutionState)
 
 //        currentRunningTask.setOnCancelled(event -> {
 //            //onSuccess.accept(false);

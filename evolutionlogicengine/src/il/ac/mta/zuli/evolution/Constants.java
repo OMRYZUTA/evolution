@@ -23,9 +23,9 @@ public class Constants {
     public static final String TIME = "time";
     //selection related:
     public static final String SELECTION = "selection";
-    public static final String TRUNCATION = "truncation";
-    public static final String ROULETTE_WHEEL = "rouletteWheel";
-    public static final String TOURNAMENT = "tournament";
+    public static final String TRUNCATION = "Truncation";
+    public static final String ROULETTE_WHEEL = "RouletteWheel";
+    public static final String TOURNAMENT = "Tournament";
     public static final String ELITISM = "elitism";
     public static final String TOP_PERCENT = "topPercent";
     public static final String PTE = "pte";
@@ -33,14 +33,14 @@ public class Constants {
     public static final String CROSSOVER = "crossover";
     public static final String CUTTING_POINTS = "cuttingPoints";
     public static final String ORIENTATION = "orientation";
-    public static final String DAY_TIME_ORIENTED = "daytimeOriented";
-    public static final String ASPECT_ORIENTED = "aspectOriented";
+    public static final String DAY_TIME_ORIENTED = "DaytimeOriented";
+    public static final String ASPECT_ORIENTED = "AspectOriented";
     public static final String TEACHER_ORIENTATION = "teacher";
     public static final String CLASS_ORIENTATION = "class";
     //mutation related:
     public static final String MUTATIONS = "mutations";
-    public static final String SIZER = "sizer";
-    public static final String FLIPPING = "flipping";
+    public static final String SIZER = "Sizer";
+    public static final String FLIPPING = "Flipping";
     public static final String PROBABILITY = "probability";
     public static final String TOTAL_TUPLES = "totalTuples";
     public static final String MAX_TUPLES = "maxTuples";

@@ -11,7 +11,7 @@ public class CrossoverDTO {
     private String orientation = null;
 
     public CrossoverDTO(CrossoverInterface<TimetableSolution> crossover) {
-        this.type = crossover.getCrossoverType(); //TODO exactly as in Constants
+        this.type = crossover.getCrossoverType();
         this.cuttingPoints = crossover.getNumOfCuttingPoints();
 
         if (type.equals(Constants.ASPECT_ORIENTED)) {

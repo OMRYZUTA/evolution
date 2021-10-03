@@ -23,16 +23,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const selectionTypes = [
-    {name: "Truncation", id: "truncation"},
-    {name: "Roulette Wheel", id: "rouletteWheel"},
-    {name: "Tournament", id: "tournament"},
+    {name: "Truncation", id: "Truncation"},
+    {name: "Roulette Wheel", id: "RouletteWheel"},
+    {name: "Tournament", id: "Tournament"},
 ];
 const crossoverTypes = [
-    {name: "Daytime Oriented", id: "daytimeOriented"},
-    {name: "Aspect Oriented", id: "aspectOriented"},
+    {name: "Daytime Oriented", id: "DaytimeOriented"},
+    {name: "Aspect Oriented", id: "AspectOriented"},
 ];
 const orientations = [{name: "Teacher", id: "teacher"}, {name: "Class", id: "class"}];
-const mutationTypes = [{name: "Flipping", id: "flipping"}, {name: "Sizer", id: "sizer"}];
+const mutationTypes = [{name: "Flipping", id: "Flipping"}, {name: "Sizer", id: "Sizer"}];
 const flippingComponent = [
     {name: "Hour", id: "H"},
     {name: "Day", id: "D"},

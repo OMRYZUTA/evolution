@@ -15,7 +15,7 @@ public class MutationDTO {
 
 
     public MutationDTO(Mutation<TimetableSolution> mutation) {
-        this.type = mutation.getMutationType(); //TODO - needs to be exactly as in Constants
+        this.type = mutation.getMutationType();
         this.probability = mutation.getProbability();
 
         if (type.equals(Constants.FLIPPING)) {

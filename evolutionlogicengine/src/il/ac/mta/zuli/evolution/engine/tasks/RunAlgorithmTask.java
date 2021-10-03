@@ -22,7 +22,6 @@ public class RunAlgorithmTask implements Runnable {
     private final Consumer<StrideData> reportStrideData;
     private TimetableSolution bestSolutionEver;
     private final EvolutionEngine<TimetableSolution> evolutionEngine;
-    private boolean stillRunning;
     private boolean cancelled;
 
     public RunAlgorithmTask(
@@ -46,7 +45,6 @@ public class RunAlgorithmTask implements Runnable {
             reportBestSolution.accept(bestSolution);
         };
         this.cancelled = false;
-        this.stillRunning = false;
     }
 
     @Override
@@ -55,7 +53,6 @@ public class RunAlgorithmTask implements Runnable {
         EvolutionState outEvolutionState = null;
         try {
             System.out.println("**********in Runnable******");
-            stillRunning = true;
             //initialGeneration is either null or not, depending on if we're resuming from pause or starting
             long startTime = System.currentTimeMillis();
             EvolutionState prevEvolutionState = inEvolutionState; //our way to resume after pause
@@ -98,7 +95,6 @@ public class RunAlgorithmTask implements Runnable {
                 if (currGenerationNum == 1 || (currGenerationNum % generationsStride == 0)) {
                     reportStrideData.accept(
                             new StrideData(currGenerationNum, currBestSolution.getFitnessScore()));
-//                updateMessage(message); TODO replace updateMessage
                 }
 
                 prevEvolutionState = currEvolutionState;
@@ -107,16 +103,14 @@ public class RunAlgorithmTask implements Runnable {
             } //end of for loop
 
             System.out.println("**********" + bestSolutionEver + "******");
-            //TODO how de we handle the update for the last generation? (since it's not necessarily the number of generations in the endPredicates)
+            //TODO how d0 we handle the update for the last generation? (since it's not necessarily the number of generations in the endPredicates)
 //        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
         } catch (Throwable e) {
+            outEvolutionState.setException(e);
             System.out.println(e.getMessage());
-            //TODO add exception field to EvolutionState, also add is RunnableDone flag
-            // maybe keep a Thread reference as a field in TimetableEngine (instead of runnable), then we can use Thread.State.Terminated
-            outEvolutionState.setException(e);// TODO needs to be async?
-            reportState.accept(outEvolutionState);
         } finally {
-            stillRunning = false;
+            outEvolutionState.setTaskDone();
+            reportState.accept(outEvolutionState); // reporting the last state as "done"
         }
     }
 
@@ -126,10 +120,6 @@ public class RunAlgorithmTask implements Runnable {
 
     public synchronized boolean isCancelled() {
         return cancelled;
-    }
-
-    public synchronized boolean isStillRunning() {
-        return stillRunning;
     }
 
     private boolean checkAllPredicates(EvolutionState evolutionState) {
