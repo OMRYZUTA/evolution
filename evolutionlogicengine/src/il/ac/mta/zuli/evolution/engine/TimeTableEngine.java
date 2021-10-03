@@ -204,6 +204,15 @@ public class TimeTableEngine implements Engine {
         return currEvolutionState;
     }
 
+
+    public Integer getCurrGenerationNum() {
+        return currEvolutionState.getGenerationNum();
+    }
+
+    public boolean isDoneRunning() {
+        return currEvolutionState.isTaskDone();
+    }
+
     public List<EndPredicate> getEndPredicates() {
         return endPredicates;
     }

@@ -53,6 +53,7 @@ public class RunAlgorithmTask implements Runnable {
         EvolutionState outEvolutionState = null;
         try {
             System.out.println("**********in Runnable******");
+
             //initialGeneration is either null or not, depending on if we're resuming from pause or starting
             long startTime = System.currentTimeMillis();
             EvolutionState prevEvolutionState = inEvolutionState; //our way to resume after pause
@@ -102,13 +103,16 @@ public class RunAlgorithmTask implements Runnable {
                 reportState.accept(outEvolutionState);
             } //end of for loop
 
-            System.out.println("**********" + bestSolutionEver + "******");
-            //TODO how d0 we handle the update for the last generation? (since it's not necessarily the number of generations in the endPredicates)
+            System.out.println("endOfLoop: " + bestSolutionEver.getFitnessScore() + "******");
+            //TODO how do we handle the update for the last generation? (since it's not necessarily the number of generations in the endPredicates)
 //        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
         } catch (Throwable e) {
+            assert outEvolutionState != null;
             outEvolutionState.setException(e);
+            System.out.println("**********Exception in Runnable******");
             System.out.println(e.getMessage());
         } finally {
+            assert outEvolutionState != null;
             outEvolutionState.setTaskDone();
             reportState.accept(outEvolutionState); // reporting the last state as "done"
         }

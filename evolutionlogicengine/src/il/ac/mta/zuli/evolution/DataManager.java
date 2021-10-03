@@ -1,6 +1,7 @@
 package il.ac.mta.zuli.evolution;
 
 import il.ac.mta.zuli.evolution.dto.AlgorithmConfigDTO;
+import il.ac.mta.zuli.evolution.dto.OtherUserSolutionDTO;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
@@ -194,5 +195,25 @@ public class DataManager {
                 ttEngine.getGenerationsStride(),
                 ttEngine.getEndPredicates(),
                 ttEngine.getEngineSettings());
+    }
+
+    public List<OtherUserSolutionDTO> getOtherSolutionsInfo(int ttID) {
+        List<OtherUserSolutionDTO> otherSolutionsInfo = new ArrayList<>();
+
+        if (isSomeoneSolvingProblem(ttID)) {
+            List<User> usersSolving = getUsersSolvingProblem(ttID);
+            for (User user : usersSolving) {
+                TimeTableEngine ttEngine = user.getTimetableEngine(ttID);
+
+                otherSolutionsInfo.add(new OtherUserSolutionDTO(
+                        user.getUsername(),
+                        ttEngine.getBestScore(),
+                        ttEngine.getCurrGenerationNum(),
+                        ttEngine.isDoneRunning())
+                );
+            }
+        }
+
+        return otherSolutionsInfo;
     }
 }

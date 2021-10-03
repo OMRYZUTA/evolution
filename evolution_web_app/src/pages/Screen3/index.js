@@ -74,19 +74,15 @@ const Screen3 = () => {
     // const actions = ["start ", "pause ", "resume ", "stop "]
 
     useEffect(() => {
-        //get timetable full details
-        // algorithmConfiguration, if already exists
-        // info about other users solving the problem
         // calling all API calls in parallel, and waiting until they ALL finish before setting
         const fetchAllData = async () => {
             try {
                 const [timetableResult, algoConfigResult, otherUsersInfoResult] = await Promise.all([
-                        Screen3Services.getTimetableDetails(currentTimetableID),
-                        Screen3Services.getAlgoConfig(currentTimetableID),
-                        null,//TODO restore later
-                        // Screen3Services.getOtherUsersInfoSolving(currentTimetableID),
-                    ])
-                ;
+                    Screen3Services.getTimetableDetails(currentTimetableID),
+                    Screen3Services.getAlgoConfig(currentTimetableID),
+                    null,//TODO restore later
+                    // Screen3Services.getOtherUsersInfoSolving(currentTimetableID),
+                ]);
 
                 if (timetableResult.data) {
                     console.log(timetableResult.data);
@@ -103,7 +99,6 @@ const Screen3 = () => {
                 } else {
                     // setAlertText('Failed initializing app, please reload page');
                     console.log(algoConfigResult.error);
-                    setAlgorithmConfiguration(emptyAlgoConfig);
                 }
 
                 // if (otherUsersInfoResult.data) {

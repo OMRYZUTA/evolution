@@ -7,7 +7,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Grid from "@mui/material/Grid";
-import {TextField} from "@mui/material";
+import CircularIndeterminate from "../../components/CircularIndeterminate";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,9 +31,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TimetableDetails = ({timetable}) => {
+    // if timetable is undefined
+    if (!timetable) {
+        return (<CircularIndeterminate/>);
+    }
+
     //days, hours subjects, teachers, classes, rules
     const classes = useStyles();
+    console.log("in TimetableDetails");
     console.log(timetable);
+
     return (
         <Paper>
             <Accordion>
@@ -69,6 +76,7 @@ const TimetableDetails = ({timetable}) => {
                     </Grid>
                 </AccordionDetails>
             </Accordion>
+
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
@@ -104,6 +112,7 @@ const TimetableDetails = ({timetable}) => {
                     </Grid>
                 </AccordionDetails>
             </Accordion>
+
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
@@ -154,6 +163,7 @@ const TimetableDetails = ({timetable}) => {
                     </Grid>
                 </AccordionDetails>
             </Accordion>
+
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
@@ -179,6 +189,7 @@ const TimetableDetails = ({timetable}) => {
                     </Grid>
                 </AccordionDetails>
             </Accordion>
+
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
@@ -192,7 +203,8 @@ const TimetableDetails = ({timetable}) => {
                         {Object.keys(timetable.teachers).map((key, index) => {
                             return (
                                 <Grid item>
-                                    <Grid container className={classes.settings} direction={"column"} sx={{border: 1}}>
+                                    <Grid container className={classes.settings} direction={"column"}
+                                          sx={{border: 1}}>
                                         <Typography>
                                             {timetable.teachers[key].id}. {timetable.teachers[key].name}
                                         </Typography>
@@ -220,8 +232,7 @@ const TimetableDetails = ({timetable}) => {
                 </AccordionDetails>
             </Accordion>
         </Paper>
-    )
-        ;
+    );
 }
 
 export default TimetableDetails;

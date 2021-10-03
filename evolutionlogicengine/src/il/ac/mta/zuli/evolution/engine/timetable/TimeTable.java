@@ -11,8 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class TimeTable {
-    private int ID; // ID is index in dataManager TT-list //TODO EX3 addition
-    private String uploadedBy; //TODO EX3 addition
     private int days;
     private int hours;
     private Map<Integer, Teacher> teachers;
@@ -20,6 +18,9 @@ public class TimeTable {
     private Map<Integer, SchoolClass> schoolClasses;
     private Set<Rule> rules; //a rule doesn't repeat
     private int hardRulesWeight;
+    //Ex3 additions:
+    private int ID; // ID is index in dataManager TT-list
+    private String uploadedBy;
 
     public TimeTable(@NotNull ETTTimeTable tt) {
         setHardRulesWeight(tt.getETTRules().getHardRulesWeight());
