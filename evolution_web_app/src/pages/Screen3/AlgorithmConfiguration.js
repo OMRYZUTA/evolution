@@ -78,11 +78,11 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
         let tempLabel;
         let tempID;
 
-        if (data.engineSettings.selection.name === 'tournament') {
+        if (data.engineSettings.selection.name === 'Tournament') {
             tempLabel = 'PTE';
             tempID = 'pte';
         } else {
-            // if (data.engineSettings.selection.name === 'truncation')
+            // if (data.engineSettings.selection.name === 'Truncation')
             tempLabel = 'Top Percent';
             tempID = 'topPercent';
         }
@@ -151,7 +151,8 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     onChange={(e) => handleMutationChange(e, index, 'probability')}
                 />
                 {renderMutationExtraFields(mutation, index)}
-            </Grid>);
+            </Grid>
+        );
     };
 
     const renderMutationExtraFields = (mutation, index) => {
@@ -250,10 +251,11 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                             defaultValue={data.engineSettings.selection.elitism}
                             onChange={(e) => handleSelectionChange(e, 'elitism')}
                         />
-                        {data.engineSettings.selection.name === 'rouletteWheel' || renderSelectionExtraField()}
+                        {data.engineSettings.selection.name === 'RouletteWheel' ? '' : renderSelectionExtraField()}
                     </Grid>
                 </AccordionDetails>
             </Accordion>
+
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
@@ -278,15 +280,15 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                             defaultValue={data.engineSettings.crossover.cuttingPoints}
                             onChange={(e) => handleCrossoverChange(e, 'cuttingPoints')}
                         />
-                        {data.engineSettings.crossover.name === 'daytimeOriented' ||
-                        <DropDown
-                            label={"Orientation"}
-                            options={orientations}
-                            currentValue={data.engineSettings.crossover.orientation}
-                            keyPropName="id"
-                            namePropName="name"
-                            onChange={(e) => handleCrossoverChange(e, 'orientation')}
-                        />}
+                        {data.engineSettings.crossover.name === 'DaytimeOriented' ? '' :
+                            <DropDown
+                                label={"Orientation"}
+                                options={orientations}
+                                currentValue={data.engineSettings.crossover.orientation}
+                                keyPropName="id"
+                                namePropName="name"
+                                onChange={(e) => handleCrossoverChange(e, 'orientation')}
+                            />}
                     </Grid>
                 </AccordionDetails>
             </Accordion>

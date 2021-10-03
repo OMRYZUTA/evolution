@@ -57,6 +57,7 @@ const Index = () => {
                 // setIsFetching(false);
             }
         };
+
         const interval = setInterval(() => {
             fetchAllData();
         }, 10000) //todo return to 1 sec

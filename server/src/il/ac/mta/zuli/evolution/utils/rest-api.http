@@ -10,7 +10,7 @@ Content-Type: application/json
     },
     "elitism": 0,
     "crossover": {
-      "name": "daytimeOriented",
+      "name": "DaytimeOriented",
       "cuttingPoints": 5
     },
     "mutations": [

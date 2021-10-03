@@ -7,7 +7,6 @@ import Navbar from "../../components/Navbar";
 import Paper from "@mui/material/Paper";
 import {TimetableContext} from "../../components/TimetableContext";
 import {UserContext} from "../../components/UserContext"
-import * as TimetableServices from "../../services/TimetableServices";
 import * as Utils from "../../services/Utils";
 import {useHistory} from "react-router-dom";
 import * as Screen3Services from "../../services/Screen3Services";
@@ -18,10 +17,10 @@ const fakeAlgoConfig = {
     endPredicates: {numOfGenerations: "120", fitnessScore: "97.1", time: "2"},
     engineSettings: {
         populationSize: "60",
-        selection: {name: "rouletteWheel", elitism: "5"},
-        crossover: {name: "daytimeOriented", "cuttingPoints": "5"},
+        selection: {name: "RouletteWheel", elitism: "5"},
+        crossover: {name: "DaytimeOriented", "cuttingPoints": "5"},
         mutations: [
-            {name: "flipping", probability: "0.2", maxTuples: "4", component: "H"}],
+            {name: "Flipping", probability: "0.2", maxTuples: "4", component: "H"}],
     }
 }
 
@@ -58,21 +57,20 @@ const Screen3 = () => {
     const {currentTimetableID} = useContext(TimetableContext);
     const [timetable, setTimetable] = useState();
     const [] = useState();
+    const classes = useStyles();
+    const history = useHistory();
     const emptyAlgoConfig = {
         timetableID: currentTimetableID,
         stride: undefined,
         endPredicates: {numOfGenerations: undefined, fitnessScore: undefined, time: undefined},
         engineSettings: {
             populationSize: undefined,
-            selection: {name: "rouletteWheel", elitism: undefined},
-            crossover: {name: "daytimeOriented", "cuttingPoints": undefined},
+            selection: {name: "RouletteWheel", elitism: undefined},
+            crossover: {name: "DaytimeOriented", "cuttingPoints": undefined},
             mutations: [],
         }
     }
-    // const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
-    const [algorithmConfiguration, setAlgorithmConfiguration] = useState(fakeAlgoConfig);
-    const classes = useStyles();
-    const history = useHistory();
+    const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
     // const actions = ["start ", "pause ", "resume ", "stop "]
 
     useEffect(() => {
@@ -82,26 +80,51 @@ const Screen3 = () => {
         // calling all API calls in parallel, and waiting until they ALL finish before setting
         const fetchAllData = async () => {
             try {
-                const [timetable, algoConfig, otherUsersInfo] = await Promise.all([
-                    Screen3Services.getTimetableDetails(currentTimetableID),
-                    Screen3Services.getAlgoConfig(currentTimetableID),
-                    Screen3Services.getOtherUsersInfoSolving(currentTimetableID),
-                ]);
-                const result = await TimetableServices.getDetails(currentTimetableID);
-                if (result.data) {
-                    console.log(result.data);
-                    setTimetable(result.data);
+                const [timetableResult, algoConfigResult, otherUsersInfoResult] = await Promise.all([
+                        Screen3Services.getTimetableDetails(currentTimetableID),
+                        Screen3Services.getAlgoConfig(currentTimetableID),
+                        null,//TODO restore later
+                        // Screen3Services.getOtherUsersInfoSolving(currentTimetableID),
+                    ])
+                ;
+
+                if (timetableResult.data) {
+                    console.log(timetableResult.data);
+                    setTimetable(timetableResult.data);
                 } else {
                     // setAlertText('Failed initializing app, please reload page');
-                    console.log(result.error);
+                    console.log(timetableResult.error);
                 }
+
+                if (algoConfigResult.data) {
+                    console.log("algoConfig result (screen 3 index)")
+                    console.log(algoConfigResult.data);
+                    setAlgorithmConfiguration(algoConfigResult.data);
+                } else {
+                    // setAlertText('Failed initializing app, please reload page');
+                    console.log(algoConfigResult.error);
+                    setAlgorithmConfiguration(emptyAlgoConfig);
+                }
+
+                // if (otherUsersInfoResult.data) {
+                //     console.log(otherUsersInfoResult.data);
+                //     setOtherUsersInfo(otherUsersInfoResult.data);
+                // } else {
+                //     // setAlertText('Failed initializing app, please reload page');
+                //     // console.log(otherUsersInfoResult.error);
+                // }
             } catch (e) {
                 console.log(e);
                 // setAlertText('Failed initializing app, please reload page');
             }
         };
 
-        fetchAllData();
+        const interval = setInterval(() => {
+            fetchAllData();
+        }, 10000) //will run every 10 seconds
+
+        return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
+
     }, []);
 
     const handleStart = useCallback(async () => {

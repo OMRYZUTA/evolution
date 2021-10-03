@@ -8,7 +8,6 @@ import React from 'react';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import TimetableDetails from "./TimetableDetails";
-import Typography from '@mui/material/Typography';
 
 TabPanel.propTypes = {
     children: PropTypes.node,
@@ -28,7 +27,9 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    {/*<Typography>*/}
+                    {children}
+                    {/*</Typography>*/}
                 </Box>
             )}
         </div>
@@ -64,7 +65,7 @@ const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigSave, tim
                 value={value}
                 onChange={handleChange}
                 variant="scrollable"
-                scrollButtons="on"
+                scrollButtons={true}
                 indicatorColor="primary"
                 textColor="primary"
                 aria-label="scrollable force tabs example"

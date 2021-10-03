@@ -15,11 +15,11 @@ export const crossoverConstants = [
     },
     {
         key: 'DAY_TIME_ORIENTED',
-        value: 'daytimeOriented',
+        value: 'DaytimeOriented',
     },
     {
         key: 'ASPECT_ORIENTED',
-        value: 'aspectOriented',
+        value: 'AspectOriented',
     },
     {
         key: 'CUTTING_POINTS',
