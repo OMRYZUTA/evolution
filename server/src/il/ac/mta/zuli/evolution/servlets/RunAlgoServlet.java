@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.DataManager;
 import il.ac.mta.zuli.evolution.engine.EngineUtils;
+import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
+import il.ac.mta.zuli.evolution.utils.AlgorithmActions;
 import il.ac.mta.zuli.evolution.utils.ServletUtils;
 import il.ac.mta.zuli.evolution.utils.SessionUtils;
 
@@ -18,58 +20,84 @@ import java.util.Map;
 
 @WebServlet(name = "il.ac.mta.zuli.evolution.servlets.RunAlgoServlet", urlPatterns = "/api/actions")
 public class RunAlgoServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-//        Map<String, Object> mapForJSON = new HashMap<>();
-//
-//        try {
-//            DataManager dataManager = ServletUtils.getDataManager(getServletContext());
-//            List<String> usernames = dataManager.getUserNames();
-//            List<TimetableSummary> timetableSummaries = dataManager.getTimetableSummaries();
-//
-//            //preparing the response (no need for DTOs because we already wrap the objects in JSON)
-//            mapForJSON.put("users", usernames);
-//            mapForJSON.put("timetables", timetableSummaries);
-//        } catch (Throwable e) {
-//            mapForJSON.put("error", e.getMessage());
-//        } finally {
-//            ServletUtils.sendJSONResponse(response, mapForJSON);
-//        }
-    }
+    DataManager dataManager;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String responseMessage = null;
 
-        String actionType = request.getParameter(Constants.ALGO_ACTION);
-
-        //    POST http://localhost:8080/server_Web_exploded/api/actions?action=start
-        //TODO currently only handling Start
         try {
             String usernameFromSession = SessionUtils.getUsername(request);
             Gson gson = new Gson();
             Map<String, Object> requestMap = gson.fromJson(request.getReader(), new HashMap<String, Object>().getClass());
-
             int ttID = (int) Math.ceil((double) requestMap.get(Constants.TIMETABLE_ID)); //we know this an integer because we provided it
-            Map<String, Object> engineSettingsMap = (HashMap<String, Object>) requestMap.get(Constants.ENGINE_SETTINGS);
-            Map<String, Object> endPredicatesMap = (Map<String, Object>) requestMap.get(Constants.END_PREDICATES);
-            Object generationStride = requestMap.get(Constants.STRIDE); //validating we received an int alter on
 
-            DataManager dataManager = ServletUtils.getDataManager(getServletContext());
-            dataManager.addAlgoRunToUser(
-                    usernameFromSession,
-                    ttID,
-                    engineSettingsMap,
-                    endPredicatesMap,
-                    generationStride);
+            //start, stop, pause,resume
+            String actionType = request.getParameter(Constants.ALGO_ACTION).toUpperCase();
+            System.out.println("in runAlgoServlet, param: " + actionType);
+            AlgorithmActions action = AlgorithmActions.valueOf(actionType);
 
-            responseMessage = "OK";
+            dataManager = ServletUtils.getDataManager(getServletContext());
+
+            switch (action) {
+                case START:
+                    responseMessage = startAlgorithmRun(usernameFromSession, ttID, requestMap);
+                    break;
+                case PAUSE:
+                    responseMessage = dataManager.pauseAlgorithmRunForUser(usernameFromSession, ttID);
+                    break;
+                case RESUME:
+                    responseMessage = resumeAlgorithmRun(usernameFromSession, ttID, requestMap);
+                    break;
+                case STOP:
+
+                    break;
+                default:
+                    throw new InvalidOperationException("Invlaid algorithm action");
+            }
         } catch (Throwable e) {
             responseMessage = EngineUtils.getToRootError(e);
         } finally {
             ServletUtils.sendJSONResponse(response, responseMessage);
         }
     }
+
+    private String resumeAlgorithmRun(String usernameFromSession, int ttID, Map<String, Object> requestMap) {
+        Map<String, Object> engineSettingsMap = (HashMap<String, Object>) requestMap.get(Constants.ENGINE_SETTINGS);
+        Map<String, Object> endPredicatesMap = (Map<String, Object>) requestMap.get(Constants.END_PREDICATES);
+        Object generationStride = requestMap.get(Constants.STRIDE); //validating we received an int alter on
+
+
+        dataManager.resumeAlgorithmRunForUser(
+                usernameFromSession,
+                ttID,
+                engineSettingsMap,
+                endPredicatesMap,
+                generationStride);
+
+        return "OK"; //TODO change response message
+    }
+
+    private String startAlgorithmRun(String usernameFromSession, int ttID, Map<String, Object> requestMap) {
+        Map<String, Object> engineSettingsMap = (HashMap<String, Object>) requestMap.get(Constants.ENGINE_SETTINGS);
+        Map<String, Object> endPredicatesMap = (Map<String, Object>) requestMap.get(Constants.END_PREDICATES);
+        Object generationStride = requestMap.get(Constants.STRIDE); //validating we received an int alter on
+
+
+        dataManager.startAlgorithmRunForUser(
+                usernameFromSession,
+                ttID,
+                engineSettingsMap,
+                endPredicatesMap,
+                generationStride);
+
+        return "OK"; //TODO change response message?
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+    }
+
 }

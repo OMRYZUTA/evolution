@@ -24,10 +24,12 @@ public class AlgoConfigServlet extends HttpServlet {
         String timetableIDFromParameter = request.getParameter(Constants.TIMETABLE_ID);
 
         try {
-            int ttID = Integer.parseInt(timetableIDFromParameter);
-            DataManager dataManager = ServletUtils.getDataManager(getServletContext());
             String usernameFromSession = SessionUtils.getUsername(request);
+            int ttID = Integer.parseInt(timetableIDFromParameter);
+
+            DataManager dataManager = ServletUtils.getDataManager(getServletContext());
             AlgorithmConfigDTO algoConfig = dataManager.getAlgoConfig(usernameFromSession, ttID);
+
             mapForJSON.put(Constants.DATA, algoConfig);
         } catch (Throwable e) {
             mapForJSON.put(Constants.ERROR, e.getMessage());
@@ -38,6 +40,6 @@ public class AlgoConfigServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //POST of algoconfig from Front reaches the RunAlgoServlet, because from there we already start running the algorithm
     }
-
 }

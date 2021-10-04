@@ -8,7 +8,10 @@ import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DataManager {
@@ -23,32 +26,64 @@ public class DataManager {
         users.put("Cupcake12321", new User("Cupcake12321"));
     }
 
+    //synchronized methods
     public synchronized void addTimetable(TimeTable timeTable, String userName) {
         timeTable.setUploadedBy(userName);
         timeTable.setID(timetables.size()); //the index in the list is the ID of the tt
         timetables.add(timeTable);
     }
 
-    public synchronized void addUser(User user) {
-        //TODO throw exception if user already exists? (add user only called after exist check)
+    //add user only called after exist check
+    public void addUser(User user) {
+        //called within a synchronized block
         users.put(user.getUsername(), user);
     }
 
-    public synchronized void addAlgoRunToUser(String userName,
-                                              int timetableID,
-                                              Map<String, Object> engineSettingsMap,
-                                              Map<String, Object> endPredicatesMap,
-                                              Object generationStride) {
+    //#region Single-User-Methods (non-synchronized)
+    //TODO should these algo-flow methods be synchronized?
+    public void startAlgorithmRunForUser(String userName,
+                                         int timetableID,
+                                         Map<String, Object> engineSettingsMap,
+                                         Map<String, Object> endPredicatesMap,
+                                         Object generationStride) {
+        TimeTable timetable = timetables.get(timetableID);
 
-        TimeTableEngine timetableEngine = new TimeTableEngine(
-                timetables.get(timetableID),
+        users.get(userName).startEvolutionAlgorithm(
+                timetable,
                 engineSettingsMap,
                 endPredicatesMap,
                 generationStride);
-
-        users.get(userName).runTimetableEngine(timetableEngine);
     }
 
+    public String pauseAlgorithmRunForUser(String userName, int ttID) {
+        users.get(userName).pauseEvolutionAlgorithm(ttID);
+        return "Algorithm paused";//TODO change message later
+    }
+
+    public void resumeAlgorithmRunForUser(
+            String userName,
+            int timetableID,
+            Map<String, Object> engineSettingsMap,
+            Map<String, Object> endPredicatesMap,
+            Object generationStride) {
+
+        TimeTable timetable = timetables.get(timetableID);
+
+        users.get(userName).resumeEvolutionAlgorithm(
+                timetableID,
+                engineSettingsMap,
+                endPredicatesMap,
+                generationStride);
+    }
+
+    public String stoplgorithmRunForUser(String userName, int ttID) {
+        users.get(userName).stopEvolutionAlgorithm(ttID);
+        return "Algorithm stopped";//TODO change message later
+    }
+
+    //#endregion
+
+    //#region getters
     //return value might be an empty list
     public List<String> getUserNames() {
         if (!users.isEmpty()) {
@@ -59,20 +94,6 @@ public class DataManager {
         } else {
             return new ArrayList<>();
         }
-    }
-
-    public boolean doesUserExist(String username) {
-        //User has a unique-name field so that's what we use in equals()
-        if (!users.isEmpty()) {
-            return users.containsKey(username);
-        } else {
-            return false; //map is empty
-        }
-    }
-
-    //return true if list isn't empty
-    private boolean isSomeoneSolvingProblem(int ttID) {
-        return !getUsersSolvingProblem(ttID).isEmpty();
     }
 
     //return value might be an empty list
@@ -115,42 +136,7 @@ public class DataManager {
         return userWithBestSolution;
     }
 
-    //return value might be NULL
-    public TimetableSolution getBestSolutionOfProblem(int ttID) {
-        User userWithBestSolution = getUserWithBestSolutionOfProblem(ttID);
-        TimetableSolution bestSolution = null;
-
-        if (userWithBestSolution != null) {
-            bestSolution = userWithBestSolution.getBestSolution(ttID);
-        }
-
-        return bestSolution;
-    }
-
-    private double getBestScoreForProblem(int ttID) {
-        User user = getUserWithBestSolutionOfProblem(ttID);
-        double score = 0;
-
-        if (user != null) {
-            score = user.getBestScore(ttID);
-        }
-
-        return score;
-    }
-
-    public synchronized Map<String, User> getUsers() {
-        return Collections.unmodifiableMap(users);
-    }
-
-    private List<TimeTable> getTimetables() {
-        return Collections.unmodifiableList(timetables);
-    }
-
-    public boolean doesTimetableExist(int ttID) {
-        return timetables.size() > ttID;
-    }
-
-    //return value might be null
+    //return value might be null TODO change to timetableDTO? and timetableSummary DTO?
     public TimeTable getTimetable(int ttID) {
 
         if (doesTimetableExist(ttID)) {
@@ -176,11 +162,6 @@ public class DataManager {
         return newList;
     }
 
-    //when do we remove users? delete later
-    public synchronized void removeUser(String username) {
-        users.remove(username);
-    }
-
     //return value might be NULL
     public TimeTableEngine getTimetableEngine(String userName, int ttID) {
         //TODO figure out what will I receive if there are no users or no ttID for that user?
@@ -197,23 +178,71 @@ public class DataManager {
                 ttEngine.getEngineSettings());
     }
 
+    //return value might be an empty list
     public List<OtherUserSolutionDTO> getOtherSolutionsInfo(int ttID) {
         List<OtherUserSolutionDTO> otherSolutionsInfo = new ArrayList<>();
 
         if (isSomeoneSolvingProblem(ttID)) {
             List<User> usersSolving = getUsersSolvingProblem(ttID);
+
             for (User user : usersSolving) {
                 TimeTableEngine ttEngine = user.getTimetableEngine(ttID);
-
-                otherSolutionsInfo.add(new OtherUserSolutionDTO(
-                        user.getUsername(),
-                        ttEngine.getBestScore(),
-                        ttEngine.getCurrGenerationNum(),
-                        ttEngine.isDoneRunning())
+                otherSolutionsInfo.add(
+                        new OtherUserSolutionDTO(
+                                user.getUsername(),
+                                ttEngine.getBestScore(),
+                                ttEngine.getCurrGenerationNum())
                 );
             }
         }
 
         return otherSolutionsInfo;
+    }
+
+    private double getBestScoreForProblem(int ttID) {
+        User user = getUserWithBestSolutionOfProblem(ttID);
+        double score = 0;
+
+        if (user != null) {
+            score = user.getBestScore(ttID);
+        }
+
+        return score;
+    }
+
+    //return value might be NULL
+    public TimetableSolution getBestSolutionOfProblem(int ttID) {
+        User userWithBestSolution = getUserWithBestSolutionOfProblem(ttID);
+        TimetableSolution bestSolution = null;
+
+        if (userWithBestSolution != null) {
+            bestSolution = userWithBestSolution.getBestSolution(ttID);
+        }
+
+        return bestSolution;
+    }
+    //#endregion
+
+    public boolean doesUserExist(String username) {
+        //User has a unique-name field so that's what we use in equals()
+        if (!users.isEmpty()) {
+            return users.containsKey(username);
+        } else {
+            return false; //map is empty
+        }
+    }
+
+    public boolean doesTimetableExist(int ttID) {
+        return timetables.size() > ttID;
+    }
+
+    //return true if list isn't empty
+    private boolean isSomeoneSolvingProblem(int ttID) {
+        return !getUsersSolvingProblem(ttID).isEmpty();
+    }
+
+    //when do we remove users? delete later
+    public synchronized void removeUser(String username) {
+        users.remove(username);
     }
 }

@@ -1,13 +1,13 @@
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import CircularIndeterminate from "../../components/CircularIndeterminate";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Grid from "@mui/material/Grid";
 import {makeStyles} from "@mui/styles";
 import Paper from "@mui/material/Paper";
 import React from 'react';
 import Typography from "@mui/material/Typography";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Grid from "@mui/material/Grid";
-import CircularIndeterminate from "../../components/CircularIndeterminate";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,16 +31,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TimetableDetails = ({timetable}) => {
+    const classes = useStyles();
+
     // if timetable is undefined
     if (!timetable) {
         return (<CircularIndeterminate/>);
     }
 
     //days, hours subjects, teachers, classes, rules
-    const classes = useStyles();
-    console.log("in TimetableDetails");
-    console.log(timetable);
-
     return (
         <Paper>
             <Accordion>
@@ -214,15 +212,11 @@ const TimetableDetails = ({timetable}) => {
                                         <Typography>
                                             Teaches:
                                         </Typography>
-                                        {console.log()}
                                         {Object.keys(timetable.teachers[key].subjects).map((subjectKey, index) => {
-                                                return (
-                                                    <Typography>
-                                                        {timetable.teachers[key].subjects[subjectKey].id}. {timetable.teachers[key].subjects[subjectKey].name}
-                                                    </Typography>)
-                                            }
-                                        )
-                                        }
+                                            return (<Typography>
+                                                {timetable.teachers[key].subjects[subjectKey].id}. {timetable.teachers[key].subjects[subjectKey].name}
+                                            </Typography>)
+                                        })}
                                     </Grid>
                                 </Grid>
                             )

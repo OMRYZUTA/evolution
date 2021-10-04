@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.timetableDetailsServlet", urlPatterns = "/api/timetable/details")
-public class timetableDetailsServlet extends HttpServlet {
+@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.TimetableServlet", urlPatterns = "/api/timetable/details")
+public class TimetableServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -37,7 +37,5 @@ public class timetableDetailsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
     }
-
 }

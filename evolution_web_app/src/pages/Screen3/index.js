@@ -10,6 +10,7 @@ import {UserContext} from "../../components/UserContext"
 import * as Utils from "../../services/Utils";
 import {useHistory} from "react-router-dom";
 import * as Screen3Services from "../../services/Screen3Services";
+import OtherSolutions from "./OtherSolutions";
 
 const fakeAlgoConfig = {
     timetableID: 0,
@@ -56,6 +57,7 @@ const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
     const {currentTimetableID} = useContext(TimetableContext);
     const [timetable, setTimetable] = useState();
+    const [otherSolutions, setOtherSolutions] = useState([]);
     const [] = useState();
     const classes = useStyles();
     const history = useHistory();
@@ -77,18 +79,19 @@ const Screen3 = () => {
         // calling all API calls in parallel, and waiting until they ALL finish before setting
         const fetchAllData = async () => {
             try {
-                const [timetableResult, algoConfigResult, otherUsersInfoResult] = await Promise.all([
+                const [timetableResult, algoConfigResult, otherSolutionsResult] = await Promise.all([
                     Screen3Services.getTimetableDetails(currentTimetableID),
                     Screen3Services.getAlgoConfig(currentTimetableID),
-                    null,//TODO restore later
-                    // Screen3Services.getOtherUsersInfoSolving(currentTimetableID),
+                    Screen3Services.getOtherSolutionsInfo(currentTimetableID),
                 ]);
 
                 if (timetableResult.data) {
+                    console.log("timetableResult result (screen 3 index)")
                     console.log(timetableResult.data);
                     setTimetable(timetableResult.data);
                 } else {
                     // setAlertText('Failed initializing app, please reload page');
+                    console.log("timetableResult.data is null");
                     console.log(timetableResult.error);
                 }
 
@@ -98,16 +101,19 @@ const Screen3 = () => {
                     setAlgorithmConfiguration(algoConfigResult.data);
                 } else {
                     // setAlertText('Failed initializing app, please reload page');
+                    console.log("algoConfigResult.data is null");
                     console.log(algoConfigResult.error);
                 }
 
-                // if (otherUsersInfoResult.data) {
-                //     console.log(otherUsersInfoResult.data);
-                //     setOtherUsersInfo(otherUsersInfoResult.data);
-                // } else {
-                //     // setAlertText('Failed initializing app, please reload page');
-                //     // console.log(otherUsersInfoResult.error);
-                // }
+                if (otherSolutionsResult.data) {
+                    console.log("otherSolutionsResult (screen 3 index)")
+                    console.log(otherSolutionsResult.data);
+                    setOtherSolutions(otherSolutionsResult.data);
+                } else {
+                    // setAlertText('Failed initializing app, please reload page');
+                    console.log("otherSolutionsResult.data is null");
+                    console.log(otherSolutionsResult.error);
+                }
             } catch (e) {
                 console.log(e);
                 // setAlertText('Failed initializing app, please reload page');
@@ -123,15 +129,14 @@ const Screen3 = () => {
     }, []);
 
     const handleStart = useCallback(async () => {
-        console.log({algorithmConfiguration});
         let result;
         try {
             result = await Utils.fetchWrapper(
                 'POST',
                 `/server_Web_exploded/api/actions?action=start`,
                 algorithmConfiguration)
-            console.log({result});
         } catch (e) {
+            // TODO handle exception
             console.log(e);
         }
         return result;
@@ -191,7 +196,7 @@ const Screen3 = () => {
                                 <Paper>stride details</Paper>
                             </Grid>
                             <Grid item>
-                                <Paper>other users solving</Paper>
+                                <OtherSolutions othersolutionsList={otherSolutions}/>
                             </Grid>
                         </Grid>
                     </Grid>

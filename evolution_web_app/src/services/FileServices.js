@@ -1,18 +1,17 @@
-import * as Utils from "./Utils";
-
 export async function uploadFile(file) {
-    const url ="/server_Web_exploded/api/dashboard";
+    const url = "/server_Web_exploded/api/dashboard";
     const method = 'POST';
     const result = await fetchXmlWrapper(method, url, file);
-    return result ;
+    return result;
 }
-const fetchXmlWrapper =async  (method, url, file)=> {
+
+const fetchXmlWrapper = async (method, url, file) => {
     const options = {
         method,
         headers: {
             'Content-Type': 'application/xml',
         },
-        body:file,
+        body: file,
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
     }
@@ -24,11 +23,12 @@ const fetchXmlWrapper =async  (method, url, file)=> {
         responseBody = await result.json();
     } else {
         responseBody = await result.text();
+        console.log("in fileServices.js")
         console.log(responseBody);
     }
     if (!result.ok) {
         console.log("error");
-        throw  new Error("error") //todo create an exception that get the response.body , status code, status text
+        throw  new Error("error") //todo create an exception that gets the response.body , status code, status text
     }
 
     return responseBody;

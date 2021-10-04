@@ -2,6 +2,8 @@ package il.ac.mta.zuli.evolution;
 
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.TimetableSolution;
+import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
+import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,11 +21,57 @@ public class User {
         userAlgorithmRuns = new HashMap<>();
     }
 
-    public void runTimetableEngine(TimeTableEngine timeTableEngine) {
-        userAlgorithmRuns.put(timeTableEngine.getTimetableID(), timeTableEngine);
-        currDisplayedRun = timeTableEngine;
+    public void startEvolutionAlgorithm(TimeTable timetable,
+                                        Map<String, Object> engineSettingsMap,
+                                        Map<String, Object> endPredicatesMap,
+                                        Object generationStride) {
+        int timetableID = timetable.getID();
 
-        timeTableEngine.startEvolutionAlgorithm();
+        if (userAlgorithmRuns.containsKey(timetableID)) {
+            throw new RuntimeException("User " + username + " already solved this problem");
+            //TODO if the run already completed for this ttID maybe allow another run, overriding the previous run and solution
+        } else {
+            TimeTableEngine timetableEngine = new TimeTableEngine(
+                    timetable,
+                    engineSettingsMap,
+                    endPredicatesMap,
+                    generationStride);
+
+            userAlgorithmRuns.put(timetableID, timetableEngine);
+            currDisplayedRun = timetableEngine;
+
+            timetableEngine.startEvolutionAlgorithm();
+        }
+    }
+
+    public void resumeEvolutionAlgorithm(int timetableID,
+                                         Map<String, Object> engineSettingsMap,
+                                         Map<String, Object> endPredicatesMap,
+                                         Object generationStride) {
+
+        if (userAlgorithmRuns.containsKey(timetableID)) {
+            //TODO check if Paused
+            // if(paused){
+            TimeTableEngine timetableEngine = userAlgorithmRuns.get(timetableID);
+            timetableEngine.setNewAlgorithmConfiguration(engineSettingsMap, endPredicatesMap, generationStride);
+            timetableEngine.resumeEvolutionAlgorithm();
+//            }  else{
+//          throw new InvalidOperationException("The algorithm is not paused, so cannot be resumed);
+//            }
+        } else {
+            throw new InvalidOperationException("The user is not solving timetable " + timetableID);
+        }
+    }
+
+    public void pauseEvolutionAlgorithm(int timetableID) {
+        if (userAlgorithmRuns.containsKey(timetableID)) {
+            TimeTableEngine timetableEngine = userAlgorithmRuns.get(timetableID);
+            timetableEngine.pauseEvolutionAlgorithm();
+        }
+    }
+
+    public void stopEvolutionAlgorithm(int ttID) {
+
     }
 
     public void setUsername(String username) throws IOException {

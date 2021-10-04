@@ -12,8 +12,10 @@ public class EvolutionState {
     //the way we save the state (for pause/resume), this is the time elapsed since the beginning of the task-call
     private final long netRunTime;
     //Ex 3 additions:
-    private boolean taskDone; //for when Runnable completed its run
     private Throwable exception; // for exception from Runnable
+    //for when Runnable completed its run (either if successfully, unsuccessfully with exception, paused or stopped by user)
+    private boolean taskDone;
+    private LogicalRunStatus status; //if running, paused or stopped
 
     public EvolutionState(int generationNum,
                           long time,
@@ -32,6 +34,14 @@ public class EvolutionState {
 
     public synchronized boolean isTaskDone() {
         return taskDone;
+    }
+
+    public void setStatus(LogicalRunStatus status) {
+        this.status = status;
+    }
+
+    public LogicalRunStatus getStatus() {
+        return status;
     }
 
     public synchronized void setException(Throwable exception) {

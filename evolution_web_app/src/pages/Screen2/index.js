@@ -49,9 +49,9 @@ const Index = () => {
             try {
                 const dashboardPayload = await Screen2Services.getAll();
                 setUsers(dashboardPayload.users);
-                setSummaries([ ...dashboardPayload.timetables]);
+                setSummaries([...dashboardPayload.timetables]);
             } catch (e) {
-                console.log(e);
+                console.log("inside screen2/index", e);
                 // setAlertText('Failed initializing app, please reload page');
             } finally {
                 // setIsFetching(false);
@@ -68,9 +68,10 @@ const Index = () => {
     const handleFileUpload = async (event) => {
         setSelectedFile(event.target.files[0]);
         const result = await FileServices.uploadFile(event.target.files[0]);
-        if(result !=="OK"){
+        if (result !== "OK") {
             setAlertText(result);
         }
+        console.log("in screen2Index handleFileUpload()");
         console.log(result);//todo handle bad xml
     };
 

@@ -21,6 +21,7 @@ public class LoginServlet extends HttpServlet {
     private final String SIGN_UP_URL = "../../../evolution_web_app/src/pages/signup/SignUp.js";
 
     //no doGet() implemented here
+
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -43,10 +44,11 @@ public class LoginServlet extends HttpServlet {
                 DataManager dataManager = ServletUtils.getDataManager(getServletContext());
                 synchronized (this) {
                     if (dataManager.doesUserExist(newUser.getUsername())) {
+                        //TODO while(dataManager.doesUserExist(newUser.getUsername())) or IF?
                         responseMessage = Constants.USER_NAME_NOT_UNIQUE;
                     } else {
                         //add the new user to the users list
-                        dataManager.addUser(newUser);
+                        dataManager.addUser(newUser); //addUser is not a synchronized method (so there's no dead-lock)
                         //set the username in a session, so it will be available on each request
                         //the true parameter means that if a session object does not exist yet
                         //create a new one
@@ -64,7 +66,6 @@ public class LoginServlet extends HttpServlet {
             ServletUtils.sendJSONResponse(response, responseMessage);
         }
     }
-
 
 
     /**

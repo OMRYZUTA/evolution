@@ -60,10 +60,11 @@ public class RunAlgorithmTask implements Runnable {
             EvolutionState currEvolutionState = null;
 
             if (inEvolutionState == null) {
-                //if we're just now starting the task, and not resuming after pause
+                //if we're just now starting the task (and not resuming after pause)
                 prevEvolutionState = createFirstGenerationState();
                 bestSolutionEver = prevEvolutionState.getGenerationBestSolution();
             } else {
+                //if we're resuming the task
                 bestSolutionEver = prevEvolutionState.getBestSolutionSoFar();
             }
 
@@ -100,21 +101,23 @@ public class RunAlgorithmTask implements Runnable {
 
                 prevEvolutionState = currEvolutionState;
                 outEvolutionState = currEvolutionState;
-                reportState.accept(outEvolutionState);
+                reportState.accept(outEvolutionState); //essential in order to allow resume-after-pause
             } //end of for loop
 
             System.out.println("endOfLoop: " + bestSolutionEver.getFitnessScore() + "******");
             //TODO how do we handle the update for the last generation? (since it's not necessarily the number of generations in the endPredicates)
 //        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
         } catch (Throwable e) {
-            assert outEvolutionState != null;
-            outEvolutionState.setException(e);
+            if (outEvolutionState != null) {
+                outEvolutionState.setException(e);
+            }
             System.out.println("**********Exception in Runnable******");
             System.out.println(e.getMessage());
         } finally {
-            assert outEvolutionState != null;
-            outEvolutionState.setTaskDone();
-            reportState.accept(outEvolutionState); // reporting the last state as "done"
+            if (outEvolutionState != null) {
+                outEvolutionState.setTaskDone();
+                reportState.accept(outEvolutionState); // reporting the last state as "done"}
+            }
         }
     }
 
@@ -167,4 +170,5 @@ public class RunAlgorithmTask implements Runnable {
         evolutionEngine.evaluateSolutions(initialPopulation);
         return initialPopulation;
     }
+
 }

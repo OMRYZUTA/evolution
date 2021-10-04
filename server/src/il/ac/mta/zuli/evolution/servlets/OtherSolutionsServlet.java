@@ -4,7 +4,6 @@ import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.DataManager;
 import il.ac.mta.zuli.evolution.dto.OtherUserSolutionDTO;
 import il.ac.mta.zuli.evolution.utils.ServletUtils;
-import il.ac.mta.zuli.evolution.utils.SessionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,9 +26,10 @@ public class OtherSolutionsServlet extends HttpServlet {
 
         try {
             int ttID = Integer.parseInt(timetableIDFromParameter);
+
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
-            String usernameFromSession = SessionUtils.getUsername(request);
             List<OtherUserSolutionDTO> otherSolutions = dataManager.getOtherSolutionsInfo(ttID);
+
             mapForJSON.put(Constants.DATA, otherSolutions);
         } catch (Throwable e) {
             mapForJSON.put(Constants.ERROR, e.getMessage());

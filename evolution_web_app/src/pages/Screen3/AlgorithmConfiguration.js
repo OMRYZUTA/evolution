@@ -98,7 +98,8 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     const handleSelectionChange = useCallback((e, propName) => {
         const selection = {
             ...data.engineSettings.selection,
-            [propName]: e.target.value,
+            [propName]: e.target.value.trim(),
+            // trim textfields
         };
 
         const engineSettings = {...data.engineSettings, selection};
@@ -184,130 +185,149 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
         }
     };
 
+    //render accordions
+    const renderAccordion1 = () => {
+        return (<Accordion>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon/>}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+            >
+                <Typography>Population and Stride</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Grid container className={classes.root}>
+                    <TextField
+                        required
+                        label='Population size'
+                        defaultValue={data.populationSize}
+                        onChange={(e) =>
+                            handlePopulationSizeChange(e, 'populationSize')}
+                    />
+                    <TextField
+                        required
+                        id='stride'
+                        label='Stride'
+                        defaultValue={data.stride}
+                        onChange={handleChange}
+                    />
+                </Grid>
+            </AccordionDetails>
+        </Accordion>);
+    };
+
+    const renderAccordion2 = () => {
+        return (<Accordion>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon/>}
+                aria-controls="panel2a-content"
+                id="panel2a-header">
+                <Typography>End Conditions</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <EndPredicates endPredicates={data.endPredicates}
+                               handleEndPredicatesChange={handleEndPredicatesChange}/>
+            </AccordionDetails>
+        </Accordion>);
+    };
+
+    const renderAccordion3 = () => {
+        return (<Accordion>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon/>}
+                aria-controls="panel2a-content"
+                id="panel2a-header"
+            >
+                <Typography>Selection</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Grid container className={classes.root}>
+                    <DropDown
+                        label={"Selection"}
+                        options={selectionTypes}
+                        currentValue={data.engineSettings.selection.name}
+                        keyPropName="id"
+                        namePropName="name"
+                        onChange={(e) => handleSelectionChange(e, 'name')}
+                    />
+                    <TextField
+                        label='Elitism'
+                        defaultValue={data.engineSettings.selection.elitism}
+                        onChange={(e) => handleSelectionChange(e, 'elitism')}
+                    />
+                    {data.engineSettings.selection.name === 'RouletteWheel' ? '' : renderSelectionExtraField()}
+                </Grid>
+            </AccordionDetails>
+        </Accordion>);
+    };
+
+    const renderAccordion4 = () => {
+        return (<Accordion>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon/>}
+                aria-controls="panel2a-content"
+                id="panel2a-header"
+            >
+                <Typography>Crossover</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Grid container className={classes.root}>
+                    <DropDown
+                        label={"Crossover"}
+                        options={crossoverTypes}
+                        currentValue={data.engineSettings.crossover.name}
+                        keyPropName="id"
+                        namePropName="name"
+                        onChange={(e) => handleCrossoverChange(e, 'name')}
+                    />
+                    <TextField
+                        required
+                        label='Cutting Points'
+                        defaultValue={data.engineSettings.crossover.cuttingPoints}
+                        onChange={(e) => handleCrossoverChange(e, 'cuttingPoints')}
+                    />
+                    {data.engineSettings.crossover.name === 'DaytimeOriented' ? '' :
+                        <DropDown
+                            label={"Orientation"}
+                            options={orientations}
+                            currentValue={data.engineSettings.crossover.orientation}
+                            keyPropName="id"
+                            namePropName="name"
+                            onChange={(e) => handleCrossoverChange(e, 'orientation')}
+                        />}
+                </Grid>
+            </AccordionDetails>
+        </Accordion>);
+    };
+
+    const renderAccordion5 = () => {
+        return (<Accordion>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon/>}
+                aria-controls="panel2a-content"
+                id="panel2a-header"
+            >
+                <Typography>Mutations</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <IconButton onClick={handleAddMutation}>
+                    <AddIcon/>
+                </IconButton>
+                {data.engineSettings.mutations.map(renderMutation)}
+            </AccordionDetails>
+        </Accordion>);
+    };
+
+
     return (
         <Paper>
-
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon/>}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <Typography>Population and Stride</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Grid container className={classes.root}>
-                        <TextField
-                            required
-                            label='Population size'
-                            defaultValue={data.populationSize}
-                            onChange={(e) =>
-                                handlePopulationSizeChange(e, 'populationSize')}
-                        />
-                        <TextField
-                            required
-                            id='stride'
-                            label='Stride'
-                            defaultValue={data.stride}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-                </AccordionDetails>
-            </Accordion>
             {/*TODO maybe make text fields visible only if the box is ticked*/}
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon/>}
-                    aria-controls="panel2a-content"
-                    id="panel2a-header">
-                    <Typography>End Conditions</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <EndPredicates endPredicates={data.endPredicates}
-                                   handleEndPredicatesChange={handleEndPredicatesChange}/>
-                </AccordionDetails>
-            </Accordion>
 
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon/>}
-                    aria-controls="panel2a-content"
-                    id="panel2a-header"
-                >
-                    <Typography>Selection</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Grid container className={classes.root}>
-                        <DropDown
-                            label={"Selection"}
-                            options={selectionTypes}
-                            currentValue={data.engineSettings.selection.name}
-                            keyPropName="id"
-                            namePropName="name"
-                            onChange={(e) => handleSelectionChange(e, 'name')}
-                        />
-                        <TextField
-                            label='Elitism'
-                            defaultValue={data.engineSettings.selection.elitism}
-                            onChange={(e) => handleSelectionChange(e, 'elitism')}
-                        />
-                        {data.engineSettings.selection.name === 'RouletteWheel' ? '' : renderSelectionExtraField()}
-                    </Grid>
-                </AccordionDetails>
-            </Accordion>
-
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon/>}
-                    aria-controls="panel2a-content"
-                    id="panel2a-header"
-                >
-                    <Typography>Crossover</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Grid container className={classes.root}>
-                        <DropDown
-                            label={"Crossover"}
-                            options={crossoverTypes}
-                            currentValue={data.engineSettings.crossover.name}
-                            keyPropName="id"
-                            namePropName="name"
-                            onChange={(e) => handleCrossoverChange(e, 'name')}
-                        />
-                        <TextField
-                            required
-                            label='Cutting Points'
-                            defaultValue={data.engineSettings.crossover.cuttingPoints}
-                            onChange={(e) => handleCrossoverChange(e, 'cuttingPoints')}
-                        />
-                        {data.engineSettings.crossover.name === 'DaytimeOriented' ? '' :
-                            <DropDown
-                                label={"Orientation"}
-                                options={orientations}
-                                currentValue={data.engineSettings.crossover.orientation}
-                                keyPropName="id"
-                                namePropName="name"
-                                onChange={(e) => handleCrossoverChange(e, 'orientation')}
-                            />}
-                    </Grid>
-                </AccordionDetails>
-            </Accordion>
-
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon/>}
-                    aria-controls="panel2a-content"
-                    id="panel2a-header"
-                >
-                    <Typography>Mutations</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <IconButton onClick={handleAddMutation}>
-                        <AddIcon/>
-                    </IconButton>
-                    {data.engineSettings.mutations.map(renderMutation)}
-                </AccordionDetails>
-            </Accordion>
+            {renderAccordion1()}
+            {renderAccordion2()}
+            {renderAccordion3()}
+            {renderAccordion4()}
+            {renderAccordion5()}
 
             <ButtonGroup>
                 <Button onClick={() => {

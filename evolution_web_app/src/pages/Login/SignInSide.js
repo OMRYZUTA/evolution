@@ -57,7 +57,7 @@ export default function SignInSide() {
                 setAlertText('User name cannot be empty, please type at least one character');
                 break;
             case USER_NAME_NOT_UNIQUE:
-                setAlertText('User name is already exist, please type another name');
+                setAlertText('User name already exists, please enter a different name');
                 break;
             default:
                 setAlertText('Unexpected Error, please contact support');

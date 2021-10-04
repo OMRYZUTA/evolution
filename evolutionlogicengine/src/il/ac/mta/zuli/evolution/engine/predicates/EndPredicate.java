@@ -38,7 +38,7 @@ public class EndPredicate implements Predicate<Double> {
 
     private void setGenerationNum(double value, int stride) {
         if (value <= 100) {
-            throw new ValidationException("Generation number must be greater then 100");
+            throw new ValidationException("Generation number must be greater than 100");
         } else if (stride > value) {
             throw new ValidationException("Stride must be less than total generations ");
         } else {
