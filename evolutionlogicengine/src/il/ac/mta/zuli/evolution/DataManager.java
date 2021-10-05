@@ -1,11 +1,13 @@
 package il.ac.mta.zuli.evolution;
 
 import il.ac.mta.zuli.evolution.dto.AlgorithmConfigDTO;
+import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
 import il.ac.mta.zuli.evolution.dto.OtherUserSolutionDTO;
+import il.ac.mta.zuli.evolution.dto.TimetableSummaryDTO;
+import il.ac.mta.zuli.evolution.engine.StrideData;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
-import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,9 +23,6 @@ public class DataManager {
     public DataManager() throws IOException {
         timetables = new ArrayList<>();
         users = new HashMap<>();
-        //TODO delete later, also delete all throws IOExceptions
-        users.put("Gary12432", new User("Gary12432"));
-        users.put("Cupcake12321", new User("Cupcake12321"));
     }
 
     //synchronized methods
@@ -33,13 +32,12 @@ public class DataManager {
         timetables.add(timeTable);
     }
 
-    //add user only called after exist check
+    //add user only called after exist check and within a synchronized block (so the function is NON-sync)
     public void addUser(User user) {
-        //called within a synchronized block
         users.put(user.getUsername(), user);
     }
 
-    //#region Single-User-Methods (non-synchronized)
+    //#region Algorithm Flow methods (these are single-User-Methods, non-synchronized)
     //TODO should these algo-flow methods be synchronized?
     public void startAlgorithmRunForUser(String userName,
                                          int timetableID,
@@ -53,6 +51,11 @@ public class DataManager {
                 engineSettingsMap,
                 endPredicatesMap,
                 generationStride);
+    }
+
+    public String stopAlgorithmRunForUser(String userName, int ttID) {
+        users.get(userName).stopEvolutionAlgorithm(ttID);
+        return "Algorithm stopped";//TODO change message later
     }
 
     public String pauseAlgorithmRunForUser(String userName, int ttID) {
@@ -75,15 +78,18 @@ public class DataManager {
                 endPredicatesMap,
                 generationStride);
     }
-
-    public String stoplgorithmRunForUser(String userName, int ttID) {
-        users.get(userName).stopEvolutionAlgorithm(ttID);
-        return "Algorithm stopped";//TODO change message later
-    }
-
     //#endregion
 
     //#region getters
+    public GenerationProgressDTO getProgressData(String userName, int ttID) {
+        return users.get(userName).getProgressData(ttID);
+    }
+
+    //we might nor be using the stride updates (depends on the bonus we implement)
+    public StrideData getStrideData(String userName, int ttID) {
+        return users.get(userName).getStrideData(ttID);
+    }
+
     //return value might be an empty list
     public List<String> getUserNames() {
         if (!users.isEmpty()) {
@@ -136,7 +142,7 @@ public class DataManager {
         return userWithBestSolution;
     }
 
-    //return value might be null TODO change to timetableDTO? and timetableSummary DTO?
+    //return value might be null
     public TimeTable getTimetable(int ttID) {
 
         if (doesTimetableExist(ttID)) {
@@ -146,16 +152,16 @@ public class DataManager {
         }
     }
 
-    public List<TimetableSummary> getTimetableSummaries() {
-        List<TimetableSummary> newList = new ArrayList<>();
+    public List<TimetableSummaryDTO> getTimetableSummaries() {
+        List<TimetableSummaryDTO> newList = new ArrayList<>();
 
         if (!timetables.isEmpty()) {
-            for (TimeTable tt : timetables) {
-                int ttID = tt.getID();
+            for (TimeTable timetable : timetables) {
+                int ttID = timetable.getID();
                 int numOfUsers = getNumOfUsersSolvingProblem(ttID);
                 double bestScore = getBestScoreForProblem(ttID);
 
-                newList.add(new TimetableSummary(tt, bestScore, numOfUsers));
+                newList.add(new TimetableSummaryDTO(timetable, bestScore, numOfUsers));
             }
         }
 
@@ -170,13 +176,15 @@ public class DataManager {
 
     public AlgorithmConfigDTO getAlgoConfig(String userName, int ttID) {
         TimeTableEngine ttEngine = getTimetableEngine(userName, ttID);
-        if(ttEngine!=null) {
+
+        if (ttEngine != null) {
             return new AlgorithmConfigDTO(
                     ttID,
                     ttEngine.getGenerationsStride(),
                     ttEngine.getEndPredicates(),
                     ttEngine.getEngineSettings());
         }
+
         return null;
     }
 

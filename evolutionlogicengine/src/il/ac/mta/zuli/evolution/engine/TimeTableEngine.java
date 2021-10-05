@@ -1,18 +1,18 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.Constants;
-import il.ac.mta.zuli.evolution.dto.*;
+import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicateType;
-import il.ac.mta.zuli.evolution.engine.rules.Rule;
 import il.ac.mta.zuli.evolution.engine.tasks.RunAlgorithmTask;
-import il.ac.mta.zuli.evolution.engine.timetable.*;
-import org.jetbrains.annotations.NotNull;
+import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class TimeTableEngine implements Engine {
     private final Descriptor descriptor;
@@ -129,10 +129,6 @@ public class TimeTableEngine implements Engine {
 //#endregion
 
     //#region getters:
-    public Integer getTimetableID() {
-        return descriptor.getTimetableID();
-    }
-
     @Override
     public TimeTable getTimeTable() {
         return descriptor.getTimeTable();
@@ -148,7 +144,7 @@ public class TimeTableEngine implements Engine {
     }
 
     public Integer getCurrGenerationNum() {
-        if(currEvolutionState!=null) {
+        if (currEvolutionState != null) {
             return currEvolutionState.getGenerationNum();
         }
         return null;
@@ -172,6 +168,16 @@ public class TimeTableEngine implements Engine {
         } else {
             return 0;
         }
+    }
+
+    public GenerationProgressDTO getProgressData() {
+        return new GenerationProgressDTO(
+                currEvolutionState.getGenerationNum(),
+                currEvolutionState.getGenerationBestScore());
+    }
+
+    public StrideData getStrideData() {
+        return strideData;
     }
     //#endregion
 
@@ -258,124 +264,4 @@ public class TimeTableEngine implements Engine {
     private boolean isXMLLoaded() {
         return descriptor != null;
     }
-
-    //#region DTO-related methods
-    @NotNull
-    private TimeTableDTO createTimeTableDTO() {
-        Map<Integer, SubjectDTO> subjectsDTO = createSortedSubjectDTOCollection(descriptor.getTimeTable().getSubjects());
-        Map<Integer, TeacherDTO> teachersDTO = createSortedTeacherDTOCollection();
-        Map<Integer, SchoolClassDTO> schoolClassesDTO = createSortedClassesDTOCollection();
-        Set<RuleDTO> rulesDTO = createRulesDTOSet();
-
-        return new TimeTableDTO(descriptor.getTimeTable().getDays(),
-                descriptor.getTimeTable().getHours(),
-                subjectsDTO, teachersDTO, schoolClassesDTO, rulesDTO);
-    }
-
-    private Set<RuleDTO> createRulesDTOSet() {
-        Set<Rule> rules = descriptor.getTimeTable().getRules();
-        Set<RuleDTO> rulesDTO = new HashSet<>();
-
-        for (Rule rule : rules) {
-            rulesDTO.add(
-                    new RuleDTO(
-                            rule.getClass().getSimpleName(),
-                            rule.getRuleType().toString(),
-                            rule.getParams()
-                    ));
-        }
-
-        return rulesDTO;
-    }
-
-    private Map<Integer, SubjectDTO> createSortedSubjectDTOCollection(Map<Integer, Subject> subjects) {
-        Map<Integer, SubjectDTO> subjectDTOS = new TreeMap<>();
-
-        for (Subject subject : subjects.values()) {
-            subjectDTOS.put(subject.getId(), new SubjectDTO(subject.getId(), subject.getName()));
-        }
-
-        return subjectDTOS; //in sorted order because of TreeMap
-    }
-
-    private QuintetDTO createQuintetDTO(Quintet quintet) {
-        TeacherDTO teacherDTO = createTeacherDTO(quintet.getTeacher());
-        SchoolClassDTO schoolClassDTO = createSchoolClassDTO(quintet.getSchoolClass());
-        SubjectDTO subjectDTO = new SubjectDTO(quintet.getSubjectID(), quintet.getSubject().getName());
-
-        return new QuintetDTO(quintet.getDay(), quintet.getHour(), teacherDTO, schoolClassDTO, subjectDTO);
-    }
-
-    private List<QuintetDTO> createQuintetDTOList(List<Quintet> quintets) {
-        List<QuintetDTO> quintetDTOList = new ArrayList<>();
-
-        for (Quintet quintet : quintets) {
-            quintetDTOList.add(createQuintetDTO(quintet));
-        }
-
-        return quintetDTOList;
-    }
-
-    private TimeTableSolutionDTO createTimeTableSolutionDTO(@NotNull TimetableSolution solution) {
-        List<QuintetDTO> quintets = createQuintetDTOList(solution.getSolutionQuintets());
-        Map<RuleDTO, java.lang.Double> fitnessScorePerRuleDTO = new HashMap<>();
-
-        for (Map.Entry<Rule, java.lang.Double> entry : solution.getFitnessScorePerRule().entrySet()) {
-            Rule rule = entry.getKey();
-            fitnessScorePerRuleDTO.put(
-                    new RuleDTO(rule.getClass().getSimpleName(), rule.getRuleType().toString(), rule.getParams()),
-                    entry.getValue()
-            );
-        }
-
-        return new TimeTableSolutionDTO(quintets, solution.getSolutionSize(), solution.getFitnessScore(),
-                fitnessScorePerRuleDTO, createTimeTableDTO());
-    }
-
-    private TeacherDTO createTeacherDTO(Teacher teacher) {
-        Map<Integer, SubjectDTO> subjectsDTO = createSortedSubjectDTOCollection(teacher.getSubjects());
-
-        return new TeacherDTO(teacher.getId(), teacher.getName(), subjectsDTO);
-    }
-
-    private Map<Integer, TeacherDTO> createSortedTeacherDTOCollection() {
-        Map<Integer, TeacherDTO> teacherDTOs = new TreeMap<>();
-        Map<Integer, Teacher> teachers = descriptor.getTimeTable().getTeachers();
-
-        for (Teacher teacher : teachers.values()) {
-            teacherDTOs.put(teacher.getId(), createTeacherDTO(teacher));
-        }
-
-        return teacherDTOs; //in sorted order because of TreeMap
-    }
-
-    private SchoolClassDTO createSchoolClassDTO(SchoolClass schoolClass) {
-        List<RequirementDTO> requirementsDTO = createRequirementsDTOList(schoolClass.getRequirements());
-
-        return new SchoolClassDTO(schoolClass.getId(), schoolClass.getName(), requirementsDTO);
-    }
-
-    private Map<Integer, SchoolClassDTO> createSortedClassesDTOCollection() {
-        Map<Integer, SchoolClassDTO> SchoolClassDTOs = new TreeMap<>();
-        Map<Integer, SchoolClass> SchoolClass = descriptor.getTimeTable().getSchoolClasses();
-
-        for (SchoolClass schoolClass : SchoolClass.values()) {
-            SchoolClassDTOs.put(schoolClass.getId(), createSchoolClassDTO(schoolClass));
-        }
-
-        return SchoolClassDTOs; //in sorted order because of TreeMap
-    }
-
-    private List<RequirementDTO> createRequirementsDTOList(List<Requirement> requirements) {
-        List<RequirementDTO> requirementDTOs = new ArrayList<>();
-        SubjectDTO subjectDTO;
-
-        for (Requirement requirement : requirements) {
-            subjectDTO = new SubjectDTO(requirement.getSubject().getId(), requirement.getSubject().getName());
-            requirementDTOs.add(new RequirementDTO(requirement.getHours(), subjectDTO));
-        }
-
-        return requirementDTOs;
-    }
-    //#endregion
 }

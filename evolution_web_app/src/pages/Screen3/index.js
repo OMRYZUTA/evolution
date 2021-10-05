@@ -11,11 +11,12 @@ import * as Utils from "../../services/Utils";
 import {useHistory} from "react-router-dom";
 import * as Screen3Services from "../../services/Screen3Services";
 import OtherSolutions from "./OtherSolutions";
+import Typography from "@mui/material/Typography";
 
 const fakeAlgoConfig = {
     timetableID: 0,
     stride: "10",
-    endPredicates: {numOfGenerations: "1500", fitnessScore: "97.1", time: "4"},
+    endPredicates: {numOfGenerations: "700", fitnessScore: "97.1", time: "4"},
     engineSettings: {
         populationSize: "60",
         selection: {name: "RouletteWheel", elitism: "5"},
@@ -56,10 +57,10 @@ const useStyles = makeStyles((theme) => ({
 const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
     const {currentTimetableID} = useContext(TimetableContext);
-    const [timetable, setTimetable] = useState();
     const [isRunning, setIsRunning] = useState(false);// flag use to diable and enable button
+    const [timetable, setTimetable] = useState();
     const [otherSolutions, setOtherSolutions] = useState([]);
-    const [] = useState();
+    const [progress, setProgress] = useState();
     const classes = useStyles();
     const history = useHistory();
     const emptyAlgoConfig = {
@@ -74,16 +75,16 @@ const Screen3 = () => {
         }
     }
     const [algorithmConfiguration, setAlgorithmConfiguration] = useState(fakeAlgoConfig); //TODO return to empty
-    // const actions = ["start ", "pause ", "resume ", "stop "]
 
     useEffect(() => {
         // calling all API calls in parallel, and waiting until they ALL finish before setting
         const fetchAllData = async () => {
             try {
-                const [timetableResult, algoConfigResult, otherSolutionsResult] = await Promise.all([
+                const [timetableResult, algoConfigResult, otherSolutionsResult, progressResult] = await Promise.all([
                     Screen3Services.getTimetableDetails(currentTimetableID),
                     Screen3Services.getAlgoConfig(currentTimetableID),
                     Screen3Services.getOtherSolutionsInfo(currentTimetableID),
+                    Screen3Services.getProgress(currentTimetableID),
                 ]);
 
                 if (timetableResult.data) {
@@ -115,6 +116,17 @@ const Screen3 = () => {
                     console.log("otherSolutionsResult.data is null");
                     console.log(otherSolutionsResult.error);
                 }
+
+                if (progressResult.data) {
+                    console.log("progressResult (screen 3 index)")
+                    console.log(progressResult.data);
+                    setProgress(progressResult.data);
+                } else {
+                    // setAlertText('Failed initializing app, please reload page');
+                    console.log("progressResult.data is null");
+                    console.log(progressResult.error);
+                }
+
             } catch (e) {
                 console.log(e);
                 // setAlertText('Failed initializing app, please reload page');
@@ -123,7 +135,7 @@ const Screen3 = () => {
 
         const interval = setInterval(() => {
             fetchAllData();
-        }, 10000) //will run every 10 seconds
+        }, 1000) //will run every 1 second
 
         return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
 
@@ -135,7 +147,7 @@ const Screen3 = () => {
             await Utils.fetchWrapper(
                 'POST',
                 `/server_Web_exploded/api/actions?action=start`,
-                algorithmConfiguration)
+                algorithmConfiguration);
         } catch (e) {
             // TODO handle exception add alert
             console.log(e);
@@ -182,37 +194,53 @@ const Screen3 = () => {
             // TODO handle exception add alert
             console.log(e);
         }
-
     }, [algorithmConfiguration]);
+
+    const renderProgress = () => {
+        if (progress) {
+            return (
+                <Grid container className={classes.settings}>
+                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                        {progress.generationNum}
+                    </Typography>
+                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                        {progress.bestScoreInGeneration}
+                    </Typography>
+                </Grid>
+            );
+        }
+    }
 
     const routeChange = () => {
         history.push(SCREEN2URL);
     }
 
     const renderButtonGroup = () => {
-        return (<ButtonGroup
-            aria-label="outlined primary button group">
-            <Button
-                id="start" onClick={handleStart}  disabled={isRunning}  >
-                {/*TODO disable later when needed*/}
-                start
-            </Button>
-            <Button id="pause" disabled={!isRunning} onClick={handlePause}>
-                pause
-            </Button>
-            <Button id="resume" disabled={isRunning}  onClick={handleResume}>
-                resume
-            </Button>
-            <Button id="stop" disabled={!isRunning} onClick={handleStop}>
-                stop
-            </Button>
-            <Button id="bestSolution">
-                Best Solution
-            </Button>
-            <Button id="back to screen 2" onClick={routeChange}>
-                Back to screen 2
-            </Button>
-        </ButtonGroup>);
+        return (
+            <ButtonGroup
+                aria-label="outlined primary button group">
+                <Button
+                    id="start" onClick={handleStart} disabled={isRunning}>
+                    {/*TODO disable later when needed*/}
+                    start
+                </Button>
+                <Button id="pause" disabled={!isRunning} onClick={handlePause}>
+                    pause
+                </Button>
+                <Button id="resume" disabled={isRunning} onClick={handleResume}>
+                    resume
+                </Button>
+                <Button id="stop" disabled={!isRunning} onClick={handleStop}>
+                    stop
+                </Button>
+                <Button id="bestSolution">
+                    Best Solution
+                </Button>
+                <Button id="back to screen 2" onClick={routeChange}>
+                    Back to screen 2
+                </Button>
+            </ButtonGroup>
+        );
     }
 
     return (
@@ -221,7 +249,6 @@ const Screen3 = () => {
                 <Navbar user={currentUser}/>
 
                 <Grid container direction={"row"} spacing={2}>
-
                     <Grid item xs={12} md={6}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
                             {/*const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange})*/}
@@ -237,7 +264,12 @@ const Screen3 = () => {
                                 {renderButtonGroup()}
                             </Grid>
                             <Grid item>
-                                <Paper>stride details</Paper>
+                                <Paper>
+                                    <Grid container direction={"column"} className={classes.root}>
+                                        <Typography> progress </Typography>
+                                        {renderProgress()}
+                                    </Grid>
+                                </Paper>
                             </Grid>
                             <Grid item>
                                 <OtherSolutions otherSolutionsList={otherSolutions}/>
@@ -247,7 +279,7 @@ const Screen3 = () => {
                 </Grid>
             </Container>
         </Grid>
-    )
+    );
 }
 
 export default Screen3;

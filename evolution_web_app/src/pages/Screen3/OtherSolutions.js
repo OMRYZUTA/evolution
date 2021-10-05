@@ -1,5 +1,4 @@
 import CircularIndeterminate from "../../components/CircularIndeterminate";
-import {DataGrid} from '@mui/x-data-grid';
 import Grid from "@mui/material/Grid";
 import {makeStyles} from "@mui/styles";
 import Paper from "@mui/material/Paper";
@@ -29,19 +28,6 @@ const useStyles = makeStyles((theme) => ({
 
 const OtherSolutions = ({otherSolutionsList}) => {
     const classes = useStyles();
-
-    const columns = [
-        {field: 'userName', headerName: 'User', width: 150, editable: false},
-        {
-            field: 'bestScore', headerName: 'Best Score', width: 90, editable: false,
-        },
-        {
-            field: 'currentGeneration',
-            headerName: 'Generation',
-            width: 30,
-            editable: false,
-        },
-    ];
 
     // if it's undefined
     if (!otherSolutionsList) {

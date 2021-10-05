@@ -1,5 +1,7 @@
 package il.ac.mta.zuli.evolution;
 
+import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
+import il.ac.mta.zuli.evolution.engine.StrideData;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
@@ -21,6 +23,7 @@ public class User {
         userAlgorithmRuns = new HashMap<>();
     }
 
+    //#region Algo-Flow Methods
     public void startEvolutionAlgorithm(TimeTable timetable,
                                         Map<String, Object> engineSettingsMap,
                                         Map<String, Object> endPredicatesMap,
@@ -50,14 +53,10 @@ public class User {
                                          Object generationStride) {
 
         if (userAlgorithmRuns.containsKey(timetableID)) {
-            //TODO check if Paused
-            // if(paused){
+            //in timetableEngine.resumeEvolutionAlgorithm() we'll check if it's indeed paused
             TimeTableEngine timetableEngine = userAlgorithmRuns.get(timetableID);
             timetableEngine.setNewAlgorithmConfiguration(engineSettingsMap, endPredicatesMap, generationStride);
             timetableEngine.resumeEvolutionAlgorithm();
-//            }  else{
-//          throw new InvalidOperationException("The algorithm is not paused, so cannot be resumed);
-//            }
         } else {
             throw new InvalidOperationException("The user is not solving timetable " + timetableID);
         }
@@ -73,6 +72,7 @@ public class User {
     public void stopEvolutionAlgorithm(int ttID) {
 
     }
+    //#endregion
 
     public void setUsername(String username) throws IOException {
         if (username == null || username.trim().isEmpty()) {
@@ -84,10 +84,15 @@ public class User {
         this.username = username.trim();
     }
 
+    public boolean isSolvingProblem(int ttID) {
+        //if currently solving or previously solved a certain timetable
+        return userAlgorithmRuns.containsKey(ttID);
+    }
+
+    //#region getters
     public String getUsername() {
         return username;
     }
-
 
     public TimeTableEngine getTimetableEngine(int ttID) {
         if (isSolvingProblem(ttID)) {
@@ -97,9 +102,12 @@ public class User {
         return null;
     }
 
-    public boolean isSolvingProblem(int ttID) {
-        //if currently solving or previously solved a certain timetable
-        return userAlgorithmRuns.containsKey(ttID);
+    public GenerationProgressDTO getProgressData(int ttID) {
+        if (isSolvingProblem(ttID)) {
+            return userAlgorithmRuns.get(ttID).getProgressData();
+        }
+
+        return null;
     }
 
     public double getBestScore(int ttID) {
@@ -117,6 +125,15 @@ public class User {
 
         return null;
     }
+
+    public StrideData getStrideData(int ttID) {
+        if (isSolvingProblem(ttID)) {
+            return userAlgorithmRuns.get(ttID).getStrideData();
+        }
+
+        return null;
+    }
+    //#endregion
 
     @Override
     public int hashCode() {

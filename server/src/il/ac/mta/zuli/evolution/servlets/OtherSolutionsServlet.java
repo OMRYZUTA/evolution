@@ -37,5 +37,4 @@ public class OtherSolutionsServlet extends HttpServlet {
             ServletUtils.sendJSONResponse(response, mapForJSON);
         }
     }
-
 }

@@ -70,6 +70,10 @@ public class EvolutionState {
                 .limit(1).collect(Collectors.toList()).get(0);
     }
 
+    public double getGenerationBestScore() {
+        return getGenerationBestSolution().getFitnessScore();
+    }
+
     public TimetableSolution getBestSolutionSoFar() {
         return bestSolutionSoFar;
     }

@@ -1,9 +1,9 @@
 package il.ac.mta.zuli.evolution.servlets;
 
 import il.ac.mta.zuli.evolution.DataManager;
+import il.ac.mta.zuli.evolution.dto.TimetableSummaryDTO;
 import il.ac.mta.zuli.evolution.engine.EngineUtils;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
-import il.ac.mta.zuli.evolution.engine.timetable.TimetableSummary;
 import il.ac.mta.zuli.evolution.engine.xmlparser.XMLParser;
 import il.ac.mta.zuli.evolution.utils.ServletUtils;
 import il.ac.mta.zuli.evolution.utils.SessionUtils;
@@ -30,7 +30,7 @@ public class DashboardServlet extends HttpServlet {
         try {
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
             List<String> usernames = dataManager.getUserNames();
-            List<TimetableSummary> timetableSummaries = dataManager.getTimetableSummaries();
+            List<TimetableSummaryDTO> timetableSummaries = dataManager.getTimetableSummaries();
 
             //preparing the response (no need for DTOs because we already wrap the objects in JSON)
             mapForJSON.put("users", usernames);
