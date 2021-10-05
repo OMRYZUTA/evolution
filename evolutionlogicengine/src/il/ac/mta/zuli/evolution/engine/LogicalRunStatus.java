@@ -3,4 +3,6 @@ package il.ac.mta.zuli.evolution.engine;
 public enum LogicalRunStatus {
     RUNNING, STOPPED, PAUSED, COMPLETED
 }
-//TODO - leave in completed? not really necessary , this enum is only used to validate pause-stop-resume flow
+//RUNNING is either after start or after resume
+//COMPLETED is either successful-completion of the algo (hitting one of the endPredicates)
+//or unsuccessful completion - with exception

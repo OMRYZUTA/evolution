@@ -36,7 +36,7 @@ public class EvolutionState {
         return taskDone;
     }
 
-    public void setStatus(LogicalRunStatus status) {
+    public synchronized void setStatus(LogicalRunStatus status) {
         this.status = status;
     }
 

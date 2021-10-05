@@ -196,7 +196,7 @@ const Screen3 = () => {
                                 <Paper>stride details</Paper>
                             </Grid>
                             <Grid item>
-                                <OtherSolutions othersolutionsList={otherSolutions}/>
+                                <OtherSolutions otherSolutionsList={otherSolutions}/>
                             </Grid>
                         </Grid>
                     </Grid>

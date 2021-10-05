@@ -27,11 +27,48 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const OtherSolutions = ({othersolutionsList}) => {
+const OtherSolutions = ({otherSolutionsList}) => {
     const classes = useStyles();
 
+    // String userName;
+    // Double bestScore;
+    // Integer currentGeneration;
+    const columns = [
+        {field: 'id', headerName: 'ID', width: 90},
+        {
+            field: 'firstName',
+            headerName: 'First name',
+            width: 150,
+            editable: true,
+        },
+        {
+            field: 'lastName',
+            headerName: 'Last name',
+            width: 150,
+            editable: true,
+        },
+        {
+            field: 'age',
+            headerName: 'Age',
+            type: 'number',
+            width: 110,
+            editable: true,
+        },
+        {
+            field: 'fullName',
+            headerName: 'Full name',
+            description: 'This column has a value getter and is not sortable.',
+            sortable: false,
+            width: 160,
+            valueGetter: (params) =>
+                `${params.getValue(params.id, 'firstName') || ''} ${
+                    params.getValue(params.id, 'lastName') || ''
+                }`,
+        },
+    ];
+
     // if it's undefined
-    if (!othersolutionsList) {
+    if (!otherSolutionsList) {
         return (<CircularIndeterminate/>);
     }
 
@@ -41,12 +78,12 @@ const OtherSolutions = ({othersolutionsList}) => {
                 <Typography>
                     other users are solving the same problem:
                 </Typography>
-                {othersolutionsList.map(solutionInfo => {
+                {otherSolutionsList.map(solutionInfo => {
                     return (
                         <Grid item>
                             <Grid container className={classes.settings}>
                                 <DataGrid
-                                    rows={rows}
+                                    rows={otherSolutionsList}
                                     columns={columns}
                                     pageSize={5}
                                     rowsPerPageOptions={[5]}

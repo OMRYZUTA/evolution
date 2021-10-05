@@ -73,6 +73,11 @@ public class TimeTableEngine implements Engine {
                 generationsStride,
                 currentState,
                 (EvolutionState state) -> {
+                    if (state.isTaskDone() &&
+                            state.getStatus() != LogicalRunStatus.STOPPED &&
+                            state.getStatus() != LogicalRunStatus.PAUSED) {
+                        state.setStatus(LogicalRunStatus.COMPLETED);
+                    }
                     this.currEvolutionState = state;
                 },
                 (TimetableSolution solution) -> bestSolution = solution,
@@ -122,16 +127,6 @@ public class TimeTableEngine implements Engine {
 //        this.currEvolutionState = null; //in case of STOP we don't want to save the previous state
     }
 
-    //either completed successfully or with exception
-    public boolean wasRunCompleted() {
-        return currEvolutionState.isTaskDone() &&
-                currEvolutionState.getStatus() != LogicalRunStatus.STOPPED &&
-                currEvolutionState.getStatus() != LogicalRunStatus.PAUSED;
-    }
-
-    public boolean wasRunSuccessfullyCompleted() {
-        return wasRunCompleted() && null == currEvolutionState.getException();
-    }
 //#endregion
 
     //#region getters:
