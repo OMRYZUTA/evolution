@@ -43,6 +43,7 @@ const flippingComponent = [
 
 const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSave, handleCancel}) => {
     const classes = useStyles();
+    console.log({algorithmConfiguration})
     const [data, setData] = useState(algorithmConfiguration); //currentSettings
 
     //for first level fields only
@@ -200,7 +201,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     <TextField
                         required
                         label='Population size'
-                        defaultValue={data.populationSize}
+                        defaultValue={data.engineSettings.populationSize}
                         onChange={(e) =>
                             handlePopulationSizeChange(e, 'populationSize')}
                     />

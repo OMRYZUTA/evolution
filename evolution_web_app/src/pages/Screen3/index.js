@@ -57,6 +57,7 @@ const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
     const {currentTimetableID} = useContext(TimetableContext);
     const [timetable, setTimetable] = useState();
+    const [isRunning, setIsRunning] = useState(false);// flag use to diable and enable button
     const [otherSolutions, setOtherSolutions] = useState([]);
     const [] = useState();
     const classes = useStyles();
@@ -72,7 +73,7 @@ const Screen3 = () => {
             mutations: [],
         }
     }
-    const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
+    const [algorithmConfiguration, setAlgorithmConfiguration] = useState(fakeAlgoConfig); //TODO return to empty
     // const actions = ["start ", "pause ", "resume ", "stop "]
 
     useEffect(() => {
@@ -130,6 +131,7 @@ const Screen3 = () => {
 
     const handleStart = useCallback(async () => {
         let result;
+        setIsRunning(true);
         try {
             result = await Utils.fetchWrapper(
                 'POST',
@@ -150,16 +152,16 @@ const Screen3 = () => {
         return (<ButtonGroup
             aria-label="outlined primary button group">
             <Button
-                id="start" onClick={handleStart}>
+                id="start" onClick={handleStart} disabled={isRunning}>
                 start
             </Button>
-            <Button id="pause">
+            <Button id="pause" disabled={!isRunning}>
                 pause
             </Button>
-            <Button id="resume">
+            <Button id="resume" disabled={isRunning}>
                 resume
             </Button>
-            <Button id="stop">
+            <Button id="stop" disabled={!isRunning}>
                 stop
             </Button>
             <Button id="bestSolution">

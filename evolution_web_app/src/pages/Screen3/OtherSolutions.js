@@ -56,7 +56,23 @@ const OtherSolutions = ({otherSolutionsList}) => {
                 </Typography>
                 <Grid item>
                     <Grid container className={classes.settings}>
-                        {console.log({otherSolutionsList})}
+                        {console.log("otherSolutionsList :")}
+                        {console.log(otherSolutionsList)}
+                        {otherSolutionsList.map(solution => {
+                            return (
+                                <Grid container className={classes.settings}>
+                                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                        {solution.userName}
+                                    </Typography>
+                                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                        {solution.bestScore}
+                                    </Typography>
+                                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                        {solution.currentGeneration}
+                                    </Typography>
+                                </Grid>
+                            )
+                        })}
                         {/*<DataGrid*/}
                         {/*    rows={otherSolutionsList}*/}
                         {/*    columns={columns}*/}
