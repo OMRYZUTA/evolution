@@ -170,12 +170,14 @@ public class DataManager {
 
     public AlgorithmConfigDTO getAlgoConfig(String userName, int ttID) {
         TimeTableEngine ttEngine = getTimetableEngine(userName, ttID);
-
-        return new AlgorithmConfigDTO(
-                ttID,
-                ttEngine.getGenerationsStride(),
-                ttEngine.getEndPredicates(),
-                ttEngine.getEngineSettings());
+        if(ttEngine!=null) {
+            return new AlgorithmConfigDTO(
+                    ttID,
+                    ttEngine.getGenerationsStride(),
+                    ttEngine.getEndPredicates(),
+                    ttEngine.getEngineSettings());
+        }
+        return null;
     }
 
     //return value might be an empty list

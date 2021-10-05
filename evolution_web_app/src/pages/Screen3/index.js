@@ -15,7 +15,7 @@ import OtherSolutions from "./OtherSolutions";
 const fakeAlgoConfig = {
     timetableID: 0,
     stride: "10",
-    endPredicates: {numOfGenerations: "120", fitnessScore: "97.1", time: "2"},
+    endPredicates: {numOfGenerations: "1500", fitnessScore: "97.1", time: "4"},
     engineSettings: {
         populationSize: "60",
         selection: {name: "RouletteWheel", elitism: "5"},
@@ -130,18 +130,59 @@ const Screen3 = () => {
     }, []);
 
     const handleStart = useCallback(async () => {
-        let result;
         setIsRunning(true);
         try {
-            result = await Utils.fetchWrapper(
+            await Utils.fetchWrapper(
                 'POST',
                 `/server_Web_exploded/api/actions?action=start`,
                 algorithmConfiguration)
         } catch (e) {
-            // TODO handle exception
+            // TODO handle exception add alert
             console.log(e);
         }
-        return result;
+
+    }, [algorithmConfiguration]);
+
+    const handlePause = useCallback(async () => {
+        setIsRunning(false);
+        try {
+            await Utils.fetchWrapper(
+                'POST',
+                `/server_Web_exploded/api/actions?action=pause`,
+                currentTimetableID)
+        } catch (e) {
+            // TODO handle exception add alert
+            console.log(e);
+        }
+
+    }, []);
+
+    const handleStop = useCallback(async () => {
+        setIsRunning(false);
+        try {
+            await Utils.fetchWrapper(
+                'POST',
+                `/server_Web_exploded/api/actions?action=stop`,
+                currentTimetableID)
+        } catch (e) {
+            // TODO handle exception add alert
+            console.log(e);
+        }
+
+    }, []);
+
+    const handleResume = useCallback(async () => {
+        setIsRunning(true);
+        try {
+            await Utils.fetchWrapper(
+                'POST',
+                `/server_Web_exploded/api/actions?action=resume`,
+                algorithmConfiguration)
+        } catch (e) {
+            // TODO handle exception add alert
+            console.log(e);
+        }
+
     }, [algorithmConfiguration]);
 
     const routeChange = () => {
@@ -152,17 +193,17 @@ const Screen3 = () => {
         return (<ButtonGroup
             aria-label="outlined primary button group">
             <Button
-                id="start" onClick={handleStart} >
+                id="start" onClick={handleStart}  disabled={isRunning}  >
                 {/*TODO disable later when needed*/}
                 start
             </Button>
-            <Button id="pause" disabled={!isRunning}>
+            <Button id="pause" disabled={!isRunning} onClick={handlePause}>
                 pause
             </Button>
-            <Button id="resume" disabled={isRunning}>
+            <Button id="resume" disabled={isRunning}  onClick={handleResume}>
                 resume
             </Button>
-            <Button id="stop" disabled={!isRunning}>
+            <Button id="stop" disabled={!isRunning} onClick={handleStop}>
                 stop
             </Button>
             <Button id="bestSolution">
