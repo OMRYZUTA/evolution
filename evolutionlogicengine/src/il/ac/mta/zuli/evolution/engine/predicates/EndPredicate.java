@@ -86,7 +86,7 @@ public class EndPredicate implements Predicate<Double> {
 
     @Override
     public boolean test(Double aDouble) {
-        //currMinutes <= totalMinutes, currGenerationNum <= numOfGenerations, score <= scoreGoal
-        return aDouble <= benchmark;
+        //currMinutes < totalMinutes, currGenerationNum < numOfGenerations, score < scoreGoal
+        return aDouble < benchmark;
     }
 }

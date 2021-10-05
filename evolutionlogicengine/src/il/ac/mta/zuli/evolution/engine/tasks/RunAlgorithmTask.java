@@ -59,6 +59,7 @@ public class RunAlgorithmTask implements Runnable {
             if (inEvolutionState == null) {
                 //if we're just now starting the task (and not resuming after pause)
                 prevEvolutionState = createFirstGenerationState();
+                reportFirstGeneration(prevEvolutionState);
                 bestSolutionEver = prevEvolutionState.getGenerationBestSolution();
             } else {
                 //if we're resuming the task
@@ -91,9 +92,10 @@ public class RunAlgorithmTask implements Runnable {
                 //with addition of first generation
                 int currGenerationNum = currEvolutionState.getGenerationNum();
 
-                if (currGenerationNum == 1 || (currGenerationNum % generationsStride == 0)) {
+                if ((currGenerationNum % generationsStride == 0)) {
                     reportStrideData.accept(
                             new StrideData(currGenerationNum, currBestSolution.getFitnessScore()));
+                    System.out.println(currGenerationNum);
                 }
 
                 prevEvolutionState = currEvolutionState;
@@ -116,6 +118,13 @@ public class RunAlgorithmTask implements Runnable {
                 reportState.accept(outEvolutionState); // reporting the last state as "done"}
             }
         }
+    }
+
+    private void reportFirstGeneration(EvolutionState prevEvolutionState) {
+        reportStrideData.accept(
+                new StrideData(prevEvolutionState.getGenerationNum(), prevEvolutionState.getGenerationBestSolution().getFitnessScore()));
+        System.out.println(prevEvolutionState.getGenerationNum());
+        reportState.accept(prevEvolutionState);
     }
 
     public synchronized void cancel() {

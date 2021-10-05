@@ -152,7 +152,8 @@ const Screen3 = () => {
         return (<ButtonGroup
             aria-label="outlined primary button group">
             <Button
-                id="start" onClick={handleStart} disabled={isRunning}>
+                id="start" onClick={handleStart} >
+                {/*TODO disable later when needed*/}
                 start
             </Button>
             <Button id="pause" disabled={!isRunning}>
