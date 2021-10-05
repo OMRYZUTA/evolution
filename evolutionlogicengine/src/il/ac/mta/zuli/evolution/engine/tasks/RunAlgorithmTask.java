@@ -1,9 +1,6 @@
 package il.ac.mta.zuli.evolution.engine.tasks;
 
-import il.ac.mta.zuli.evolution.engine.Descriptor;
-import il.ac.mta.zuli.evolution.engine.EvolutionState;
-import il.ac.mta.zuli.evolution.engine.StrideData;
-import il.ac.mta.zuli.evolution.engine.TimetableSolution;
+import il.ac.mta.zuli.evolution.engine.*;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +64,7 @@ public class RunAlgorithmTask implements Runnable {
                 //if we're resuming the task
                 bestSolutionEver = prevEvolutionState.getBestSolutionSoFar();
             }
-
+            prevEvolutionState.setStatus(LogicalRunStatus.RUNNING);
             reportBestSolution.accept(bestSolutionEver);
 
             //while the user didn't click Pause or Stop, and we haven't reached any of the end-conditions yet

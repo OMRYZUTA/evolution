@@ -56,12 +56,13 @@ const OtherSolutions = ({otherSolutionsList}) => {
                 </Typography>
                 <Grid item>
                     <Grid container className={classes.settings}>
-                        <DataGrid
-                            rows={otherSolutionsList}
-                            columns={columns}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                        />
+                        {console.log({otherSolutionsList})}
+                        {/*<DataGrid*/}
+                        {/*    rows={otherSolutionsList}*/}
+                        {/*    columns={columns}*/}
+                        {/*    pageSize={5}*/}
+                        {/*    rowsPerPageOptions={[5]}*/}
+                        {/*/>*/}
                     </Grid>
                 </Grid>
             </Grid>

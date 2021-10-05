@@ -98,7 +98,6 @@ public class TimeTableEngine implements Engine {
 //            currentRunningTask = null;
 //        });
 
-        currEvolutionState.setStatus(LogicalRunStatus.RUNNING);
 
         new Thread(currentRunningTask, "EvolutionAlgorithmThread").start();
     }
@@ -149,7 +148,10 @@ public class TimeTableEngine implements Engine {
     }
 
     public Integer getCurrGenerationNum() {
-        return currEvolutionState.getGenerationNum();
+        if(currEvolutionState!=null) {
+            return currEvolutionState.getGenerationNum();
+        }
+        return null;
     }
 
     public List<EndPredicate> getEndPredicates() {
