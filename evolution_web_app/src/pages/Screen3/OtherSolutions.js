@@ -1,10 +1,10 @@
 import CircularIndeterminate from "../../components/CircularIndeterminate";
+import {DataGrid} from '@mui/x-data-grid';
 import Grid from "@mui/material/Grid";
 import {makeStyles} from "@mui/styles";
 import Paper from "@mui/material/Paper";
 import React from 'react';
 import Typography from "@mui/material/Typography";
-import DataGrid from "../../components/DataGrid";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,40 +30,16 @@ const useStyles = makeStyles((theme) => ({
 const OtherSolutions = ({otherSolutionsList}) => {
     const classes = useStyles();
 
-    // String userName;
-    // Double bestScore;
-    // Integer currentGeneration;
     const columns = [
-        {field: 'id', headerName: 'ID', width: 90},
+        {field: 'userName', headerName: 'User', width: 150, editable: false},
         {
-            field: 'firstName',
-            headerName: 'First name',
-            width: 150,
-            editable: true,
+            field: 'bestScore', headerName: 'Best Score', width: 90, editable: false,
         },
         {
-            field: 'lastName',
-            headerName: 'Last name',
-            width: 150,
-            editable: true,
-        },
-        {
-            field: 'age',
-            headerName: 'Age',
-            type: 'number',
-            width: 110,
-            editable: true,
-        },
-        {
-            field: 'fullName',
-            headerName: 'Full name',
-            description: 'This column has a value getter and is not sortable.',
-            sortable: false,
-            width: 160,
-            valueGetter: (params) =>
-                `${params.getValue(params.id, 'firstName') || ''} ${
-                    params.getValue(params.id, 'lastName') || ''
-                }`,
+            field: 'currentGeneration',
+            headerName: 'Generation',
+            width: 30,
+            editable: false,
         },
     ];
 
@@ -78,31 +54,16 @@ const OtherSolutions = ({otherSolutionsList}) => {
                 <Typography>
                     other users are solving the same problem:
                 </Typography>
-                {otherSolutionsList.map(solutionInfo => {
-                    return (
-                        <Grid item>
-                            <Grid container className={classes.settings}>
-                                <DataGrid
-                                    rows={otherSolutionsList}
-                                    columns={columns}
-                                    pageSize={5}
-                                    rowsPerPageOptions={[5]}
-                                    checkboxSelection
-                                    disableSelectionOnClick
-                                />
-                                <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                    {solutionInfo.userName}
-                                </Typography>
-                                <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                    {solutionInfo.bestScore}
-                                </Typography>
-                                <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                    {solutionInfo.currentGeneration}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    )
-                })}
+                <Grid item>
+                    <Grid container className={classes.settings}>
+                        <DataGrid
+                            rows={otherSolutionsList}
+                            columns={columns}
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                        />
+                    </Grid>
+                </Grid>
             </Grid>
         </Paper>
     );
