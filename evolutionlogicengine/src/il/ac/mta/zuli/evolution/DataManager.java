@@ -7,6 +7,7 @@ import il.ac.mta.zuli.evolution.dto.TimetableSummaryDTO;
 import il.ac.mta.zuli.evolution.engine.StrideData;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.TimetableSolution;
+import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 
 import java.io.IOException;
@@ -46,11 +47,15 @@ public class DataManager {
                                          Object generationStride) {
         TimeTable timetable = timetables.get(timetableID);
 
-        users.get(userName).startEvolutionAlgorithm(
-                timetable,
-                engineSettingsMap,
-                endPredicatesMap,
-                generationStride);
+        if (timetable != null) {
+            users.get(userName).startEvolutionAlgorithm(
+                    timetable,
+                    engineSettingsMap,
+                    endPredicatesMap,
+                    generationStride);
+        } else {
+            throw new InvalidOperationException("Timetable (ID " + timetableID + ") not found in dataManager");
+        }
     }
 
     public String stopAlgorithmRunForUser(String userName, int ttID) {

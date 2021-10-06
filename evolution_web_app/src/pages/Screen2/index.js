@@ -17,13 +17,19 @@ const useStyles = makeStyles((theme) => ({
         spacing: 2,
         justifyContent: 'flex-start',
         alignItems: 'top-center',
-        minHeight: "100vh",
+        minHeight: '100vh',
+        backgroundColor: "pink",
     },
     summaries: {
         alignItems: 'top-center',
+        backgroundColor: 'lightyellow',
     },
-
+    button: {
+        backgroundColor: 'pink',
+        margin: '5px',
+    },
 }))
+
 const renderAlert = (alertText) => {
     return (
         <Alert severity="error">
@@ -60,7 +66,7 @@ const Index = () => {
 
         const interval = setInterval(() => {
             fetchAllData();
-        }, 10000) //todo return to 1 sec
+        }, 5000) //todo return to 1 sec
         fetchAllData()//and initially
         return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
     }, []);
@@ -78,22 +84,6 @@ const Index = () => {
     return (
         <Grid container direction={"column"}>
             <Navbar user={currentUser}/>
-            <Grid item>
-                <Button
-                    variant="contained"
-                    component="label"
-                >
-                    Upload File
-                    <input
-                        type="file"
-                        name={"file"}
-                        onChange={handleFileUpload}
-                        hidden
-                        accept={".xml"}
-                    />
-                </Button>
-                {alertText && renderAlert(alertText)}
-            </Grid>
             <Grid container className={classes.root} direction={"row"}>
                 <Grid item xs={12} md={4}>
                     <UserList users={users}/>
@@ -107,7 +97,24 @@ const Index = () => {
                             )
                         })}
                     </Grid>
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            component="label"
+                            className={classes.button}
+                        >
+                            Upload File
+                            <input
+                                type="file"
+                                name={"file"}
+                                onChange={handleFileUpload}
+                                hidden
+                                accept={".xml"}
+                            />
+                        </Button>
+                    </Grid>
                 </Grid>
+                {alertText && renderAlert(alertText)}
             </Grid>
         </Grid>
     )

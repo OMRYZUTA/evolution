@@ -14,7 +14,7 @@ import OtherSolutions from "./OtherSolutions";
 import Typography from "@mui/material/Typography";
 
 const fakeAlgoConfig = {
-    timetableID: 0,
+    timetableID: 0, //notice which timetable
     stride: "10",
     endPredicates: {numOfGenerations: "700", fitnessScore: "97.1", time: "4"},
     engineSettings: {
@@ -37,6 +37,8 @@ const useStyles = makeStyles((theme) => ({
         minHeight: "100vh",
     },
     settings: {
+        spacing: 2,
+        justifyContent: "space-between",
         width: '100%',
         height: 400,
         maxWidth: 300,
@@ -74,7 +76,8 @@ const Screen3 = () => {
             mutations: [],
         }
     }
-    const [algorithmConfiguration, setAlgorithmConfiguration] = useState(fakeAlgoConfig); //TODO return to empty
+    const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
+    const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
         // calling all API calls in parallel, and waiting until they ALL finish before setting
@@ -135,10 +138,9 @@ const Screen3 = () => {
 
         const interval = setInterval(() => {
             fetchAllData();
-        }, 1000) //will run every 1 second
+        }, 5000) //will run every 5 seconds
 
         return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
-
     }, []);
 
     const handleStart = useCallback(async () => {
@@ -158,16 +160,20 @@ const Screen3 = () => {
     const handlePause = useCallback(async () => {
         setIsRunning(false);
         try {
+            // await Utils.fetchWrapper(
+            //     'POST',
+            //     `/server_Web_exploded/api/actions?action=pause`,
+            //     currentTimetableID)
+
             await Utils.fetchWrapper(
                 'POST',
                 `/server_Web_exploded/api/actions?action=pause`,
-                currentTimetableID)
+                algorithmConfiguration)
         } catch (e) {
             // TODO handle exception add alert
             console.log(e);
         }
-
-    }, []);
+    }, [algorithmConfiguration]);
 
     const handleStop = useCallback(async () => {
         setIsRunning(false);
@@ -175,13 +181,12 @@ const Screen3 = () => {
             await Utils.fetchWrapper(
                 'POST',
                 `/server_Web_exploded/api/actions?action=stop`,
-                currentTimetableID)
+                algorithmConfiguration)
         } catch (e) {
             // TODO handle exception add alert
             console.log(e);
         }
-
-    }, []);
+    }, [algorithmConfiguration]);
 
     const handleResume = useCallback(async () => {
         setIsRunning(true);
@@ -215,13 +220,21 @@ const Screen3 = () => {
         history.push(SCREEN2URL);
     }
 
+    // const handleClickOpen = () => {
+    //     console.log(" in handleClickOpen");
+    //     setOpen(true);
+    // };
+
+    // const handleClose = (value) => {
+    //     setOpen(false);
+    //     // setSelectedValue(value);
+    // };
+
     const renderButtonGroup = () => {
         return (
             <ButtonGroup
                 aria-label="outlined primary button group">
-                <Button
-                    id="start" onClick={handleStart} disabled={isRunning}>
-                    {/*TODO disable later when needed*/}
+                <Button id="start" onClick={handleStart} disabled={isRunning}>
                     start
                 </Button>
                 <Button id="pause" disabled={!isRunning} onClick={handlePause}>
@@ -247,11 +260,10 @@ const Screen3 = () => {
         <Grid>
             <Container maxWidth="xl">
                 <Navbar user={currentUser}/>
-
                 <Grid container direction={"row"} spacing={2}>
+
                     <Grid item xs={12} md={6}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
-                            {/*const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigChange})*/}
                             <InfoTabs algorithmConfiguration={algorithmConfiguration}
                                       handleAlgorithmConfigSave={setAlgorithmConfiguration}
                                       timetable={timetable}/>
@@ -260,9 +272,11 @@ const Screen3 = () => {
 
                     <Grid item xs={12} md={5}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
+
                             <Grid item>
                                 {renderButtonGroup()}
                             </Grid>
+
                             <Grid item>
                                 <Paper>
                                     <Grid container direction={"column"} className={classes.root}>
@@ -271,9 +285,11 @@ const Screen3 = () => {
                                     </Grid>
                                 </Paper>
                             </Grid>
+
                             <Grid item>
                                 <OtherSolutions otherSolutionsList={otherSolutions}/>
                             </Grid>
+
                         </Grid>
                     </Grid>
                 </Grid>

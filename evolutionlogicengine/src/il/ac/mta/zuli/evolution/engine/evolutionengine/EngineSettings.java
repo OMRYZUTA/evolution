@@ -36,8 +36,6 @@ public class EngineSettings<T extends Solution> {
 
     private List<Mutation<T>> generateMutationList(List<Map<String, Object>> mutationsMap, TimeTable timetable) {
         List<Mutation<T>> mutationList = new ArrayList<>();
-        System.out.println(mutationsMap); //TODO delte later
-        //TODO - is it required to have at least 1 mutation?
 
         if (mutationsMap.size() > 0) {
             for (Map<String, Object> mutationMap : mutationsMap) {

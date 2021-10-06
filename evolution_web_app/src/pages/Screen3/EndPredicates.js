@@ -16,6 +16,10 @@ const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
     const classes = useStyles();
 
     const handleTextChanged = (predicateName, value) => {
+        if (value) {
+            value = value.trim();
+        }
+
         handleEndPredicatesChange({
             ...endPredicates,
             [predicateName]: value

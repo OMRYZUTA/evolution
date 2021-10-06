@@ -24,7 +24,7 @@ public class MutationFactory {
                 totalTuples = Integer.parseInt((String) mutationMap.get(Constants.TOTAL_TUPLES));
                 probability = Double.parseDouble((String) mutationMap.get(Constants.PROBABILITY));
             } catch (Throwable e) {
-                throw new ValidationException("Invalid Mutation parameter." + e.getMessage());
+                throw new ValidationException("Invalid Mutation parameter (for Sizer)." + e.getMessage());
             }
 
             if (totalTuples > timeTable.getHours() * timeTable.getDays()) {
@@ -46,7 +46,7 @@ public class MutationFactory {
                 maxTuples = Integer.parseInt((String) mutationMap.get(Constants.MAX_TUPLES));
                 probability = Double.parseDouble((String) mutationMap.get(Constants.PROBABILITY));
             } catch (Throwable e) {
-                throw new ValidationException("Invalid Mutation parameter." + e.getMessage());
+                throw new ValidationException("Invalid Mutation parameter (for Flipping)." + e.getMessage());
             }
 
             if (maxTuples < 0) {

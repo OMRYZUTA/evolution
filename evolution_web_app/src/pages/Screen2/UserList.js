@@ -11,7 +11,11 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         height: 400,
         maxWidth: 300,
-        backgroundColor: "#D3D3D3", //light gray
+        backgroundColor: 'lightblue',
+    },
+    icon: {
+        backgroundColor: 'lightpink',
+        color: 'lightblue',
     },
 }));
 
@@ -24,7 +28,7 @@ export default function UserList({users}) {
                 {users.map(user => {
                         return (<ListItem key={user}>
                             <ListItemAvatar>
-                                <Avatar>
+                                <Avatar className={classes.icon}>
                                     <PersonOutlinedIcon/>
                                 </Avatar>
                             </ListItemAvatar>

@@ -50,7 +50,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     const handleChange = useCallback((e) => {
         setData({
             ...data,
-            [e.target.id]: e.target.value,
+            [e.target.id]: e.target.value.trim(),
         })
     }, [data]);
 
@@ -59,14 +59,14 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     }, [data]);
 
     const handlePopulationSizeChange = useCallback((e, propName) => {
-        const engineSettings = {...data.engineSettings, [propName]: e.target.value,};
+        const engineSettings = {...data.engineSettings, [propName]: e.target.value.trim(),};
         setData({...data, engineSettings});
     }, [data]);
 
     const handleCrossoverChange = useCallback((e, propName) => {
         const crossover = {
             ...data.engineSettings.crossover,
-            [propName]: e.target.value,
+            [propName]: e.target.value.trim(),
         };
 
         const engineSettings = {...data.engineSettings, crossover};
@@ -100,7 +100,6 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
         const selection = {
             ...data.engineSettings.selection,
             [propName]: e.target.value.trim(),
-            // trim textfields
         };
 
         const engineSettings = {...data.engineSettings, selection};
@@ -114,7 +113,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
 
         const mutation = {
             ...mutationsArray[index],
-            [propName]: e.target.value,
+            [propName]: e.target.value.trim(),
         };
 
         const newMutationsArray = [...mutationsArray.slice(0, index), mutation, ...mutationsArray.slice(index + 1)];
@@ -158,14 +157,14 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     };
 
     const renderMutationExtraFields = (mutation, index) => {
-        if (mutation.name === 'sizer') {
+        if (mutation.name === 'Sizer') {
             return (<TextField
                 required
                 label='Total Tuples'
                 defaultValue={mutation.totalTuples}
                 onChange={(e) => handleMutationChange(e, index, 'totalTuples')}
             />)
-        } else if (mutation.name === 'flipping') {
+        } else if (mutation.name === 'Flipping') {
             return (
                 <Grid container className={classes.root}>
                     <TextField

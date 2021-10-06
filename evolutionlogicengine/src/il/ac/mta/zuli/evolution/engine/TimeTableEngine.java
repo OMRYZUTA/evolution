@@ -67,7 +67,7 @@ public class TimeTableEngine implements Engine {
 //            throw new RuntimeException("Failed running task because another task is currently running");
 //        }
 
-        RunAlgorithmTask currentRunningTask = new RunAlgorithmTask(
+        currentRunningTask = new RunAlgorithmTask(
                 this.descriptor,
                 endPredicates,
                 generationsStride,

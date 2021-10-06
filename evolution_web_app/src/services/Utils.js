@@ -1,18 +1,21 @@
 export async function fetchWrapper(method, url, object) {
+    console.log("in fetchWrapper, object")
+    console.log(object) //TODO delete later
+
     const options = {
         method,
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json',},
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
     }
+
     if (object) {
         options.body = JSON.stringify(object);
     }
     const result = await fetch(url, options);
 
     let responseBody;
+
     if (result.headers.get("content-type").includes("application/json")) {
         responseBody = await result.json();
     } else {
