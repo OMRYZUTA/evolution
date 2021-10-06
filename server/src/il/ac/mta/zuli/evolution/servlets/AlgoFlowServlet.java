@@ -32,8 +32,6 @@ public class AlgoFlowServlet extends HttpServlet {
             String usernameFromSession = SessionUtils.getUsername(request);
             Gson gson = new Gson();
             Map<String, Object> requestMap = gson.fromJson(request.getReader(), new HashMap<String, Object>().getClass());
-            System.out.println("in AlgoFlowServlet, requestMap");
-            System.out.println(requestMap);
             int ttID = (int) Math.ceil((double) requestMap.get(Constants.TIMETABLE_ID)); //we know this an integer because we provided it
             dataManager = ServletUtils.getDataManager(getServletContext());
 
@@ -104,7 +102,6 @@ public class AlgoFlowServlet extends HttpServlet {
         Map<String, Object> engineSettingsMap = (HashMap<String, Object>) requestMap.get(Constants.ENGINE_SETTINGS);
         Map<String, Object> endPredicatesMap = (Map<String, Object>) requestMap.get(Constants.END_PREDICATES);
         Object generationStride = requestMap.get(Constants.STRIDE); //validating we received an int alter on
-
 
         dataManager.resumeAlgorithmRunForUser(
                 usernameFromSession,

@@ -1,7 +1,7 @@
 import {Checkbox, FormControlLabel, Grid, TextField} from "@mui/material";
 import React, {useEffect, useState} from "react";
 
-const CheckedTextBox = ({label, value, handleValueChange}) => {
+const CheckedTextBox = ({label, value, handleValueChange, valueError}) => {
     const [checked, setChecked] = useState(!!value);
 
     useEffect(() => {
@@ -22,6 +22,8 @@ const CheckedTextBox = ({label, value, handleValueChange}) => {
                 label={label}/>
             <TextField
                 disabled={!checked}
+                error={valueError}
+                helperText={valueError ? 'Invalid value (must be a number)' : ''}
                 value={value || ''}
                 onChange={(e) => {
                     handleValueChange(e.target.value);

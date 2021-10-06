@@ -249,6 +249,11 @@ const Screen3 = () => {
                 <Button id="bestSolution">
                     Best Solution
                 </Button>
+                {/*<SolutionDialog*/}
+                {/*    // selectedValue={selectedValue}*/}
+                {/*    open={open}*/}
+                {/*    onClose={handleClose}*/}
+                {/*/>*/}
                 <Button id="back to screen 2" onClick={routeChange}>
                     Back to screen 2
                 </Button>

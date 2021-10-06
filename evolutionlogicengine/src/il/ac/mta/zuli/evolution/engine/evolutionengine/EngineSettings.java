@@ -46,13 +46,13 @@ public class EngineSettings<T extends Solution> {
         return mutationList;
     }
 
-    private void setPopulationSize(Object sizeString) {
+    private void setPopulationSize(Object sizeObj) {
         int size;
 
         try {
-            size = Integer.parseInt((String) sizeString);
+            size = Integer.parseInt((String) sizeObj);
         } catch (Throwable e) {
-            throw new ValidationException("Population size must be a positive number");
+            throw new ValidationException("Population size must be a positive number" + sizeObj);
         }
 
         if (size > 0) {

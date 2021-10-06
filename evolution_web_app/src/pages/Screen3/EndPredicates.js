@@ -1,7 +1,7 @@
 import CheckedTextBox from './CheckedTextBox'
 import {Grid} from "@mui/material";
 import {makeStyles} from "@mui/styles";
-import React from "react";
+import React, {useState} from "react";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -13,17 +13,17 @@ const useStyles = makeStyles(() => ({
 }));
 
 const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
+    const floatRegEx = /^\d*(\.\d+)?$/;
+    const [valueError, setValueError] = useState(false);
     const classes = useStyles();
 
     const handleTextChanged = (predicateName, value) => {
-        if (value) {
-            value = value.trim();
+        if (floatRegEx.test(value)) {
+            setValueError(false);
+            handleEndPredicatesChange({...endPredicates, [predicateName]: parseFloat(value)});
+        } else {
+            setValueError(true);
         }
-
-        handleEndPredicatesChange({
-            ...endPredicates,
-            [predicateName]: value
-        });
     };
 
     //object and not array, for example: endPredicates: {numOfGenerations: 120} or
@@ -34,8 +34,9 @@ const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
                 <CheckedTextBox label="Num Of Generations"
                                 value={endPredicates.numOfGenerations}
                                 handleValueChange={(value) => {
-                                    handleTextChanged('numOfGenerations', value);
-                                }}/>
+                                    handleTextChanged('numOfGenerations', value)
+                                }}
+                                valueError={valueError}/>
             </Grid>
 
             <Grid item>
@@ -43,7 +44,8 @@ const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
                                 value={endPredicates.fitnessScore}
                                 handleValueChange={(value) => {
                                     handleTextChanged('fitnessScore', value);
-                                }}/>
+                                }}
+                                valueError={valueError}/>
             </Grid>
 
             <Grid item>
@@ -51,7 +53,8 @@ const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
                                 value={endPredicates.time}
                                 handleValueChange={(value) => {
                                     handleTextChanged('time', value);
-                                }}/>
+                                }}
+                                valueError={valueError}/>
             </Grid>
         </Grid>
     );

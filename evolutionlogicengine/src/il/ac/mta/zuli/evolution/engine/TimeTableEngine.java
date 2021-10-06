@@ -51,6 +51,8 @@ public class TimeTableEngine implements Engine {
     public void resumeEvolutionAlgorithm() {
         //will likely NOT throw exceptions, since we'll disable buttons accordingly in FrontEnd
         if (LogicalRunStatus.PAUSED == currEvolutionState.getStatus()) {
+            System.out.println("in resumeEvolutionAlgorithm");
+            System.out.println(currEvolutionState);
             runEvolutionAlgorithm(this.currEvolutionState);
         } else if (LogicalRunStatus.STOPPED == currEvolutionState.getStatus()) {
             throw new InvalidOperationException("Run was stopped, cannot resume");
@@ -73,11 +75,13 @@ public class TimeTableEngine implements Engine {
                 generationsStride,
                 currentState,
                 (EvolutionState state) -> {
+                    System.out.println("state status " + state.getStatus());
                     if (state.isTaskDone() &&
                             state.getStatus() != LogicalRunStatus.STOPPED &&
                             state.getStatus() != LogicalRunStatus.PAUSED) {
                         state.setStatus(LogicalRunStatus.COMPLETED);
                     }
+
                     this.currEvolutionState = state;
                 },
                 (TimetableSolution solution) -> bestSolution = solution,

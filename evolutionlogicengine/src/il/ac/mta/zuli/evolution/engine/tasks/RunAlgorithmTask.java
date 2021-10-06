@@ -48,6 +48,7 @@ public class RunAlgorithmTask implements Runnable {
     public void run() {
         //we'll either report this state on successful exit from the loop or with an exception in the catch-block
         EvolutionState outEvolutionState = null;
+
         try {
             System.out.println("**********in Runnable******");
 
@@ -56,7 +57,7 @@ public class RunAlgorithmTask implements Runnable {
             EvolutionState prevEvolutionState = inEvolutionState; //our way to resume after pause
             EvolutionState currEvolutionState = null;
 
-            if (inEvolutionState == null) {
+            if (prevEvolutionState == null) {
                 //if we're just now starting the task (and not resuming after pause)
                 prevEvolutionState = createFirstGenerationState();
                 reportFirstGeneration(prevEvolutionState);
@@ -80,6 +81,7 @@ public class RunAlgorithmTask implements Runnable {
                         elapsedTime, //the generation time param is when we started the 1st generation
                         currSolutions,
                         bestSolutionEver);
+                currEvolutionState.setStatus(LogicalRunStatus.RUNNING);
 
                 TimetableSolution currBestSolution = currEvolutionState.getGenerationBestSolution();
 
@@ -123,7 +125,7 @@ public class RunAlgorithmTask implements Runnable {
     private void reportFirstGeneration(EvolutionState prevEvolutionState) {
         reportStrideData.accept(
                 new StrideData(prevEvolutionState.getGenerationNum(), prevEvolutionState.getGenerationBestSolution().getFitnessScore()));
-        System.out.println(prevEvolutionState.getGenerationNum());
+        System.out.println(prevEvolutionState.getGenerationNum()); //TODO delete later
         reportState.accept(prevEvolutionState);
     }
 
@@ -162,7 +164,10 @@ public class RunAlgorithmTask implements Runnable {
     }
 
     private EvolutionState createFirstGenerationState() {
-        return new EvolutionState(1, 0, getInitialPopulation(), bestSolutionEver);
+        EvolutionState state = new EvolutionState(1, 0, getInitialPopulation(), bestSolutionEver);
+        state.setStatus(LogicalRunStatus.RUNNING);
+
+        return state;
     }
 
     @NotNull
