@@ -32,13 +32,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SolutionDialog = ({open, onClose}) => {
+const SolutionDialog = ({handleClose}) => {
     const classes = useStyles();
 
     return (
-        <Dialog onClose={() => {
-            console.log("handle Dialog Close")
-        }} open={open}>
+        <Dialog onClose={handleClose}
+                open={true}>
             <DialogTitle>Best Solution</DialogTitle>
             <Typography>just words for now</Typography>
         </Dialog>

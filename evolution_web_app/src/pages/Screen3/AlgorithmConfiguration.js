@@ -224,7 +224,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
 
         if (intRegEx.test(value)) {
             setTotalTuplesError(false);
-            setValueInMutation('totalTuples', parseInt(value), index);
+            setValueInMutation('totalTuples', parseInt(value, 10), index);
         } else {
             setTotalTuplesError(true);
         }
@@ -235,7 +235,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
 
         if (intRegEx.test(value)) {
             setMaxTuplesError(false);
-            setValueInMutation('maxTuples', parseInt(value), index);
+            setValueInMutation('maxTuples', parseInt(value, 10), index);
         } else {
             setMaxTuplesError(true);
         }

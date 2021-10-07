@@ -13,9 +13,10 @@ import * as Screen3Services from "../../services/Screen3Services";
 import OtherSolutions from "./OtherSolutions";
 import Typography from "@mui/material/Typography";
 import CircularIndeterminate from "../../components/CircularIndeterminate";
+import SolutionDialog from "./SolutionDialog";
 
 const fakeAlgoConfig = {
-    timetableID: 0, //notice which timetable
+    timetableID: 0, //important to notice which timetable we're dealing with
     stride: "10",
     endPredicates: {numOfGenerations: "700", fitnessScore: "97.1", time: "4"},
     engineSettings: {
@@ -69,7 +70,6 @@ const renderAlert = (alertText) => {
 const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
     const {currentTimetableID} = useContext(TimetableContext);
-    const [isRunning, setIsRunning] = useState(false);// flag use to diable and enable button
     const [timetable, setTimetable] = useState();
     const [otherSolutions, setOtherSolutions] = useState([]);
     const [progress, setProgress] = useState();
@@ -89,6 +89,7 @@ const Screen3 = () => {
     const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
     const [alertText, setAlertText] = React.useState('');
     const [isFetching, setIsFetching] = React.useState(true);
+    const [isRunning, setIsRunning] = useState(false);// flag use to diabled and enable button
     const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
@@ -247,21 +248,21 @@ const Screen3 = () => {
         history.push(SCREEN2URL);
     }
 
-    // const handleClickOpen = () => {
-    //     console.log(" in handleClickOpen");
-    //     setOpen(true);
-    // };
+    const handleSolutionClick = useCallback(() => {
+        console.log(" in handleClickOpen");
+        setOpen(true);
+    }, [open])
 
-    // const handleClose = (value) => {
-    //     setOpen(false);
-    //     // setSelectedValue(value);
-    // };
+    const handleClose = () => {
+        setOpen(false);
+        // setSelectedValue(value);
+    };
 
     const renderButtonGroup = () => {
         return (
             <ButtonGroup
                 aria-label="outlined primary button group">
-                <Button id="start" onClick={handleStart} disabled={isRunning}>
+                <Button id="start" disabled={isRunning} onClick={handleStart}>
                     start
                 </Button>
                 <Button id="pause" disabled={!isRunning} onClick={handlePause}>
@@ -273,14 +274,12 @@ const Screen3 = () => {
                 <Button id="stop" disabled={!isRunning} onClick={handleStop}>
                     stop
                 </Button>
-                <Button id="bestSolution">
+                <Button id="bestSolution" onClick={handleSolutionClick}>
                     Best Solution
                 </Button>
-                {/*<SolutionDialog*/}
-                {/*    // selectedValue={selectedValue}*/}
-                {/*    open={open}*/}
-                {/*    onClose={handleClose}*/}
-                {/*/>*/}
+                {open && <SolutionDialog
+                    onClose={handleClose}
+                />}
                 <Button id="back to screen 2" onClick={routeChange}>
                     Back to screen 2
                 </Button>
