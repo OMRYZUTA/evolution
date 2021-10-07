@@ -45,7 +45,9 @@ const useStyles = makeStyles((theme) => ({
 const SolutionDialog = ({handleClose}) => {
     const {currentTimetableID} = useContext(TimetableContext);
     const classes = useStyles();
-    const [solution,setSolution]= useState({});
+    const [quintets,setQuintets]= useState({});
+    const [days,setDays] = useState();
+    const[hours,setHours]= useState();
 
     useEffect(() => {
         const fetchAllData = async () => {
@@ -53,7 +55,10 @@ const SolutionDialog = ({handleClose}) => {
             try {
                 console.log({currentTimetableID})
                 const solutionPayload = await Screen3Services.getBestSolution(currentTimetableID);
-                setSolution(solutionPayload);
+                setQuintets(solutionPayload.data.solutionQuintets);
+                setDays(solutionPayload.data.timetable.days);
+                setHours(solutionPayload.data.timetable.hours);
+
                 console.log("solution received:");
                 console.log({solutionPayload});
             } catch (e) {
@@ -70,9 +75,8 @@ const SolutionDialog = ({handleClose}) => {
     return (
         <Dialog onClose={handleClose} open={true} fullWidth={true} maxWidth={"xl"}>
             <DialogTitle>Best Solution</DialogTitle>
-           <TeacherView solution={solution}/>
+           <TeacherView quintets={quintets} hours ={hours} days={days}/>
         </Dialog>
     );
 }
-
 export default SolutionDialog;
