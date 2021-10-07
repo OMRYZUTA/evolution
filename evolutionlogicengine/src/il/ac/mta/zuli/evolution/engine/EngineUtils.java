@@ -66,19 +66,18 @@ public class EngineUtils {
         return str.trim().isEmpty();
     }
 
-    public static String getToRootError(Throwable e){
+    public static String getToRootError(Throwable e) {
         StringBuilder sb = new StringBuilder();
         Throwable root = EngineUtils.findThrowableRootCause(e);
         Throwable currError = e;
 
-        while (!currError.equals(root)) {
+        while (currError != null) {
             sb.append(currError.getMessage() + System.lineSeparator());
             currError = currError.getCause();
         }
 
-        sb.append(root.getMessage());
 
-        return e.getMessage()+". "+ sb;
+        return sb.toString();
     }
 
     private static Throwable findThrowableRootCause(Throwable throwable) {
