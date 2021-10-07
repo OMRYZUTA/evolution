@@ -191,7 +191,7 @@ public class DataManager {
         return null;
     }
 
-    //return value might be an empty list
+    //This function returns currGeneration and Best-Score-So-Far (and NOT bestScoreInGeneration like getProgress() does)
     public List<OtherUserSolutionDTO> getOtherSolutionsInfo(int ttID) {
         List<OtherUserSolutionDTO> otherSolutionsInfo = new ArrayList<>();
 
@@ -199,13 +199,12 @@ public class DataManager {
             List<User> usersSolving = getUsersSolvingProblem(ttID);
 
             for (User user : usersSolving) {
-//                getProgressData
-                TimeTableEngine ttEngine = user.getTimetableEngine(ttID);
+                TimeTableEngine userTTEngine = user.getTimetableEngine(ttID);
                 otherSolutionsInfo.add(
                         new OtherUserSolutionDTO(
                                 user.getUsername(),
-                                ttEngine.getBestScore(),
-                                ttEngine.getCurrGenerationNum())
+                                userTTEngine.getBestScore(),
+                                userTTEngine.getCurrGenerationNum())
                 );
             }
         }

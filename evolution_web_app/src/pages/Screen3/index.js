@@ -232,18 +232,19 @@ const Screen3 = () => {
     }, [algorithmConfiguration]);
 
     const renderProgress = () => {
-        if (progress) {
-            return (
-                <Grid container className={classes.settings}>
-                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+        return (
+            <Grid container className={classes.settings}>
+                {progress ?
+                    [<Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
                         {progress.generationNum}
-                    </Typography>
-                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                        {progress.bestScoreInGeneration}
-                    </Typography>
-                </Grid>
-            );
-        }
+                    </Typography>,
+                        <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                            {progress.bestScoreInGeneration}
+                        </Typography>]
+                    :
+                    <Typography> Start running the algorithm to see some progress </Typography>}
+            </Grid>
+        );
     }
 
     const routeChange = () => {
@@ -316,7 +317,7 @@ const Screen3 = () => {
                             <Grid item>
                                 <Paper>
                                     <Grid container direction={"column"} className={classes.root}>
-                                        <Typography> Progress </Typography>
+                                        <Typography> Progress (best score in generation) </Typography>
                                         {renderProgress()}
                                     </Grid>
                                 </Paper>

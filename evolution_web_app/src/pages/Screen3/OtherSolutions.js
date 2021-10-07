@@ -37,9 +37,15 @@ const OtherSolutions = ({otherSolutionsList}) => {
     return (
         <Paper>
             <Grid container direction={"column"} className={classes.root}>
-                <Typography>
-                    other users are solving the same problem:
-                </Typography>
+                {otherSolutionsList.length ?
+                    <Typography>
+                        Users solving the same problem (and their BEST score so far):
+                    </Typography>
+                    :
+                    <Typography>
+                        No users are currently solving the problem
+                    </Typography>
+                }
                 <Grid item>
                     <Grid container className={classes.settings}>
 
@@ -58,12 +64,6 @@ const OtherSolutions = ({otherSolutionsList}) => {
                                 </Grid>
                             )
                         })}
-                        {/*<DataGrid*/}
-                        {/*    rows={otherSolutionsList}*/}
-                        {/*    columns={columns}*/}
-                        {/*    pageSize={5}*/}
-                        {/*    rowsPerPageOptions={[5]}*/}
-                        {/*/>*/}
                     </Grid>
                 </Grid>
             </Grid>
@@ -71,4 +71,4 @@ const OtherSolutions = ({otherSolutionsList}) => {
     );
 }
 
-export default OtherSolutions;
+export default OtherSolutions
