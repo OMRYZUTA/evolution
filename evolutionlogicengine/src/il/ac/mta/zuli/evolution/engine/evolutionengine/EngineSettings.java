@@ -22,8 +22,7 @@ public class EngineSettings<T extends Solution> {
     private final List<Mutation<T>> mutations;
 
     public EngineSettings(Map<String, Object> engineSettingsMap, TimeTable timetable) {
-
-        setPopulationSize(engineSettingsMap.get(Constants.POPULATION_SIZE));
+        setPopulationSize((int) Math.ceil((double) engineSettingsMap.get(Constants.POPULATION_SIZE)));
 
         Map<String, Object> selectionMap = (Map<String, Object>) engineSettingsMap.get(Constants.SELECTION);
         Map<String, Object> crossoverMap = (Map<String, Object>) engineSettingsMap.get(Constants.CROSSOVER);
@@ -46,15 +45,7 @@ public class EngineSettings<T extends Solution> {
         return mutationList;
     }
 
-    private void setPopulationSize(Object sizeObj) {
-        int size;
-
-        try {
-            size = Integer.parseInt((String) sizeObj);
-        } catch (Throwable e) {
-            throw new ValidationException("Population size must be a positive number" + sizeObj);
-        }
-
+    private void setPopulationSize(int size) {
         if (size > 0) {
             this.populationSize = size;
         } else {

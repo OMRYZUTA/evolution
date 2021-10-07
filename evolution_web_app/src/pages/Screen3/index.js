@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import {ButtonGroup, Container, Grid} from "@mui/material";
+import {Alert, AlertTitle, ButtonGroup, Container, Grid} from "@mui/material";
 import InfoTabs from "./InfoTabs";
 import {makeStyles} from "@mui/styles";
 import React, {useCallback, useContext, useEffect, useState} from 'react';
@@ -12,6 +12,7 @@ import {useHistory} from "react-router-dom";
 import * as Screen3Services from "../../services/Screen3Services";
 import OtherSolutions from "./OtherSolutions";
 import Typography from "@mui/material/Typography";
+import CircularIndeterminate from "../../components/CircularIndeterminate";
 
 const fakeAlgoConfig = {
     timetableID: 0, //notice which timetable
@@ -56,6 +57,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const renderAlert = (alertText) => {
+    return (
+        <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {alertText}
+        </Alert>
+    );
+}
+
 const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
     const {currentTimetableID} = useContext(TimetableContext);
@@ -77,17 +87,17 @@ const Screen3 = () => {
         }
     }
     const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
+    const [alertText, setAlertText] = React.useState('');
+    const [isFetching, setIsFetching] = React.useState(true);
     const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
         // calling all API calls in parallel, and waiting until they ALL finish before setting
-        const fetchAllData = async () => {
+        const fetchStaticData = async () => {
             try {
-                const [timetableResult, algoConfigResult, otherSolutionsResult, progressResult] = await Promise.all([
+                const [timetableResult, algoConfigResult] = await Promise.all([
                     Screen3Services.getTimetableDetails(currentTimetableID),
                     Screen3Services.getAlgoConfig(currentTimetableID),
-                    Screen3Services.getOtherSolutionsInfo(currentTimetableID),
-                    Screen3Services.getProgress(currentTimetableID),
                 ]);
 
                 if (timetableResult.data) {
@@ -109,6 +119,19 @@ const Screen3 = () => {
                     console.log("algoConfigResult.data is null");
                     console.log(algoConfigResult.error);
                 }
+            } catch (e) {
+                setAlertText('Failed initializing app, please reload page');
+            } finally {
+                setIsFetching(false);
+            }
+        }
+
+        const fetchIntervalData = async () => {
+            try {
+                const [otherSolutionsResult, progressResult] = await Promise.all([
+                    Screen3Services.getOtherSolutionsInfo(currentTimetableID),
+                    Screen3Services.getProgress(currentTimetableID),
+                ]);
 
                 if (otherSolutionsResult.data) {
                     console.log("otherSolutionsResult (screen 3 index)")
@@ -136,12 +159,16 @@ const Screen3 = () => {
             }
         };
 
+        fetchStaticData();
+        fetchIntervalData();
+
         const interval = setInterval(() => {
-            fetchAllData();
+            fetchIntervalData();
         }, 5000) //will run every 5 seconds
 
+        //React performs the cleanup when the component unmounts.
         return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
-    }, []);
+    }, [currentTimetableID,]);
 
     const handleStart = useCallback(async () => {
         setIsRunning(true);
@@ -263,10 +290,12 @@ const Screen3 = () => {
 
     return (
         <Grid>
+            <Grid item>
+                {isFetching && <CircularIndeterminate/>}
+            </Grid>
             <Container maxWidth="xl">
                 <Navbar user={currentUser}/>
                 <Grid container direction={"row"} spacing={2}>
-
                     <Grid item xs={12} md={6}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
                             <InfoTabs algorithmConfiguration={algorithmConfiguration}
@@ -277,7 +306,6 @@ const Screen3 = () => {
 
                     <Grid item xs={12} md={5}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
-
                             <Grid item>
                                 {renderButtonGroup()}
                             </Grid>
@@ -285,7 +313,7 @@ const Screen3 = () => {
                             <Grid item>
                                 <Paper>
                                     <Grid container direction={"column"} className={classes.root}>
-                                        <Typography> progress </Typography>
+                                        <Typography> Progress </Typography>
                                         {renderProgress()}
                                     </Grid>
                                 </Paper>
@@ -294,7 +322,6 @@ const Screen3 = () => {
                             <Grid item>
                                 <OtherSolutions otherSolutionsList={otherSolutions}/>
                             </Grid>
-
                         </Grid>
                     </Grid>
                 </Grid>

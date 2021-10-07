@@ -11,8 +11,12 @@ import java.util.function.Supplier;
 public class SelectionFactory<T extends Solution> {
 
     public static <T extends Solution> Selection<T> createSelectionFromMap(Map<String, Object> selectionMap, int populationSize) {
-
-        final int elitism = parseElitism(selectionMap);
+        int elitism;
+        try {
+            elitism = (int) Math.ceil((double) selectionMap.get(Constants.ELITISM));
+        } catch (Throwable e) {
+            throw new ValidationException("Invalid Selection parameter. " + e.getMessage());
+        }
 
         Map<String, Supplier<Selection<T>>> selectionBuilder = new HashMap<>();
 
@@ -22,11 +26,10 @@ public class SelectionFactory<T extends Solution> {
             int topPercent;
 
             try {
-                topPercent = Integer.parseInt((String) selectionMap.get(Constants.TOP_PERCENT));
+                topPercent = (int) Math.ceil((double) selectionMap.get(Constants.TOP_PERCENT));
             } catch (Throwable e) {
-                throw new ValidationException("Invalid Selection parameter." + e.getMessage());
+                throw new ValidationException("Invalid Selection parameter. " + e.getMessage());
             }
-
             return new Truncation<T>(topPercent, populationSize, elitism);
         });
 
@@ -34,7 +37,7 @@ public class SelectionFactory<T extends Solution> {
             double pte;
 
             try {
-                pte = Double.parseDouble((String) selectionMap.get(Constants.PTE));
+                pte = (double) selectionMap.get(Constants.PTE);
             } catch (Throwable e) {
                 throw new ValidationException("Invalid Selection parameter. " + e.getMessage());
             }
@@ -48,20 +51,5 @@ public class SelectionFactory<T extends Solution> {
         } catch (Throwable e) {
             throw new ValidationException("Invalid Selection type. " + e.getMessage());
         }
-    }
-
-    private static int parseElitism(Map<String, Object> selectionMap) {
-        int elitism = 0;
-
-        if (selectionMap.containsKey(Constants.ELITISM)) {
-            try {
-                String elitismStr = (String) selectionMap.get(Constants.ELITISM);
-                elitism = Integer.parseInt(elitismStr);
-            } catch (Throwable e) {
-                throw new ValidationException("Invalid value. Selection elitism must be Integer. " + e.getMessage());
-            }
-        }
-
-        return elitism;
     }
 }

@@ -14,25 +14,22 @@ public class MutationFactory {
             Map<String, Object> mutationMap,
             TimeTable timeTable) {
 
+        double probability;
+        try {
+            probability = (double) mutationMap.get(Constants.PROBABILITY);
+        } catch (Throwable e) {
+            throw new ValidationException("Invalid Mutation parameter." + e.getMessage());
+        }
+
         Map<String, Supplier<Mutation<T>>> mutationBuilder = new HashMap<>();
 
         mutationBuilder.put(Constants.SIZER, () -> {
             int totalTuples;
-            double probability;
 
             try {
-                totalTuples = Integer.parseInt((String) mutationMap.get(Constants.TOTAL_TUPLES));
-                probability = Double.parseDouble((String) mutationMap.get(Constants.PROBABILITY));
+                totalTuples = (int) Math.ceil((double) mutationMap.get(Constants.TOTAL_TUPLES));
             } catch (Throwable e) {
                 throw new ValidationException("Invalid Mutation parameter (for Sizer)." + e.getMessage());
-            }
-
-            if (totalTuples > timeTable.getHours() * timeTable.getDays()) {
-                throw new ValidationException("Positive-totalTuples must be less than (days * hours), invalid value: " + totalTuples);
-            }
-
-            if (totalTuples < (-1) * timeTable.getHours() * timeTable.getDays()) {
-                throw new ValidationException("Negative--totalTuples must be greater than -(days * hours), invalid value: " + totalTuples);
             }
 
             return new Sizer<T>(probability, totalTuples, timeTable);
@@ -40,17 +37,11 @@ public class MutationFactory {
 
         mutationBuilder.put(Constants.FLIPPING, () -> {
             int maxTuples;
-            double probability;
 
             try {
-                maxTuples = Integer.parseInt((String) mutationMap.get(Constants.MAX_TUPLES));
-                probability = Double.parseDouble((String) mutationMap.get(Constants.PROBABILITY));
+                maxTuples = (int) Math.ceil((double) mutationMap.get(Constants.MAX_TUPLES));
             } catch (Throwable e) {
                 throw new ValidationException("Invalid Mutation parameter (for Flipping)." + e.getMessage());
-            }
-
-            if (maxTuples < 0) {
-                throw new ValidationException("MaxTuples must be >=0, invalid value: " + maxTuples);
             }
 
             ComponentName component = parseComponent(mutationMap);
@@ -73,7 +64,7 @@ public class MutationFactory {
             String ComponentStr = (String) mutationMap.get(Constants.COMPONENT);
             component = ComponentName.valueOf(ComponentStr);
         } catch (Throwable e) {
-            throw new ValidationException("Invalid component");
+            throw new ValidationException("Invalid Mutation Component");
         }
 
         return component;

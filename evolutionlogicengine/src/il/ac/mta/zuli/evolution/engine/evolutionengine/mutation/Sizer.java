@@ -17,12 +17,12 @@ import static il.ac.mta.zuli.evolution.engine.EngineUtils.generateRandomNumZeroB
 
 public class Sizer<S extends Solution> implements Mutation<S> {
     double probability;
-    final int totalTuples; // number of tuples to add or remove
+    int totalTuples; // number of tuples to add or remove
     final TimeTable timeTable;
 
-    public Sizer(double probability, int totalTuple, TimeTable timeTable) {
+    public Sizer(double probability, int totalTuples, TimeTable timeTable) {
         setProbability(probability);
-        this.totalTuples = totalTuple;
+        setTotalTuples(totalTuples);
         this.timeTable = timeTable;
     }
 
@@ -108,6 +108,16 @@ public class Sizer<S extends Solution> implements Mutation<S> {
             this.probability = probability;
         } else {
             throw new ValidationException("probability must be between 0 -1, invalid value: " + probability);
+        }
+    }
+
+    public void setTotalTuples(int totalTuples) {
+        if (totalTuples > timeTable.getHours() * timeTable.getDays()) {
+            throw new ValidationException("Positive-totalTuples must be less than (days * hours), invalid value: " + totalTuples);
+        } else if (totalTuples < (-1) * timeTable.getHours() * timeTable.getDays()) {
+            throw new ValidationException("Negative--totalTuples must be greater than -(days * hours), invalid value: " + totalTuples);
+        } else {
+            this.totalTuples = totalTuples;
         }
     }
 

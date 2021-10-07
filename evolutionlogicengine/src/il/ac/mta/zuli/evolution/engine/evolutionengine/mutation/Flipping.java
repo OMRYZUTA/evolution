@@ -22,7 +22,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
 
     public Flipping(double probability, int maxTuples, ComponentName component, TimeTable timeTable) {
         setProbability(probability);
-        this.maxTuples = maxTuples;
+        setMaxTuples(maxTuples);
         this.component = component;
         this.timeTable = timeTable;
     }
@@ -111,6 +111,14 @@ public class Flipping<S extends Solution> implements Mutation<S> {
             this.probability = probability;
         } else {
             throw new ValidationException("probability must be between 0 -1, invalid value: " + probability);
+        }
+    }
+
+    public void setMaxTuples(int maxTuples) {
+        if (maxTuples < 0) {
+            throw new ValidationException("MaxTuples must be >=0, invalid value: " + maxTuples);
+        } else {
+            this.maxTuples = maxTuples;
         }
     }
 

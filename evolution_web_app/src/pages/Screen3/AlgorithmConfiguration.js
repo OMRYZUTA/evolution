@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSave, handleCancel}) => {
+const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSave}) => {
     const classes = useStyles();
     const [data, setData] = useState(algorithmConfiguration); //currentSettings
     //#region useState() for flags indicating incorrect type in field (for helpText)
@@ -139,7 +139,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     helperText={pteError ? 'Invalid value (must be a number)' : ''}
                     id="pte"
                     label="PTE"
-                    defaultValue={data.engineSettings.selection.pte}
+                    defaultvalue={data.engineSettings.selection.pte}
                     onChange={handlePTEChange}/>
             );
         } else {
@@ -151,7 +151,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     helperText={topPercentError ? 'Invalid value (must be a number)' : ''}
                     id="topPercent"
                     label="Top Percent"
-                    defaultValue={data.engineSettings.selection.topPercent}
+                    defaultvalue={data.engineSettings.selection.topPercent}
                     onChange={handleTopPercentChange}/>
             );
         }
@@ -257,7 +257,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     label='Probability'
                     error={probabilityError}
                     helperText={probabilityError ? 'Invalid value (must be a number)' : ''}
-                    defaultValue={mutation.probability}
+                    defaultvalue={mutation.probability}
                     onChange={(e) => handleProbabilityChange(e, index)}
                 />
                 {renderMutationExtraFields(mutation, index)}
@@ -272,7 +272,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                 error={totalTuplesError}
                 helperText={totalTuplesError ? 'Invalid value (must be a number)' : ''}
                 label='Total Tuples'
-                defaultValue={mutation.totalTuples}
+                defaultvalue={mutation.totalTuples}
                 onChange={(e) => handleTotalTuplesChange(e, index)}
             />)
         } else if (mutation.name === 'Flipping') {
@@ -283,7 +283,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         error={maxTuplesError}
                         helperText={maxTuplesError ? 'Invalid value (must be a number)' : ''}
                         label='Max Tuples'
-                        defaultValue={mutation.maxTuples}
+                        defaultvalue={mutation.maxTuples}
                         onChange={(e) => handleMaxTuplesChange(e, index)}
                     />
                     <DropDown
@@ -316,7 +316,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         error={populationSizeError}
                         helperText={populationSizeError ? 'Invalid value (must be a number)' : ''}
                         label='Population size'
-                        defaultValue={data.engineSettings.populationSize}
+                        defaultvalue={data.engineSettings.populationSize}
                         onChange={handlePopulationSizeChange}
                     />
                     <TextField
@@ -325,7 +325,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         helperText={strideError ? 'Invalid value (must be a number)' : ''}
                         id='stride'
                         label='Stride'
-                        defaultValue={data.stride}
+                        defaultvalue={data.stride}
                         onChange={handleStrideChange}
                     />
                 </Grid>
@@ -371,7 +371,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         error={elitismError}
                         helperText={elitismError ? 'Invalid value (must be a number)' : ''}
                         label='Elitism'
-                        defaultValue={data.engineSettings.selection.elitism}
+                        value={data.engineSettings.selection.elitism}
                         onChange={handleElitismChange}
                     />
                     {data.engineSettings.selection.name === 'RouletteWheel' ? '' : renderSelectionExtraField()}
@@ -404,7 +404,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         error={cuttingPointsError}
                         helperText={cuttingPointsError ? 'Invalid value (must be a number)' : ''}
                         label='Cutting Points'
-                        defaultValue={data.engineSettings.crossover.cuttingPoints}
+                        value={data.engineSettings.crossover.cuttingPoints}
                         onChange={handleCuttingPointsChange}
                     />
                     {data.engineSettings.crossover.name === 'DaytimeOriented' ? '' :
@@ -440,6 +440,10 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     };
     //#endregion
 
+    const noError = !strideError && !populationSizeError && !elitismError && !pteError && !topPercentError
+        && !cuttingPointsError && !probabilityError && !maxTuplesError && !totalTuplesError;
+    const saveEnabled = (data !== algorithmConfiguration) && noError;
+
     return (
         <Paper>
             {/*TODO maybe make text fields visible only if the box is ticked*/}
@@ -449,11 +453,13 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
             {renderCrossover()}
             {renderMutations()}
             <ButtonGroup>
+                <Button disabled={!saveEnabled}
+                        onClick={() => {
+                            handleAlgorithmConfigSave(data);
+                        }}>Save</Button>
                 <Button onClick={() => {
-                    handleAlgorithmConfigSave(data)
-                    // TODO notify user Save was successful
-                }}>Save</Button>
-                <Button onClick={handleCancel}>Cancel</Button>
+                    setData(algorithmConfiguration);
+                }}>Cancel</Button>
             </ButtonGroup>
         </Paper>
     );

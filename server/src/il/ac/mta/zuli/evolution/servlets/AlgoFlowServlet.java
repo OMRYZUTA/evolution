@@ -85,8 +85,8 @@ public class AlgoFlowServlet extends HttpServlet {
     private String startAlgorithmRun(String usernameFromSession, int ttID, Map<String, Object> requestMap) {
         Map<String, Object> engineSettingsMap = (HashMap<String, Object>) requestMap.get(Constants.ENGINE_SETTINGS);
         Map<String, Object> endPredicatesMap = (Map<String, Object>) requestMap.get(Constants.END_PREDICATES);
-        Object generationStride = requestMap.get(Constants.STRIDE); //validating we received an int alter on
-
+        //all number values arrive as double in request
+        int generationStride = (int) Math.ceil((double) requestMap.get(Constants.STRIDE));
 
         dataManager.startAlgorithmRunForUser(
                 usernameFromSession,

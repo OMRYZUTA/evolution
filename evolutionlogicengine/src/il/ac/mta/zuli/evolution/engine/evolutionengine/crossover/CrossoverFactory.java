@@ -15,29 +15,18 @@ public class CrossoverFactory {
             Map<String, Object> crossoverMap,
             TimeTable timeTable) {
 
+        int cuttingPoints;
+        try {
+            cuttingPoints = (int) Math.ceil((double) crossoverMap.get(Constants.CUTTING_POINTS));
+        } catch (Throwable e) {
+            throw new ValidationException("Invalid Crossover parameter." + e.getMessage());
+        }
+
         Map<String, Supplier<Crossover<T>>> crossoverBuilder = new HashMap<>();
 
-        crossoverBuilder.put(Constants.DAY_TIME_ORIENTED, () -> {
-            int cuttingPoints;
-
-            try {
-                cuttingPoints = Integer.parseInt((String) crossoverMap.get(Constants.CUTTING_POINTS));
-            } catch (Throwable e) {
-                throw new ValidationException("Invalid Crossover parameter." + e.getMessage());
-            }
-
-            return new DayTimeOriented<T>(cuttingPoints, timeTable);
-        });
+        crossoverBuilder.put(Constants.DAY_TIME_ORIENTED, () -> new DayTimeOriented<T>(cuttingPoints, timeTable));
 
         crossoverBuilder.put(Constants.ASPECT_ORIENTED, () -> {
-            int cuttingPoints;
-
-            try {
-                cuttingPoints = Integer.parseInt((String) crossoverMap.get(Constants.CUTTING_POINTS));
-            } catch (Throwable e) {
-                throw new ValidationException("Invalid Crossover parameter." + e.getMessage());
-            }
-
             Orientation orientation = parseOrientationFromConfiguration(crossoverMap);
 
             return new AspectOriented<T>(cuttingPoints, orientation, timeTable);

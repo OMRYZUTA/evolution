@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigSave, timetable}) => {
+const InfoTabs = ({algorithmConfiguration, handleAlgorithmConfigSave, timetable}) => {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -59,6 +59,7 @@ const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigSave, tim
         setValue(newValue);
     };
 
+    console.log('rendering InfoTabs')
     return (
         <div className={classes.root}>
             <Tabs
@@ -68,16 +69,14 @@ const InfoTabs = ({stats, algorithmConfiguration, handleAlgorithmConfigSave, tim
                 scrollButtons={true}
                 indicatorColor="primary"
                 textColor="primary"
-                aria-label="scrollable force tabs example"
-            >
+                aria-label="scrollable force tabs example">
                 <Tab label="Algorithm Configuration" icon={<EqualizerIcon/>} {...a11yProps(0)} />
                 <Tab label="Timetable Details" icon={<DescriptionIcon/>} {...a11yProps(1)} />
             </Tabs>
 
             <TabPanel value={value} index={0}>
                 <AlgorithmConfiguration algorithmConfiguration={algorithmConfiguration}
-                                        handleAlgorithmConfigSave={handleAlgorithmConfigSave}
-                                        handleCancel={() => console.log("cancel algoConfig change")}/>
+                                        handleAlgorithmConfigSave={handleAlgorithmConfigSave}/>
             </TabPanel>
 
             <TabPanel value={value} index={1}>

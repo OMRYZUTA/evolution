@@ -198,7 +198,7 @@ public class TimeTableEngine implements Engine {
         int stride;
 
         try {
-            stride = Integer.parseInt((String) generationsStride);
+            stride = (int) Math.ceil((double) generationsStride);
         } catch (Throwable e) {
             throw new ValidationException("Stride must be a positive number");
         }
@@ -256,7 +256,7 @@ public class TimeTableEngine implements Engine {
             String constantName) {
 
         try {
-            double value = java.lang.Double.parseDouble((String) endPredicatesMap.get(constantName));
+            double value = (double) endPredicatesMap.get(constantName);
             endPredicates.add(
                     new EndPredicate(type, value, generationsStride)
             );
