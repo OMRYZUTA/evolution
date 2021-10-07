@@ -2,7 +2,7 @@ package il.ac.mta.zuli.evolution.servlets;
 
 import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.DataManager;
-import il.ac.mta.zuli.evolution.engine.TimetableSolution;
+import il.ac.mta.zuli.evolution.dto.TimetableSolutionDTO;
 import il.ac.mta.zuli.evolution.utils.ServletUtils;
 
 import javax.servlet.ServletException;
@@ -27,7 +27,7 @@ public class BestSolutionServlet extends HttpServlet {
             String timetableIDFromParameter = request.getParameter(Constants.TIMETABLE_ID);
             int ttID = Integer.parseInt(timetableIDFromParameter);
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
-            TimetableSolution bestSolution = dataManager.getBestSolutionOfProblem(ttID);
+            TimetableSolutionDTO bestSolution = dataManager.getBestSolutionOfProblem(ttID);
 
             mapForJSON.put(Constants.DATA, bestSolution);
         } catch (Throwable e) {

@@ -1,9 +1,6 @@
 package il.ac.mta.zuli.evolution;
 
-import il.ac.mta.zuli.evolution.dto.AlgorithmConfigDTO;
-import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
-import il.ac.mta.zuli.evolution.dto.OtherUserSolutionDTO;
-import il.ac.mta.zuli.evolution.dto.TimetableSummaryDTO;
+import il.ac.mta.zuli.evolution.dto.*;
 import il.ac.mta.zuli.evolution.engine.StrideData;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.TimetableSolution;
@@ -133,7 +130,7 @@ public class DataManager {
         if (isSomeoneSolvingProblem(ttID)) {
             List<User> usersSolvingProblem = getUsersSolvingProblem(ttID);
             TimetableSolution bestSolution = usersSolvingProblem.get(0).getBestSolution(ttID);
-            userWithBestSolution= usersSolvingProblem.get(0);
+            userWithBestSolution = usersSolvingProblem.get(0);
 
             for (User user : usersSolvingProblem) {
                 TimetableSolution currUserSolution = user.getBestSolution(ttID);
@@ -228,12 +225,12 @@ public class DataManager {
     }
 
     //return value might be NULL
-    public TimetableSolution getBestSolutionOfProblem(int ttID) {
+    public TimetableSolutionDTO getBestSolutionOfProblem(int ttID) {
         User userWithBestSolution = getUserWithBestSolutionOfProblem(ttID);
-        TimetableSolution bestSolution = null;
+        TimetableSolutionDTO bestSolution = null;
 
         if (userWithBestSolution != null) {
-            bestSolution = userWithBestSolution.getBestSolution(ttID);
+            bestSolution = new TimetableSolutionDTO(userWithBestSolution.getBestSolution(ttID));
         }
 
         return bestSolution;

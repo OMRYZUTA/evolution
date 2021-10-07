@@ -1,16 +1,16 @@
 package il.ac.mta.zuli.evolution.dto;
 
+import il.ac.mta.zuli.evolution.engine.rules.Rule;
+
 import java.util.Objects;
 
 public class RuleDTO {
     private final String name;
     private final String type;
-    private final String params;
 
-    public RuleDTO(String name, String type, String params) {
-        this.name = name;
-        this.type = type;
-        this.params = params;
+    public RuleDTO(Rule rule) {
+        this.name = rule.getClass().getSimpleName();
+        this.type = rule.getRuleType().toString();
     }
 
     @Override
@@ -37,10 +37,6 @@ public class RuleDTO {
 
     public String getType() {
         return type;
-    }
-
-    public String getParams() {
-        return params;
     }
 
     public boolean isHardRule() {

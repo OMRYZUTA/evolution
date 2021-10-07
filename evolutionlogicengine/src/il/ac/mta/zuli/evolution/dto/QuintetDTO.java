@@ -1,60 +1,52 @@
 package il.ac.mta.zuli.evolution.dto;
 
-import java.time.DayOfWeek;
+import il.ac.mta.zuli.evolution.engine.Quintet;
+
 import java.util.Comparator;
 import java.util.Objects;
 
 public class QuintetDTO {
-    private final DayOfWeek day;
+    private final int day;
     private final int hour;
-    private final TeacherDTO teacher;
-    private final SchoolClassDTO schoolClass;
-    private final SubjectDTO subject;
+    private final int teacherID;
+    private final String teacherName;
+    private final int schoolClassID;
+    private final String schoolClassName;
+    private final int subjectID;
+    private final String subjectName;
+
     private final static Comparator<QuintetDTO> compareByDay = Comparator.comparing(QuintetDTO::getDay);
     private final static Comparator<QuintetDTO> compareByHour = Comparator.comparing(QuintetDTO::getHour);
     private final static Comparator<QuintetDTO> compareByTeacher = Comparator.comparing(QuintetDTO::getTeacherID);
     private final static Comparator<QuintetDTO> compareBySchoolClass = Comparator.comparing(QuintetDTO::getSchoolClassID);
     private final static Comparator<QuintetDTO> compareBySubject = Comparator.comparing(QuintetDTO::getSubjectID);
 
-    public QuintetDTO(DayOfWeek day, int hour, TeacherDTO teacher, SchoolClassDTO schoolClass, SubjectDTO subject) {
-        this.day = day;
-        this.hour = hour;
-        this.teacher = teacher;
-        this.schoolClass = schoolClass;
-        this.subject = subject;
+    public QuintetDTO(Quintet quintet) {
+        this.day = quintet.getDay().getValue() - 1;
+        this.hour = quintet.getHour();
+        this.teacherID = quintet.getTeacherID();
+        this.teacherName = quintet.getTeacher().getName();
+        this.schoolClassID = quintet.getSchoolClassID();
+        this.schoolClassName = quintet.getSchoolClass().getName();
+        this.subjectID = quintet.getSubjectID();
+        this.subjectName = quintet.getSubject().getName();
     }
 
-    public DayOfWeek getDay() {
-        return day;
-    }
-
-    public int getHour() {
-        return hour;
-    }
-
-    public TeacherDTO getTeacher() {
-        return teacher;
-    }
-
-    public SchoolClassDTO getSchoolClass() {
-        return schoolClass;
-    }
-
-    public SubjectDTO getSubject() {
-        return subject;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         QuintetDTO that = (QuintetDTO) o;
-        return hour == that.hour && day == that.day && teacher.equals(that.teacher) && schoolClass.equals(that.schoolClass) && subject.equals(that.subject);
+        return hour == that.hour && day == that.day &&
+                (teacherID == that.teacherID) &&
+                (schoolClassID == that.schoolClassID) &&
+                (subjectID == that.subjectID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(day, hour, teacher, schoolClass, subject);
+        return Objects.hash(day, hour, teacherID, schoolClassID, subjectID);
     }
 
     @Override
@@ -62,9 +54,9 @@ public class QuintetDTO {
         return "QuintetDTO{" +
                 "day=" + day +
                 ", hour=" + hour +
-                ", teacher=" + teacher +
-                ", schoolClass=" + schoolClass +
-                ", subject=" + subject +
+                ", teacher=" + teacherID +
+                ", schoolClass=" + schoolClassID +
+                ", subject=" + subjectID +
                 '}';
     }
 
@@ -79,18 +71,23 @@ public class QuintetDTO {
         return dhComparator;
     }
 
+    public int getDay() {
+        return day;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+
     public int getTeacherID() {
-        return teacher.getId();
+        return teacherID;
     }
 
     public int getSchoolClassID() {
-        return schoolClass.getId();
+        return schoolClassID;
     }
 
     public int getSubjectID() {
-        return subject.getId();
+        return subjectID;
     }
-
-
-
 }
