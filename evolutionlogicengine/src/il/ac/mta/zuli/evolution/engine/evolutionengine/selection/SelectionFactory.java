@@ -11,16 +11,22 @@ import java.util.function.Supplier;
 public class SelectionFactory<T extends Solution> {
 
     public static <T extends Solution> Selection<T> createSelectionFromMap(Map<String, Object> selectionMap, int populationSize) {
-        int elitism;
-        try {
-            elitism = (int) Math.ceil((double) selectionMap.get(Constants.ELITISM));
-        } catch (Throwable e) {
-            throw new ValidationException("Invalid Selection parameter. " + e.getMessage());
+        int elitism = 0;
+
+        if (selectionMap.containsKey(Constants.ELITISM)) {
+            try {
+                elitism = (int) Math.ceil((double) selectionMap.get(Constants.ELITISM));
+            } catch (Throwable e) {
+                throw new ValidationException("Invalid Selection parameter. " + e.getMessage());
+            }
         }
 
         Map<String, Supplier<Selection<T>>> selectionBuilder = new HashMap<>();
 
-        selectionBuilder.put(Constants.ROULETTE_WHEEL, () -> new RouletteWheel<T>(populationSize, elitism));
+        int finalElitism = elitism;
+
+        selectionBuilder.put(Constants.ROULETTE_WHEEL, () -> new RouletteWheel<T>(populationSize, finalElitism));
+
 
         selectionBuilder.put(Constants.TRUNCATION, () -> {
             int topPercent;
@@ -30,7 +36,7 @@ public class SelectionFactory<T extends Solution> {
             } catch (Throwable e) {
                 throw new ValidationException("Invalid Selection parameter. " + e.getMessage());
             }
-            return new Truncation<T>(topPercent, populationSize, elitism);
+            return new Truncation<T>(topPercent, populationSize, finalElitism);
         });
 
         selectionBuilder.put(Constants.TOURNAMENT, () -> {
@@ -42,7 +48,7 @@ public class SelectionFactory<T extends Solution> {
                 throw new ValidationException("Invalid Selection parameter. " + e.getMessage());
             }
 
-            return new Tournament<T>(pte, populationSize, elitism);
+            return new Tournament<T>(pte, populationSize, finalElitism);
         });
 
         try {

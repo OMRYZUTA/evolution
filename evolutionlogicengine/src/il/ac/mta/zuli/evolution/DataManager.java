@@ -44,7 +44,7 @@ public class DataManager {
                                          int timetableID,
                                          Map<String, Object> engineSettingsMap,
                                          Map<String, Object> endPredicatesMap,
-                                         Object generationStride) {
+                                         int generationStride) {
         TimeTable timetable = timetables.get(timetableID);
 
         if (timetable != null) {
@@ -73,7 +73,7 @@ public class DataManager {
             int timetableID,
             Map<String, Object> engineSettingsMap,
             Map<String, Object> endPredicatesMap,
-            Object generationStride) {
+            int generationStride) {
 
         TimeTable timetable = timetables.get(timetableID);
 

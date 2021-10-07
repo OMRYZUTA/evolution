@@ -27,7 +27,7 @@ public class User {
     public void startEvolutionAlgorithm(TimeTable timetable,
                                         Map<String, Object> engineSettingsMap,
                                         Map<String, Object> endPredicatesMap,
-                                        Object generationStride) {
+                                        int generationStride) {
         int timetableID = timetable.getID();
 
         if (userAlgorithmRuns.containsKey(timetableID)) {
@@ -47,30 +47,33 @@ public class User {
         }
     }
 
-    public void resumeEvolutionAlgorithm(int timetableID,
+    public void resumeEvolutionAlgorithm(int ttID,
                                          Map<String, Object> engineSettingsMap,
                                          Map<String, Object> endPredicatesMap,
-                                         Object generationStride) {
+                                         int generationStride) {
 
-        if (userAlgorithmRuns.containsKey(timetableID)) {
+        if (userAlgorithmRuns.containsKey(ttID)) {
             //in timetableEngine.resumeEvolutionAlgorithm() we'll check if it's indeed paused
-            TimeTableEngine timetableEngine = userAlgorithmRuns.get(timetableID);
+            TimeTableEngine timetableEngine = userAlgorithmRuns.get(ttID);
             timetableEngine.setNewAlgorithmConfiguration(engineSettingsMap, endPredicatesMap, generationStride);
             timetableEngine.resumeEvolutionAlgorithm();
         } else {
-            throw new InvalidOperationException("The user is not solving timetable " + timetableID);
+            throw new InvalidOperationException("The user is not solving timetable " + ttID);
         }
     }
 
-    public void pauseEvolutionAlgorithm(int timetableID) {
-        if (userAlgorithmRuns.containsKey(timetableID)) {
-            TimeTableEngine timetableEngine = userAlgorithmRuns.get(timetableID);
+    public void pauseEvolutionAlgorithm(int ttID) {
+        if (userAlgorithmRuns.containsKey(ttID)) {
+            TimeTableEngine timetableEngine = userAlgorithmRuns.get(ttID);
             timetableEngine.pauseEvolutionAlgorithm();
         }
     }
 
     public void stopEvolutionAlgorithm(int ttID) {
-
+        if (userAlgorithmRuns.containsKey(ttID)) {
+            TimeTableEngine timetableEngine = userAlgorithmRuns.get(ttID);
+            timetableEngine.stopEvolutionAlgorithm();
+        }
     }
     //#endregion
 

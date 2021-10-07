@@ -50,7 +50,7 @@ public class AlgoFlowServlet extends HttpServlet {
                     responseMessage = resumeAlgorithmRun(usernameFromSession, ttID, requestMap);
                     break;
                 case STOP:
-
+                    responseMessage = dataManager.stopAlgorithmRunForUser(usernameFromSession, ttID);
                     break;
                 default:
                     throw new InvalidOperationException("Invalid algorithm action");
@@ -101,7 +101,7 @@ public class AlgoFlowServlet extends HttpServlet {
     private String resumeAlgorithmRun(String usernameFromSession, int ttID, Map<String, Object> requestMap) {
         Map<String, Object> engineSettingsMap = (HashMap<String, Object>) requestMap.get(Constants.ENGINE_SETTINGS);
         Map<String, Object> endPredicatesMap = (Map<String, Object>) requestMap.get(Constants.END_PREDICATES);
-        Object generationStride = requestMap.get(Constants.STRIDE); //validating we received an int alter on
+        int generationStride = (int) Math.ceil((double) requestMap.get(Constants.STRIDE));
 
         dataManager.resumeAlgorithmRunForUser(
                 usernameFromSession,

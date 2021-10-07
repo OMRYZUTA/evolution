@@ -28,7 +28,7 @@ public class TimeTableEngine implements Engine {
     public TimeTableEngine(TimeTable timetable,
                            Map<String, Object> engineSettingsMap,
                            Map<String, Object> endPredicatesMap,
-                           Object stride) {
+                           int stride) {
 
         EngineSettings<TimetableSolution> engineSettings = new EngineSettings<>(engineSettingsMap, timetable);
         this.descriptor = new Descriptor(timetable, engineSettings);
@@ -51,8 +51,6 @@ public class TimeTableEngine implements Engine {
     public void resumeEvolutionAlgorithm() {
         //will likely NOT throw exceptions, since we'll disable buttons accordingly in FrontEnd
         if (LogicalRunStatus.PAUSED == currEvolutionState.getStatus()) {
-            System.out.println("in resumeEvolutionAlgorithm");
-            System.out.println(currEvolutionState);
             runEvolutionAlgorithm(this.currEvolutionState);
         } else if (LogicalRunStatus.STOPPED == currEvolutionState.getStatus()) {
             throw new InvalidOperationException("Run was stopped, cannot resume");
@@ -65,23 +63,13 @@ public class TimeTableEngine implements Engine {
     }
 
     private void runEvolutionAlgorithm(EvolutionState currentState) {
-//        if (currentRunningTask != null) {
-//            throw new RuntimeException("Failed running task because another task is currently running");
-//        }
-
         currentRunningTask = new RunAlgorithmTask(
                 this.descriptor,
                 endPredicates,
                 generationsStride,
                 currentState,
                 (EvolutionState state) -> {
-                    System.out.println("state status " + state.getStatus());
-                    if (state.isTaskDone() &&
-                            state.getStatus() != LogicalRunStatus.STOPPED &&
-                            state.getStatus() != LogicalRunStatus.PAUSED) {
-                        state.setStatus(LogicalRunStatus.COMPLETED);
-                    }
-
+                    System.out.println("state status " + state.getStatus() + " isDone? " + state.isTaskDone());
                     this.currEvolutionState = state;
                 },
                 (TimetableSolution solution) -> bestSolution = solution,
@@ -110,8 +98,7 @@ public class TimeTableEngine implements Engine {
     public void pauseEvolutionAlgorithm() {
         if (!currEvolutionState.isTaskDone()) {
             //if currently running
-            currentRunningTask.cancel();
-            currEvolutionState.setStatus(LogicalRunStatus.PAUSED);
+            currentRunningTask.pause();
         } else {
             throw new InvalidOperationException("Nothing to pause here");
         }
@@ -119,13 +106,15 @@ public class TimeTableEngine implements Engine {
 
     @Override
     public void stopEvolutionAlgorithm() {
+        System.out.println("in stopEvolutionAlgorithm");
+        System.out.println(currEvolutionState.getStatus() + " isTaskDone? " + currEvolutionState.isTaskDone());
         if (!currEvolutionState.isTaskDone()) {
             //if currently running
-            currentRunningTask.cancel();
-            currEvolutionState.setStatus(LogicalRunStatus.STOPPED);
+            currentRunningTask.stop();
         } else if (LogicalRunStatus.PAUSED == currEvolutionState.getStatus()) {
-            currEvolutionState.setStatus(LogicalRunStatus.STOPPED);
+            currentRunningTask.stop();
         }
+
         // no need for this in Ex 3 because each timetableEngine only runs for a single timeTable
 //        this.currEvolutionState = null; //in case of STOP we don't want to save the previous state
     }
@@ -188,21 +177,13 @@ public class TimeTableEngine implements Engine {
     public void setNewAlgorithmConfiguration(
             Map<String, Object> engineSettingsMap,
             Map<String, Object> endPredicatesMap,
-            Object generationStride) {
+            int generationStride) {
         descriptor.setEngineSettings(new EngineSettings<>(engineSettingsMap, descriptor.getTimeTable()));
         setGenerationsStride(generationStride);
         endPredicates = generatePredicates(endPredicatesMap);
     }
 
-    private void setGenerationsStride(Object generationsStride) {
-        int stride;
-
-        try {
-            stride = (int) Math.ceil((double) generationsStride);
-        } catch (Throwable e) {
-            throw new ValidationException("Stride must be a positive number");
-        }
-
+    private void setGenerationsStride(int stride) {
         if (stride > 0) {
             this.generationsStride = stride; //we'll check stride < generationNum only if that predicate is applied
         } else {

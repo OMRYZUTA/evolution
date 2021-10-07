@@ -28,11 +28,11 @@ public class EvolutionState {
         this.taskDone = false;
     }
 
-    public synchronized void setTaskDone() {
+    public void setTaskDone() {
         taskDone = true;
     }
 
-    public synchronized boolean isTaskDone() {
+    public boolean isTaskDone() {
         return taskDone;
     }
 
@@ -44,11 +44,11 @@ public class EvolutionState {
         return status;
     }
 
-    public synchronized void setException(Throwable exception) {
+    public void setException(Throwable exception) {
         this.exception = exception;
     }
 
-    public synchronized Throwable getException() {
+    public Throwable getException() {
         return exception;
     }
 

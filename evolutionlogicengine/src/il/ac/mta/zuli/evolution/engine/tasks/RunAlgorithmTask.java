@@ -19,7 +19,8 @@ public class RunAlgorithmTask implements Runnable {
     private final Consumer<StrideData> reportStrideData;
     private TimetableSolution bestSolutionEver;
     private final EvolutionEngine<TimetableSolution> evolutionEngine;
-    private boolean cancelled;
+    private boolean paused;
+    private boolean stopped;
 
     public RunAlgorithmTask(
             Descriptor descriptor,
@@ -41,7 +42,8 @@ public class RunAlgorithmTask implements Runnable {
         this.reportBestSolution = (TimetableSolution bestSolution) -> {
             reportBestSolution.accept(bestSolution);
         };
-        this.cancelled = false;
+        this.paused = false;
+        this.stopped = false;
     }
 
     @Override
@@ -70,7 +72,7 @@ public class RunAlgorithmTask implements Runnable {
             reportBestSolution.accept(bestSolutionEver);
 
             //while the user didn't click Pause or Stop, and we haven't reached any of the end-conditions yet
-            while (!isCancelled() && checkAllPredicates(prevEvolutionState)) {
+            while (!isPaused() && !isStopped() && checkAllPredicates(prevEvolutionState)) {
                 List<TimetableSolution> currSolutions = evolutionEngine.execute(prevEvolutionState.getGenerationSolutions());
                 // building the current EvolutionState
                 long timeFromStart = System.currentTimeMillis() - startTime;
@@ -117,6 +119,13 @@ public class RunAlgorithmTask implements Runnable {
         } finally {
             if (outEvolutionState != null) {
                 outEvolutionState.setTaskDone();
+                outEvolutionState.setStatus(LogicalRunStatus.COMPLETED); //either successfully or unsuccessfully
+                if (paused) {
+                    outEvolutionState.setStatus(LogicalRunStatus.PAUSED);
+                }
+                if (stopped) {
+                    outEvolutionState.setStatus(LogicalRunStatus.STOPPED);
+                }
                 reportState.accept(outEvolutionState); // reporting the last state as "done"}
             }
         }
@@ -129,12 +138,20 @@ public class RunAlgorithmTask implements Runnable {
         reportState.accept(prevEvolutionState);
     }
 
-    public synchronized void cancel() {
-        cancelled = true;
+    public synchronized void pause() {
+        paused = true;
     }
 
-    public synchronized boolean isCancelled() {
-        return cancelled;
+    public synchronized boolean isPaused() {
+        return paused;
+    }
+
+    public synchronized void stop() {
+        stopped = true;
+    }
+
+    public synchronized boolean isStopped() {
+        return stopped;
     }
 
     private boolean checkAllPredicates(EvolutionState evolutionState) {
