@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
         spacing: 2,
         justifyContent: 'flex-start',
         alignItems: 'top-center',
-        minHeight: "100vh",
     },
     settings: {
         spacing: 2,

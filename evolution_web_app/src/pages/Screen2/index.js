@@ -56,11 +56,10 @@ const Index = () => {
                 const dashboardPayload = await Screen2Services.getAll();
                 setUsers(dashboardPayload.users);
                 setSummaries([...dashboardPayload.timetables]);
+                setAlertText("");
             } catch (e) {
                 console.log("inside screen2/index", e);
-                // setAlertText('Failed initializing app, please reload page');
-            } finally {
-                // setIsFetching(false);
+                setAlertText('oops something happend, please reload page');
             }
         };
 
