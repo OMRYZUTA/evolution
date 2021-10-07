@@ -86,6 +86,7 @@ const Screen3 = () => {
             mutations: [],
         }
     }
+
     const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
     const [alertText, setAlertText] = React.useState('');
     const [isFetching, setIsFetching] = React.useState(true);
@@ -255,6 +256,7 @@ const Screen3 = () => {
 
     const handleClose = () => {
         setOpen(false);
+        console.log("closing")
         // setSelectedValue(value);
     };
 
@@ -278,7 +280,7 @@ const Screen3 = () => {
                     Best Solution
                 </Button>
                 {open && <SolutionDialog
-                    onClose={handleClose}
+                    handleClose={handleClose}
                 />}
                 <Button id="back to screen 2" onClick={routeChange}>
                     Back to screen 2

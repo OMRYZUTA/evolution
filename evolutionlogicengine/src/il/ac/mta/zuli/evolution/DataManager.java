@@ -133,6 +133,7 @@ public class DataManager {
         if (isSomeoneSolvingProblem(ttID)) {
             List<User> usersSolvingProblem = getUsersSolvingProblem(ttID);
             TimetableSolution bestSolution = usersSolvingProblem.get(0).getBestSolution(ttID);
+            userWithBestSolution= usersSolvingProblem.get(0);
 
             for (User user : usersSolvingProblem) {
                 TimetableSolution currUserSolution = user.getBestSolution(ttID);

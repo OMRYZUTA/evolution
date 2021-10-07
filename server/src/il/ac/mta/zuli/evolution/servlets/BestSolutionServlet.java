@@ -33,6 +33,8 @@ public class BestSolutionServlet extends HttpServlet {
         } catch (Throwable e) {
             mapForJSON.put(Constants.ERROR, e.getMessage());
         } finally {
+            System.out.println("best solution servlet");
+            System.out.println(mapForJSON);
             ServletUtils.sendJSONResponse(response, mapForJSON);
         }
     }
