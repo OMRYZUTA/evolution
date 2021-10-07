@@ -73,6 +73,7 @@ const Screen3 = () => {
     const [timetable, setTimetable] = useState();
     const [otherSolutions, setOtherSolutions] = useState([]);
     const [progress, setProgress] = useState();
+    const [bestSolution, setBestSolution] = useState();
     const classes = useStyles();
     const history = useHistory();
     const emptyAlgoConfig = {
@@ -103,8 +104,6 @@ const Screen3 = () => {
                 ]);
 
                 if (timetableResult.data) {
-                    console.log("timetableResult result (screen 3 index)")
-                    console.log(timetableResult.data);
                     setTimetable(timetableResult.data);
                 } else {
                     // setAlertText('Failed initializing app, please reload page');
@@ -113,8 +112,6 @@ const Screen3 = () => {
                 }
 
                 if (algoConfigResult.data) {
-                    console.log("algoConfig result (screen 3 index)")
-                    console.log(algoConfigResult.data);
                     setAlgorithmConfiguration(algoConfigResult.data);
                 } else {
                     // setAlertText('Failed initializing app, please reload page');
@@ -130,14 +127,13 @@ const Screen3 = () => {
 
         const fetchIntervalData = async () => {
             try {
-                const [otherSolutionsResult, progressResult] = await Promise.all([
+                const [otherSolutionsResult, progressResult, bestSolutionResult] = await Promise.all([
                     Screen3Services.getOtherSolutionsInfo(currentTimetableID),
                     Screen3Services.getProgress(currentTimetableID),
+                    Screen3Services.getBestSolution(currentTimetableID)
                 ]);
 
                 if (otherSolutionsResult.data) {
-                    console.log("otherSolutionsResult (screen 3 index)")
-                    console.log(otherSolutionsResult.data);
                     setOtherSolutions(otherSolutionsResult.data);
                 } else {
                     // setAlertText('Failed initializing app, please reload page');
@@ -146,13 +142,19 @@ const Screen3 = () => {
                 }
 
                 if (progressResult.data) {
-                    console.log("progressResult (screen 3 index)")
-                    console.log(progressResult.data);
                     setProgress(progressResult.data);
                 } else {
                     // setAlertText('Failed initializing app, please reload page');
                     console.log("progressResult.data is null");
                     console.log(progressResult.error);
+                }
+
+                if (bestSolutionResult.data) {
+                    setBestSolution(bestSolutionResult.data);
+                } else {
+                    // setAlertText('Failed initializing app, please reload page');
+                    console.log("bestSolutionResult.data is null");
+                    console.log(bestSolutionResult.error);
                 }
 
             } catch (e) {
@@ -250,13 +252,11 @@ const Screen3 = () => {
     }
 
     const handleSolutionClick = useCallback(() => {
-        console.log(" in handleClickOpen");
         setOpen(true);
     }, [open])
 
     const handleClose = () => {
         setOpen(false);
-        console.log("closing")
         // setSelectedValue(value);
     };
 
@@ -276,11 +276,14 @@ const Screen3 = () => {
                 <Button id="stop" disabled={!isRunning} onClick={handleStop}>
                     stop
                 </Button>
-                <Button id="bestSolution" onClick={handleSolutionClick}>
+                <Button id="bestSolution" onClick={handleSolutionClick} disabled={!bestSolution}>
                     Best Solution
                 </Button>
                 {open && <SolutionDialog
                     handleClose={handleClose}
+                    days={timetable.days}
+                    hours={timetable.hours}
+                    solution={bestSolution}
                 />}
                 <Button id="back to screen 2" onClick={routeChange}>
                     Back to screen 2

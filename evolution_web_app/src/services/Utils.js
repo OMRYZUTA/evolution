@@ -1,7 +1,4 @@
 export async function fetchWrapper(method, url, object) {
-    console.log("in fetchWrapper, object")
-    console.log(object) //TODO delete later
-
     const options = {
         method,
         headers: {'Content-Type': 'application/json',},

@@ -59,7 +59,6 @@ const InfoTabs = ({algorithmConfiguration, handleAlgorithmConfigSave, timetable}
         setValue(newValue);
     };
 
-    console.log('rendering InfoTabs')
     return (
         <div className={classes.root}>
             <Tabs

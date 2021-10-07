@@ -21,7 +21,7 @@ public class Teacher {
         this.hours = hours;
         setName(t.getETTName());
         setId(t.getId());
-        setWorkingHours(t.getETTWorkingHours()); //todo: return to this later
+        setWorkingHours(t.getETTWorkingHours());
         setSubjects(t.getETTTeaching().getETTTeaches(), existingSubjects);
     }
 

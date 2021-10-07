@@ -42,8 +42,7 @@ const OtherSolutions = ({otherSolutionsList}) => {
                 </Typography>
                 <Grid item>
                     <Grid container className={classes.settings}>
-                        {console.log("otherSolutionsList :")}
-                        {console.log(otherSolutionsList)}
+
                         {otherSolutionsList.map(solution => {
                             return (
                                 <Grid container className={classes.settings}>

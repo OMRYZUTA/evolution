@@ -7,6 +7,7 @@ import TeacherView from "./TeacherView";
 import * as Screen3Services from "../../services/Screen3Services";
 import {TimetableContext} from "../../components/TimetableContext";
 import {getBestSolution} from "../../services/Screen3Services";
+import CircularIndeterminate from "../../components/CircularIndeterminate";
 
 const useStyles = makeStyles((theme) => ({
     grid: {
@@ -42,40 +43,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SolutionDialog = ({handleClose}) => {
+const SolutionDialog = ({handleClose, days, hours, solution}) => {
     const {currentTimetableID} = useContext(TimetableContext);
     const classes = useStyles();
-    const [quintets,setQuintets]= useState({});
-    const [days,setDays] = useState();
-    const[hours,setHours]= useState();
 
-    useEffect(() => {
-        const fetchAllData = async () => {
-            // calling all API calls in parallel, and waiting until they ALL finish before setting
-            try {
-                console.log({currentTimetableID})
-                const solutionPayload = await Screen3Services.getBestSolution(currentTimetableID);
-                setQuintets(solutionPayload.data.solutionQuintets);
-                setDays(solutionPayload.data.timetable.days);
-                setHours(solutionPayload.data.timetable.hours);
-
-                console.log("solution received:");
-                console.log({solutionPayload});
-            } catch (e) {
-                console.log("inside solution dialog", e);
-                // setAlertText('Failed initializing app, please reload page');
-            } finally {
-                // setIsFetching(false);
-            }
-        };
-
-        fetchAllData();
-    }, []);
 
     return (
         <Dialog onClose={handleClose} open={true} fullWidth={true} maxWidth={"xl"}>
             <DialogTitle>Best Solution</DialogTitle>
-           <TeacherView quintets={quintets} hours ={hours} days={days}/>
+            {solution? <TeacherView quintets={solution.solutionQuintets} hours={hours} days={days}/>: <CircularIndeterminate/>}
         </Dialog>
     );
 }

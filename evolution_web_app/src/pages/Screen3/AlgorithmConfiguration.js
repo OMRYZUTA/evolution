@@ -139,7 +139,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     helperText={pteError ? 'Invalid value (must be a number)' : ''}
                     id="pte"
                     label="PTE"
-                    defaultvalue={data.engineSettings.selection.pte}
+                    defaultValue={data.engineSettings.selection.pte}
                     onChange={handlePTEChange}/>
             );
         } else {
@@ -151,7 +151,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     helperText={topPercentError ? 'Invalid value (must be a number)' : ''}
                     id="topPercent"
                     label="Top Percent"
-                    defaultvalue={data.engineSettings.selection.topPercent}
+                    defaultValue={data.engineSettings.selection.topPercent}
                     onChange={handleTopPercentChange}/>
             );
         }
@@ -257,7 +257,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     label='Probability'
                     error={probabilityError}
                     helperText={probabilityError ? 'Invalid value (must be a number)' : ''}
-                    defaultvalue={mutation.probability}
+                    defaultValue={mutation.probability}
                     onChange={(e) => handleProbabilityChange(e, index)}
                 />
                 {renderMutationExtraFields(mutation, index)}
@@ -272,7 +272,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                 error={totalTuplesError}
                 helperText={totalTuplesError ? 'Invalid value (must be a number)' : ''}
                 label='Total Tuples'
-                defaultvalue={mutation.totalTuples}
+                defaultValue={mutation.totalTuples}
                 onChange={(e) => handleTotalTuplesChange(e, index)}
             />)
         } else if (mutation.name === 'Flipping') {
@@ -283,7 +283,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         error={maxTuplesError}
                         helperText={maxTuplesError ? 'Invalid value (must be a number)' : ''}
                         label='Max Tuples'
-                        defaultvalue={mutation.maxTuples}
+                        defaultValue={mutation.maxTuples}
                         onChange={(e) => handleMaxTuplesChange(e, index)}
                     />
                     <DropDown
@@ -316,7 +316,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         error={populationSizeError}
                         helperText={populationSizeError ? 'Invalid value (must be a number)' : ''}
                         label='Population size'
-                        defaultvalue={data.engineSettings.populationSize}
+                        defaultValue={data.engineSettings.populationSize}
                         onChange={handlePopulationSizeChange}
                     />
                     <TextField
@@ -325,7 +325,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         helperText={strideError ? 'Invalid value (must be a number)' : ''}
                         id='stride'
                         label='Stride'
-                        defaultvalue={data.stride}
+                        defaultValue={data.stride}
                         onChange={handleStrideChange}
                     />
                 </Grid>
