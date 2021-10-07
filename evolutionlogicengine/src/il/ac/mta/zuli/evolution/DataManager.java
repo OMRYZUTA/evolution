@@ -201,6 +201,7 @@ public class DataManager {
             List<User> usersSolving = getUsersSolvingProblem(ttID);
 
             for (User user : usersSolving) {
+//                getProgressData
                 TimeTableEngine ttEngine = user.getTimetableEngine(ttID);
                 otherSolutionsInfo.add(
                         new OtherUserSolutionDTO(

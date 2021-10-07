@@ -23,3 +23,9 @@ export const getProgress = async (timetableID) => {
     const method = 'GET';
     return await fetchWrapper(method, url);
 }
+
+export const getBestSolution = async (timetableID) => {
+    const url = `/server_Web_exploded/api/bestsolution?timetableID=${timetableID}`;
+    const method = 'GET';
+    return await fetchWrapper(method, url);
+}
