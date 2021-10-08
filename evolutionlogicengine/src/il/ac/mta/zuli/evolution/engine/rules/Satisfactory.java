@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class Satisfactory extends Rule {
-    //satisfactory rule - each class gets the exact number of hours-per-subject (the class' requirements are met)
+    //satisfactory rule each class gets the exact number of hours-per-subject (the class' requirements are met)
     private Map<Integer, SchoolClass> schoolClasses;
     private final String ruleName;
 
@@ -47,7 +47,8 @@ public class Satisfactory extends Rule {
         if (timeTableSolution.getSolutionSize() > 0) {
             for (SchoolClass schoolClass : schoolClasses.values()) {
                 int classID = schoolClass.getId();
-                classScores[classID - 1] = classFitnessEvaluation(classID, timeTableSolution.getSubSolutionForClass(classID));
+                classScores[classID 1] =
+                classFitnessEvaluation(classID, timeTableSolution.getSubSolutionForClass(classID));
             }
 
             score = Arrays.stream(classScores).average().getAsDouble();

@@ -180,7 +180,7 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
         return selectedSolutionsAsMatrix.get(randomIndex);
     }
 
-    //generic method - T is either Teacher or SchoolClass
+    //generic method T is either Teacher or SchoolClass
     private <T> void removeParentFromPoolOfParents(
             List<Map<T, List<List<Quintet>>>> selectedSolutionsAsMatrix,
             Map<T, List<List<Quintet>>> itemToRemove) {

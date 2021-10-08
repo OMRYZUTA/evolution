@@ -75,7 +75,7 @@ public class RunAlgorithmTask implements Runnable {
             while (!isPaused() && !isStopped() && checkAllPredicates(prevEvolutionState)) {
                 List<TimetableSolution> currSolutions = evolutionEngine.execute(prevEvolutionState.getGenerationSolutions());
                 // building the current EvolutionState
-                long timeFromStart = System.currentTimeMillis() - startTime;
+                long timeFromStart = System.currentTimeMillis() startTime;
                 long elapsedTime = inEvolutionState == null ? timeFromStart : inEvolutionState.getNetRunTime() + timeFromStart;
 
                 currEvolutionState = new EvolutionState(
@@ -109,7 +109,7 @@ public class RunAlgorithmTask implements Runnable {
 
             System.out.println("endOfLoop: " + bestSolutionEver.getFitnessScore() + "******");
             //TODO how do we handle the update for the last generation? (since it's not necessarily the number of generations in the endPredicates)
-//        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
+//        reportStrideLater.accept(new StrideData(currentGenerationNum 1, currBestSolution));
             outEvolutionState.setStatus(LogicalRunStatus.COMPLETED); //either successfully or unsuccessfully
         } catch (Throwable e) {
             if (outEvolutionState != null) {

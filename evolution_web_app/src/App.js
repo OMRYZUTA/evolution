@@ -2,16 +2,16 @@ import './App.css';
 import React, {useMemo} from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Login from './pages/Login';
-import SignUp from './pages/signup/SignUp' //TODO - delete later
+import SignUp from './pages/signup/SignUp' //TODO delete later
 import Screen2 from './pages/Screen2'
 import {UserContext} from "./components/UserContext";
 import Screen3 from "./pages/Screen3";
 import {TimetableContext} from "./components/TimetableContext";
 
-const getCookieDetail=(name)=>{
+const getCookieDetail = (name) => {
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
+    for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
         while (c.charAt(0) === ' ') {
             c = c.substring(1);

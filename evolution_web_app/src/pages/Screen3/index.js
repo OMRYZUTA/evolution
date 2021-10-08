@@ -110,18 +110,18 @@ const Screen3 = () => {
                 if (timetableResult.data) {
                     setTimetable(timetableResult.data);
                 } else {
-                    setAlertText('oops something went wrong, please reload page</br>' + timetableResult.error);
+                    setAlertText('oops something went wrong, please reload page ' + timetableResult.error);
                     console.error('failed getting time table', timetableResult.error);
                 }
 
                 if (algoConfigResult.data) {
                     setAlgorithmConfiguration(algoConfigResult.data);
                 } else if (algoConfigResult.error) {
-                    setAlertText('oops something went wrong, please reload page</br>' + algoConfigResult.error);
+                    setAlertText('oops something went wrong, please reload page ' + algoConfigResult.error);
                     console.error('failed getting algorithm configuration', algoConfigResult.error);
                 }
             } catch (e) {
-                setAlertText('oops something went wrong, please reload page</br>' + e.message);
+                setAlertText('oops something went wrong, please reload page ' + e.message);
                 console.error('failed fetching static data', e);
             } finally {
                 setIsFetching(false);
@@ -138,27 +138,27 @@ const Screen3 = () => {
 
                 if (otherSolutionsResult.data) {
                     setOtherSolutions(otherSolutionsResult.data);
-                } else {
-                    setAlertText('oops something went wrong</br>' + otherSolutionsResult.error);
+                } else if (otherSolutionsResult.error) {
+                    setAlertText('oops something went wrong ' + otherSolutionsResult.error);
                     console.error('failed getting other solution result', otherSolutionsResult.error);
                 }
 
                 if (progressResult.data) {
                     setProgress(progressResult.data);
-                } else {
-                    setAlertText('oops something went wrong</br>' + progressResult.error);
+                } else if (progressResult.error) {
+                    setAlertText('oops something went wrong ' + progressResult.error);
                     console.error('failed getting progress result', progressResult.error);
                 }
 
                 if (bestSolutionResult.data) {
                     setBestSolution(bestSolutionResult.data);
-                } else {
-                    setAlertText('oops something went wrong</br>' + bestSolutionResult.error);
+                } else if (bestSolutionResult.error) {
+                    setAlertText('oops something went wrong ' + bestSolutionResult.error);
                     console.error('failed getting best solution', bestSolutionResult.error);
                 }
 
             } catch (e) {
-                setAlertText('oops something went wrong</br>' + e.message);
+                setAlertText('oops something went wrong ' + (e.message || ''));
                 console.error('failed getting interval data', e);
             }
         };

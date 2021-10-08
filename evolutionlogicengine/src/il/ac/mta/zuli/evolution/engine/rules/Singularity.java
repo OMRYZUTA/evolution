@@ -42,7 +42,7 @@ public class Singularity extends Rule {
             }
             //specifically for singularity we decided not to assign a score of 0 if it's a HARD rule
 //            if (this.isHardRule() && 0 < collisions) { score = 0;}
-            score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
+            score = (100 * (numOfQuintets collisions)) /(double) numOfQuintets;
         }
 
         timeTableSolution.addScoreToRule(this, score);

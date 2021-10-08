@@ -45,7 +45,7 @@ public class Subject implements Comparable {
 
     @Override
     public int compareTo(@NotNull Object o) {
-        return this.id - ((Subject) o).getId();
+        return this.id((Subject) o).getId();
     }
 
     @Override

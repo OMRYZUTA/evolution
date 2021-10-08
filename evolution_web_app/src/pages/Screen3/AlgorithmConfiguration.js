@@ -42,6 +42,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function nullCoalesce(value, defValue = '') {
+    return value == null ? '' : value;
+}
+
 const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSave}) => {
     const classes = useStyles();
     const [data, setData] = useState(algorithmConfiguration); //currentSettings
@@ -109,7 +113,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     }, [data]);
 
     const handleElitismChange = useCallback((e) => {
-        let value = e.target.value.trim() || '0'; // if after trim we have an empty string - use '0'
+        let value = e.target.value.trim() || '0'; // if after trim we have an empty string use '0'
 
         if (intRegEx.test(value)) {
             setElitismError(false);
@@ -127,7 +131,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
 
         if (floatRegEx.test(value)) {
             setPteError(false);
-            value = parseFloat(value);
+            value = parseFloat(value) || 0;
         } else {
             setPteError(true);
         }
@@ -156,7 +160,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     error={pteError}
                     helperText={pteError ? 'Invalid value (must be a number)' : ''}
                     label="PTE"
-                    value={data.engineSettings.selection.pte || ''}
+                    value={nullCoalesce(data.engineSettings.selection.pte)}
                     onChange={handlePTEChange}/>
             );
         } else {
@@ -167,7 +171,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     error={topPercentError}
                     helperText={topPercentError ? 'Invalid value (must be a number)' : ''}
                     label="Top Percent"
-                    value={data.engineSettings.selection.topPercent || ''}
+                    value={nullCoalesce(data.engineSettings.selection.topPercent)}
                     onChange={handleTopPercentChange}/>
             );
         }
@@ -230,7 +234,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
 
         if (floatRegEx.test(value)) {
             setProbabilityError(false);
-            value = parseFloat(value);
+            value = parseFloat(value) || 0;
         } else {
             setProbabilityError(true);
         }
@@ -270,7 +274,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                 <DropDown
                     label={'Mutation'}
                     options={mutationTypes}
-                    currentValue={mutation.type || ''}
+                    currentValue={nullCoalesce(mutation.type)}
                     keyPropName='type'
                     namePropName='name'
                     onChange={(e) => setValueInMutation('type', e.target.value, index)}/>
@@ -279,7 +283,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     label='Probability'
                     error={probabilityError}
                     helperText={probabilityError ? 'Invalid value (must be a number)' : ''}
-                    value={mutation.probability || ''}
+                    value={nullCoalesce(mutation.probability)}
                     onChange={(e) => handleProbabilityChange(e, index)}/>
                 {renderMutationExtraFields(mutation, index)}
             </Grid>
@@ -294,7 +298,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     error={totalTuplesError}
                     helperText={totalTuplesError ? 'Invalid value (must be a number)' : ''}
                     label='Total Tuples'
-                    value={mutation.totalTuples || ''}
+                    value={nullCoalesce(mutation.totalTuples)}
                     onChange={(e) => handleTotalTuplesChange(e, index)}/>
             )
         } else if (mutation.type === 'Flipping') {
@@ -310,7 +314,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     <DropDown
                         label={'Component'}
                         options={flippingComponent}
-                        currentValue={mutation.component || ''}
+                        currentValue={nullCoalesce(mutation.component)}
                         keyPropName='type'
                         namePropName='name'
                         onChange={(e) => setValueInMutation('component', e.target.value, index)}/>
@@ -335,14 +339,14 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                             error={populationSizeError}
                             helperText={populationSizeError ? 'Invalid value (must be a number)' : ''}
                             label="Population size"
-                            value={data.engineSettings.populationSize || ''}
+                            value={nullCoalesce(data.engineSettings.populationSize)}
                             onChange={handlePopulationSizeChange}/>
                         <TextField
                             required
                             error={strideError}
                             helperText={strideError ? 'Invalid value (must be a number)' : ''}
                             label='Stride'
-                            value={data.stride || ''}
+                            value={nullCoalesce(data.stride)}
                             onChange={handleStrideChange}/>
                     </Grid>
                 </AccordionDetails>
@@ -377,7 +381,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         <DropDown
                             label={"Selection"}
                             options={selectionTypes}
-                            currentValue={data.engineSettings.selection.type || ''}
+                            currentValue={nullCoalesce(data.engineSettings.selection.type)}
                             keyPropName="type"
                             namePropName="name"
                             onChange={(e) => setValueInSelection('type', e.target.value)}/>
@@ -385,7 +389,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                             error={elitismError}
                             helperText={elitismError ? 'Invalid value (must be a number)' : ''}
                             label="Elitism"
-                            value={data.engineSettings.selection.elitism || ''}
+                            value={nullCoalesce(data.engineSettings.selection.elitism)}
                             onChange={handleElitismChange}/>
                         {data.engineSettings.selection.type === 'RouletteWheel' ? '' : renderSelectionExtraField()}
                     </Grid>
@@ -406,7 +410,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         <DropDown
                             label={"Crossover"}
                             options={crossoverTypes}
-                            currentValue={data.engineSettings.crossover.type || ''}
+                            currentValue={nullCoalesce(data.engineSettings.crossover.type)}
                             keyPropName="type"
                             namePropName="name"
                             onChange={(e) => setValueInCrossover('type', e.target.value)}/>
@@ -415,13 +419,13 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                             error={cuttingPointsError}
                             helperText={cuttingPointsError ? 'Invalid value (must be a number)' : ''}
                             label='Cutting Points'
-                            value={data.engineSettings.crossover.cuttingPoints || ''}
+                            value={nullCoalesce(data.engineSettings.crossover.cuttingPoints)}
                             onChange={handleCuttingPointsChange}/>
                         {data.engineSettings.crossover.type === 'DayTimeOriented' ? '' :
                             <DropDown
                                 label={"Orientation"}
                                 options={orientations}
-                                currentValue={data.engineSettings.crossover.orientation || ''}
+                                currentValue={nullCoalesce(data.engineSettings.crossover.orientation)}
                                 keyPropName="type"
                                 namePropName="name"
                                 onChange={(e) => setValueInCrossover('orientation', e.target.value)}/>}

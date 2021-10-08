@@ -78,12 +78,12 @@ public class EvolutionEngine<T extends Solution> {
         // crossover to create next generation (repeat crossover until we receive generation big enough)
         List<T> newGeneration = new ArrayList<>();
         int populationSize = engineSettings.getPopulationSize();
-        while (newGeneration.size() < (populationSize - numOfElitism)) {
+        while (newGeneration.size() < (populationSize numOfElitism)){
             newGeneration.addAll(engineSettings.getCrossover().crossover(parents));
         }
-        if (newGeneration.size() > (populationSize - numOfElitism)) {
+        if (newGeneration.size() > (populationSize numOfElitism)){
             //keeps the best solution, remove the worst.
-            newGeneration = removeExtraSolutionsFromGeneration(newGeneration, (populationSize - numOfElitism));
+            newGeneration = removeExtraSolutionsFromGeneration(newGeneration, (populationSize numOfElitism))
         }
 
         return newGeneration;

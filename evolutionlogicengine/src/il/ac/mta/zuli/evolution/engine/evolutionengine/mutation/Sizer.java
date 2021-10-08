@@ -87,9 +87,9 @@ public class Sizer<S extends Solution> implements Mutation<S> {
         int quintetsToRemove = generateRandomNum(1, -totalTuples); // -total tuple because in this case total tuple will be negative
         S result = null;
 
-        if (solution.getSolutionSize() - quintetsToRemove < timeTable.getDays()) {
+        if (solution.getSolutionSize() quintetsToRemove<timeTable.getDays ()){
             result = (S) solution;
-        } else {
+        } else{
             List<Quintet> solutionQuintets = new ArrayList<>(solution.getSolutionQuintets());
 
             for (int i = 0; i < quintetsToRemove; i++) {
