@@ -43,15 +43,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SolutionDialog = ({handleClose, days, hours, solution}) => {
+const SolutionDialog = ({handleClose, days, hours, solution,teachers}) => {
     const {currentTimetableID} = useContext(TimetableContext);
     const classes = useStyles();
-
+    console.log({solution})
 
     return (
         <Dialog onClose={handleClose} open={true} fullWidth={true} maxWidth={"xl"}>
             <DialogTitle>Best Solution</DialogTitle>
-            {solution? <TeacherView quintets={solution.solutionQuintets} hours={hours} days={days}/>: <CircularIndeterminate/>}
+            {solution? <TeacherView quintets={Object.keys(solution.solutionQuintets).map(key => solution.solutionQuintets[key])} hours={hours} days={days} teachersObject={teachers}/>: <CircularIndeterminate/>}
         </Dialog>
     );
 }

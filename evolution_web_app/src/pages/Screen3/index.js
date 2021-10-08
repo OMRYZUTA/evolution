@@ -288,6 +288,7 @@ const Screen3 = () => {
                     days={timetable.days}
                     hours={timetable.hours}
                     solution={bestSolution}
+                    teachers={timetable.teachers}
                 />}
                 <Button id="back to screen 2" onClick={routeChange}>
                     Back to screen 2
