@@ -15,10 +15,10 @@ export default function DropDown({
                                  }) {
     const tempOptions = options.sort((s1, s2) => (s1[namePropName]).localeCompare(s2[namePropName]))
 
-    const extendedOptions = [{
-        [keyPropName]: '',
-        [namePropName]: '',
-    }, ...tempOptions];
+    // const extendedOptions = [{
+    //     [keyPropName]: '',
+    //     [namePropName]: '',
+    // }, ...tempOptions];
 
     return (
         <Box sx={{minWidth: 120}}>
@@ -28,8 +28,8 @@ export default function DropDown({
                     label={label}
                     value={currentValue}
                     onChange={onChange}>
-                    {extendedOptions.map((option) => <MenuItem key={option[keyPropName]}
-                                                               value={option[keyPropName]}>{option[namePropName]}</MenuItem>)}
+                    {tempOptions.map((option) => <MenuItem key={option[keyPropName]}
+                                                           value={option[keyPropName]}>{option[namePropName]}</MenuItem>)}
                 </Select>
             </FormControl>
         </Box>

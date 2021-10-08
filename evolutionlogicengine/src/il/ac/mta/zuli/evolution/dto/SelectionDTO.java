@@ -10,30 +10,19 @@ public class SelectionDTO {
     private final String type;
     private final Integer elitism;
     private Integer topPercent = null;
+    private Double pte = null;
 
     public SelectionDTO(Selection<TimetableSolution> selection) {
         this.type = selection.getSelectionType();
         this.elitism = selection.getElitism();
 
         if (type.equals(Constants.TRUNCATION)) {
-            Truncation truncation = (Truncation) selection;
+            Truncation<TimetableSolution> truncation = (Truncation<TimetableSolution>) selection;
             topPercent = truncation.getTopPercent();
         } else if (type.equals(Constants.TOURNAMENT)) {
-            Tournament<TimetableSolution> tournament = (Tournament) selection;
+            Tournament<TimetableSolution> tournament = (Tournament<TimetableSolution>) selection;
+            pte = tournament.getPTE();
         }
-    }
-
-    public String getType() {
-        return type;
-    }
-
-
-    public Integer getElitism() {
-        return elitism;
-    }
-
-    public Integer getTopPercent() {
-        return topPercent;
     }
 
     @Override

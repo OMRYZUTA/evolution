@@ -24,7 +24,7 @@ const crossoverTypes = [
     {name: "Daytime Oriented", type: "DayTimeOriented"},
     {name: "Aspect Oriented", type: "AspectOriented"},
 ];
-const orientations = [{name: "Teacher", type: "teacher"}, {name: "Class", type: "class"}];
+const orientations = [{name: "Teacher", type: "TEACHER"}, {name: "Class", type: "CLASS"}];
 const mutationTypes = [{name: "Flipping", type: "Flipping"}, {name: "Sizer", type: "Sizer"}];
 const flippingComponent = [
     {name: "Hour", type: "H"},
@@ -270,21 +270,25 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
 
     const renderMutation = (mutation, index) => {
         return (
-            <Grid container className={classes.root}>
-                <DropDown
-                    label={'Mutation'}
-                    options={mutationTypes}
-                    currentValue={nullCoalesce(mutation.type)}
-                    keyPropName='type'
-                    namePropName='name'
-                    onChange={(e) => setValueInMutation('type', e.target.value, index)}/>
-                <TextField
-                    required
-                    label='Probability'
-                    error={probabilityError}
-                    helperText={probabilityError ? 'Invalid value (must be a number)' : ''}
-                    value={nullCoalesce(mutation.probability)}
-                    onChange={(e) => handleProbabilityChange(e, index)}/>
+            <Grid container item spacing={1}>
+                <Grid item>
+                    <DropDown
+                        label={'Mutation'}
+                        options={mutationTypes}
+                        currentValue={nullCoalesce(mutation.type)}
+                        keyPropName='type'
+                        namePropName='name'
+                        onChange={(e) => setValueInMutation('type', e.target.value, index)}/>
+                </Grid>
+                <Grid item>
+                    <TextField
+                        required
+                        label='Probability'
+                        error={probabilityError}
+                        helperText={probabilityError ? 'Invalid value (must be a number)' : ''}
+                        value={nullCoalesce(mutation.probability)}
+                        onChange={(e) => handleProbabilityChange(e, index)}/>
+                </Grid>
                 {renderMutationExtraFields(mutation, index)}
             </Grid>
         );
@@ -293,17 +297,19 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     const renderMutationExtraFields = (mutation, index) => {
         if (mutation.type === 'Sizer') {
             return (
-                <TextField
-                    required
-                    error={totalTuplesError}
-                    helperText={totalTuplesError ? 'Invalid value (must be a number)' : ''}
-                    label='Total Tuples'
-                    value={nullCoalesce(mutation.totalTuples)}
-                    onChange={(e) => handleTotalTuplesChange(e, index)}/>
+                <Grid item>
+                    <TextField
+                        required
+                        error={totalTuplesError}
+                        helperText={totalTuplesError ? 'Invalid value (must be a number)' : ''}
+                        label='Total Tuples'
+                        value={nullCoalesce(mutation.totalTuples)}
+                        onChange={(e) => handleTotalTuplesChange(e, index)}/>
+                </Grid>
             )
         } else if (mutation.type === 'Flipping') {
-            return (
-                <Grid container className={classes.root}>
+            return [
+                <Grid item>
                     <TextField
                         required
                         error={maxTuplesError}
@@ -311,6 +317,8 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         label='Max Tuples'
                         value={mutation.maxTuples}
                         onChange={(e) => handleMaxTuplesChange(e, index)}/>
+                </Grid>,
+                <Grid item>
                     <DropDown
                         label={'Component'}
                         options={flippingComponent}
@@ -318,8 +326,8 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         keyPropName='type'
                         namePropName='name'
                         onChange={(e) => setValueInMutation('component', e.target.value, index)}/>
-                </Grid>
-            );
+                </Grid>,
+            ];
         }
     };
     //#endregion
@@ -446,7 +454,9 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     <IconButton onClick={handleAddMutation}>
                         <AddIcon/>
                     </IconButton>
-                    {data.engineSettings.mutations.map(renderMutation)}
+                    <Grid container direction={"column"} className={classes.root} spacing={4}>
+                        {data.engineSettings.mutations.map(renderMutation)}
+                    </Grid>
                 </AccordionDetails>
             </Accordion>
         );
