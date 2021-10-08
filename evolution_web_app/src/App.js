@@ -25,7 +25,7 @@ const getCookieDetail=(name)=>{
 
 export default function App() {
     const [currentUser, setCurrentUser] = React.useState(getCookieDetail("username"));
-    const [currentTimetableID, setCurrentTimetableID] = React.useState(getCookieDetail("timetableID"));
+    const [currentTimetableID, setCurrentTimetableID] = React.useState(Number.parseInt(getCookieDetail("timetableID"), 10));
     const userProviderValue = useMemo(() => ({currentUser, setCurrentUser}), [currentUser, setCurrentUser]);
     const timetableProviderValue = useMemo(() => ({ currentTimetableID, setCurrentTimetableID}), [currentTimetableID, setCurrentTimetableID]);
     return (

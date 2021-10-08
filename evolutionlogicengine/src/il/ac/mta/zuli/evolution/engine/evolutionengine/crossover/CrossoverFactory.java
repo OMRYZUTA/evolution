@@ -44,7 +44,7 @@ public class CrossoverFactory {
         Orientation orientation;
 
         try {
-            String OrientationStr = (String) crossoverMap.get(Constants.ORIENTATION);
+            String OrientationStr = ((String) crossoverMap.get(Constants.ORIENTATION)).toUpperCase();
             orientation = Orientation.valueOf(OrientationStr);
         } catch (Throwable e) {
             throw new ValidationException("invalid orientation, must be a either TEACHER or CLASS");

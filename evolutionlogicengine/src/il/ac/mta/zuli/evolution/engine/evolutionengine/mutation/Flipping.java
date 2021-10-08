@@ -21,10 +21,10 @@ public class Flipping<S extends Solution> implements Mutation<S> {
     TimeTable timeTable;
 
     public Flipping(double probability, int maxTuples, ComponentName component, TimeTable timeTable) {
+        this.timeTable = timeTable;
+        this.component = component;
         setProbability(probability);
         setMaxTuples(maxTuples);
-        this.component = component;
-        this.timeTable = timeTable;
     }
 
     @Override

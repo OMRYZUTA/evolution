@@ -63,29 +63,33 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     }, [algorithmConfiguration])
 
     const handleStrideChange = useCallback((e) => {
-        const value = e.target.value.trim();
+        let value = e.target.value.trim();
 
         if (intRegEx.test(value)) {
             setStrideError(false);
-            setData({
-                ...data,
-                stride: parseInt(value, 10),
-            });
+            value = parseInt(value, 10);
         } else {
             setStrideError(true);
         }
+
+        setData({
+            ...data,
+            stride: value,
+        });
     }, [data]);
 
     const handlePopulationSizeChange = useCallback((e) => {
-        const value = e.target.value.trim();
+        let value = e.target.value.trim();
 
         if (intRegEx.test(value)) {
             setPopulationSizeError(false);
-            const engineSettings = {...data.engineSettings, populationSize: parseInt(value, 10)};
-            setData({...data, engineSettings});
+            value = parseInt(value, 10);
         } else {
             setPopulationSizeError(true);
         }
+
+        const engineSettings = {...data.engineSettings, populationSize: value};
+        setData({...data, engineSettings});
     }, [data]);
 
     const handleEndPredicatesChange = useCallback((endPredicates) => {
@@ -105,34 +109,43 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     }, [data]);
 
     const handleElitismChange = useCallback((e) => {
-        const value = e.target.value.trim() || '0'; // if after trim we have an empty string - use '0'
+        let value = e.target.value.trim() || '0'; // if after trim we have an empty string - use '0'
+
         if (intRegEx.test(value)) {
             setElitismError(false);
-            setValueInSelection('elitism', parseInt(value, 10));
+            value = parseInt(value, 10);
         } else {
             setElitismError(true);
         }
+
+        setValueInSelection('elitism', value);
+
     }, [data]);
 
     const handlePTEChange = useCallback((e) => {
-        const value = e.target.value.trim();
+        let value = e.target.value.trim();
 
         if (floatRegEx.test(value)) {
             setPteError(false);
-            setValueInSelection('pte', parseFloat(value));
+            value = parseFloat(value);
         } else {
             setPteError(true);
         }
+
+        setValueInSelection('pte', value);
     }, [data]);
 
     const handleTopPercentChange = useCallback((e) => {
-        const value = e.target.value.trim();
+        let value = e.target.value.trim();
+
         if (intRegEx.test(value)) {
             setTopPercentError(false);
-            setValueInSelection('topPercent', parseInt(value, 10));
+            value = parseInt(value, 10);
         } else {
             setTopPercentError(true);
         }
+
+        setValueInSelection('topPercent', value);
     }, [data]);
 
     const renderSelectionExtraField = () => {
@@ -163,13 +176,15 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
 
     //#region crossover related
     const handleCuttingPointsChange = useCallback((e) => {
-        const value = e.target.value.trim();
+        let value = e.target.value.trim();
         if (intRegEx.test(value)) {
             setCuttingPointsError(false);
-            setValueInCrossover('cuttingPoints', parseInt(value, 10));
+            value = parseInt(value, 10);
         } else {
             setCuttingPointsError(true);
         }
+
+        setValueInCrossover('cuttingPoints', value);
     }, [data]);
 
     const setValueInCrossover = useCallback((propName, value) => {
@@ -199,7 +214,6 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
 
     const setValueInMutation = useCallback((propName, value, index) => {
         const mutationsArray = data.engineSettings.mutations;
-
         const mutation = {
             ...mutationsArray[index],
             [propName]: value,
@@ -212,36 +226,42 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     }, [data]);
 
     const handleProbabilityChange = useCallback((e, index) => {
-        const value = e.target.value.trim();
+        let value = e.target.value.trim();
 
         if (floatRegEx.test(value)) {
             setProbabilityError(false);
-            setValueInMutation('probability', parseFloat(value), index);
+            value = parseFloat(value);
         } else {
             setProbabilityError(true);
         }
+
+        setValueInMutation('probability', value, index);
     }, [data]);
 
     const handleTotalTuplesChange = useCallback((e, index) => {
-        const value = e.target.value.trim();
+        let value = e.target.value.trim();
 
         if (intRegEx.test(value)) {
             setTotalTuplesError(false);
-            setValueInMutation('totalTuples', parseInt(value, 10), index);
+            value = parseInt(value, 10);
         } else {
             setTotalTuplesError(true);
         }
+
+        setValueInMutation('totalTuples', value, index);
     }, [data]);
 
     const handleMaxTuplesChange = useCallback((e, index) => {
-        const value = e.target.value.trim();
+        let value = e.target.value.trim();
 
         if (intRegEx.test(value)) {
             setMaxTuplesError(false);
-            setValueInMutation('maxTuples', parseInt(value, 10), index);
+            value = parseInt(value, 10);
         } else {
             setMaxTuplesError(true);
         }
+
+        setValueInMutation('maxTuples', value, index);
     }, [data]);
 
     const renderMutation = (mutation, index) => {

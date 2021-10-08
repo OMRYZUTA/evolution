@@ -6,16 +6,16 @@ Content-Type: application/json
   "engineSettings": {
     "populationSize": 32,
     "selection": {
-      "name": "rouletteWheel"
+      "name": "RouletteWheel"
     },
     "elitism": 0,
     "crossover": {
-      "name": "DaytimeOriented",
+      "name": "DayTimeOriented",
       "cuttingPoints": 5
     },
     "mutations": [
       {
-        "name": "flipping",
+        "name": "Flipping",
         "probability": 0.2,
         "maxTupples": 3,
         "component": "H"

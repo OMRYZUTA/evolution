@@ -21,10 +21,11 @@ public class AlgoConfigServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Map<String, Object> mapForJSON = new HashMap<>();
-        String timetableIDFromParameter = request.getParameter(Constants.TIMETABLE_ID);
+
 
         try {
             String usernameFromSession = SessionUtils.getUsername(request);
+            String timetableIDFromParameter = request.getParameter(Constants.TIMETABLE_ID);
             int ttID = Integer.parseInt(timetableIDFromParameter);
 
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());

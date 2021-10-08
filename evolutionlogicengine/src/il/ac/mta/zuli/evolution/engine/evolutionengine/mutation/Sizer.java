@@ -21,9 +21,9 @@ public class Sizer<S extends Solution> implements Mutation<S> {
     final TimeTable timeTable;
 
     public Sizer(double probability, int totalTuples, TimeTable timeTable) {
+        this.timeTable = timeTable;
         setProbability(probability);
         setTotalTuples(totalTuples);
-        this.timeTable = timeTable;
     }
 
     public int getTotalTuples() {

@@ -33,7 +33,7 @@ public class Constants {
     public static final String CROSSOVER = "crossover";
     public static final String CUTTING_POINTS = "cuttingPoints";
     public static final String ORIENTATION = "orientation";
-    public static final String DAY_TIME_ORIENTED = "DaytimeOriented";
+    public static final String DAY_TIME_ORIENTED = "DayTimeOriented";
     public static final String ASPECT_ORIENTED = "AspectOriented";
     public static final String TEACHER_ORIENTATION = "teacher";
     public static final String CLASS_ORIENTATION = "class";

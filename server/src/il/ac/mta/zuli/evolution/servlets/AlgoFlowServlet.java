@@ -33,11 +33,10 @@ public class AlgoFlowServlet extends HttpServlet {
             String usernameFromSession = SessionUtils.getUsername(request);
             Gson gson = new Gson();
             Map<String, Object> requestMap = gson.fromJson(request.getReader(), new HashMap<String, Object>().getClass());
-            int ttID = (int) Math.ceil((double) requestMap.get(Constants.TIMETABLE_ID)); //we know this an integer because we provided it
+            int ttID = (int) Math.ceil((double) requestMap.get(Constants.TIMETABLE_ID));
             dataManager = ServletUtils.getDataManager(getServletContext());
 
             String actionType = request.getParameter(Constants.ALGO_ACTION).toUpperCase();
-            System.out.println("in AlgoFlowServlet, param: " + actionType); //TODO delete later
             AlgorithmActions action = AlgorithmActions.valueOf(actionType);
 
             switch (action) {

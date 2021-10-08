@@ -50,7 +50,7 @@ public class MutationFactory {
         });
 
         try {
-            String mutationType = (String) mutationMap.get(Constants.TYPE);
+            String mutationType = ((String) mutationMap.get(Constants.TYPE));
             return mutationBuilder.get(mutationType).get();
         } catch (Throwable e) {
             throw new ValidationException("Invalid Mutation type. " + e.getMessage());
@@ -61,7 +61,7 @@ public class MutationFactory {
         ComponentName component;
 
         try {
-            String ComponentStr = (String) mutationMap.get(Constants.COMPONENT);
+            String ComponentStr = ((String) mutationMap.get(Constants.COMPONENT)).toUpperCase();
             component = ComponentName.valueOf(ComponentStr);
         } catch (Throwable e) {
             throw new ValidationException("Invalid Mutation Component");
