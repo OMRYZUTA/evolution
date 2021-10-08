@@ -8,7 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from "@mui/material/Grid";
 import {makeStyles} from "@mui/styles";
 import Paper from "@mui/material/Paper";
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Typography from '@mui/material/Typography';
 import EndPredicates from './EndPredicates'
 import Button from "@mui/material/Button";
@@ -16,22 +16,22 @@ import Button from "@mui/material/Button";
 const intRegEx = /^\d+$/;
 const floatRegEx = /^\d*(\.\d+)?$/;
 const selectionTypes = [
-    {name: "Truncation", id: "Truncation"},
-    {name: "Roulette Wheel", id: "RouletteWheel"},
-    {name: "Tournament", id: "Tournament"},
+    {name: "Truncation", type: "Truncation"},
+    {name: "Roulette Wheel", type: "RouletteWheel"},
+    {name: "Tournament", type: "Tournament"},
 ];
 const crossoverTypes = [
-    {name: "Daytime Oriented", id: "DaytimeOriented"},
-    {name: "Aspect Oriented", id: "AspectOriented"},
+    {name: "Daytime Oriented", type: "DayTimeOriented"},
+    {name: "Aspect Oriented", type: "AspectOriented"},
 ];
-const orientations = [{name: "Teacher", id: "teacher"}, {name: "Class", id: "class"}];
-const mutationTypes = [{name: "Flipping", id: "Flipping"}, {name: "Sizer", id: "Sizer"}];
+const orientations = [{name: "Teacher", type: "teacher"}, {name: "Class", type: "class"}];
+const mutationTypes = [{name: "Flipping", type: "Flipping"}, {name: "Sizer", type: "Sizer"}];
 const flippingComponent = [
-    {name: "Hour", id: "H"},
-    {name: "Day", id: "D"},
-    {name: "Teacher", id: "T"},
-    {name: "Class", id: "C"},
-    {name: "Subject", id: "S"},
+    {name: "Hour", type: "H"},
+    {name: "Day", type: "D"},
+    {name: "Teacher", type: "T"},
+    {name: "Class", type: "C"},
+    {name: "Subject", type: "S"},
 ];
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSave}) => {
     const classes = useStyles();
     const [data, setData] = useState(algorithmConfiguration); //currentSettings
+
     //#region useState() for flags indicating incorrect type in field (for helpText)
     const [strideError, setStrideError] = useState(false);
     const [populationSizeError, setPopulationSizeError] = useState(false);
@@ -56,6 +57,10 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     const [maxTuplesError, setMaxTuplesError] = useState(false);
     const [totalTuplesError, setTotalTuplesError] = useState(false);
     //#endregion
+
+    useEffect(() => {
+        setData(algorithmConfiguration);
+    }, [algorithmConfiguration])
 
     const handleStrideChange = useCallback((e) => {
         const value = e.target.value.trim();
@@ -131,27 +136,25 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     }, [data]);
 
     const renderSelectionExtraField = () => {
-        if (data.engineSettings.selection.name === 'Tournament') {
+        if (data.engineSettings.selection.type === 'Tournament') {
             return (
                 <TextField
                     required
                     error={pteError}
                     helperText={pteError ? 'Invalid value (must be a number)' : ''}
-                    id="pte"
                     label="PTE"
-                    defaultValue={data.engineSettings.selection.pte}
+                    value={data.engineSettings.selection.pte || ''}
                     onChange={handlePTEChange}/>
             );
         } else {
-            // if (data.engineSettings.selection.name === 'Truncation')
+            // if (data.engineSettings.selection.type === 'Truncation')
             return (
                 <TextField
                     required
                     error={topPercentError}
                     helperText={topPercentError ? 'Invalid value (must be a number)' : ''}
-                    id="topPercent"
                     label="Top Percent"
-                    defaultValue={data.engineSettings.selection.topPercent}
+                    value={data.engineSettings.selection.topPercent || ''}
                     onChange={handleTopPercentChange}/>
             );
         }
@@ -185,7 +188,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     const handleAddMutation = useCallback(() => {
         const mutationsArray = data.engineSettings.mutations;
         const newEmptyMutation = {
-            name: mutationTypes[0].id,
+            type: mutationTypes[0].type,
         };
 
         const newMutationsArray = [...mutationsArray, newEmptyMutation];
@@ -247,35 +250,34 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                 <DropDown
                     label={'Mutation'}
                     options={mutationTypes}
-                    currentValue={mutation.name}
-                    keyPropName='id'
+                    currentValue={mutation.type || ''}
+                    keyPropName='type'
                     namePropName='name'
-                    onChange={(e) => setValueInMutation('name', e.target.value, index)}
-                />
+                    onChange={(e) => setValueInMutation('type', e.target.value, index)}/>
                 <TextField
                     required
                     label='Probability'
                     error={probabilityError}
                     helperText={probabilityError ? 'Invalid value (must be a number)' : ''}
-                    defaultValue={mutation.probability}
-                    onChange={(e) => handleProbabilityChange(e, index)}
-                />
+                    value={mutation.probability || ''}
+                    onChange={(e) => handleProbabilityChange(e, index)}/>
                 {renderMutationExtraFields(mutation, index)}
             </Grid>
         );
     };
 
     const renderMutationExtraFields = (mutation, index) => {
-        if (mutation.name === 'Sizer') {
-            return (<TextField
-                required
-                error={totalTuplesError}
-                helperText={totalTuplesError ? 'Invalid value (must be a number)' : ''}
-                label='Total Tuples'
-                defaultValue={mutation.totalTuples}
-                onChange={(e) => handleTotalTuplesChange(e, index)}
-            />)
-        } else if (mutation.name === 'Flipping') {
+        if (mutation.type === 'Sizer') {
+            return (
+                <TextField
+                    required
+                    error={totalTuplesError}
+                    helperText={totalTuplesError ? 'Invalid value (must be a number)' : ''}
+                    label='Total Tuples'
+                    value={mutation.totalTuples || ''}
+                    onChange={(e) => handleTotalTuplesChange(e, index)}/>
+            )
+        } else if (mutation.type === 'Flipping') {
             return (
                 <Grid container className={classes.root}>
                     <TextField
@@ -283,160 +285,147 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         error={maxTuplesError}
                         helperText={maxTuplesError ? 'Invalid value (must be a number)' : ''}
                         label='Max Tuples'
-                        defaultValue={mutation.maxTuples}
-                        onChange={(e) => handleMaxTuplesChange(e, index)}
-                    />
+                        value={mutation.maxTuples}
+                        onChange={(e) => handleMaxTuplesChange(e, index)}/>
                     <DropDown
                         label={'Component'}
                         options={flippingComponent}
-                        currentValue={mutation.component}
-                        keyPropName='id'
+                        currentValue={mutation.component || ''}
+                        keyPropName='type'
                         namePropName='name'
-                        onChange={(e) => setValueInMutation('component', e.target.value, index)}
-                    />
-                </Grid>);
+                        onChange={(e) => setValueInMutation('component', e.target.value, index)}/>
+                </Grid>
+            );
         }
     };
     //#endregion
 
     //#region render accordions
     const renderGeneralDetails = () => {
-        return (<Accordion>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon/>}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-            >
-                <Typography>Population and Stride</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <Grid container className={classes.root}>
-                    <TextField
-                        required
-                        error={populationSizeError}
-                        helperText={populationSizeError ? 'Invalid value (must be a number)' : ''}
-                        label='Population size'
-                        defaultValue={data.engineSettings.populationSize}
-                        onChange={handlePopulationSizeChange}
-                    />
-                    <TextField
-                        required
-                        error={strideError}
-                        helperText={strideError ? 'Invalid value (must be a number)' : ''}
-                        id='stride'
-                        label='Stride'
-                        defaultValue={data.stride}
-                        onChange={handleStrideChange}
-                    />
-                </Grid>
-            </AccordionDetails>
-        </Accordion>);
+        return (
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon/>}>
+                    <Typography>Population and Stride</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Grid container className={classes.root}>
+                        <TextField
+                            required
+                            error={populationSizeError}
+                            helperText={populationSizeError ? 'Invalid value (must be a number)' : ''}
+                            label="Population size"
+                            value={data.engineSettings.populationSize || ''}
+                            onChange={handlePopulationSizeChange}/>
+                        <TextField
+                            required
+                            error={strideError}
+                            helperText={strideError ? 'Invalid value (must be a number)' : ''}
+                            label='Stride'
+                            value={data.stride || ''}
+                            onChange={handleStrideChange}/>
+                    </Grid>
+                </AccordionDetails>
+            </Accordion>
+        );
     };
 
     const renderEndConditions = () => {
-        return (<Accordion>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon/>}
-                aria-controls="panel2a-content"
-                id="panel2a-header">
-                <Typography>End Conditions</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <EndPredicates endPredicates={data.endPredicates}
-                               handleEndPredicatesChange={handleEndPredicatesChange}/>
-            </AccordionDetails>
-        </Accordion>);
+        return (
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon/>}>
+                    <Typography>End Conditions</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <EndPredicates endPredicates={data.endPredicates}
+                                   handleEndPredicatesChange={handleEndPredicatesChange}/>
+                </AccordionDetails>
+            </Accordion>
+        );
     };
 
     const renderSelection = () => {
-        return (<Accordion>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon/>}
-                aria-controls="panel2a-content"
-                id="panel2a-header"
-            >
-                <Typography>Selection</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <Grid container className={classes.root}>
-                    <DropDown
-                        label={"Selection"}
-                        options={selectionTypes}
-                        currentValue={data.engineSettings.selection.name}
-                        keyPropName="id"
-                        namePropName="name"
-                        onChange={(e) => setValueInSelection('name', e.target.value)}
-                    />
-                    <TextField
-                        error={elitismError}
-                        helperText={elitismError ? 'Invalid value (must be a number)' : ''}
-                        label='Elitism'
-                        value={data.engineSettings.selection.elitism}
-                        onChange={handleElitismChange}
-                    />
-                    {data.engineSettings.selection.name === 'RouletteWheel' ? '' : renderSelectionExtraField()}
-                </Grid>
-            </AccordionDetails>
-        </Accordion>);
+        return (
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon/>}>
+                    <Typography>Selection</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Grid container className={classes.root}>
+                        <DropDown
+                            label={"Selection"}
+                            options={selectionTypes}
+                            currentValue={data.engineSettings.selection.type || ''}
+                            keyPropName="type"
+                            namePropName="name"
+                            onChange={(e) => setValueInSelection('type', e.target.value)}/>
+                        <TextField
+                            error={elitismError}
+                            helperText={elitismError ? 'Invalid value (must be a number)' : ''}
+                            label="Elitism"
+                            value={data.engineSettings.selection.elitism || ''}
+                            onChange={handleElitismChange}/>
+                        {data.engineSettings.selection.type === 'RouletteWheel' ? '' : renderSelectionExtraField()}
+                    </Grid>
+                </AccordionDetails>
+            </Accordion>
+        );
     };
 
     const renderCrossover = () => {
-        return (<Accordion>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon/>}
-                aria-controls="panel2a-content"
-                id="panel2a-header"
-            >
-                <Typography>Crossover</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <Grid container className={classes.root}>
-                    <DropDown
-                        label={"Crossover"}
-                        options={crossoverTypes}
-                        currentValue={data.engineSettings.crossover.name}
-                        keyPropName="id"
-                        namePropName="name"
-                        onChange={(e) => setValueInCrossover('name', e.target.value)}
-                    />
-                    <TextField
-                        required
-                        error={cuttingPointsError}
-                        helperText={cuttingPointsError ? 'Invalid value (must be a number)' : ''}
-                        label='Cutting Points'
-                        value={data.engineSettings.crossover.cuttingPoints}
-                        onChange={handleCuttingPointsChange}
-                    />
-                    {data.engineSettings.crossover.name === 'DaytimeOriented' ? '' :
+        return (
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon/>}>
+                    <Typography>Crossover</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Grid container className={classes.root}>
                         <DropDown
-                            label={"Orientation"}
-                            options={orientations}
-                            currentValue={data.engineSettings.crossover.orientation}
-                            keyPropName="id"
+                            label={"Crossover"}
+                            options={crossoverTypes}
+                            currentValue={data.engineSettings.crossover.type || ''}
+                            keyPropName="type"
                             namePropName="name"
-                            onChange={(e) => setValueInCrossover('orientation', e.target.value)}
-                        />}
-                </Grid>
-            </AccordionDetails>
-        </Accordion>);
+                            onChange={(e) => setValueInCrossover('type', e.target.value)}/>
+                        <TextField
+                            required
+                            error={cuttingPointsError}
+                            helperText={cuttingPointsError ? 'Invalid value (must be a number)' : ''}
+                            label='Cutting Points'
+                            value={data.engineSettings.crossover.cuttingPoints || ''}
+                            onChange={handleCuttingPointsChange}/>
+                        {data.engineSettings.crossover.type === 'DayTimeOriented' ? '' :
+                            <DropDown
+                                label={"Orientation"}
+                                options={orientations}
+                                currentValue={data.engineSettings.crossover.orientation || ''}
+                                keyPropName="type"
+                                namePropName="name"
+                                onChange={(e) => setValueInCrossover('orientation', e.target.value)}/>}
+                    </Grid>
+                </AccordionDetails>
+            </Accordion>
+        );
     };
 
     const renderMutations = () => {
-        return (<Accordion>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon/>}
-                aria-controls="panel2a-content"
-                id="panel2a-header"
-            >
-                <Typography>Mutations</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <IconButton onClick={handleAddMutation}>
-                    <AddIcon/>
-                </IconButton>
-                {data.engineSettings.mutations.map(renderMutation)}
-            </AccordionDetails>
-        </Accordion>);
+        return (
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon/>}>
+                    <Typography>Mutations</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <IconButton onClick={handleAddMutation}>
+                        <AddIcon/>
+                    </IconButton>
+                    {data.engineSettings.mutations.map(renderMutation)}
+                </AccordionDetails>
+            </Accordion>
+        );
     };
     //#endregion
 
@@ -446,7 +435,6 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
 
     return (
         <Paper>
-            {/*TODO maybe make text fields visible only if the box is ticked*/}
             {renderGeneralDetails()}
             {renderEndConditions()}
             {renderSelection()}

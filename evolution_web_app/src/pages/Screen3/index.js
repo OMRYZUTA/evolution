@@ -21,10 +21,10 @@ const fakeAlgoConfig = {
     endPredicates: {numOfGenerations: "700", fitnessScore: "97.1", time: "4"},
     engineSettings: {
         populationSize: "60",
-        selection: {name: "RouletteWheel", elitism: "5"},
-        crossover: {name: "DaytimeOriented", "cuttingPoints": "5"},
+        selection: {type: "RouletteWheel", elitism: "5"},
+        crossover: {type: "DayTimeOriented", "cuttingPoints": "5"},
         mutations: [
-            {name: "Flipping", probability: "0.2", maxTuples: "4", component: "H"}],
+            {type: "Flipping", probability: "0.2", maxTuples: "4", component: "H"}],
     }
 }
 
@@ -86,8 +86,8 @@ const Screen3 = () => {
         endPredicates: {numOfGenerations: undefined, fitnessScore: undefined, time: undefined},
         engineSettings: {
             populationSize: undefined,
-            selection: {name: "RouletteWheel", elitism: undefined},
-            crossover: {name: "DaytimeOriented", "cuttingPoints": undefined},
+            selection: {type: "RouletteWheel", elitism: undefined},
+            crossover: {type: "DayTimeOriented", "cuttingPoints": undefined},
             mutations: [],
         }
     }
@@ -173,7 +173,7 @@ const Screen3 = () => {
 
         //React performs the cleanup when the component unmounts.
         return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
-    }, [currentTimetableID,]);
+    }, [currentTimetableID]);
 
     const renderAlert = () => {
         return (

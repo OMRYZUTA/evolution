@@ -52,7 +52,7 @@ public class SelectionFactory<T extends Solution> {
         });
 
         try {
-            String selectionType = (String) selectionMap.get(Constants.NAME);
+            String selectionType = (String) selectionMap.get(Constants.TYPE);
             return selectionBuilder.get(selectionType).get();
         } catch (Throwable e) {
             throw new ValidationException("Invalid Selection type. " + e.getMessage());

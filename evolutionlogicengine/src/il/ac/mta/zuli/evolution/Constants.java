@@ -13,7 +13,7 @@ public class Constants {
     //TimetableEngine:
     public static final String ENGINE_SETTINGS = "engineSettings";
     public static final String END_PREDICATES = "endPredicates";
-    public static final String NAME = "name";
+    public static final String TYPE = "type";
     public static final String VALUE = "value";
     public static final String STRIDE = "stride";
     public static final String POPULATION_SIZE = "populationSize";

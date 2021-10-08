@@ -50,7 +50,7 @@ public class MutationFactory {
         });
 
         try {
-            String mutationType = (String) mutationMap.get(Constants.NAME);
+            String mutationType = (String) mutationMap.get(Constants.TYPE);
             return mutationBuilder.get(mutationType).get();
         } catch (Throwable e) {
             throw new ValidationException("Invalid Mutation type. " + e.getMessage());

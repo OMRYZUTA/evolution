@@ -33,7 +33,7 @@ public class CrossoverFactory {
         });
 
         try {
-            String crossoverType = (String) crossoverMap.get(Constants.NAME);
+            String crossoverType = (String) crossoverMap.get(Constants.TYPE);
             return crossoverBuilder.get(crossoverType).get();
         } catch (Throwable e) {
             throw new ValidationException("Invalid Crossover type. " + e.getMessage());
