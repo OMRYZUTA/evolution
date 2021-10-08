@@ -51,7 +51,7 @@ const Index = () => {
                 setUsers(dashboardPayload.users);
                 setSummaries([...dashboardPayload.timetables]);
             } catch (e) {
-                console.log("inside screen2/index", e);
+                console.error("failed fetching all data", e);
                 setAlertText('oops something went wrong, please reload page');
             }
         };
@@ -89,9 +89,7 @@ const Index = () => {
     const handleFileUpload = async (event) => {
         const file = event.target.files[0];
         event.target.value = '';
-        console.log(`uploading file ${file.name}`);
         const result = await FileServices.uploadFile(file);
-        console.log(`done uploading ${file.name}, result: ${result}`);
         if (result !== "OK") {
             setAlertText(result);
         }

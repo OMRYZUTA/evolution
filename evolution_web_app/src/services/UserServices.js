@@ -1,14 +1,12 @@
-import * as Utils from "./Utils";
+import {fetchWrapper} from "./Utils";
 
 export async function login(username) {
-    const userObject = {"username":username};
-    const url ="/server_Web_exploded/api/login";
+    const url = "/server_Web_exploded/api/login";
     const method = 'POST';
-    let result;
+    const data = {username};
     try {
-         result = await Utils.fetchWrapper(method, url, userObject);
-    }catch (e){
-        console.log(e)
+        return await fetchWrapper(method, url, data);
+    } catch (e) {
+        console.error('failed login', e)
     }
-    return result ;
 }

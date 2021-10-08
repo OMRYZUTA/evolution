@@ -110,20 +110,19 @@ const Screen3 = () => {
                 if (timetableResult.data) {
                     setTimetable(timetableResult.data);
                 } else {
-                    // setAlertText('oops something went wrong, please reload page');
-                    console.log(timetableResult.error);
+                    setAlertText('oops something went wrong, please reload page</br>' + timetableResult.error);
+                    console.error('failed getting time table', timetableResult.error);
                 }
 
                 if (algoConfigResult.data) {
-                    // setAlertText('oops something went wrong, please reload page');
                     setAlgorithmConfiguration(algoConfigResult.data);
-                } else {
-                    console.log("algoConfigResult.data is null");
-                    console.log(algoConfigResult.error);
+                } else if (algoConfigResult.error) {
+                    setAlertText('oops something went wrong, please reload page</br>' + algoConfigResult.error);
+                    console.error('failed getting algorithm configuration', algoConfigResult.error);
                 }
             } catch (e) {
-                setAlertText('oops something went wrong, please reload page\n ' + e.message);
-                console.log(e);
+                setAlertText('oops something went wrong, please reload page</br>' + e.message);
+                console.error('failed fetching static data', e);
             } finally {
                 setIsFetching(false);
             }
@@ -140,27 +139,27 @@ const Screen3 = () => {
                 if (otherSolutionsResult.data) {
                     setOtherSolutions(otherSolutionsResult.data);
                 } else {
-                    console.log("otherSolutionsResult.data is null");
-                    console.log(otherSolutionsResult.error);
+                    setAlertText('oops something went wrong</br>' + otherSolutionsResult.error);
+                    console.error('failed getting other solution result', otherSolutionsResult.error);
                 }
 
                 if (progressResult.data) {
                     setProgress(progressResult.data);
                 } else {
-                    console.log("progressResult.data is null");
-                    console.log(progressResult.error);
+                    setAlertText('oops something went wrong</br>' + progressResult.error);
+                    console.error('failed getting progress result', progressResult.error);
                 }
 
                 if (bestSolutionResult.data) {
                     setBestSolution(bestSolutionResult.data);
                 } else {
-                    console.log("bestSolutionResult.data is null");
-                    console.log(bestSolutionResult.error);
+                    setAlertText('oops something went wrong</br>' + bestSolutionResult.error);
+                    console.error('failed getting best solution', bestSolutionResult.error);
                 }
 
             } catch (e) {
-                setAlertText('oops something went wrong, please reload page\n ' + e.message);
-                console.log(e);
+                setAlertText('oops something went wrong</br>' + e.message);
+                console.error('failed getting interval data', e);
             }
         };
 
@@ -208,7 +207,7 @@ const Screen3 = () => {
             setRunStatus(RUNNING);
         } catch (e) {
             setAlertText(e.message);
-            console.log(e);
+            console.error('failed starting run', e);
             setRunStatus(ERROR);
         }
 
@@ -220,7 +219,7 @@ const Screen3 = () => {
             setRunStatus(PAUSED);
         } catch (e) {
             setAlertText(e.message);
-            console.log(e);
+            console.error('failed pausing run', e);
             setRunStatus(ERROR);
         }
     }, [algorithmConfiguration]);
@@ -231,7 +230,7 @@ const Screen3 = () => {
             setRunStatus(STOPPED);
         } catch (e) {
             setAlertText(e.message);
-            console.log(e);
+            console.error('failed stopping run', e);
             setRunStatus(ERROR);
         }
     }, [algorithmConfiguration]);
@@ -242,7 +241,7 @@ const Screen3 = () => {
             setRunStatus(RUNNING);
         } catch (e) {
             setAlertText(e.message);
-            console.log(e);
+            console.error('failed resuming run', e);
             setRunStatus(ERROR);
         }
     }, [algorithmConfiguration]);
@@ -329,7 +328,7 @@ const Screen3 = () => {
                 <Grid container direction={"row"} spacing={2}>
                     <Grid item xs={12} md={6}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
-                            {/*TODO need to disable algoConfig tab as editable while running*/}
+                            {/*TODO need to disable algoConfig ONLY tab as editable while running*/}
                             <InfoTabs algorithmConfiguration={algorithmConfiguration}
                                       handleAlgorithmConfigSave={setAlgorithmConfiguration}
                                       timetable={timetable}/>

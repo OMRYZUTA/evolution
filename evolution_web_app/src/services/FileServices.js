@@ -1,8 +1,9 @@
+import ServiceError from "./ServiceError";
+
 export async function uploadFile(file) {
     const url = "/server_Web_exploded/api/dashboard";
     const method = 'POST';
-    const result = await fetchXmlWrapper(method, url, file);
-    return result;
+    return await fetchXmlWrapper(method, url, file);
 }
 
 const fetchXmlWrapper = async (method, url, file) => {
@@ -19,16 +20,15 @@ const fetchXmlWrapper = async (method, url, file) => {
     const result = await fetch(url, options);
     let responseBody;
 
-    if (result.headers.get("content-type").includes("application/json")) {
+    const contentType = result.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
         responseBody = await result.json();
     } else {
         responseBody = await result.text();
-        console.log("in fileServices.js")
-        console.log(responseBody);
     }
+
     if (!result.ok) {
-        console.log("error");
-        throw  new Error("error") //todo create an exception that gets the response.body , status code, status text
+        throw new ServiceError(method, url, result.statusCode, result.statusText, responseBody)
     }
 
     return responseBody;
