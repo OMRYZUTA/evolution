@@ -29,3 +29,14 @@ export const getBestSolution = async (timetableID) => {
     const method = 'GET';
     return await fetchWrapper(method, url);
 }
+
+export const postAction = async (action, algorithmConfiguration) => {
+    const url = `/server_Web_exploded/api/actions?action=${action}`;
+    const method = 'POST';
+    const {data, error} = await fetchWrapper(method, url, algorithmConfiguration);
+    if (error) {
+        throw new Error(error);
+    }
+
+    return data;
+}

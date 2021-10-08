@@ -1,3 +1,5 @@
+import ServiceError from './ServiceError'
+
 export async function fetchWrapper(method, url, object) {
     const options = {
         method,
@@ -13,13 +15,15 @@ export async function fetchWrapper(method, url, object) {
     const result = await fetch(url, options);
     let responseBody;
 
-    if (result.headers.get("content-type").includes("application/json")) {
+    const contentType = result.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
         responseBody = await result.json();
     } else {
         responseBody = await result.text();
     }
+
     if (!result.ok) {
-        throw new Error("error") //todo create an exception that get the response.body , status code, status text
+        throw new ServiceError(method, url, result.statusCode, result.statusText, responseBody)
     }
 
     return responseBody;

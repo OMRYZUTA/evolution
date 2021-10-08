@@ -32,14 +32,10 @@ public class AlgoConfigServlet extends HttpServlet {
 
             mapForJSON.put(Constants.DATA, algoConfig);
         } catch (Throwable e) {
+            System.out.println();
             mapForJSON.put(Constants.ERROR, e.getMessage());
         } finally {
             ServletUtils.sendJSONResponse(response, mapForJSON);
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //POST of algoconfig from Front reaches the RunAlgoServlet, because from there we already start running the algorithm
     }
 }

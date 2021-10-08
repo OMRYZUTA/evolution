@@ -64,7 +64,7 @@ public class DashboardServlet extends HttpServlet {
 
             responseMessage = "OK";
         } catch (JAXBException e) {
-            responseMessage = "JAXB Exception";
+            responseMessage = "JAXB Exception: " + e.getMessage();
         } catch (Throwable e) {
             responseMessage = EngineUtils.getToRootError(e);
         } finally {

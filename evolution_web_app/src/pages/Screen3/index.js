@@ -1,18 +1,19 @@
 import Button from '@mui/material/Button';
-import {Alert, AlertTitle, ButtonGroup, Container, Grid} from "@mui/material";
+import {Alert, AlertTitle, ButtonGroup, Container, Grid, IconButton} from "@mui/material";
 import InfoTabs from "./InfoTabs";
 import {makeStyles} from "@mui/styles";
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import Navbar from "../../components/Navbar";
 import {TimetableContext} from "../../components/TimetableContext";
 import {UserContext} from "../../components/UserContext"
-import * as Utils from "../../services/Utils";
 import {useHistory} from "react-router-dom";
 import * as Screen3Services from "../../services/Screen3Services";
 import OtherSolutions from "./OtherSolutions";
 import Typography from "@mui/material/Typography";
 import CircularIndeterminate from "../../components/CircularIndeterminate";
 import SolutionDialog from "./SolutionDialog";
+import Box from "@mui/material/Box";
+import CloseIcon from "@mui/icons-material/Close";
 
 const fakeAlgoConfig = {
     timetableID: 0, //important to notice which timetable we're dealing with
@@ -26,6 +27,11 @@ const fakeAlgoConfig = {
             {name: "Flipping", probability: "0.2", maxTuples: "4", component: "H"}],
     }
 }
+
+const ERROR = Symbol.for('ERROR');
+const RUNNING = Symbol.for('RUNNING');
+const STOPPED = Symbol.for('STOPPED');
+const PAUSED = Symbol.for('PAUSED');
 
 const SCREEN2URL = "/server_Web_exploded/screen2";
 
@@ -61,15 +67,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const renderAlert = (alertText) => {
-    return (
-        <Alert severity="error">
-            <AlertTitle>Error</AlertTitle>
-            {alertText}
-        </Alert>
-    );
-}
-
 const Screen3 = () => {
     const {currentUser} = useContext(UserContext);
     const {currentTimetableID} = useContext(TimetableContext);
@@ -90,11 +87,10 @@ const Screen3 = () => {
             mutations: [],
         }
     }
-
     const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
     const [alertText, setAlertText] = React.useState('');
     const [isFetching, setIsFetching] = React.useState(true);
-    const [isRunning, setIsRunning] = useState(false);// flag use to diabled and enable button
+    const [runStatus, setRunStatus] = useState(STOPPED);
     const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
@@ -109,20 +105,20 @@ const Screen3 = () => {
                 if (timetableResult.data) {
                     setTimetable(timetableResult.data);
                 } else {
-                    // setAlertText('Failed initializing app, please reload page');
-                    console.log("timetableResult.data is null");
+                    // setAlertText('oops something went wrong, please reload page');
                     console.log(timetableResult.error);
                 }
 
                 if (algoConfigResult.data) {
+                    // setAlertText('oops something went wrong, please reload page');
                     setAlgorithmConfiguration(algoConfigResult.data);
                 } else {
-                    // setAlertText('Failed initializing app, please reload page');
                     console.log("algoConfigResult.data is null");
                     console.log(algoConfigResult.error);
                 }
             } catch (e) {
-                setAlertText('Failed initializing app, please reload page');
+                setAlertText('oops something went wrong, please reload page\n ' + e.message);
+                console.log(e);
             } finally {
                 setIsFetching(false);
             }
@@ -139,7 +135,6 @@ const Screen3 = () => {
                 if (otherSolutionsResult.data) {
                     setOtherSolutions(otherSolutionsResult.data);
                 } else {
-                    // setAlertText('Failed initializing app, please reload page');
                     console.log("otherSolutionsResult.data is null");
                     console.log(otherSolutionsResult.error);
                 }
@@ -147,7 +142,6 @@ const Screen3 = () => {
                 if (progressResult.data) {
                     setProgress(progressResult.data);
                 } else {
-                    // setAlertText('Failed initializing app, please reload page');
                     console.log("progressResult.data is null");
                     console.log(progressResult.error);
                 }
@@ -155,14 +149,13 @@ const Screen3 = () => {
                 if (bestSolutionResult.data) {
                     setBestSolution(bestSolutionResult.data);
                 } else {
-                    // setAlertText('Failed initializing app, please reload page');
                     console.log("bestSolutionResult.data is null");
                     console.log(bestSolutionResult.error);
                 }
 
             } catch (e) {
+                setAlertText('oops something went wrong, please reload page\n ' + e.message);
                 console.log(e);
-                // setAlertText('Failed initializing app, please reload page');
             }
         };
 
@@ -177,61 +170,71 @@ const Screen3 = () => {
         return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
     }, [currentTimetableID,]);
 
+    const renderAlert = () => {
+        return (
+            <Box sx={{width: '100%'}}>
+                <Alert severity="error"
+                       action={
+                           <IconButton
+                               aria-label="close"
+                               color="inherit"
+                               size="small"
+                               onClick={() => {
+                                   setAlertText('');
+                               }}>
+                               <CloseIcon fontSize="inherit"/>
+                           </IconButton>
+                       }
+                       sx={{mb: 2}}>
+                    <AlertTitle>Error</AlertTitle>
+                    {alertText}
+                </Alert>
+            </Box>
+        );
+    };
+
     const handleStart = useCallback(async () => {
-        setIsRunning(true);
         try {
-            await Utils.fetchWrapper(
-                'POST',
-                `/server_Web_exploded/api/actions?action=start`,
-                algorithmConfiguration);
+            await Screen3Services.postAction('start', algorithmConfiguration);
+            setRunStatus(RUNNING);
         } catch (e) {
-            // TODO handle exception add alert
+            setAlertText(e.message);
             console.log(e);
+            setRunStatus(ERROR);
         }
 
     }, [algorithmConfiguration]);
 
     const handlePause = useCallback(async () => {
-        setIsRunning(false);
         try {
-            // await Utils.fetchWrapper(
-            //     'POST',
-            //     `/server_Web_exploded/api/actions?action=pause`,
-            //     currentTimetableID)
-
-            await Utils.fetchWrapper(
-                'POST',
-                `/server_Web_exploded/api/actions?action=pause`,
-                algorithmConfiguration)
+            await Screen3Services.postAction('pause', algorithmConfiguration);
+            setRunStatus(PAUSED);
         } catch (e) {
-            // TODO handle exception add alert
+            setAlertText(e.message);
             console.log(e);
+            setRunStatus(ERROR);
         }
     }, [algorithmConfiguration]);
 
     const handleStop = useCallback(async () => {
-        setIsRunning(false);
         try {
-            await Utils.fetchWrapper(
-                'POST',
-                `/server_Web_exploded/api/actions?action=stop`,
-                algorithmConfiguration)
+            await Screen3Services.postAction('stop', algorithmConfiguration);
+            setRunStatus(STOPPED);
         } catch (e) {
-            // TODO handle exception add alert
+            setAlertText(e.message);
             console.log(e);
+            setRunStatus(ERROR);
         }
     }, [algorithmConfiguration]);
 
     const handleResume = useCallback(async () => {
-        setIsRunning(true);
         try {
-            await Utils.fetchWrapper(
-                'POST',
-                `/server_Web_exploded/api/actions?action=resume`,
-                algorithmConfiguration)
+            await Screen3Services.postAction('resume', algorithmConfiguration);
+            setRunStatus(RUNNING);
         } catch (e) {
-            // TODO handle exception add alert
+            setAlertText(e.message);
             console.log(e);
+            setRunStatus(ERROR);
         }
     }, [algorithmConfiguration]);
 
@@ -264,20 +267,24 @@ const Screen3 = () => {
         // setSelectedValue(value);
     };
 
+    const startEnabled = true; //runStatus !== ERROR && runStatus === STOPPED;
+    const pauseEnabled = true; //runStatus !== ERROR && runStatus === RUNNING;
+    const resumeEnabled = true; //runStatus !== ERROR && runStatus === PAUSED;
+    const stopEnabled = true; //runStatus !== ERROR && runStatus === RUNNING || runStatus === PAUSED;
     const renderButtonGroup = () => {
         return (
             <ButtonGroup
                 aria-label="outlined primary button group">
-                <Button id="start" disabled={isRunning} onClick={handleStart}>
+                <Button id="start" disabled={!startEnabled} onClick={handleStart}>
                     start
                 </Button>
-                <Button id="pause" disabled={!isRunning} onClick={handlePause}>
+                <Button id="pause" disabled={!pauseEnabled} onClick={handlePause}>
                     pause
                 </Button>
-                <Button id="resume" disabled={isRunning} onClick={handleResume}>
+                <Button id="resume" disabled={!resumeEnabled} onClick={handleResume}>
                     resume
                 </Button>
-                <Button id="stop" disabled={!isRunning} onClick={handleStop}>
+                <Button id="stop" disabled={!stopEnabled} onClick={handleStop}>
                     stop
                 </Button>
                 <Button id="bestSolution" onClick={handleSolutionClick} disabled={!bestSolution}>
@@ -304,6 +311,12 @@ const Screen3 = () => {
             </Grid>
             <Container maxWidth="xl">
                 <Navbar user={currentUser}/>
+                <Grid item
+                      alignItems="top-center"
+                      justifyContent="flex-start"
+                      spacing={2}>
+                    {alertText && renderAlert(alertText)}
+                </Grid>
                 <Grid container direction={"row"} spacing={2}>
                     <Grid item xs={12} md={6}>
                         <Grid container direction={"column"} className={classes.tempGrid}>

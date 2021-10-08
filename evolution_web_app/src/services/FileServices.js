@@ -16,9 +16,9 @@ const fetchXmlWrapper = async (method, url, file) => {
         referrerPolicy: 'no-referrer',
     }
 
-
     const result = await fetch(url, options);
     let responseBody;
+
     if (result.headers.get("content-type").includes("application/json")) {
         responseBody = await result.json();
     } else {
