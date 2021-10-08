@@ -26,9 +26,10 @@ public class AlgoFlowServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String responseMessage = null;
+        Map<String, Object> mapForJSON = new HashMap<>();
 
         try {
+            String responseMessage;
             String usernameFromSession = SessionUtils.getUsername(request);
             Gson gson = new Gson();
             Map<String, Object> requestMap = gson.fromJson(request.getReader(), new HashMap<String, Object>().getClass());
@@ -55,10 +56,14 @@ public class AlgoFlowServlet extends HttpServlet {
                 default:
                     throw new InvalidOperationException("Invalid algorithm action");
             }
+
+            mapForJSON.put(Constants.DATA, responseMessage);
         } catch (Throwable e) {
-            responseMessage = EngineUtils.getToRootError(e);
+            System.out.println("in AlgoFlowServlet");
+            System.out.println(EngineUtils.getToRootError(e));
+            mapForJSON.put(Constants.ERROR, EngineUtils.getToRootError(e));
         } finally {
-            ServletUtils.sendJSONResponse(response, responseMessage);
+            ServletUtils.sendJSONResponse(response, mapForJSON);
         }
     }
 
@@ -95,7 +100,7 @@ public class AlgoFlowServlet extends HttpServlet {
                 endPredicatesMap,
                 generationStride);
 
-        return "OK"; //TODO change response message?
+        return "OK";
     }
 
     private String resumeAlgorithmRun(String usernameFromSession, int ttID, Map<String, Object> requestMap) {
@@ -110,6 +115,6 @@ public class AlgoFlowServlet extends HttpServlet {
                 endPredicatesMap,
                 generationStride);
 
-        return "OK"; //TODO change response message
+        return "OK";
     }
 }

@@ -9,7 +9,7 @@ import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
-        height: 400,
+        height: 'auto',
         maxWidth: 300,
         backgroundColor: 'lightblue',
     },

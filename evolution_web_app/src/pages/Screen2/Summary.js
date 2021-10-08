@@ -40,7 +40,7 @@ export default function Summary({data}) {
         <Card sx={{minWidth: 275}}>
             <CardContent>
                 <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                    Uploaded by {data.uploadedBy}
+                    Uploaded by: {data.uploadedBy}
                 </Typography>
                 <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
                     Problem ID:{data.ID}
@@ -55,10 +55,10 @@ export default function Summary({data}) {
                     {bull}{data.numOfHardRules} hard rules, {data.numOfSoftRules} soft rules
                 </Typography>
                 <Typography variant="body2">
-                    {bull}{data.numOfUsersSolving} Users are trying to solve it
+                    {bull}{data.numOfUsersSolving} users are trying to solve it
                 </Typography>
                 <Typography variant="body2">
-                    {bull}{data.bestScore} -max fitness so far
+                    {bull}{data.bestScore} max fitness so far
                 </Typography>
 
             </CardContent>
