@@ -24,7 +24,7 @@ public class Truncation<S extends Solution> implements Selection<S> {
         Collections.reverse(solutions); //in descending order
 
         int topFitnessSolutions = (int) Math.ceil(((double) topPercent * solutions.size()) / 100);
-        topFitnessSolutions = Math.min(topFitnessSolutions, (populationSize elitism))
+        topFitnessSolutions = Math.min(topFitnessSolutions, (populationSize - elitism));
 
         return solutions.stream().limit(topFitnessSolutions).collect(Collectors.toList());
     }
@@ -50,7 +50,7 @@ public class Truncation<S extends Solution> implements Selection<S> {
         if (topPercent >= 1 && topPercent <= 100) {
             this.topPercent = topPercent;
         } else {
-            throw new RuntimeException("Invalid top percent value :" + topPercent + ". Must be between 1 100");
+            throw new RuntimeException("Invalid top percent value :" + topPercent + ". Must be between 1 - 100");
         }
     }
 

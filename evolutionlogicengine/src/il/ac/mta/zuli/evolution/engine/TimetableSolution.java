@@ -72,7 +72,7 @@ public class TimetableSolution implements Solution {
         return Collections.unmodifiableMap(fitnessScorePerRule);
     }
 
-    //might return an empty list need to check size of list returned when using this method
+    //might return an empty list - need to check size of list returned when using this method
     public List<Quintet> getSubSolutionForClass(int schoolClassID) {
         List<Quintet> solutionForClass = solutionQuintets.stream()
                 .filter(p -> p.getSchoolClassID() == schoolClassID).collect(Collectors.toList());
@@ -80,7 +80,7 @@ public class TimetableSolution implements Solution {
         return Collections.unmodifiableList(solutionForClass);
     }
 
-    //might return an empty list need to check size of list returned when using this method
+    //might return an empty list - need to check size of list returned when using this method
     public List<Quintet> getSubSolutionForTeacher(int teacherID) {
         List<Quintet> solutionForTeacher = solutionQuintets.stream()
                 .filter(p -> p.getTeacher().getId() == teacherID).collect(Collectors.toList());
@@ -120,14 +120,14 @@ public class TimetableSolution implements Solution {
     }
 
     private Teacher generateRandomTeacher(Subject randomSubject) {
-        //randomly generate teacher randomly but only from teachers that teach the random subject
+        //randomly generate teacher - randomly but only from teachers that teach the random subject
         List<Integer> TeachersIDs = timeTable.getTeachersThatTeachSubject(randomSubject.getId());
         int randomTeachersIndex = generateRandomNumZeroBase(TeachersIDs.size());
         return timeTable.getTeachers().get(TeachersIDs.get(randomTeachersIndex));
     }
 
     private Subject generateRandomSubject(SchoolClass randomSchoolClass) {
-        //randomly generate subject randomly but only from class-subjects
+        //randomly generate subject - randomly but only from class-subjects
         List<Integer> classRequiredSubjectsIDs = randomSchoolClass.getRequiredSubjectsIDs();
         int randomIndex = generateRandomNumZeroBase(classRequiredSubjectsIDs.size());
         return timeTable.getSubjects().get(classRequiredSubjectsIDs.get(randomIndex));
@@ -145,7 +145,7 @@ public class TimetableSolution implements Solution {
     }
     //#endregion
 
-    //not in place creates new TimeTableSolution
+    //not in place - creates new TimeTableSolution
     public void sortQuintetsInSolution(@NotNull Comparator<Quintet> quintetComparator) {
         List<Quintet> quintets = this.getSolutionQuintets();
         this.solutionQuintets = quintets.stream().sorted(quintetComparator).collect(Collectors.toList());
@@ -184,7 +184,7 @@ public class TimetableSolution implements Solution {
         }
 
         double hardRuleWeightedScore = (hardRuleAvg * timeTable.getHardRulesWeight()) / 100;
-        double softRuleWeightedScore = (softRuleAvg * (100 timeTable.getHardRulesWeight())) /100;
+        double softRuleWeightedScore = (softRuleAvg * (100 - timeTable.getHardRulesWeight())) / 100;
 
         totalFitnessScore = hardRuleWeightedScore + softRuleWeightedScore;
     }

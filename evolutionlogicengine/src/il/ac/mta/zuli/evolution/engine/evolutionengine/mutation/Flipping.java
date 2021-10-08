@@ -124,7 +124,7 @@ public class Flipping<S extends Solution> implements Mutation<S> {
 
     @Override
     public String getMutationType() {
-        return getClass().getSimpleName().toLowerCase();
+        return getClass().getSimpleName();
     }
 
     @Override

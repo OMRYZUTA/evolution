@@ -45,7 +45,7 @@ public class TeacherIsHuman extends Rule {
                 }
             }
 
-            score = (100 * (numOfQuintets collisions)) /(double) numOfQuintets;
+            score = (100 * (numOfQuintets - collisions)) / (double) numOfQuintets;
         }
 
         if (this.isHardRule() && collisions > 0) {

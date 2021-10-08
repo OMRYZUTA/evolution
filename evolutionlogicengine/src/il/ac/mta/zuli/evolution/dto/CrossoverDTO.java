@@ -16,7 +16,7 @@ public class CrossoverDTO {
 
         if (type.equals(Constants.ASPECT_ORIENTED)) {
             AspectOriented<TimetableSolution> aspectOriented = (AspectOriented<TimetableSolution>) crossover;
-            this.orientation = aspectOriented.getOrientation().name().toLowerCase();
+            this.orientation = aspectOriented.getOrientation().name();
         }
     }
 

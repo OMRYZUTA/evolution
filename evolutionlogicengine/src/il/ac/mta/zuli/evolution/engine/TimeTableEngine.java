@@ -58,7 +58,7 @@ public class TimeTableEngine implements Engine {
         if (null != currEvolutionState && LogicalRunStatus.PAUSED == currEvolutionState.getStatus()) {
             runEvolutionAlgorithm(this.currEvolutionState);
         } else {
-            // task was not paused we can not resume it
+            // task was not paused - we can not resume it
             throw new InvalidOperationException("Run can not resume");
         }
     }
@@ -68,7 +68,7 @@ public class TimeTableEngine implements Engine {
         if (null != currEvolutionState && LogicalRunStatus.RUNNING == currEvolutionState.getStatus()) {
             currentRunningTask.pause();
         } else {
-            // task was not running we can not pause it
+            // task was not running - we can not pause it
             throw new InvalidOperationException("Run can not pause");
         }
     }
@@ -80,7 +80,7 @@ public class TimeTableEngine implements Engine {
                 || LogicalRunStatus.PAUSED == currEvolutionState.getStatus())) {
             currentRunningTask.stop();
         } else {
-            // task was not running/paused can not stop
+            // task was not running/paused - can not stop
             throw new InvalidOperationException("Run can not stop");
         }
 

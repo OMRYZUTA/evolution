@@ -22,7 +22,7 @@ public class QuintetDTO {
     private final static Comparator<QuintetDTO> compareBySubject = Comparator.comparing(QuintetDTO::getSubjectID);
 
     public QuintetDTO(Quintet quintet) {
-        this.day = quintet.getDay().getValue() 1; //so we have it as a numeric value for the UI
+        this.day = quintet.getDay().getValue() - 1; //so we have it as a numeric value for the UI
         this.hour = quintet.getHour();
         this.teacherID = quintet.getTeacherID();
         this.teacherName = quintet.getTeacher().getName();

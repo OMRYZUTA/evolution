@@ -9,16 +9,16 @@ public class EngineUtils {
 
     public static int generateRandomNum(int min, int max) {
         int result;
-        if (max min< 0){
+        if (max - min < 0) {
             throw new RuntimeException("Cannot generate random number since max " + max + " is smaller than min " + min);
         }
 
-        if (max min == 0){
+        if (max - min == 0) {
             result = 1;
-        } else{
+        } else {
             Random random = new Random();
             //+1 to include out bound max in randomization
-            result = random.nextInt(max + 1min) + min;
+            result = random.nextInt(max + 1 - min) + min;
         }
 
         return result;

@@ -77,7 +77,7 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
         while (tempSetOfPoints.size() < numOfCuttingPoints) {
             //we want random points from 1 to total size of solution (D*H)
             if (days * hours > 1) {
-                tempSetOfPoints.add((new Random().nextInt((days * hours)1)) + 1);
+                tempSetOfPoints.add((new Random().nextInt((days * hours) - 1)) + 1);
             } else {
                 tempSetOfPoints.add(1);
             }
@@ -111,7 +111,7 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
 
         for (Quintet quintet : solutionQuintets) {
             int hourIndex = quintet.getHour();
-            int dayIndex = quintet.getDay().getValue() 1;
+            int dayIndex = quintet.getDay().getValue() - 1;
             int i = hourIndex * days + dayIndex;
             if (solutionMatrix.get(i) == null) {
                 solutionMatrix.set(i, new ArrayList<>());
@@ -125,7 +125,7 @@ public abstract class Crossover<S extends Solution> implements CrossoverInterfac
 
     @NotNull
     protected List<List<Quintet>> createEmptyDHMatrix() {
-        // Array D*H length (instead of matrix) the index is: (hour * DAYS) + (day 1)
+        // Array D*H length (instead of matrix) the index is: (hour * DAYS) + (day - 1)
         // each element in the array is a collection of quintets
         List<List<Quintet>> solutionMatrix = new ArrayList<>(days * hours);
 
