@@ -103,6 +103,7 @@ fabric.properties
 
 node_modules/
 
-server.iml
-
 .idea/artifacts/server_Web_exploded.xml
+
+server/web/
+!server/web/WEB-INF/
