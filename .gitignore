@@ -102,6 +102,7 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 node_modules/
+build/
 
 .idea/artifacts/server_Web_exploded.xml
 
