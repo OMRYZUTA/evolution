@@ -78,6 +78,10 @@ public class EvolutionState {
         return bestSolutionSoFar;
     }
 
+    public double getBestScoreSoFar() {
+        return bestSolutionSoFar.getFitnessScore();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

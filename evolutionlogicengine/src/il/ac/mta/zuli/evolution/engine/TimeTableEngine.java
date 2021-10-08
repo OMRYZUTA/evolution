@@ -43,23 +43,49 @@ public class TimeTableEngine implements Engine {
             throw new InvalidOperationException("Can not execute Evolution Algorithm, a file is not loaded");
         }
 
-        //if already running we do NOT want to start fresh TODO check isTaskDone()?
-        runEvolutionAlgorithm(null); // sending null as currentState, to start a fresh run
+        if (null == currEvolutionState
+                || (LogicalRunStatus.PAUSED != currEvolutionState.getStatus()
+                && LogicalRunStatus.RUNNING != currEvolutionState.getStatus())) {
+            //we only allow to start again if stopped or complete
+            runEvolutionAlgorithm(null); // sending null as currentState, to start a fresh run
+        } else {
+            throw new InvalidOperationException("Run can not start");
+        }
     }
 
     @Override
     public void resumeEvolutionAlgorithm() {
-        //will likely NOT throw exceptions, since we'll disable buttons accordingly in FrontEnd
-        if (LogicalRunStatus.PAUSED == currEvolutionState.getStatus()) {
+        if (null != currEvolutionState && LogicalRunStatus.PAUSED == currEvolutionState.getStatus()) {
             runEvolutionAlgorithm(this.currEvolutionState);
-        } else if (LogicalRunStatus.STOPPED == currEvolutionState.getStatus()) {
-            throw new InvalidOperationException("Run was stopped, cannot resume");
-        } else if (!currEvolutionState.isTaskDone()) {
-            //do nothing (it's already running)
         } else {
-            //if task completed (either successfully or with exception)
-            throw new InvalidOperationException("Run cannot resume");
+            // task was not paused - we can not resume it
+            throw new InvalidOperationException("Run can not resume");
         }
+    }
+
+    @Override
+    public void pauseEvolutionAlgorithm() {
+        if (null != currEvolutionState && LogicalRunStatus.RUNNING == currEvolutionState.getStatus()) {
+            currentRunningTask.pause();
+        } else {
+            // task was not running - we can not pause it
+            throw new InvalidOperationException("Run can not pause");
+        }
+    }
+
+    @Override
+    public void stopEvolutionAlgorithm() {
+        if (null != currEvolutionState
+                && (LogicalRunStatus.RUNNING == currEvolutionState.getStatus()
+                || LogicalRunStatus.PAUSED == currEvolutionState.getStatus())) {
+            currentRunningTask.stop();
+        } else {
+            // task was not running/paused - can not stop
+            throw new InvalidOperationException("Run can not stop");
+        }
+
+//        no need for this in Ex 3 because each timetableEngine only runs for a single timeTable
+//        this.currEvolutionState = null; //in case of STOP we don't want to save the previous state
     }
 
     private void runEvolutionAlgorithm(EvolutionState currentState) {
@@ -75,51 +101,10 @@ public class TimeTableEngine implements Engine {
                 (TimetableSolution solution) -> bestSolution = solution,
                 (StrideData data) -> strideData = data);
 
-//        currentRunningTask.setOnCancelled(event -> {
-//            //onSuccess.accept(false);
-//            currentRunningTask = null; // clearing task - no need to clear task in Ex3
-//        });//
-//        currentRunningTask.setOnSucceeded(event -> {
-//            this.currEvolutionState = null; // reset state
-////            onSuccess.accept(true); // sending the best solutionDTO to the controller
-//            currentRunningTask = null; // clearing task
-//        });//
-//        currentRunningTask.setOnFailed(value -> {
-//            System.out.println("********setOnFailed");
-//            System.out.println(currentRunningTask.getException());
-//            currentRunningTask = null;
-//        });
-
-
         new Thread(currentRunningTask, "EvolutionAlgorithmThread").start();
     }
 
-    @Override
-    public void pauseEvolutionAlgorithm() {
-        if (!currEvolutionState.isTaskDone()) {
-            //if currently running
-            currentRunningTask.pause();
-        } else {
-            throw new InvalidOperationException("Nothing to pause here");
-        }
-    }
-
-    @Override
-    public void stopEvolutionAlgorithm() {
-        System.out.println("in stopEvolutionAlgorithm");
-        System.out.println(currEvolutionState.getStatus() + " isTaskDone? " + currEvolutionState.isTaskDone());
-        if (!currEvolutionState.isTaskDone()) {
-            //if currently running
-            currentRunningTask.stop();
-        } else if (LogicalRunStatus.PAUSED == currEvolutionState.getStatus()) {
-            currentRunningTask.stop();
-        }
-
-        // no need for this in Ex 3 because each timetableEngine only runs for a single timeTable
-//        this.currEvolutionState = null; //in case of STOP we don't want to save the previous state
-    }
-
-//#endregion
+    //#endregion
 
     //#region getters:
     @Override
@@ -166,7 +151,10 @@ public class TimeTableEngine implements Engine {
     public GenerationProgressDTO getProgressData() {
         return new GenerationProgressDTO(
                 currEvolutionState.getGenerationNum(),
-                currEvolutionState.getGenerationBestScore());
+                currEvolutionState.getGenerationBestScore(),
+                currEvolutionState.getBestScoreSoFar(),
+                currEvolutionState.getStatus()
+        );
     }
 
     public StrideData getStrideData() {

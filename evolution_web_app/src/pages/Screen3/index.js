@@ -33,6 +33,10 @@ const RUNNING = Symbol.for('RUNNING');
 const STOPPED = Symbol.for('STOPPED');
 const PAUSED = Symbol.for('PAUSED');
 
+const UNSAVED = Symbol.for('UNSAVED');
+const SAVED = Symbol.for('SAVED');
+const DIRTY = Symbol.for('DIRTY');
+
 const SCREEN2URL = "/server_Web_exploded/screen2";
 
 const useStyles = makeStyles((theme) => ({
@@ -91,6 +95,7 @@ const Screen3 = () => {
     const [alertText, setAlertText] = React.useState('');
     const [isFetching, setIsFetching] = React.useState(true);
     const [runStatus, setRunStatus] = useState(STOPPED);
+    const [saveStatus, setSaveStatus] = useState(UNSAVED);
     const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
@@ -192,6 +197,10 @@ const Screen3 = () => {
             </Box>
         );
     };
+
+    // useEffect(() => {
+    //     setSaveStatus(!!algorithmConfiguration ? );
+    // }, [algorithmConfiguration]);
 
     const handleStart = useCallback(async () => {
         try {

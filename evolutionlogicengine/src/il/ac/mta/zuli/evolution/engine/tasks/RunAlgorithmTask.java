@@ -110,16 +110,17 @@ public class RunAlgorithmTask implements Runnable {
             System.out.println("endOfLoop: " + bestSolutionEver.getFitnessScore() + "******");
             //TODO how do we handle the update for the last generation? (since it's not necessarily the number of generations in the endPredicates)
 //        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
+            outEvolutionState.setStatus(LogicalRunStatus.COMPLETED); //either successfully or unsuccessfully
         } catch (Throwable e) {
             if (outEvolutionState != null) {
                 outEvolutionState.setException(e);
+                outEvolutionState.setStatus(LogicalRunStatus.ERROR);
             }
             System.out.println("**********Exception in Runnable******");
             System.out.println(e.getMessage());
         } finally {
             if (outEvolutionState != null) {
                 outEvolutionState.setTaskDone();
-                outEvolutionState.setStatus(LogicalRunStatus.COMPLETED); //either successfully or unsuccessfully
                 if (paused) {
                     outEvolutionState.setStatus(LogicalRunStatus.PAUSED);
                 }
