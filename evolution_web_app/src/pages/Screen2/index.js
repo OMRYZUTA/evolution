@@ -13,11 +13,18 @@ import AlertTitle from "@mui/material/AlertTitle";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        padding: '50px 70px',
+        padding: '10px 70px',
         spacing: 2,
         justifyContent: 'flex-start',
         alignItems: 'top-center',
         minHeight: '100vh',
+        backgroundColor: "pink",
+    },
+    aroundButton: {
+        padding: '10px 10px',
+        spacing: 2,
+        justifyContent: 'flex-start',
+        alignItems: 'top-center',
         backgroundColor: "pink",
     },
     summaries: {
@@ -83,6 +90,22 @@ const Index = () => {
     return (
         <Grid container direction={"column"}>
             <Navbar user={currentUser}/>
+            <Grid item className={classes.aroundButton}>
+                <Button
+                    variant="contained"
+                    component="label"
+                    className={classes.button}
+                >
+                    Upload File
+                    <input
+                        type="file"
+                        name={"file"}
+                        onChange={handleFileUpload}
+                        hidden
+                        accept={".xml"}
+                    />
+                </Button>
+            </Grid>
             <Grid container className={classes.root} direction={"row"}>
                 <Grid item xs={12} md={4}>
                     <UserList users={users}/>
@@ -95,22 +118,6 @@ const Index = () => {
                                 <Summary data={summary}/>
                             )
                         })}
-                    </Grid>
-                    <Grid item>
-                        <Button
-                            variant="contained"
-                            component="label"
-                            className={classes.button}
-                        >
-                            Upload File
-                            <input
-                                type="file"
-                                name={"file"}
-                                onChange={handleFileUpload}
-                                hidden
-                                accept={".xml"}
-                            />
-                        </Button>
                     </Grid>
                 </Grid>
                 {alertText && renderAlert(alertText)}

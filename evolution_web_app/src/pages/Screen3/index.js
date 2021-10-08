@@ -4,7 +4,6 @@ import InfoTabs from "./InfoTabs";
 import {makeStyles} from "@mui/styles";
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import Navbar from "../../components/Navbar";
-import Paper from "@mui/material/Paper";
 import {TimetableContext} from "../../components/TimetableContext";
 import {UserContext} from "../../components/UserContext"
 import * as Utils from "../../services/Utils";
@@ -43,6 +42,11 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         height: 400,
         maxWidth: 300,
+        backgroundColor: "#D3D3D3", //light gray
+    },
+    progressRow: {
+        spacing: 2,
+        justifyContent: "space-between",
         backgroundColor: "#D3D3D3", //light gray
     },
     actions: {
@@ -233,7 +237,7 @@ const Screen3 = () => {
 
     const renderProgress = () => {
         return (
-            <Grid container className={classes.settings}>
+            <Grid container className={classes.progressRow}>
                 {progress ?
                     [<Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
                         {progress.generationNum}
@@ -313,18 +317,16 @@ const Screen3 = () => {
                             <Grid item>
                                 {renderButtonGroup()}
                             </Grid>
-
                             <Grid item>
-                                <Paper>
-                                    <Grid container direction={"column"} className={classes.root}>
-                                        <Typography> Progress (best score in generation) </Typography>
+                                <Grid container direction={"column"}>
+                                    <Grid item>
+                                        <Typography> My Progress (best score in generation) </Typography>
                                         {renderProgress()}
                                     </Grid>
-                                </Paper>
-                            </Grid>
-
-                            <Grid item>
-                                <OtherSolutions otherSolutionsList={otherSolutions}/>
+                                    <Grid item>
+                                        <OtherSolutions otherSolutionsList={otherSolutions}/>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
