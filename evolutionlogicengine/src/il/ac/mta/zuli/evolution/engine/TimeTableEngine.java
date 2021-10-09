@@ -97,7 +97,7 @@ public class TimeTableEngine implements Engine {
                 generationsStride,
                 currentState,
                 (EvolutionState state) -> currEvolutionState = state,
-                (StrideDataDTO data) -> strideData.add(data));
+                strideData::add);
 
         new Thread(currentRunningTask, "EvolutionAlgorithmThread").start();
     }

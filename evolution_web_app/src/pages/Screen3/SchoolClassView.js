@@ -1,13 +1,5 @@
 import * as React from 'react';
-import {useCallback, useEffect, useState} from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Typography from "@mui/material/Typography";
+import {useCallback, useState} from 'react';
 import {makeStyles} from "@mui/styles"
 import Grid from "@mui/material/Grid";
 import DropDown from "../../components/Dropdown";
@@ -38,7 +30,7 @@ const timeSlotToString = (quintets) => {
 
 
 const SchoolClassView = ({quintets, days, hours, schoolClassesObject}) => {
-    const classes = useStyles();
+    useStyles();
     const [schoolClasses] = useState(Utils.convertObjectToArray(schoolClassesObject));
     const [currentSchoolClass, setCurrentSchoolClass] = useState(schoolClasses[0]);
     const [schoolClassesQuintets, setTeacherQuintupletsClasses] = useState(quintets.filter(quintet => quintet.schoolClassID === currentSchoolClass.id));

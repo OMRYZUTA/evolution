@@ -63,7 +63,7 @@ public class Sequentiality extends Rule {
         if (this.isHardRule() && (satisfactoryClasses < numOfClasses)) {
             score = 0.0;
         } else {
-            score = classScores.stream().reduce(0.0, (sum, element) -> sum + element);
+            score = classScores.stream().reduce(0.0, Double::sum);
             score = score / numOfClasses;
         }
 

@@ -1,4 +1,3 @@
-import AlgorithmConfiguration from "./AlgorithmConfiguration";
 import Box from '@mui/material/Box';
 import DescriptionIcon from '@mui/icons-material/Description';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
@@ -7,7 +6,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import TimetableDetails from "./TimetableDetails";
 import TeacherView from "./TeacherView";
 import SchoolClassView from "./SchoolClassView";
 import RawView from "./RawView";

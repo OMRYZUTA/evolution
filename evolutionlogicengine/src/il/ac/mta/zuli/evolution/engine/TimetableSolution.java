@@ -203,7 +203,7 @@ public class TimetableSolution implements Solution {
 
     @Override
     public int compareTo(@NotNull Solution other) {
-        return ((java.lang.Double) totalFitnessScore).compareTo(other.getFitnessScore());
+        return Double.compare(totalFitnessScore, other.getFitnessScore());
     }
 
     @Override

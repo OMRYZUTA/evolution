@@ -110,7 +110,7 @@ public class AspectOriented<S extends Solution> extends Crossover<S> {
             twoChildrenPerAspect.set(0, matrix2);
             twoChildrenPerAspect.set(1, matrix2);
 
-        } else if ((matrix1 != null) && (matrix2 == null)) {
+        } else if (matrix1 != null) {
             twoChildrenPerAspect.set(0, matrix1);
             twoChildrenPerAspect.set(1, matrix1);
         }

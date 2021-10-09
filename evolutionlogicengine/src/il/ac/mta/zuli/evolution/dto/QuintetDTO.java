@@ -62,13 +62,12 @@ public class QuintetDTO {
 
     public static Comparator<QuintetDTO> getRawComparator() {
         //sort by day,hour,class,teacher,subject
-        Comparator<QuintetDTO> dhComparator = compareByDay
+
+        return compareByDay
                 .thenComparing(compareByHour)
                 .thenComparing(compareBySchoolClass)
                 .thenComparing(compareByTeacher)
                 .thenComparing(compareBySubject);
-
-        return dhComparator;
     }
 
     public int getDay() {

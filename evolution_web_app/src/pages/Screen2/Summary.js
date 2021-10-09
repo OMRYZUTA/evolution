@@ -26,8 +26,7 @@ export default function Summary({data}) {
     const history = useHistory();
 
     const routeChange = () => {
-        let path = SCREEN3URL;
-        history.push(path);
+        history.push(SCREEN3URL);
     }
 
     const handleTimeTableClicked = async () => {

@@ -33,7 +33,7 @@ const timeSlotToString = (quintets) => {
 
 
 const TeacherView = ({quintets, days, hours, teachersObject}) => {
-    const classes = useStyles();
+    useStyles();
     const [teachers] = useState(extractTeachersFromTeacherObject(teachersObject));
     const [currentTeacher, setCurrentTeacher] = useState(teachers[0]);
     const [teacherQuintets, setTeacherQuintets] = useState(quintets.filter(quintet => quintet.teacherID === currentTeacher.id));

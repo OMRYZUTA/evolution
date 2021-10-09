@@ -32,33 +32,30 @@ public class Quintet {
 
     //#region comparators
     public static Comparator<Quintet> getRawComparator() {
-        Comparator<Quintet> rawComparator = compareByDay
+
+        return compareByDay
                 .thenComparing(compareByHour)
                 .thenComparing(compareBySchoolClass)
                 .thenComparing(compareByTeacher)
                 .thenComparing(compareBySubject);
-
-        return rawComparator;
     }
 
     public static Comparator<Quintet> getTeacherComparator() {
-        Comparator<Quintet> teacherComparator = compareByTeacher
+
+        return compareByTeacher
                 .thenComparing(compareByDay)
                 .thenComparing(compareByHour)
                 .thenComparing(compareBySchoolClass)
                 .thenComparing(compareBySubject);
-
-        return teacherComparator;
     }
 
     public static Comparator<Quintet> getSchoolClassComparator() {
-        Comparator<Quintet> schoolClassComparator = compareBySchoolClass
+
+        return compareBySchoolClass
                 .thenComparing(compareByDay)
                 .thenComparing(compareByHour)
                 .thenComparing(compareByTeacher)
                 .thenComparing(compareBySubject);
-
-        return schoolClassComparator;
     }
 //#endregion
 
@@ -120,7 +117,7 @@ public class Quintet {
     @Override
     public boolean equals(@NotNull Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (getClass() != o.getClass()) return false;
         Quintet quintet = (Quintet) o;
         return hour == quintet.hour && day == quintet.day && teacher.equals(quintet.teacher) && schoolClass.equals(quintet.schoolClass) && subject.equals(quintet.subject);
     }
