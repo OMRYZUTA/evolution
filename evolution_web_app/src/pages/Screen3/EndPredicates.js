@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
+const EndPredicates = ({endPredicates, handleEndPredicatesChange, disableEdit}) => {
     const classes = useStyles();
 
     //object and not array, for example: endPredicates: {numOfGenerations: 120} or
@@ -25,7 +25,8 @@ const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
                                 handleValueChange={(value) => {
                                     handleEndPredicatesChange('numOfGenerations', value)
                                 }}
-                                valueError={endPredicates.numOfGenerationsError}/>
+                                valueError={endPredicates.numOfGenerationsError}
+                                disableEdit={disableEdit}/>
             </Grid>
 
             <Grid item>

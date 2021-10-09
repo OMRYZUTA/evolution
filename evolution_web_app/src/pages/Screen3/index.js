@@ -385,11 +385,12 @@ const Screen3 = () => {
                 <Grid container direction={"row"} spacing={2}>
                     <Grid item xs={12} md={6}>
                         <Grid container direction={"column"} className={classes.tempGrid}>
-                            {/*TODO need to disable algoConfig ONLY tab as editable while running*/}
                             <InfoTabs algorithmConfiguration={algorithmConfiguration}
                                       handleAlgorithmConfigSave={setAlgorithmConfiguration}
                                       handleAlgorithmConfigChanged={onAlgorithmConfigChanged}
-                                      timetable={timetable}/>
+                                      timetable={timetable}
+                                      disableEdit={runStatus === RUNNING}
+                            />
                         </Grid>
                     </Grid>
 
