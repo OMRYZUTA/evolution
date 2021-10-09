@@ -1,18 +1,6 @@
 import ServiceError from './ServiceError'
 
-export async function fetchWrapper(method, url, object) {
-    const options = {
-        method,
-        headers: {'Content-Type': 'application/json',},
-        redirect: 'follow',
-        referrerPolicy: 'no-referrer',
-    }
-
-    if (object) {
-        options.body = JSON.stringify(object);
-    }
-
-    const result = await fetch(url, options);
+export async function buildResponse(result, method, url) {
     let responseBody;
 
     const contentType = result.headers.get("content-type");
@@ -27,4 +15,20 @@ export async function fetchWrapper(method, url, object) {
     }
 
     return responseBody;
+}
+
+export async function fetchWrapper(method, url, object) {
+    const options = {
+        method,
+        headers: {'Content-Type': 'application/json',},
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+    }
+
+    if (object) {
+        options.body = JSON.stringify(object);
+    }
+
+    const result = await fetch(url, options);
+    return await buildResponse(result, method, url);
 }

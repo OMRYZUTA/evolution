@@ -82,10 +82,10 @@ public class Teacher {
     @Override
     public String toString() {
         return "Teacher{" +
-                "id=" + id;
-//                ", name='" + name + '\'' +
-//                ", subjects=" + subjects +
-//                '}';
+                "id=" + id+
+                ", name='" + name + '\'' +
+                ", subjects=" + subjects +
+                '}';
     }
 
     @Override

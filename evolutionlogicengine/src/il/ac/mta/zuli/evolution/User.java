@@ -71,7 +71,7 @@ public class User {
     //#endregion
 
     public void setUsername(String username) throws IOException {
-        if (username == null || username.trim().isEmpty()) {
+        if (username == null) {
             throw new IOException("username cannot be  null");
         } else if (username.trim().isEmpty()) {
             throw new IOException("username cannot be empty string");

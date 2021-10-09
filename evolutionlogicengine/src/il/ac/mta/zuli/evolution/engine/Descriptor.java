@@ -15,9 +15,8 @@ public class Descriptor {
 
     public Descriptor(@NotNull ETTDescriptor d) {
         // only if received another valid file we want to overwrite the previous descriptor instance
-        TimeTable tempTimeTable = new TimeTable(d.getETTTimeTable());
         //only reaching here if TimeTable c'tor didn't throw exceptions
-        this.timeTable = tempTimeTable;
+        this.timeTable = new TimeTable(d.getETTTimeTable());
     }
 
     public Descriptor(TimeTable timeTable, EngineSettings engineSettings) {

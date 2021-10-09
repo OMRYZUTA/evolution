@@ -51,8 +51,8 @@ public class Subject implements Comparable {
     @Override
     public String toString() {
         return "Subject{" +
-                "id=" + id;
-//                ", name='" + name + '\'' +
-//                '}';
+                "id=" + id+
+                ", name='" + name + '\'' +
+                '}';
     }
 }

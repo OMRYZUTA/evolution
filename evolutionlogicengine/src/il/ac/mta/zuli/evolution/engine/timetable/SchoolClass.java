@@ -97,9 +97,9 @@ public class SchoolClass {
     @Override
     public String toString() {
         return "SchoolClass{" +
-                "id=" + id ;
-//                ", name='" + name + '\'' +
-//                ", requirements=" + requirements +
-//                '}';
+                "id=" + id+
+                ", name='" + name + '\'' +
+                ", requirements=" + requirements +
+                '}';
     }
 }

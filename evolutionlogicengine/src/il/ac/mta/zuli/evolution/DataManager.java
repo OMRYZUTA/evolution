@@ -181,7 +181,6 @@ public class DataManager {
 
     //return value might be NULL
     public TimeTableEngine getTimetableEngine(String userName, int ttID) {
-        //TODO figure out what will I receive if there are no users or no ttID for that user?
         return users.get(userName).getTimetableEngine(ttID);
     }
 

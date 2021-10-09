@@ -19,19 +19,4 @@ public class XMLParser {
 
         return new TimeTable(d.getETTTimeTable());
     }
-
-    //from Ex1 & Ex2:
-//    public Descriptor unmarshall(@NotNull String path) throws JAXBException {
-////        try {
-//        File file = new File(path);
-//
-//        JAXBContext jaxbContext = JAXBContext.newInstance(ETTDescriptor.class);
-//        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-//        ETTDescriptor d = (ETTDescriptor) jaxbUnmarshaller.unmarshal(file);
-//
-//        return new Descriptor(d);
-////        } catch (UnmarshalException e) {
-////            throw e.getLinkedException();
-////        }
-//    }
 }

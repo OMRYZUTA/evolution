@@ -210,8 +210,8 @@ public class TimetableSolution implements Solution {
     public String toString() {
         return "TimeTableSolution=" + System.lineSeparator() +
                 ", totalFitnessScore=" + totalFitnessScore + System.lineSeparator() +
-                solutionQuintets + "*****";
-        //", solutionSize=" + solutionSize +
-        //+", fitnessScorePerRole=" + fitnessScorePerRule;
+                solutionQuintets + "*****"+
+        ", solutionSize=" + solutionSize
+        +", fitnessScorePerRole=" + fitnessScorePerRule;
     }
 }

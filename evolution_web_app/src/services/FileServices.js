@@ -1,4 +1,5 @@
 import ServiceError from "./ServiceError";
+import * as Utils from "./Utils";
 
 export async function uploadFile(file) {
     const url = "/server_Web_exploded/api/dashboard";
@@ -18,18 +19,5 @@ const fetchXmlWrapper = async (method, url, file) => {
     }
 
     const result = await fetch(url, options);
-    let responseBody;
-
-    const contentType = result.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-        responseBody = await result.json();
-    } else {
-        responseBody = await result.text();
-    }
-
-    if (!result.ok) {
-        throw new ServiceError(method, url, result.statusCode, result.statusText, responseBody)
-    }
-
-    return responseBody;
+    return await Utils.buildResponse(result, method, url);
 }
