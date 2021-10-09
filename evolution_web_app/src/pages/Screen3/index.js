@@ -248,14 +248,35 @@ const Screen3 = () => {
 
     const renderProgress = () => {
         return (
-            <Grid container className={classes.progressRow}>
-                {progress ?
-                    [<Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                        {progress.generationNum}
-                    </Typography>,
-                        <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                            {(progress.bestScoreInGeneration).toFixed(4).replace(/[.,]00$/, "")}
-                        </Typography>]
+            <Grid container className={classes.progressRow} direction="column">
+                {progress
+                    ?
+                    [
+                        <Grid item>
+                            <Typography> My Progress </Typography>
+                        </Grid>,
+                        <Grid item>
+                            <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                Current generaion: {progress.generationNum}
+                            </Typography>
+                        </Grid>,
+                        <Grid item>
+                            <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                Best score in generation: {progress.bestScoreInGeneration.toFixed(4)}
+                            </Typography>
+                        </Grid>,
+                        <Grid item>
+                            <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                Best score so far: {progress.bestScoreSoFar.toFixed(4)}
+                            </Typography>
+                        </Grid>,
+                        <Grid item>
+                            {(progress.status === 'COMPLETED') &&
+                            <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                completed run
+                            </Typography>}
+                        </Grid>,
+                    ]
                     :
                     <Typography> Start running the algorithm to see some progress </Typography>}
             </Grid>
@@ -337,14 +358,13 @@ const Screen3 = () => {
                     </Grid>
 
                     <Grid item xs={12} md={5}>
-                        <Grid container direction={"column"} className={classes.tempGrid}>
+                        <Grid container direction={"column"} className={classes.tempGrid} spacing={4}>
                             <Grid item>
                                 {renderButtonGroup()}
                             </Grid>
                             <Grid item>
-                                <Grid container direction={"column"}>
+                                <Grid container direction={"column"} spacing={4}>
                                     <Grid item>
-                                        <Typography> My Progress (best score in generation) </Typography>
                                         {renderProgress()}
                                     </Grid>
                                     <Grid item>

@@ -31,7 +31,7 @@ export default function Summary({data}) {
     }
 
     const handleTimeTableClicked = async () => {
-        document.cookie= `timetableID=${localTimetable};path=/`
+        document.cookie = `timetableID=${localTimetable};path=/`
         await setCurrentTimetableID(localTimetable)
         routeChange()
     }
@@ -58,7 +58,7 @@ export default function Summary({data}) {
                     {bull}{data.numOfUsersSolving} users are trying to solve it
                 </Typography>
                 <Typography variant="body2">
-                    {bull}{data.bestScore} max fitness so far
+                    {bull}Max fitness score (so far): {data.bestScore.toFixed(4)}
                 </Typography>
 
             </CardContent>

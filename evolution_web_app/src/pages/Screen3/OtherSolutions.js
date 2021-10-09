@@ -57,7 +57,7 @@ const OtherSolutions = ({otherSolutionsList}) => {
                                     {solution.currentGeneration}
                                 </Typography>
                                 <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                    {(solution.bestScore).toFixed(4).replace(/[.,]00$/, "")}
+                                    {(solution.bestScore).toFixed(4)}
                                 </Typography>
                             </Grid>
                         )
