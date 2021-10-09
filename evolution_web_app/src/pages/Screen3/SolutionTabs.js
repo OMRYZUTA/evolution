@@ -10,6 +10,7 @@ import Tabs from '@mui/material/Tabs';
 import TimetableDetails from "./TimetableDetails";
 import TeacherView from "./TeacherView";
 import SchoolClassView from "./SchoolClassView";
+import RawView from "./RawView";
 
 TabPanel.propTypes = {
     children: PropTypes.node,
@@ -73,6 +74,7 @@ const SolutionTabs = ({days, hours, quintets, teachersObject, schoolClassesObjec
                 aria-label="scrollable force tabs example">
                 <Tab label="Teacher view" icon={<EqualizerIcon/>} {...a11yProps(0)} />
                 <Tab label="School Class view" icon={<DescriptionIcon/>} {...a11yProps(1)} />
+                <Tab label="Raw view" icon={<DescriptionIcon/>} {...a11yProps(2)} />
             </Tabs>
 
             <TabPanel value={value} index={0}>
@@ -81,6 +83,9 @@ const SolutionTabs = ({days, hours, quintets, teachersObject, schoolClassesObjec
 
             <TabPanel value={value} index={1}>
                 <SchoolClassView quintets={quintets} hours={hours} days={days} schoolClassesObject={schoolClassesObject}/>
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+                <RawView quintets={quintets} />
             </TabPanel>
 
         </div>
