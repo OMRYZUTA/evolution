@@ -17,18 +17,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import StrideGraph from "./StrideGraph";
 import ConfirmationDialog from "../../components/ConfirmationDialog";
 
-const fakeAlgoConfig = {
-    timetableID: 0, //important to notice which timetable we're dealing with
-    stride: "10",
-    endPredicates: {numOfGenerations: "700", fitnessScore: "97.1", time: "4"},
-    engineSettings: {
-        populationSize: "60",
-        selection: {type: "RouletteWheel", elitism: "5"},
-        crossover: {type: "DayTimeOriented", "cuttingPoints": "5"},
-        mutations: [
-            {type: "Flipping", probability: "0.2", maxTuples: "4", component: "H"}],
-    }
-}
 
 // front-end statuses
 const RUNNING = Symbol.for('RUNNING');
@@ -222,7 +210,6 @@ const Screen3 = () => {
     };
 
     const handleStart = useCallback(async () => {
-        debugger;
         if (runStatus === COMPLETED || runStatus === STOPPED) {
             setOpenConfirmationDialog(true);
         } else {
@@ -294,7 +281,7 @@ const Screen3 = () => {
                         </Grid>,
                         <Grid item>
                             <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                Current generaion: {progress.generationNum}
+                                Current generation: {progress.generationNum}
                             </Typography>
                         </Grid>,
                         <Grid item>
