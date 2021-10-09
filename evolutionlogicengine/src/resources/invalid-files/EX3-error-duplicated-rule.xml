@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ETT-Descriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ETT-V3.xsd">
+<ETT-Descriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../ETT-V3.xsd">
     <ETT-TimeTable days="4" hours="5">
         <ETT-Teachers>
             <ETT-Teacher id="1">

@@ -42,6 +42,8 @@ const Index = () => {
     const [users, setUsers] = useState([]);
     const [summaries, setSummaries] = useState([]);
     const [alertText, setAlertText] = React.useState('');
+    const [alertType,setAlertType] = useState("error");
+    const [alertHeader,setAlertHeader] = useState("Error")
 
     useEffect(() => {
         const fetchAllData = async () => {
@@ -66,7 +68,7 @@ const Index = () => {
     const renderAlert = () => {
         return (
             <Box sx={{width: '100%'}}>
-                <Alert severity="error"
+                <Alert severity={alertType}
                        action={
                            <IconButton
                                aria-label="close"
@@ -79,7 +81,7 @@ const Index = () => {
                            </IconButton>
                        }
                        sx={{mb: 2}}>
-                    <AlertTitle>Error</AlertTitle>
+                    <AlertTitle>{alertHeader}</AlertTitle>
                     {alertText}
                 </Alert>
             </Box>
@@ -92,6 +94,13 @@ const Index = () => {
         const result = await FileServices.uploadFile(file);
         if (result !== "OK") {
             setAlertText(result);
+            setAlertType("error");
+            setAlertHeader("Error");
+        }
+        else{
+            setAlertText("File was uploaded successfully");
+            setAlertType("success");
+            setAlertHeader("Success");
         }
     };
 
