@@ -7,6 +7,7 @@ import Screen2 from './pages/Screen2'
 import {UserContext} from "./components/UserContext";
 import Screen3 from "./pages/Screen3";
 import {TimetableContext} from "./components/TimetableContext";
+import '@devexpress/dx-react-chart-bootstrap4/dist/dx-react-chart-bootstrap4.css';
 
 const getCookieDetail = (name) => {
     let decodedCookie = decodeURIComponent(document.cookie);
