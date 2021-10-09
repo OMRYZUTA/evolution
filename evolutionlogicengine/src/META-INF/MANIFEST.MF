@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: il.ac.mta.zuli.evolution.ui.Program
-Class-Path: cssfx-1.0.0.jar annotations-20.1.0.jar junit-jupiter-5.7.0.j
- ar junit-jupiter-api-5.7.0.jar apiguardian-api-1.1.0.jar opentest4j-1.2
- .0.jar junit-platform-commons-1.7.0.jar junit-jupiter-params-5.7.0.jar 
- junit-jupiter-engine-5.7.0.jar junit-platform-engine-1.7.0.jar
-

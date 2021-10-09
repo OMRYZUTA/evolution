@@ -2,7 +2,6 @@ import './App.css';
 import React, {useMemo} from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Login from './pages/Login';
-import SignUp from './pages/signup/SignUp' //TODO delete later
 import Screen2 from './pages/Screen2'
 import {UserContext} from "./components/UserContext";
 import Screen3 from "./pages/Screen3";
@@ -28,7 +27,10 @@ export default function App() {
     const [currentUser, setCurrentUser] = React.useState(getCookieDetail("username"));
     const [currentTimetableID, setCurrentTimetableID] = React.useState(Number.parseInt(getCookieDetail("timetableID"), 10));
     const userProviderValue = useMemo(() => ({currentUser, setCurrentUser}), [currentUser, setCurrentUser]);
-    const timetableProviderValue = useMemo(() => ({ currentTimetableID, setCurrentTimetableID}), [currentTimetableID, setCurrentTimetableID]);
+    const timetableProviderValue = useMemo(() => ({
+        currentTimetableID,
+        setCurrentTimetableID
+    }), [currentTimetableID, setCurrentTimetableID]);
     return (
         <TimetableContext.Provider value={timetableProviderValue}>
             <UserContext.Provider value={userProviderValue}>
@@ -47,9 +49,6 @@ export default function App() {
                             </Route>
                             <Route path="/server_Web_exploded/screen1">
                                 <Login/>
-                            </Route>
-                            <Route path="/server_Web_exploded/signup">
-                                <SignUp/>
                             </Route>
                             <Route path="/server_Web_exploded/screen2">
                                 {currentUser ? <Screen2/> : <Login/>}
