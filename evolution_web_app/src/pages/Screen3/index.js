@@ -97,6 +97,7 @@ const Screen3 = () => {
     const [runStatus, setRunStatus] = useState(STOPPED);
     const [saveStatus, setSaveStatus] = useState(UNSAVED);
     const [open, setOpen] = React.useState(false);
+    console.log(timetable);
 
     useEffect(() => {
         // calling all API calls in parallel, and waiting until they ALL finish before setting
@@ -304,6 +305,7 @@ const Screen3 = () => {
                     hours={timetable.hours}
                     solution={bestSolution}
                     teachers={timetable.teachers}
+                    schoolClasses={timetable.schoolClasses}
                 />}
                 <Button id="back to screen 2" onClick={routeChange}>
                     Back to screen 2

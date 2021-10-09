@@ -21,16 +21,17 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const extractTeachersFromTeacherObject = (teachersObject) => {
-    return Object.keys(teachersObject).map(key => teachersObject[key]);
+const convertObjectToArray = (object) => {
+    return Object.keys(object).map(key => object[key]);
 }
 
 const timeSlotToString = (quintets) => {
     let slotString = "";
 
+
     for (let i = 0; i < quintets.length; i++) {
-        let id1 = quintets[i].schoolClassID;
-        let s1 = quintets[i].schoolClassName;
+        let id1 = quintets[i].teacherID;
+        let s1 = quintets[i].teacherName;
         let id2 = quintets[i].subjectID;
         let s2 = quintets[i].subjectName;
         slotString += `${id1} ${s1}, ${id2} ${s2}\n`;
@@ -40,17 +41,17 @@ const timeSlotToString = (quintets) => {
 }
 
 
-const SchoolClassView = ({quintets, days, hours, teachersObject}) => {
+const SchoolClassView = ({quintets, days, hours, schoolClassesObject}) => {
     const classes = useStyles();
-    const [teachers] = useState(extractTeachersFromTeacherObject(teachersObject));
-    const [currentTeacher, setCurrentTeacher] = useState(teachers[0]);
-    const [teacherQuintets, setTeacherQuintets] = useState(quintets.filter(quintet => quintet.teacherID === currentTeacher.id));
+    const [schoolClasses] = useState(convertObjectToArray(schoolClassesObject));
+    const [currentSchoolClass, setCurrentSchoolClass] = useState(schoolClasses[0]);
+    const [schoolClassesQuintets, setTeacherQuintupletsClasses] = useState(quintets.filter(quintet => quintet.schoolClassID === currentSchoolClass.id));
 
 
 
-    const setValueInTeacher = useCallback((name, value) => {
-        setTeacherQuintets(quintets.filter(quintet => quintet.teacherID === value));
-        setCurrentTeacher(teachers.find(teacher => teacher.id === value))
+    const setValueInSchoolClass = useCallback((name, value) => {
+        setTeacherQuintupletsClasses(quintets.filter(quintet => quintet.schoolClassID === value));
+        setCurrentSchoolClass(schoolClasses.find(schoolClass => schoolClass.id === value))
     }, []);
 
     return (
@@ -58,19 +59,19 @@ const SchoolClassView = ({quintets, days, hours, teachersObject}) => {
             <Grid item>
                 <Grid container xs={6} md={3}>
                     <DropDown
-                        label={"Teacher"}
-                        options={teachers.map(teacher => ({
-                            id: teacher.id, name: teacher.name
+                        label={"school Class"}
+                        options={schoolClasses.map(schoolClass => ({
+                            id: schoolClass.id, name: schoolClass.name
                         }))}
-                        currentValue={currentTeacher.id}
+                        currentValue={currentSchoolClass.id}
                         keyPropName="id"
                         namePropName="name"
-                        onChange={(e) => setValueInTeacher('name', e.target.value)}
+                        onChange={(e) => setValueInSchoolClass('name', e.target.value)}
                     />
                 </Grid>
             </Grid>
             <Grid item>
-                <TabularTimeTable days={days} hours={hours} quintets={teacherQuintets}
+                <TabularTimeTable days={days} hours={hours} quintets={schoolClassesQuintets}
                                   timeSlotToString={timeSlotToString}/>
             </Grid>
         </Grid>

@@ -8,6 +8,7 @@ import * as Screen3Services from "../../services/Screen3Services";
 import {TimetableContext} from "../../components/TimetableContext";
 import {getBestSolution} from "../../services/Screen3Services";
 import CircularIndeterminate from "../../components/CircularIndeterminate";
+import SolutionTabs from "./SolutionTabs";
 
 const useStyles = makeStyles((theme) => ({
     grid: {
@@ -43,15 +44,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SolutionDialog = ({handleClose, days, hours, solution,teachers}) => {
+const SolutionDialog = ({handleClose, days, hours, solution,teachers, schoolClasses}) => {
     const {currentTimetableID} = useContext(TimetableContext);
     const classes = useStyles();
-    console.log({solution})
 
     return (
         <Dialog onClose={handleClose} open={true} fullWidth={true} maxWidth={"xl"}>
             <DialogTitle>Best Solution</DialogTitle>
-            {solution? <TeacherView quintets={Object.keys(solution.solutionQuintets).map(key => solution.solutionQuintets[key])} hours={hours} days={days} teachersObject={teachers}/>: <CircularIndeterminate/>}
+            {solution? <SolutionTabs quintets={Object.keys(solution.solutionQuintets).map(key => solution.solutionQuintets[key])} hours={hours} days={days} teachersObject={teachers} schoolClassesObject={schoolClasses}/>: <CircularIndeterminate/>}
         </Dialog>
     );
 }
