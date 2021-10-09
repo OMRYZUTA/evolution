@@ -2,6 +2,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {ButtonGroup, IconButton, TextField} from "@mui/material";
 import DropDown from "../../components/Dropdown";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -171,7 +172,7 @@ const AlgorithmConfiguration = ({
                 <TextField
                     required
                     error={pteError}
-                    helperText={pteError ? 'Invalid value (must be a number)' : ''}
+                    helperText="decimal point number (0-1)"
                     disabled={disableEdit}
                     label="PTE"
                     value={nullCoalesce(data.engineSettings.selection.pte)}
@@ -231,6 +232,14 @@ const AlgorithmConfiguration = ({
 
         setData({...data, engineSettings});
     }, [data]);
+
+    const handleRemoveMutation = useCallback((index) => {
+        const mutationsArray = data.engineSettings.mutations;
+        const newMutationsArray = [...mutationsArray.slice(0, index), ...mutationsArray.slice(index + 1)];
+        const engineSettings = {...data.engineSettings, mutations: newMutationsArray};
+
+        setData({...data, engineSettings});
+    }, [data])
 
     const setValueInMutation = useCallback((index, propName, value, error) => {
         const mutationsArray = data.engineSettings.mutations;
@@ -304,7 +313,7 @@ const AlgorithmConfiguration = ({
                             <TextField
                                 required
                                 error={mutation.probabilityError}
-                                helperText={'Value must be 0 - 1'}
+                        helperText="decimal point number (0-1)"
                                 disabled={disableEdit}
                                 label='Probability'
                                 value={nullCoalesce(mutation.probability)}
@@ -315,6 +324,11 @@ const AlgorithmConfiguration = ({
                 <Grid item>
                     <Grid container>
                         {renderMutationExtraFields(mutation, index)}
+                <IconButton onClick={() => {
+                    handleRemoveMutation(index);
+                }}>
+                    <DeleteIcon/>
+                </IconButton>
                     </Grid>
                 </Grid>
             </Grid>
@@ -328,7 +342,7 @@ const AlgorithmConfiguration = ({
                     <TextField
                         required
                         error={mutation.totalTuplesError}
-                        helperText={mutation.totalTuplesError ? 'Invalid value (must be a number)' : ''}
+                        helperText="whole number"
                         disabled={disableEdit}
                         label='Total Tuples'
                         value={nullCoalesce(mutation.totalTuples)}
@@ -341,7 +355,7 @@ const AlgorithmConfiguration = ({
                     <TextField
                         required
                         error={mutation.maxTuplesError}
-                        helperText={mutation.maxTuplesError ? 'Invalid value (must be a number)' : ''}
+                        helperText="whole number"
                         disabled={disableEdit}
                         label='Max Tuples'
                         value={mutation.maxTuples}
@@ -375,7 +389,7 @@ const AlgorithmConfiguration = ({
                         <TextField
                             required
                             error={populationSizeError}
-                            helperText={populationSizeError ? 'Invalid value (must be a number)' : ''}
+                            helperText="whole number"
                             disabled={disableEdit}
                             label="Population size"
                             value={nullCoalesce(data.engineSettings.populationSize)}
@@ -383,7 +397,7 @@ const AlgorithmConfiguration = ({
                         <TextField
                             required
                             error={strideError}
-                            helperText={strideError ? 'Invalid value (must be a number)' : ''}
+                            helperText="whole number"
                             disabled={disableEdit}
                             label='Stride'
                             value={nullCoalesce(data.stride)}
@@ -429,7 +443,7 @@ const AlgorithmConfiguration = ({
                             onChange={(e) => setValueInSelection('type', e.target.value)}/>
                         <TextField
                             error={elitismError}
-                            helperText={elitismError ? 'Invalid value (must be a number)' : ''}
+                            helperText="whole number"
                             disabled={disableEdit}
                             label="Elitism"
                             value={nullCoalesce(data.engineSettings.selection.elitism)}
@@ -461,7 +475,7 @@ const AlgorithmConfiguration = ({
                         <TextField
                             required
                             error={cuttingPointsError}
-                            helperText={cuttingPointsError ? 'Invalid value (must be a number)' : ''}
+                            helperText="whole number"
                             disabled={disableEdit}
                             label='Cutting Points'
                             value={nullCoalesce(data.engineSettings.crossover.cuttingPoints)}
@@ -524,7 +538,7 @@ const AlgorithmConfiguration = ({
                 <Button disabled={!saveEnabled}
                         onClick={() => {
                             handleAlgorithmConfigSave(data);
-                        }}>Save</Button>
+                        }}>Apply</Button>
                 <Button disabled={!cancelEnabled}
                         onClick={() => {
                             setData(algorithmConfiguration);

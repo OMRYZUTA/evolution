@@ -28,7 +28,7 @@ const EndPredicates = ({endPredicates, handleEndPredicatesChange, disableEdit}) 
                 <TextField label="Num Of Generations"
                            value={endPredicates.numOfGenerations || ''}
                            error={endPredicates.numOfGenerationsError}
-                           helperText="Whole number"
+                           helperText="whole number"
                            disabled={disableEdit}
                            onChange={(e) => {
                                let value = e.target.value;
@@ -49,7 +49,7 @@ const EndPredicates = ({endPredicates, handleEndPredicatesChange, disableEdit}) 
                 <TextField label="Fitness Score"
                            value={endPredicates.fitnessScore || ''}
                            error={endPredicates.fitnessScoreError}
-                           helperText="Allows decimal point"
+                           helperText="allows decimal point"
                            disabled={disableEdit}
                            onChange={(e) => {
                                let value = e.target.value;
@@ -70,7 +70,7 @@ const EndPredicates = ({endPredicates, handleEndPredicatesChange, disableEdit}) 
                 <TextField label="Time"
                            value={endPredicates.time || ''}
                            error={endPredicates.timeError}
-                           helperText="Whole number"
+                           helperText="whole number"
                            disabled={disableEdit}
                            onChange={(e) => {
                                let value = e.target.value;
