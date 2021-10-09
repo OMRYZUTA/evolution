@@ -287,28 +287,36 @@ const AlgorithmConfiguration = ({
 
     const renderMutation = (mutation, index) => {
         return (
-            <Grid container item spacing={1}>
-                <Grid item>
-                    <DropDown
-                        label={'Mutation'}
-                        options={mutationTypes}
-                        currentValue={nullCoalesce(mutation.type)}
-                        keyPropName='type'
-                        namePropName='name'
-                        disableEdit={disableEdit}
-                        onChange={(e) => setValueInMutation(index, 'type', e.target.value)}/>
+            <Grid container item sx={{padding: "10px 0px"}} direction={"column"}>
+                <Grid item sx={{padding: "10px 0px"}}>
+                    <Grid container direction={"row"}>
+                        <Grid item>
+                            <DropDown
+                                label={'Mutation'}
+                                options={mutationTypes}
+                                currentValue={nullCoalesce(mutation.type)}
+                                keyPropName='type'
+                                namePropName='name'
+                                disableEdit={disableEdit}
+                                onChange={(e) => setValueInMutation(index, 'type', e.target.value)}/>
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                required
+                                error={mutation.probabilityError}
+                                helperText={'Value must be 0 - 1'}
+                                disabled={disableEdit}
+                                label='Probability'
+                                value={nullCoalesce(mutation.probability)}
+                                onChange={(e) => handleProbabilityChange(e, index)}/>
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item>
-                    <TextField
-                        required
-                        error={mutation.probabilityError}
-                        helperText={'Value must be 0 - 1'}
-                        disabled={disableEdit}
-                        label='Probability'
-                        value={nullCoalesce(mutation.probability)}
-                        onChange={(e) => handleProbabilityChange(e, index)}/>
+                    <Grid container>
+                        {renderMutationExtraFields(mutation, index)}
+                    </Grid>
                 </Grid>
-                {renderMutationExtraFields(mutation, index)}
             </Grid>
         );
     };
@@ -484,7 +492,7 @@ const AlgorithmConfiguration = ({
                     <IconButton onClick={handleAddMutation}>
                         <AddIcon/>
                     </IconButton>
-                    <Grid container direction={"column"} className={classes.root} spacing={4}>
+                    <Grid container direction={"column"} className={classes.root}>
                         {data.engineSettings.mutations.map(renderMutation)}
                     </Grid>
                 </AccordionDetails>
