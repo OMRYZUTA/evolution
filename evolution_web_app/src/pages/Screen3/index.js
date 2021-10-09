@@ -34,12 +34,11 @@ const SCREEN2URL = "/server_Web_exploded/screen2";
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: '50px 70px',
-        spacing: 2,
         justifyContent: 'flex-start',
         alignItems: 'top-center',
     },
     settings: {
-        spacing: 2,
+
         justifyContent: "space-between",
         width: '100%',
         height: 400,
@@ -47,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#D3D3D3", //light gray
     },
     progressRow: {
-        spacing: 2,
         justifyContent: "space-between",
         backgroundColor: "#D3D3D3", //light gray
     },
@@ -387,10 +385,10 @@ const Screen3 = () => {
                         <Grid item
                               alignItems="top-center"
                               justifyContent="flex-start"
-                              spacing={2}>
+                            >
                             {alertText && renderAlert(alertText)}
                         </Grid>
-                        <Grid container direction={"row"} spacing={2}>
+                        <Grid container direction={"row"}>
                             <Grid item xs={12} md={6}>
                                 <Grid container direction={"column"} className={classes.tempGrid}>
                                     <InfoTabs algorithmConfiguration={algorithmConfiguration}
@@ -402,7 +400,7 @@ const Screen3 = () => {
                             </Grid>
 
                             <Grid item xs={12} md={5}>
-                                <Grid container direction={"column"} className={classes.tempGrid} spacing={4}>
+                                <Grid container direction={"column"} className={classes.tempGrid} >
                                     <Grid item>
                                         {renderButtonGroup()}
                                     </Grid>
