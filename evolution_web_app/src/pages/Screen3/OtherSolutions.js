@@ -49,13 +49,13 @@ const OtherSolutions = ({otherSolutionsList}) => {
                         return (
                             <Grid container className={classes.settings}>
                                 <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                    {solution.userName}
+                                    User: {solution.userName}
                                 </Typography>
                                 <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                    {solution.currentGeneration}
+                                    Current generation: {solution.currentGeneration}
                                 </Typography>
                                 <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                    {(solution.bestScore).toFixed(4)}
+                                    Best score: {(solution.bestScore).toFixed(4)}
                                 </Typography>
                             </Grid>
                         )
