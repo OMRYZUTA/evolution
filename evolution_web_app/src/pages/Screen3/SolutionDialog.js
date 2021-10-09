@@ -9,7 +9,13 @@ import {TimetableContext} from "../../components/TimetableContext";
 import {getBestSolution} from "../../services/Screen3Services";
 import CircularIndeterminate from "../../components/CircularIndeterminate";
 import SolutionTabs from "./SolutionTabs";
-
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Grid from "@mui/material/Grid";
+import RulesScoreContainer from "./RulesScoreContainer";
+import * as Utils from "../../Utils/Utils"
 const useStyles = makeStyles((theme) => ({
     grid: {
         margin: 0,
@@ -44,14 +50,42 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SolutionDialog = ({handleClose, days, hours, solution,teachers, schoolClasses}) => {
+const SolutionDialog = ({handleClose, days, hours, solution, teachers, schoolClasses}) => {
     const {currentTimetableID} = useContext(TimetableContext);
     const classes = useStyles();
+    console.log(solution.scorePerRule);
 
     return (
         <Dialog onClose={handleClose} open={true} fullWidth={true} maxWidth={"xl"}>
             <DialogTitle>Best Solution</DialogTitle>
-            {solution? <SolutionTabs quintets={Object.keys(solution.solutionQuintets).map(key => solution.solutionQuintets[key])} hours={hours} days={days} teachersObject={teachers} schoolClassesObject={schoolClasses}/>: <CircularIndeterminate/>}
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon/>}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <Typography>Rules score summary</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <RulesScoreContainer rulesScores={solution.scorePerRule}/>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon/>}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <Typography>Solution views</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    {solution ? <SolutionTabs
+                            quintets={Object.keys(solution.solutionQuintets).map(key => solution.solutionQuintets[key])}
+                            hours={hours} days={days} teachersObject={teachers} schoolClassesObject={schoolClasses}/> :
+                        <CircularIndeterminate/>}
+                </AccordionDetails>
+            </Accordion>
+
         </Dialog>
     );
 }

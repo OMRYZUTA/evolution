@@ -12,7 +12,7 @@ import {makeStyles} from "@mui/styles"
 import Grid from "@mui/material/Grid";
 import DropDown from "../../components/Dropdown";
 import TabularTimeTable from "./TabularTimeTable";
-
+import * as Utils from "../../Utils/Utils"
 
 const useStyles = makeStyles(() => ({
     dropdown: {
@@ -20,10 +20,6 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-
-const convertObjectToArray = (object) => {
-    return Object.keys(object).map(key => object[key]);
-}
 
 const timeSlotToString = (quintets) => {
     let slotString = "";
@@ -43,7 +39,7 @@ const timeSlotToString = (quintets) => {
 
 const SchoolClassView = ({quintets, days, hours, schoolClassesObject}) => {
     const classes = useStyles();
-    const [schoolClasses] = useState(convertObjectToArray(schoolClassesObject));
+    const [schoolClasses] = useState(Utils.convertObjectToArray(schoolClassesObject));
     const [currentSchoolClass, setCurrentSchoolClass] = useState(schoolClasses[0]);
     const [schoolClassesQuintets, setTeacherQuintupletsClasses] = useState(quintets.filter(quintet => quintet.schoolClassID === currentSchoolClass.id));
 
