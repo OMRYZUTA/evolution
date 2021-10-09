@@ -254,7 +254,7 @@ const Screen3 = () => {
                         {progress.generationNum}
                     </Typography>,
                         <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                            {progress.bestScoreInGeneration}
+                            {(progress.bestScoreInGeneration).toFixed(4).replace(/[.,]00$/, "")}
                         </Typography>]
                     :
                     <Typography> Start running the algorithm to see some progress </Typography>}
