@@ -1,11 +1,19 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
+import {makeStyles} from '@mui/styles'
 import {
     ArgumentAxis,
     ValueAxis,
     Chart,
     LineSeries,
 } from '@devexpress/dx-react-chart-material-ui';
+import {useEffect, useState} from "react";
+
+const useStyles = makeStyles(() => ({
+    paper: {
+        width: "80%",
+    }
+}));
 
 const data = [
     {argument: 1, value: 10},
@@ -14,9 +22,17 @@ const data = [
 ];
 
 const StrideGraph = ({strideData}) => {
-    console.log({strideData})
+    const classes = useStyles();
+    const [data, setData] = useState([]);
+    console.log({data});
+
+    useEffect(() => {
+        setData(strideData.map(stride => ({"argument": stride.generationNum, "value": stride.bestScoreInGeneration})
+        ))
+    }, [strideData]);
+
     return (
-        <Paper>
+        <Paper className={classes.paper}>
             <Chart
                 data={data}
             >

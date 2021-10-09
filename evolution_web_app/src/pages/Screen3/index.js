@@ -14,6 +14,7 @@ import CircularIndeterminate from "../../components/CircularIndeterminate";
 import SolutionDialog from "./SolutionDialog";
 import Box from "@mui/material/Box";
 import CloseIcon from "@mui/icons-material/Close";
+import StrideGraph from "./StrideGraph";
 
 const fakeAlgoConfig = {
     timetableID: 0, //important to notice which timetable we're dealing with
@@ -370,49 +371,58 @@ const Screen3 = () => {
     }, [algorithmConfiguration])
 
     return (
-        <Grid>
+        <Grid container direction={"column"}>
             <Grid item>
-                {isFetching && <CircularIndeterminate/>}
-            </Grid>
-            <Container maxWidth="xl">
-                <Navbar user={currentUser}/>
-                <Grid item
-                      alignItems="top-center"
-                      justifyContent="flex-start"
-                      spacing={2}>
-                    {alertText && renderAlert(alertText)}
-                </Grid>
-                <Grid container direction={"row"} spacing={2}>
-                    <Grid item xs={12} md={6}>
-                        <Grid container direction={"column"} className={classes.tempGrid}>
-                            <InfoTabs algorithmConfiguration={algorithmConfiguration}
-                                      handleAlgorithmConfigSave={setAlgorithmConfiguration}
-                                      handleAlgorithmConfigChanged={onAlgorithmConfigChanged}
-                                      timetable={timetable}
-                                      disableEdit={runStatus === RUNNING}
-                            />
-                        </Grid>
+                <Grid>
+                    <Grid item>
+                        {isFetching && <CircularIndeterminate/>}
                     </Grid>
-
-                    <Grid item xs={12} md={5}>
-                        <Grid container direction={"column"} className={classes.tempGrid} spacing={4}>
-                            <Grid item>
-                                {renderButtonGroup()}
+                    <Container maxWidth="xl">
+                        <Navbar user={currentUser}/>
+                        <Grid item
+                              alignItems="top-center"
+                              justifyContent="flex-start"
+                              spacing={2}>
+                            {alertText && renderAlert(alertText)}
+                        </Grid>
+                        <Grid container direction={"row"} spacing={2}>
+                            <Grid item xs={12} md={6}>
+                                <Grid container direction={"column"} className={classes.tempGrid}>
+                                    <InfoTabs algorithmConfiguration={algorithmConfiguration}
+                                              handleAlgorithmConfigSave={setAlgorithmConfiguration}
+                                              handleAlgorithmConfigChanged={onAlgorithmConfigChanged}
+                                              timetable={timetable}
+                                              disableEdit={runStatus === RUNNING}
+                                    />
+                                </Grid>
                             </Grid>
-                            <Grid item>
-                                <Grid container direction={"column"} spacing={4}>
+
+                            <Grid item xs={12} md={5}>
+                                <Grid container direction={"column"} className={classes.tempGrid} spacing={4}>
                                     <Grid item>
-                                        {renderProgress()}
+                                        {renderButtonGroup()}
                                     </Grid>
                                     <Grid item>
-                                        <OtherSolutions otherSolutionsList={otherSolutions}/>
+                                        <Grid container direction={"column"}>
+                                            <Grid item>
+                                                {renderProgress()}
+                                            </Grid>
+                                            <Grid item>
+                                                <OtherSolutions otherSolutionsList={otherSolutions}/>
+                                            </Grid>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
+                    </Container>
                 </Grid>
-            </Container>
+            </Grid>
+            <Grid item xs={12} md={12}>
+                <Grid container className={classes.tempGrid}>
+                    <StrideGraph strideData={strideData}/>
+                </Grid>
+            </Grid>
         </Grid>
     );
 }
