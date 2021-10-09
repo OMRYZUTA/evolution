@@ -101,6 +101,9 @@ const Index = () => {
             setAlertText("File was uploaded successfully");
             setAlertType("success");
             setAlertHeader("Success");
+            setTimeout(()=>{
+                setAlertText("");
+            },2000)
         }
     };
 
