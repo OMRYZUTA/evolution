@@ -116,7 +116,6 @@ public class RunAlgorithmTask implements Runnable {
 
                     if (isStopped()) {
                         outEvolutionState.setStatus(LogicalRunStatus.STOPPED);
-
                     } else {
                         outEvolutionState.setStatus(LogicalRunStatus.COMPLETED);
                     }
