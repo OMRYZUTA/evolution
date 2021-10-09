@@ -47,7 +47,12 @@ function nullCoalesce(value, defValue = '') {
     return value == null ? '' : value;
 }
 
-const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSave, handleAlgorithmConfigChanged}) => {
+const AlgorithmConfiguration = ({
+                                    algorithmConfiguration,
+                                    handleAlgorithmConfigSave,
+                                    handleAlgorithmConfigChanged,
+                                    disableEdit,
+                                }) => {
     const classes = useStyles();
     const [data, setData] = useState(algorithmConfiguration); //currentSettings
 
@@ -176,6 +181,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     required
                     error={pteError}
                     helperText={pteError ? 'Invalid value (must be a number)' : ''}
+                    disabled={disableEdit}
                     label="PTE"
                     value={nullCoalesce(data.engineSettings.selection.pte)}
                     onChange={handlePTEChange}/>
@@ -187,6 +193,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                     required
                     error={topPercentError}
                     helperText={topPercentError ? 'Invalid value (must be a number)' : ''}
+                    disabled={disableEdit}
                     label="Top Percent"
                     value={nullCoalesce(data.engineSettings.selection.topPercent)}
                     onChange={handleTopPercentChange}/>
@@ -296,14 +303,16 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         currentValue={nullCoalesce(mutation.type)}
                         keyPropName='type'
                         namePropName='name'
+                        disableEdit={disableEdit}
                         onChange={(e) => setValueInMutation(index, 'type', e.target.value)}/>
                 </Grid>
                 <Grid item>
                     <TextField
                         required
-                        label='Probability'
                         error={mutation.probabilityError}
                         helperText={'Value must be 0 - 1'}
+                        disabled={disableEdit}
+                        label='Probability'
                         value={nullCoalesce(mutation.probability)}
                         onChange={(e) => handleProbabilityChange(e, index)}/>
                 </Grid>
@@ -320,6 +329,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         required
                         error={mutation.totalTuplesError}
                         helperText={mutation.totalTuplesError ? 'Invalid value (must be a number)' : ''}
+                        disabled={disableEdit}
                         label='Total Tuples'
                         value={nullCoalesce(mutation.totalTuples)}
                         onChange={(e) => handleTotalTuplesChange(e, index)}/>
@@ -332,6 +342,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         required
                         error={mutation.maxTuplesError}
                         helperText={mutation.maxTuplesError ? 'Invalid value (must be a number)' : ''}
+                        disabled={disableEdit}
                         label='Max Tuples'
                         value={mutation.maxTuples}
                         onChange={(e) => handleMaxTuplesChange(e, index)}/>
@@ -343,6 +354,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         currentValue={nullCoalesce(mutation.component)}
                         keyPropName='type'
                         namePropName='name'
+                        disableEdit={disableEdit}
                         onChange={(e) => setValueInMutation(index, 'component', e.target.value)}/>
                 </Grid>,
             ];
@@ -364,6 +376,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                             required
                             error={populationSizeError}
                             helperText={populationSizeError ? 'Invalid value (must be a number)' : ''}
+                            disabled={disableEdit}
                             label="Population size"
                             value={nullCoalesce(data.engineSettings.populationSize)}
                             onChange={handlePopulationSizeChange}/>
@@ -371,6 +384,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                             required
                             error={strideError}
                             helperText={strideError ? 'Invalid value (must be a number)' : ''}
+                            disabled={disableEdit}
                             label='Stride'
                             value={nullCoalesce(data.stride)}
                             onChange={handleStrideChange}/>
@@ -389,7 +403,8 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                 </AccordionSummary>
                 <AccordionDetails>
                     <EndPredicates endPredicates={data.endPredicates}
-                                   handleEndPredicatesChange={handleEndPredicatesChange}/>
+                                   handleEndPredicatesChange={handleEndPredicatesChange}
+                                   disableEdit={disableEdit}/>
                 </AccordionDetails>
             </Accordion>
         );
@@ -410,10 +425,12 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                             currentValue={nullCoalesce(data.engineSettings.selection.type)}
                             keyPropName="type"
                             namePropName="name"
+                            disableEdit={disableEdit}
                             onChange={(e) => setValueInSelection('type', e.target.value)}/>
                         <TextField
                             error={elitismError}
                             helperText={elitismError ? 'Invalid value (must be a number)' : ''}
+                            disabled={disableEdit}
                             label="Elitism"
                             value={nullCoalesce(data.engineSettings.selection.elitism)}
                             onChange={handleElitismChange}/>
@@ -439,11 +456,13 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                             currentValue={nullCoalesce(data.engineSettings.crossover.type)}
                             keyPropName="type"
                             namePropName="name"
+                            disableEdit={disableEdit}
                             onChange={(e) => setValueInCrossover('type', e.target.value)}/>
                         <TextField
                             required
                             error={cuttingPointsError}
                             helperText={cuttingPointsError ? 'Invalid value (must be a number)' : ''}
+                            disabled={disableEdit}
                             label='Cutting Points'
                             value={nullCoalesce(data.engineSettings.crossover.cuttingPoints)}
                             onChange={handleCuttingPointsChange}/>
@@ -454,6 +473,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                                 currentValue={nullCoalesce(data.engineSettings.crossover.orientation)}
                                 keyPropName="type"
                                 namePropName="name"
+                                disableEdit={disableEdit}
                                 onChange={(e) => setValueInCrossover('orientation', e.target.value)}/>}
                     </Grid>
                 </AccordionDetails>

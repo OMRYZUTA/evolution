@@ -51,7 +51,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const InfoTabs = ({timetable, algorithmConfiguration, handleAlgorithmConfigSave, handleAlgorithmConfigChanged}) => {
+const InfoTabs = ({
+                      timetable,
+                      algorithmConfiguration,
+                      disableEdit,
+                      handleAlgorithmConfigSave,
+                      handleAlgorithmConfigChanged
+                  }) => {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -76,7 +82,8 @@ const InfoTabs = ({timetable, algorithmConfiguration, handleAlgorithmConfigSave,
             <TabPanel value={value} index={0}>
                 <AlgorithmConfiguration algorithmConfiguration={algorithmConfiguration}
                                         handleAlgorithmConfigSave={handleAlgorithmConfigSave}
-                                        handleAlgorithmConfigChanged={handleAlgorithmConfigChanged}/>
+                                        handleAlgorithmConfigChanged={handleAlgorithmConfigChanged}
+                                        disableEdit={disableEdit}/>
             </TabPanel>
 
             <TabPanel value={value} index={1}>

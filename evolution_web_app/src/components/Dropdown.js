@@ -12,6 +12,7 @@ export default function DropDown({
                                      keyPropName,  // the name of the "key" property from the pair
                                      namePropName, // the name of the "name" property from the pair
                                      onChange,     // callback function that notifies "outside" that the user selected a different option
+                                     disableEdit,
                                  }) {
     const tempOptions = options.sort((s1, s2) => (s1[namePropName]).localeCompare(s2[namePropName]))
 
@@ -27,6 +28,7 @@ export default function DropDown({
                 <Select
                     label={label}
                     value={currentValue}
+                    disabled={disableEdit}
                     onChange={onChange}>
                     {tempOptions.map((option) => <MenuItem key={option[keyPropName]}
                                                            value={option[keyPropName]}>{option[namePropName]}</MenuItem>)}
