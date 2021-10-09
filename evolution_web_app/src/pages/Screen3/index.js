@@ -222,25 +222,26 @@ const Screen3 = () => {
     };
 
     const handleStart = useCallback(async () => {
+        debugger;
         if (runStatus === COMPLETED || runStatus === STOPPED) {
             setOpenConfirmationDialog(true);
         } else {
-            await startRun();
+            await startRun(algorithmConfiguration);
         }
     }, [algorithmConfiguration, runStatus]);
 
     const handleConfirmationOk = useCallback(async () => {
         setOpenConfirmationDialog(false);
-        await startRun();
-    }, []);
+        await startRun(algorithmConfiguration);
+    }, [algorithmConfiguration]);
 
     const handleConfirmationCancel = useCallback(() => {
         setOpenConfirmationDialog(false);
     }, []);
 
-    const startRun = async () => {
+    const startRun = async (data) => {
         try {
-            await Screen3Services.postAction('start', algorithmConfiguration);
+            await Screen3Services.postAction('start', data);
             setRunStatus(RUNNING);
         } catch (e) {
             setAlertText(e.message);
