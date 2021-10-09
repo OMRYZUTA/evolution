@@ -40,7 +40,7 @@ const timeSlotToString = (quintets) => {
 }
 
 
-const TeacherView = ({quintets, days, hours, teachersObject}) => {
+const SchoolClassView = ({quintets, days, hours, teachersObject}) => {
     const classes = useStyles();
     const [teachers] = useState(extractTeachersFromTeacherObject(teachersObject));
     const [currentTeacher, setCurrentTeacher] = useState(teachers[0]);
@@ -77,4 +77,4 @@ const TeacherView = ({quintets, days, hours, teachersObject}) => {
     );
 }
 
-export default TeacherView;
+export default SchoolClassView;
