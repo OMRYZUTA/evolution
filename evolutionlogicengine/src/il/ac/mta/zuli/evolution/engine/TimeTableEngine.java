@@ -97,7 +97,7 @@ public class TimeTableEngine implements Engine {
                 generationsStride,
                 currentState,
                 (EvolutionState state) -> {
-                    System.out.println("state status " + state.getStatus() + " isDone? " + state.isTaskDone());
+                    System.out.println("state status " + state.getStatus() + ", isDone? " + state.isTaskDone());
                     this.currEvolutionState = state;
                 },
                 (TimetableSolution solution) -> bestSolution = solution,

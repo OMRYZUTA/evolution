@@ -56,12 +56,12 @@ public class DataManager {
 
     public String stopAlgorithmRunForUser(String userName, int ttID) {
         users.get(userName).stopEvolutionAlgorithm(ttID);
-        return "Algorithm stopped";//TODO change message later
+        return "Algorithm stopped";
     }
 
     public String pauseAlgorithmRunForUser(String userName, int ttID) {
         users.get(userName).pauseEvolutionAlgorithm(ttID);
-        return "Algorithm paused";//TODO change message later
+        return "Algorithm paused";
     }
 
     public void resumeAlgorithmRunForUser(

@@ -74,6 +74,8 @@ public class RunAlgorithmTask implements Runnable {
             }
             prevEvolutionState.setStatus(LogicalRunStatus.RUNNING);
             reportBestSolution.accept(bestSolutionEver);
+            int currGenerationNum = 0;
+            TimetableSolution currBestSolution = null;
 
             //while the user didn't click Pause or Stop, and we haven't reached any of the end-conditions yet
             while (!isPaused() && !isStopped() && checkAllPredicates(prevEvolutionState)) {
@@ -89,7 +91,7 @@ public class RunAlgorithmTask implements Runnable {
                         bestSolutionEver);
                 currEvolutionState.setStatus(LogicalRunStatus.RUNNING);
 
-                TimetableSolution currBestSolution = currEvolutionState.getGenerationBestSolution();
+                currBestSolution = currEvolutionState.getGenerationBestSolution();
 
                 if (currBestSolution.getFitnessScore() > bestSolutionEver.getFitnessScore()) {
                     bestSolutionEver = currBestSolution;
@@ -98,12 +100,11 @@ public class RunAlgorithmTask implements Runnable {
 
                 //stride for purposes of info-display and to save a stride-generation history
                 //with addition of first generation
-                int currGenerationNum = currEvolutionState.getGenerationNum();
+                currGenerationNum = currEvolutionState.getGenerationNum();
 
-                if ((currGenerationNum % generationsStride == 0)) {
+                if (currGenerationNum % generationsStride == 0) {
                     reportStrideData.accept(
                             new StrideDataDTO(currGenerationNum, currBestSolution.getFitnessScore()));
-                    System.out.println(currGenerationNum);
                 }
 
                 prevEvolutionState = currEvolutionState;
@@ -111,26 +112,34 @@ public class RunAlgorithmTask implements Runnable {
                 reportState.accept(outEvolutionState); //essential in order to allow resume-after-pause
             } //end of for loop
 
-            System.out.println("endOfLoop: " + bestSolutionEver.getFitnessScore() + "******");
-            //TODO how do we handle the update for the last generation? (since it's not necessarily the number of generations in the endPredicates)
-//        reportStrideLater.accept(new StrideData(currentGenerationNum - 1, currBestSolution));
-            outEvolutionState.setStatus(LogicalRunStatus.COMPLETED); //either successfully or unsuccessfully
+            if (outEvolutionState != null) {
+                if (isPaused()) {
+                    outEvolutionState.setStatus(LogicalRunStatus.PAUSED);
+                } else {
+                    if (currGenerationNum % generationsStride != 0) {
+                        reportStrideData.accept(
+                                new StrideDataDTO(currGenerationNum, currBestSolution.getFitnessScore()));
+                    }
+
+                    if (isStopped()) {
+                        outEvolutionState.setStatus(LogicalRunStatus.STOPPED);
+
+                    } else {
+                        outEvolutionState.setStatus(LogicalRunStatus.COMPLETED);
+                    }
+                }
+            }
         } catch (Throwable e) {
             if (outEvolutionState != null) {
                 outEvolutionState.setException(e);
                 outEvolutionState.setStatus(LogicalRunStatus.ERROR);
             }
+
             System.out.println("**********Exception in Runnable******");
             System.out.println(e.getMessage());
         } finally {
             if (outEvolutionState != null) {
                 outEvolutionState.setTaskDone();
-                if (paused) {
-                    outEvolutionState.setStatus(LogicalRunStatus.PAUSED);
-                }
-                if (stopped) {
-                    outEvolutionState.setStatus(LogicalRunStatus.STOPPED);
-                }
                 reportState.accept(outEvolutionState); // reporting the last state as "done"}
             }
         }

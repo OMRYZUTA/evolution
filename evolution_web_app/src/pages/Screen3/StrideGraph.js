@@ -1,13 +1,8 @@
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 import Paper from '@mui/material/Paper';
 import {makeStyles} from '@mui/styles'
-import {
-    ArgumentAxis,
-    ValueAxis,
-    Chart,
-    LineSeries,
-} from '@devexpress/dx-react-chart-material-ui';
-import {useEffect, useState} from "react";
+import {ArgumentAxis, Chart, LineSeries, ValueAxis,} from '@devexpress/dx-react-chart-material-ui';
 
 const useStyles = makeStyles(() => ({
     paper: {
@@ -24,7 +19,6 @@ const data = [
 const StrideGraph = ({strideData}) => {
     const classes = useStyles();
     const [data, setData] = useState([]);
-    console.log({data});
 
     useEffect(() => {
         setData(strideData.map(stride => ({"argument": stride.generationNum, "value": stride.bestScoreInGeneration})

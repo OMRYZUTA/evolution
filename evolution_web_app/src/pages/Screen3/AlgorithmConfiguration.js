@@ -184,7 +184,7 @@ const AlgorithmConfiguration = ({
                 <TextField
                     required
                     error={topPercentError}
-                    helperText={topPercentError ? 'Invalid value (must be a number)' : ''}
+                    helperText="whole number"
                     disabled={disableEdit}
                     label="Top Percent"
                     value={nullCoalesce(data.engineSettings.selection.topPercent)}

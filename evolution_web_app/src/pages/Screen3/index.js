@@ -15,6 +15,7 @@ import SolutionDialog from "./SolutionDialog";
 import Box from "@mui/material/Box";
 import CloseIcon from "@mui/icons-material/Close";
 import StrideGraph from "./StrideGraph";
+import ConfirmationDialog from "../../components/ConfirmationDialog";
 
 const fakeAlgoConfig = {
     timetableID: 0, //important to notice which timetable we're dealing with
@@ -45,10 +46,12 @@ const SCREEN2URL = "/server_Web_exploded/screen2";
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: '50px 70px',
+        spacing: 2,
         justifyContent: 'flex-start',
         alignItems: 'top-center',
     },
     settings: {
+        spacing: 2,
         justifyContent: "space-between",
         width: '100%',
         height: 400,
@@ -56,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#D3D3D3", //light gray
     },
     progressRow: {
+        spacing: 2,
         justifyContent: "space-between",
         backgroundColor: "#D3D3D3", //light gray
     },
@@ -95,9 +99,10 @@ const Screen3 = () => {
     const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
     const [alertText, setAlertText] = React.useState('');
     const [isFetching, setIsFetching] = React.useState(true);
-    const [runStatus, setRunStatus] = useState(STOPPED);
+    const [runStatus, setRunStatus] = useState();
     const [saveStatus, setSaveStatus] = useState(UNSAVED);
     const [open, setOpen] = React.useState(false);
+    const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
 
     useEffect(() => {
         // calling all API calls in parallel, and waiting until they ALL finish before setting
@@ -217,6 +222,23 @@ const Screen3 = () => {
     };
 
     const handleStart = useCallback(async () => {
+        if (runStatus === COMPLETED || runStatus === STOPPED) {
+            setOpenConfirmationDialog(true);
+        } else {
+            await startRun();
+        }
+    }, [algorithmConfiguration, runStatus]);
+
+    const handleConfirmationOk = useCallback(async () => {
+        setOpenConfirmationDialog(false);
+        await startRun();
+    }, []);
+
+    const handleConfirmationCancel = useCallback(() => {
+        setOpenConfirmationDialog(false);
+    }, []);
+
+    const startRun = async () => {
         try {
             await Screen3Services.postAction('start', algorithmConfiguration);
             setRunStatus(RUNNING);
@@ -225,8 +247,7 @@ const Screen3 = () => {
             console.error('failed starting run', e);
             setRunStatus(ERROR);
         }
-
-    }, [algorithmConfiguration]);
+    }
 
     const handlePause = useCallback(async () => {
         try {
@@ -356,19 +377,18 @@ const Screen3 = () => {
 
     const onAlgorithmConfigChanged = useCallback((data) => {
         if (data === emptyAlgoConfig) {
-            console.log('setting to unsaved');
             setSaveStatus(UNSAVED);
         } else if (data === algorithmConfiguration) {
-            console.log('setting to saved');
             setSaveStatus(SAVED);
         } else {
-            console.log('setting to dirty');
             setSaveStatus(DIRTY);
         }
     }, [algorithmConfiguration])
 
     return (
         <Grid container direction={"column"}>
+            {openConfirmationDialog ?
+                <ConfirmationDialog handleCancel={handleConfirmationCancel} handleOk={handleConfirmationOk}/> : ''}
             <Grid item>
                 <Grid>
                     <Grid item>
@@ -379,23 +399,22 @@ const Screen3 = () => {
                         <Grid item
                               alignItems="top-center"
                               justifyContent="flex-start"
-                        >
+                              spacing={2}>
                             {alertText && renderAlert(alertText)}
                         </Grid>
-                        <Grid container direction={"row"}>
+                        <Grid container direction={"row"} spacing={2}>
                             <Grid item xs={12} md={6}>
                                 <Grid container direction={"column"} className={classes.tempGrid}>
                                     <InfoTabs algorithmConfiguration={algorithmConfiguration}
                                               handleAlgorithmConfigSave={setAlgorithmConfiguration}
                                               handleAlgorithmConfigChanged={onAlgorithmConfigChanged}
                                               timetable={timetable}
-                                              disableEdit={runStatus === RUNNING}
-                                    />
+                                              disableEdit={runStatus === RUNNING}/>
                                 </Grid>
                             </Grid>
 
                             <Grid item xs={12} md={5}>
-                                <Grid container direction={"column"} className={classes.tempGrid}>
+                                <Grid container direction={"column"} className={classes.tempGrid} spacing={4}>
                                     <Grid item>
                                         {renderButtonGroup()}
                                     </Grid>
@@ -416,15 +435,9 @@ const Screen3 = () => {
                 </Grid>
             </Grid>
             <Grid item xs={12} md={12}>
-                <Container maxWidth="xl">
-
-                    <Grid container className={classes.tempGrid} direction={"column"}>
-                        <Typography sx={{padding: "10px 0px"}}>
-                            Score per generation stride graph:
-                        </Typography>
-                        <StrideGraph strideData={strideData}/>
-                    </Grid>
-                </Container>
+                <Grid container className={classes.tempGrid}>
+                    <StrideGraph strideData={strideData}/>
+                </Grid>
             </Grid>
         </Grid>
     );
