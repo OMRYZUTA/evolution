@@ -337,7 +337,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         currentValue={nullCoalesce(mutation.component)}
                         keyPropName='type'
                         namePropName='name'
-                        onChange={(e) => setValueInMutation('component', e.target.value, index)}/>
+                        onChange={(e) => setValueInMutation(index, 'component', e.target.value)}/>
                 </Grid>,
             ];
         }
