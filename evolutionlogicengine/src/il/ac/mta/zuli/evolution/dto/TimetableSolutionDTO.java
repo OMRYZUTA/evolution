@@ -14,12 +14,14 @@ public class TimetableSolutionDTO {
     private final Map<RuleDTO, Double> scorePerRule;
     private final int solutionSize;
     private final double score;
+    private final String solver;
 
-    public TimetableSolutionDTO(TimetableSolution timetableSolution) {
+    public TimetableSolutionDTO(TimetableSolution timetableSolution, String solver) {
         this.solutionSize = timetableSolution.getSolutionSize();
         this.score = timetableSolution.getFitnessScore();
         this.solutionQuintets = generateQuintetDTOs(timetableSolution.getSolutionQuintets());
         this.scorePerRule = generateRuleDTOScoreMap(timetableSolution.getFitnessScorePerRule());
+        this.solver = solver;
     }
 
     private List<QuintetDTO> generateQuintetDTOs(List<Quintet> quintets) {

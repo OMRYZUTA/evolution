@@ -1,21 +1,18 @@
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import {makeStyles} from "@mui/styles";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext} from "react";
 import Typography from "@mui/material/Typography";
-import TeacherView from "./TeacherView";
-import * as Screen3Services from "../../services/Screen3Services";
 import {TimetableContext} from "../../components/TimetableContext";
-import {getBestSolution} from "../../services/Screen3Services";
 import CircularIndeterminate from "../../components/CircularIndeterminate";
 import SolutionTabs from "./SolutionTabs";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import Grid from "@mui/material/Grid";
 import RulesScoreContainer from "./RulesScoreContainer";
-import * as Utils from "../../Utils/Utils"
+import {DialogContent} from "@mui/material";
+
 const useStyles = makeStyles((theme) => ({
     grid: {
         margin: 0,
@@ -58,6 +55,14 @@ const SolutionDialog = ({handleClose, days, hours, solution, teachers, schoolCla
     return (
         <Dialog onClose={handleClose} open={true} fullWidth={true} maxWidth={"xl"}>
             <DialogTitle>Best Solution</DialogTitle>
+            <DialogContent>
+                <Typography>
+                    Score: {solution ? solution.score.toFixed(2).replace(/[.,]00$/, "") : ''}
+                </Typography>
+                <Typography>
+                    Solved by: {solution ? solution.solver : ''}
+                </Typography>
+            </DialogContent>
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}

@@ -228,7 +228,7 @@ public class DataManager {
         TimetableSolutionDTO bestSolution = null;
 
         if (userWithBestSolution != null) {
-            bestSolution = new TimetableSolutionDTO(userWithBestSolution.getBestSolution(ttID));
+            bestSolution = new TimetableSolutionDTO(userWithBestSolution.getBestSolution(ttID), userWithBestSolution.getUsername());
         }
 
         return bestSolution;
