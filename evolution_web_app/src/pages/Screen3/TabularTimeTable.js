@@ -17,10 +17,13 @@ const useStyles = makeStyles(() => ({
         width: "100%",
     },
     typography: {
-        padding: "5px 10px",
+        padding: "2px 1px",
     },
     dropdown: {
-        width: "100px"
+        width: "100px",
+    },
+    cell: {
+        padding: "5px",
     }
 }));
 
@@ -91,7 +94,7 @@ const TabularTimeTable = ({days, hours, quintets, timeSlotToString}) => {
             <TableHead>
                 <TableRow>
                     <TableCell>Hour</TableCell>
-                    {Array.from(Array(days).keys()).map(day => <TableCell><Typography
+                    {Array.from(Array(days).keys()).map(day => <TableCell sx={{padding: "5px"}}><Typography
                         className={classes.typography}>{convertNumToDay(day)}</Typography></TableCell>)}
                 </TableRow>
             </TableHead>
@@ -103,8 +106,9 @@ const TabularTimeTable = ({days, hours, quintets, timeSlotToString}) => {
                             <TableCell component="th" scope="row">
                                 {index}
                             </TableCell>
-                            {row.map((day) => <TableCell>{day.split("\n").map(lesson => <Typography
-                                className={classes.typography}>{lesson}</Typography>)}</TableCell>)}
+                            {row.map((day) => <TableCell sx={{padding: "5px"}}>{day.split("\n").map(lesson =>
+                                <Typography
+                                    className={classes.typography}>{lesson}</Typography>)}</TableCell>)}
                         </TableRow>
                     )
                 })}
