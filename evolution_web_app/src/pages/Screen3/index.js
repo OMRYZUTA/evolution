@@ -91,7 +91,7 @@ const Screen3 = () => {
             selection: {type: "RouletteWheel", elitism: undefined},
             crossover: {type: "DayTimeOriented", "cuttingPoints": undefined},
             mutations: [],
-        }
+        },
     }
     const [algorithmConfiguration, setAlgorithmConfiguration] = useState(emptyAlgoConfig);
     const [alertText, setAlertText] = React.useState('');

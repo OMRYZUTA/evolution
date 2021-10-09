@@ -1,7 +1,7 @@
 import CheckedTextBox from './CheckedTextBox'
 import {Grid} from "@mui/material";
 import {makeStyles} from "@mui/styles";
-import React, {useCallback, useState} from "react";
+import React from "react";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -13,29 +13,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
-    const floatRegEx = /^\d*(\.\d+)?$/;
-    const [valueError, setValueError] = useState({});
     const classes = useStyles();
-
-    const handleTextChanged = useCallback((predicateName, value) => {
-        if (!value) {
-            setError(predicateName, false);
-            handleEndPredicatesChange({...endPredicates, [predicateName]: undefined});
-        } else if (floatRegEx.test(value)) {
-            setError(predicateName, false);
-            handleEndPredicatesChange({...endPredicates, [predicateName]: parseFloat(value)});
-        } else {
-            setError(predicateName, true);
-            handleEndPredicatesChange({...endPredicates, [predicateName]: value});
-        }
-    }, [endPredicates, handleEndPredicatesChange]);
-
-    const setError = (predicateName, error) => {
-        setValueError({
-            ...valueError,
-            [predicateName]: error,
-        });
-    }
 
     //object and not array, for example: endPredicates: {numOfGenerations: 120} or
     // endPredicates: {numOfGenerations: 120, fitnessScore: 92.3, time: 2}
@@ -45,27 +23,27 @@ const EndPredicates = ({endPredicates, handleEndPredicatesChange}) => {
                 <CheckedTextBox label="Num Of Generations"
                                 value={endPredicates.numOfGenerations}
                                 handleValueChange={(value) => {
-                                    handleTextChanged('numOfGenerations', value)
+                                    handleEndPredicatesChange('numOfGenerations', value)
                                 }}
-                                valueError={valueError.numOfGenerations}/>
+                                valueError={endPredicates.numOfGenerationsError}/>
             </Grid>
 
             <Grid item>
                 <CheckedTextBox label="Fitness Score"
                                 value={endPredicates.fitnessScore}
                                 handleValueChange={(value) => {
-                                    handleTextChanged('fitnessScore', value);
+                                    handleEndPredicatesChange('fitnessScore', value);
                                 }}
-                                valueError={valueError.fitnessScore}/>
+                                valueError={endPredicates.fitnessScoreError}/>
             </Grid>
 
             <Grid item>
                 <CheckedTextBox label="Time"
                                 value={endPredicates.time}
                                 handleValueChange={(value) => {
-                                    handleTextChanged('time', value);
+                                    handleEndPredicatesChange('time', value);
                                 }}
-                                valueError={valueError.time}/>
+                                valueError={endPredicates.timeError}/>
             </Grid>
         </Grid>
     );

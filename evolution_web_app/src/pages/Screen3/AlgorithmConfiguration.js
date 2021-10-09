@@ -57,9 +57,6 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     const [pteError, setPteError] = useState(false);
     const [topPercentError, setTopPercentError] = useState(false);
     const [cuttingPointsError, setCuttingPointsError] = useState(false);
-    const [probabilityError, setProbabilityError] = useState(false);
-    const [maxTuplesError, setMaxTuplesError] = useState(false);
-    const [totalTuplesError, setTotalTuplesError] = useState(false);
     //#endregion
 
     useEffect(() => {
@@ -96,7 +93,21 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
         setData({...data, engineSettings});
     }, [data]);
 
-    const handleEndPredicatesChange = useCallback((endPredicates) => {
+    const handleEndPredicatesChange = useCallback((predicateName, value) => {
+        let error = false;
+        if (!value) {
+            value = undefined;
+        } else if (floatRegEx.test(value)) {
+            value = parseFloat(value);
+        } else {
+            error = true;
+        }
+
+        const endPredicates = {
+            ...data.endPredicates,
+            [predicateName]: value,
+            [predicateName + 'Error']: error,
+        }
         setData({...data, endPredicates});
     }, [data]);
 
@@ -216,11 +227,12 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
         setData({...data, engineSettings});
     }, [data]);
 
-    const setValueInMutation = useCallback((propName, value, index) => {
+    const setValueInMutation = useCallback((index, propName, value, error) => {
         const mutationsArray = data.engineSettings.mutations;
         const mutation = {
             ...mutationsArray[index],
             [propName]: value,
+            [propName + 'Error']: error,
         };
 
         const newMutationsArray = [...mutationsArray.slice(0, index), mutation, ...mutationsArray.slice(index + 1)];
@@ -231,41 +243,41 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
 
     const handleProbabilityChange = useCallback((e, index) => {
         let value = e.target.value.trim();
+        let error = false;
 
         if (floatRegEx.test(value)) {
-            setProbabilityError(false);
             value = parseFloat(value) || 0;
         } else {
-            setProbabilityError(true);
+            error = true;
         }
 
-        setValueInMutation('probability', value, index);
+        setValueInMutation(index, 'probability', value, error);
     }, [data]);
 
     const handleTotalTuplesChange = useCallback((e, index) => {
         let value = e.target.value.trim();
+        let error = false;
 
         if (intRegEx.test(value)) {
-            setTotalTuplesError(false);
             value = parseInt(value, 10);
         } else {
-            setTotalTuplesError(true);
+            error = true;
         }
 
-        setValueInMutation('totalTuples', value, index);
+        setValueInMutation(index, 'totalTuples', value, error);
     }, [data]);
 
     const handleMaxTuplesChange = useCallback((e, index) => {
         let value = e.target.value.trim();
+        let error = false;
 
         if (intRegEx.test(value)) {
-            setMaxTuplesError(false);
             value = parseInt(value, 10);
         } else {
-            setMaxTuplesError(true);
+            error = true;
         }
 
-        setValueInMutation('maxTuples', value, index);
+        setValueInMutation(index, 'maxTuples', value, error);
     }, [data]);
 
     const renderMutation = (mutation, index) => {
@@ -278,14 +290,14 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         currentValue={nullCoalesce(mutation.type)}
                         keyPropName='type'
                         namePropName='name'
-                        onChange={(e) => setValueInMutation('type', e.target.value, index)}/>
+                        onChange={(e) => setValueInMutation(index, 'type', e.target.value)}/>
                 </Grid>
                 <Grid item>
                     <TextField
                         required
                         label='Probability'
-                        error={probabilityError}
-                        helperText={probabilityError ? 'Invalid value (must be a number)' : ''}
+                        error={mutation.probabilityError}
+                        helperText={'Value must be 0 - 1'}
                         value={nullCoalesce(mutation.probability)}
                         onChange={(e) => handleProbabilityChange(e, index)}/>
                 </Grid>
@@ -300,8 +312,8 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                 <Grid item>
                     <TextField
                         required
-                        error={totalTuplesError}
-                        helperText={totalTuplesError ? 'Invalid value (must be a number)' : ''}
+                        error={mutation.totalTuplesError}
+                        helperText={mutation.totalTuplesError ? 'Invalid value (must be a number)' : ''}
                         label='Total Tuples'
                         value={nullCoalesce(mutation.totalTuples)}
                         onChange={(e) => handleTotalTuplesChange(e, index)}/>
@@ -312,8 +324,8 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                 <Grid item>
                     <TextField
                         required
-                        error={maxTuplesError}
-                        helperText={maxTuplesError ? 'Invalid value (must be a number)' : ''}
+                        error={mutation.maxTuplesError}
+                        helperText={mutation.maxTuplesError ? 'Invalid value (must be a number)' : ''}
                         label='Max Tuples'
                         value={mutation.maxTuples}
                         onChange={(e) => handleMaxTuplesChange(e, index)}/>
@@ -463,8 +475,15 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     };
     //#endregion
 
-    const noError = !strideError && !populationSizeError && !elitismError && !pteError && !topPercentError
-        && !cuttingPointsError && !probabilityError && !maxTuplesError && !totalTuplesError;
+    const selectionError = elitismError || pteError || topPercentError;
+    const endPredicatesError = data.endPredicates.numOfGenerationsError || data.endPredicates.fitnessScoreError || data.endPredicates.timeError;
+    const mutationsError = data.engineSettings.mutations.some((mutation) => mutation.probabilityError || mutation.totalTuplesError || mutation.maxTuplesError);
+    const noError = !strideError
+        && !populationSizeError
+        && !endPredicatesError
+        && !selectionError
+        && !cuttingPointsError
+        && !mutationsError;
     const saveEnabled = (data !== algorithmConfiguration) && noError;
 
     return (
