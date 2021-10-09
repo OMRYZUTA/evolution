@@ -2,7 +2,7 @@ import ServiceError from "./ServiceError";
 import * as Utils from "./Utils";
 
 export async function uploadFile(file) {
-    const url = "/server_Web_exploded/api/dashboard";
+    const url = "/evolution/api/dashboard";
     const method = 'POST';
     return await fetchXmlWrapper(method, url, file);
 }

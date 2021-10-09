@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="evolution">
+    <output-path>$PROJECT_DIR$/out/artifacts/evolution</output-path>
+    <root id="archive" name="evolution.war">
+      <element id="artifact" artifact-name="evolution_exploded" />
+    </root>
+  </artifact>
+</component>

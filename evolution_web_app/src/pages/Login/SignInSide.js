@@ -29,7 +29,7 @@ const renderAlert = (alertText) => {
 const USER_NAME_EMPTY = "empty name";
 const USER_NAME_NOT_UNIQUE = "not unique name";
 const SUCCESSFUL_LOGIN = "successful login";
-const SCREEN2URL = "/server_Web_exploded/screen2";
+const SCREEN2URL = "/evolution/screen2";
 
 const theme = createTheme();
 

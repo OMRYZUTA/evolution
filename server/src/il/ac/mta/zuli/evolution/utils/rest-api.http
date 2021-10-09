@@ -1,4 +1,4 @@
-POST http://localhost:8080/server_Web_exploded/api/actions?action=start
+POST http://localhost:8080/evolution/api/actions?action=start
 Content-Type: application/json
 
 {
@@ -40,11 +40,11 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8080/server_Web_exploded/api/timetable/details?timetableID=0
+GET http://localhost:8080/evolution/api/timetable/details?timetableID=0
 Accept: application/json
 
 ###
-POST http://localhost:8080/server_Web_exploded/login
+POST http://localhost:8080/evolution/login
 Content-Type: application/json
 
 {
@@ -57,13 +57,13 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:8080/server_Web_exploded/login
+POST http://localhost:8080/evolution/login
 Accept: application/json
 {}
 
 
 ###
-GET http://localhost:8080/server_Web_exploded/
+GET http://localhost:8080/evolution/
 Accept: application/json
 
 <> 2021-09-21T183418.200.html
@@ -71,6 +71,6 @@ Accept: application/json
 <> 2021-09-21T164722.200.html
 
 ###
-POST http://localhost:8080/server_Web_exploded/login?username=cupcake
+POST http://localhost:8080/evolution/login?username=cupcake
 Accept: application/json
 

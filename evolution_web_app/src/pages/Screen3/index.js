@@ -29,7 +29,7 @@ const UNSAVED = Symbol.for('UNSAVED');
 const SAVED = Symbol.for('SAVED');
 const DIRTY = Symbol.for('DIRTY');
 
-const SCREEN2URL = "/server_Web_exploded/screen2";
+const SCREEN2URL = "/evolution/screen2";
 
 const useStyles = makeStyles((theme) => ({
     root: {

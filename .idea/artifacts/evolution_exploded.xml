@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="evolution_exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/evolution_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="server/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="server" />
+          <element id="module-output" name="evolutionlogicengine" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="file-copy" path="D:/downloads/gson/gson-2.1.jar" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/jetbrains/annotations/20.1.0/annotations-20.1.0.jar" />
+          <element id="library" level="module" name="JUnit5.7.0" module-name="evolutionlogicengine" />
+          <element id="library" level="project" name="cssfx-1.0.0" />
+          <element id="file-copy" path="$PROJECT_DIR$/server/dependencies/gson-2.1.jar" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -44,16 +44,16 @@ export default function App() {
           of them to render at a time
         */}
                         <Switch>
-                            <Route exact path="/server_Web_exploded">
+                            <Route exact path="/evolution">
                                 <Login/>
                             </Route>
-                            <Route path="/server_Web_exploded/screen1">
+                            <Route path="/evolution/screen1">
                                 <Login/>
                             </Route>
-                            <Route path="/server_Web_exploded/screen2">
+                            <Route path="/evolution/screen2">
                                 {currentUser ? <Screen2/> : <Login/>}
                             </Route>
-                            <Route path="/server_Web_exploded/screen3">
+                            <Route path="/evolution/screen3">
                                 {currentUser ? <Screen3/> : <Login/>}
                             </Route>
                         </Switch>

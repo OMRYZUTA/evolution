@@ -1,7 +1,7 @@
 import {fetchWrapper} from "./Utils";
 
 export async function login(username) {
-    const url = "/server_Web_exploded/api/login";
+    const url = "/evolution/api/login";
     const method = 'POST';
     const data = {username};
     try {

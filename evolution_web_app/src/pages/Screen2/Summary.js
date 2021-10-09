@@ -18,7 +18,7 @@ const bull = (
     </Box>
 );
 
-const SCREEN3URL = "/server_Web_exploded/screen3";
+const SCREEN3URL = "/evolution/screen3";
 
 export default function Summary({data}) {
     const [localTimetable, setLocalTimetable] = useState(data.ID);

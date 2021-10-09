@@ -10,11 +10,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const data = [
-    {argument: 1, value: 10},
-    {argument: 2, value: 40},
-    {argument: 3, value: 30},
-];
+
 
 const StrideGraph = ({strideData}) => {
     const classes = useStyles();
