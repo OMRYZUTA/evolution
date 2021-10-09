@@ -28,11 +28,11 @@ const crossoverTypes = [
 const orientations = [{name: "Teacher", type: "TEACHER"}, {name: "Class", type: "CLASS"}];
 const mutationTypes = [{name: "Flipping", type: "Flipping"}, {name: "Sizer", type: "Sizer"}];
 const flippingComponent = [
-    {name: "Hour", type: "H"},
-    {name: "Day", type: "D"},
-    {name: "Teacher", type: "T"},
     {name: "Class", type: "C"},
+    {name: "Day", type: "D"},
+    {name: "Hour", type: "H"},
     {name: "Subject", type: "S"},
+    {name: "Teacher", type: "T"},
 ];
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -104,16 +104,7 @@ const AlgorithmConfiguration = ({
         setData({...data, engineSettings});
     }, [data]);
 
-    const handleEndPredicatesChange = useCallback((predicateName, value) => {
-        let error = false;
-        if (!value) {
-            value = undefined;
-        } else if (floatRegEx.test(value)) {
-            value = parseFloat(value);
-        } else {
-            error = true;
-        }
-
+    const handleEndPredicatesChange = useCallback((predicateName, value, error) => {
         const endPredicates = {
             ...data.endPredicates,
             [predicateName]: value,
@@ -232,6 +223,7 @@ const AlgorithmConfiguration = ({
         const mutationsArray = data.engineSettings.mutations;
         const newEmptyMutation = {
             type: mutationTypes[0].type,
+            component: flippingComponent[0].type,
         };
 
         const newMutationsArray = [...mutationsArray, newEmptyMutation];

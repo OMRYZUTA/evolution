@@ -28,21 +28,16 @@ public class User {
                                         int generationStride) {
         int timetableID = timetable.getID();
 
-        if (userAlgorithmRuns.containsKey(timetableID)) {
-            throw new RuntimeException("User " + username + " already solved this problem");
-            //TODO if the run already completed for this ttID maybe allow another run, overriding the previous run and solution
-        } else {
-            TimeTableEngine timetableEngine = new TimeTableEngine(
-                    timetable,
-                    engineSettingsMap,
-                    endPredicatesMap,
-                    generationStride);
+        TimeTableEngine timetableEngine = new TimeTableEngine(
+                timetable,
+                engineSettingsMap,
+                endPredicatesMap,
+                generationStride);
 
-            userAlgorithmRuns.put(timetableID, timetableEngine);
-            currDisplayedRun = timetableEngine;
+        userAlgorithmRuns.put(timetableID, timetableEngine); // if already contained in the map, it will overwrite it
+        currDisplayedRun = timetableEngine;
 
-            timetableEngine.startEvolutionAlgorithm();
-        }
+        timetableEngine.startEvolutionAlgorithm();
     }
 
     public void resumeEvolutionAlgorithm(int ttID,
