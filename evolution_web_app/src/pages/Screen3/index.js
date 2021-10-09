@@ -28,11 +28,13 @@ const fakeAlgoConfig = {
     }
 }
 
-const ERROR = Symbol.for('ERROR');
+// front-end statuses
 const RUNNING = Symbol.for('RUNNING');
-const STOPPED = Symbol.for('STOPPED');
 const PAUSED = Symbol.for('PAUSED');
-
+const STOPPED = Symbol.for('STOPPED');
+const COMPLETED = Symbol.for('COMPLETED');
+const ERROR = Symbol.for('ERROR');
+// status of the algo-config
 const UNSAVED = Symbol.for('UNSAVED');
 const SAVED = Symbol.for('SAVED');
 const DIRTY = Symbol.for('DIRTY');
@@ -174,6 +176,20 @@ const Screen3 = () => {
         return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
     }, [currentTimetableID]);
 
+    useEffect(() => {
+        if (progress) {
+            setRunStatus(Symbol.for(progress.status));
+        }
+    }, [progress]);
+
+    useEffect(() => {
+        if (algorithmConfiguration && algorithmConfiguration !== emptyAlgoConfig) {
+            setSaveStatus(SAVED);
+        } else {
+            setSaveStatus(UNSAVED);
+        }
+    }, [algorithmConfiguration]);
+
     const renderAlert = () => {
         return (
             <Box sx={{width: '100%'}}>
@@ -196,10 +212,6 @@ const Screen3 = () => {
             </Box>
         );
     };
-
-    // useEffect(() => {
-    //     setSaveStatus(!!algorithmConfiguration ? );
-    // }, [algorithmConfiguration]);
 
     const handleStart = useCallback(async () => {
         try {
@@ -271,9 +283,13 @@ const Screen3 = () => {
                             </Typography>
                         </Grid>,
                         <Grid item>
-                            {(progress.status === 'COMPLETED') &&
+                            {(runStatus === COMPLETED) &&
                             <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
                                 completed run
+                            </Typography>}
+                            {(runStatus === STOPPED) &&
+                            <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                run stopped
                             </Typography>}
                         </Grid>,
                     ]
@@ -296,11 +312,12 @@ const Screen3 = () => {
         // setSelectedValue(value);
     };
 
-    const startEnabled = true; //runStatus !== ERROR && runStatus === STOPPED;
-    const pauseEnabled = true; //runStatus !== ERROR && runStatus === RUNNING;
-    const resumeEnabled = true; //runStatus !== ERROR && runStatus === PAUSED;
-    const stopEnabled = true; //runStatus !== ERROR && runStatus === RUNNING || runStatus === PAUSED;
     const renderButtonGroup = () => {
+        const startEnabled = saveStatus === SAVED && runStatus !== PAUSED && runStatus !== RUNNING;
+        const pauseEnabled = runStatus === RUNNING;
+        const resumeEnabled = saveStatus === SAVED && runStatus === PAUSED;
+        const stopEnabled = runStatus === RUNNING || runStatus === PAUSED;
+
         return (
             <ButtonGroup
                 aria-label="outlined primary button group">
