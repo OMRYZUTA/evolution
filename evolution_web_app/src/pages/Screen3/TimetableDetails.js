@@ -64,7 +64,7 @@ const TimetableDetails = ({timetable}) => {
                         <Grid item>
                             <Grid container className={classes.root}>
                                 <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                    Table ID: {timetable.ID}
+                                    timetable ID: {timetable.ID}
                                 </Typography>
                                 <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
                                     Uploaded by: {timetable.uploadedBy}
@@ -143,7 +143,7 @@ const TimetableDetails = ({timetable}) => {
                                                               className={classes.requirements}>
                                                             <Grid item>
                                                                 <Typography>
-                                                                    Subject: {requirement.subject.name} Hours: {requirement.hours}
+                                                                    Subject: {requirement.subject.name}, Hours: {requirement.hours}
                                                                 </Typography>
                                                             </Grid>
                                                         </Grid>

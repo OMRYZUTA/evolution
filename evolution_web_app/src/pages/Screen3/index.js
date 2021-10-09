@@ -38,11 +38,11 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'top-center',
     },
     settings: {
-
         justifyContent: "space-between",
         width: '100%',
         height: 400,
         maxWidth: 300,
+        padding: "10px",
         backgroundColor: "#D3D3D3", //light gray
     },
     progressRow: {
@@ -168,7 +168,7 @@ const Screen3 = () => {
 
         const interval = setInterval(() => {
             fetchIntervalData();
-        }, 5000) //will run every 5 seconds
+        }, 1000) //will run every 1 seconds
 
         //React performs the cleanup when the component unmounts.
         return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
@@ -385,7 +385,7 @@ const Screen3 = () => {
                         <Grid item
                               alignItems="top-center"
                               justifyContent="flex-start"
-                            >
+                        >
                             {alertText && renderAlert(alertText)}
                         </Grid>
                         <Grid container direction={"row"}>
@@ -400,7 +400,7 @@ const Screen3 = () => {
                             </Grid>
 
                             <Grid item xs={12} md={5}>
-                                <Grid container direction={"column"} className={classes.tempGrid} >
+                                <Grid container direction={"column"} className={classes.tempGrid}>
                                     <Grid item>
                                         {renderButtonGroup()}
                                     </Grid>
@@ -422,7 +422,7 @@ const Screen3 = () => {
             </Grid>
             <Grid item xs={12} md={12}>
                 <Grid container className={classes.tempGrid}>
-                    <StrideGraph strideData={strideData}/>
+                    {strideData.length > 1 && <StrideGraph strideData={strideData}/>}
                 </Grid>
             </Grid>
         </Grid>

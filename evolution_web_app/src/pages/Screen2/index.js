@@ -31,7 +31,8 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: 'lightyellow',
     },
     button: {
-        backgroundColor: 'pink',
+        backgroundColor: 'lightblue',
+        color:"black",
         margin: '5px',
     },
 }))
@@ -60,7 +61,7 @@ const Index = () => {
 
         const interval = setInterval(() => {
             fetchAllData();
-        }, 5000) //todo return to 1 sec
+        }, 1000)
         fetchAllData()//and initially
         return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
     }, []);
