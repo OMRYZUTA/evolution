@@ -14,6 +14,7 @@ import EndPredicates from './EndPredicates'
 import Button from "@mui/material/Button";
 
 const intRegEx = /^\d+$/;
+const signedIntRegEx = /^-?\d+$/;
 const floatRegEx = /^\d*(\.\d+)?$/;
 const selectionTypes = [
     {name: "Truncation", type: "Truncation"},
@@ -258,7 +259,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
         let value = e.target.value.trim();
         let error = false;
 
-        if (intRegEx.test(value)) {
+        if (signedIntRegEx.test(value)) {
             value = parseInt(value, 10);
         } else {
             error = true;
