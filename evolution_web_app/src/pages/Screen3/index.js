@@ -222,7 +222,6 @@ const Screen3 = () => {
     };
 
     const handleStart = useCallback(async () => {
-        debugger;
         if (runStatus === COMPLETED || runStatus === STOPPED) {
             setOpenConfirmationDialog(true);
         } else {
