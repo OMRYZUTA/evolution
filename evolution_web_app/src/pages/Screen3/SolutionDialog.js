@@ -22,13 +22,11 @@ const useStyles = makeStyles((theme) => ({
     },
     root: {
         padding: '50px 70px',
-        spacing: 2,
         justifyContent: 'flex-start',
         alignItems: 'top-center',
         minHeight: "100vh",
     },
     settings: {
-        spacing: 2,
         justifyContent: "space-between",
         width: '100%',
         height: 400,

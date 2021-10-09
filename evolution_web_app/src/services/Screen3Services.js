@@ -25,8 +25,16 @@ export const getProgress = async (timetableID) => {
     return await fetchWrapper(method, url);
 }
 
+//best solution from all users solving problem
 export const getBestSolution = async (timetableID) => {
     const url = `/server_Web_exploded/api/bestsolution?timetableID=${timetableID}`;
+    const method = 'GET';
+    return await fetchWrapper(method, url);
+}
+
+//best solution from user
+export const getBestUserSolution = async (timetableID) => {
+    const url = `/server_Web_exploded/api/bestusersolution?timetableID=${timetableID}`;
     const method = 'GET';
     return await fetchWrapper(method, url);
 }

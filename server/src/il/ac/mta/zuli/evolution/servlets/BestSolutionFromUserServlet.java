@@ -4,6 +4,7 @@ import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.DataManager;
 import il.ac.mta.zuli.evolution.dto.TimetableSolutionDTO;
 import il.ac.mta.zuli.evolution.utils.ServletUtils;
+import il.ac.mta.zuli.evolution.utils.SessionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,22 +16,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.BestSolutionServlet", urlPatterns = "/api/bestsolution")
-public class BestSolutionServlet extends HttpServlet {
+@WebServlet(name = "il.ac.mta.zuli.evolution.servlets.BestSolutionFromUserServlet", urlPatterns = "/api/bestusersolution")
+public class BestSolutionFromUserServlet extends HttpServlet {
 
-    //returns the best solution out of all the users solving this ttID
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Map<String, Object> mapForJSON = new HashMap<>();
 
         try {
+            String usernameFromSession = SessionUtils.getUsername(request);
             String timetableIDFromParameter = request.getParameter(Constants.TIMETABLE_ID);
             int ttID = Integer.parseInt(timetableIDFromParameter);
-            DataManager dataManager = ServletUtils.getDataManager(getServletContext());
-            TimetableSolutionDTO bestSolution = dataManager.getBestSolutionOfProblem(ttID);
 
-            mapForJSON.put(Constants.DATA, bestSolution);
+            DataManager dataManager = ServletUtils.getDataManager(getServletContext());
+            TimetableSolutionDTO bestUserSolution = dataManager.getBestSolutionFromUser(usernameFromSession, ttID);
+
+            mapForJSON.put(Constants.DATA, bestUserSolution);
         } catch (Throwable e) {
             mapForJSON.put(Constants.ERROR, e.getMessage());
         } finally {

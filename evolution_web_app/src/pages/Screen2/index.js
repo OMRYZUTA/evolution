@@ -43,8 +43,8 @@ const Index = () => {
     const [users, setUsers] = useState([]);
     const [summaries, setSummaries] = useState([]);
     const [alertText, setAlertText] = React.useState('');
-    const [alertType,setAlertType] = useState("error");
-    const [alertHeader,setAlertHeader] = useState("Error")
+    const [alertType, setAlertType] = useState("error");
+    const [alertHeader, setAlertHeader] = useState("Error")
 
     useEffect(() => {
         const fetchAllData = async () => {
@@ -53,6 +53,7 @@ const Index = () => {
                 const dashboardPayload = await Screen2Services.getAll();
                 setUsers(dashboardPayload.users);
                 setSummaries([...dashboardPayload.timetables]);
+
             } catch (e) {
                 console.error("failed fetching all data", e);
                 setAlertText('oops something went wrong, please reload page');
@@ -63,7 +64,9 @@ const Index = () => {
             fetchAllData();
         }, 1000)
         fetchAllData()//and initially
-        return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
+        return () => {
+            clearInterval(interval);
+        }; // in order to clear the interval when the component unmounts.
     }, []);
 
     const renderAlert = () => {
@@ -97,14 +100,13 @@ const Index = () => {
             setAlertText(result);
             setAlertType("error");
             setAlertHeader("Error");
-        }
-        else{
+        } else {
             setAlertText("File was uploaded successfully");
             setAlertType("success");
             setAlertHeader("Success");
-            setTimeout(()=>{
+            setTimeout(() => {
                 setAlertText("");
-            },2000)
+            }, 2000)
         }
     };
 
@@ -114,8 +116,7 @@ const Index = () => {
             <Grid item
                   className={classes.aroundButton}
                   alignItems="top-center"
-                  justifyContent="flex-start"
-                  spacing={2}>
+                  justifyContent="flex-start">
                 <label htmlFor="contained-button-file">
                     <input hidden accept=".xml" id="contained-button-file" type="file"
                            onChange={handleFileUpload}/>
@@ -145,7 +146,6 @@ const Index = () => {
                         })}
                     </Grid>
                 </Grid>
-
             </Grid>
         </Grid>
     )

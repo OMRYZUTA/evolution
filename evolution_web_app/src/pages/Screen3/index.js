@@ -68,6 +68,7 @@ const Screen3 = () => {
     const [otherSolutions, setOtherSolutions] = useState([]);
     const [progress, setProgress] = useState();
     const [bestSolution, setBestSolution] = useState();
+    const [bestUserSolution, setBestUserSolution] = useState();
     const [strideData, setStrideData] = useState([]);
     const classes = useStyles();
     const history = useHistory();
@@ -87,7 +88,8 @@ const Screen3 = () => {
     const [isFetching, setIsFetching] = React.useState(true);
     const [runStatus, setRunStatus] = useState();
     const [saveStatus, setSaveStatus] = useState(UNSAVED);
-    const [open, setOpen] = React.useState(false);
+    const [openSolution, setOpenSolution] = React.useState(false);
+    const [openUserSolution, setOpenUserSolution] = React.useState(false);
     const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
 
     useEffect(() => {
@@ -113,8 +115,9 @@ const Screen3 = () => {
                     console.error('failed getting algorithm configuration', algoConfigResult.error);
                 }
             } catch (e) {
-                setAlertText('oops something went wrong, please reload page ' + e.message);
                 console.error('failed fetching static data', e);
+                setAlertText('oops something went wrong, please reload page ' + e.message);
+
             } finally {
                 setIsFetching(false);
             }
@@ -122,10 +125,11 @@ const Screen3 = () => {
 
         const fetchIntervalData = async () => {
             try {
-                const [otherSolutionsResult, progressResult, bestSolutionResult, strideDataResult] = await Promise.all([
+                const [otherSolutionsResult, progressResult, bestSolutionResult, bestUserSolutionResult, strideDataResult] = await Promise.all([
                     Screen3Services.getOtherSolutionsInfo(currentTimetableID),
                     Screen3Services.getProgress(currentTimetableID),
                     Screen3Services.getBestSolution(currentTimetableID),
+                    Screen3Services.getBestUserSolution(currentTimetableID),
                     Screen3Services.getStrideData(currentTimetableID)
                 ]);
 
@@ -150,6 +154,13 @@ const Screen3 = () => {
                     console.error('failed getting best solution', bestSolutionResult.error);
                 }
 
+                if (bestUserSolutionResult.data) {
+                    setBestUserSolution(bestUserSolutionResult.data);
+                } else if (bestUserSolutionResult.error) {
+                    setAlertText('oops something went wrong ' + bestUserSolutionResult.error);
+                    console.error('failed getting best solution', bestUserSolutionResult.error);
+                }
+
                 if (strideDataResult.data) {
                     setStrideData(strideDataResult.data);
                 } else if (strideDataResult.error) {
@@ -158,8 +169,8 @@ const Screen3 = () => {
                 }
 
             } catch (e) {
-                setAlertText('oops something went wrong ' + (e.message || ''));
                 console.error('failed getting interval data', e);
+                setAlertText('oops something went wrong ' + (e.message || ''));
             }
         };
 
@@ -171,7 +182,9 @@ const Screen3 = () => {
         }, 1000) //will run every 1 seconds
 
         //React performs the cleanup when the component unmounts.
-        return () => clearInterval(interval); // in order to clear the interval when the component unmounts.
+        return () => {
+            clearInterval(interval);
+        }; // in order to clear the interval when the component unmounts.
     }, [currentTimetableID]);
 
     useEffect(() => {
@@ -313,13 +326,20 @@ const Screen3 = () => {
         history.push(SCREEN2URL);
     };
 
-    const handleSolutionClick = useCallback(() => {
-        setOpen(true);
-    }, [open]);
+    const handleBestSolutionClick = useCallback(() => {
+        setOpenSolution(true);
+    }, [openSolution]);
 
-    const handleClose = () => {
-        setOpen(false);
-        // setSelectedValue(value);
+    const handleBestSolutionClose = () => {
+        setOpenSolution(false);
+    };
+
+    const handleUserSolutionClick = useCallback(() => {
+        setOpenUserSolution(true);
+    }, [openUserSolution]);
+
+    const handleUserSolutionClose = () => {
+        setOpenUserSolution(false);
     };
 
     const renderButtonGroup = () => {
@@ -343,14 +363,14 @@ const Screen3 = () => {
                 <Button id="stop" disabled={!stopEnabled} onClick={handleStop}>
                     stop
                 </Button>
-                <Button id="bestSolution" onClick={handleSolutionClick} disabled={!bestSolution}>
-                    Best Solution
+                <Button id="bestUserSolution" onClick={handleUserSolutionClick} disabled={!bestUserSolution}>
+                    My Best Solution
                 </Button>
-                {open && <SolutionDialog
-                    handleClose={handleClose}
+                {openUserSolution && <SolutionDialog
+                    handleClose={handleUserSolutionClose}
                     days={timetable.days}
                     hours={timetable.hours}
-                    solution={bestSolution}
+                    solution={bestUserSolution}
                     teachers={timetable.teachers}
                     schoolClasses={timetable.schoolClasses}
                 />}
@@ -411,6 +431,20 @@ const Screen3 = () => {
                                             </Grid>
                                             <Grid item>
                                                 <OtherSolutions otherSolutionsList={otherSolutions}/>
+                                            </Grid>
+                                            <Grid item>
+                                                <Button id="bestSolution" onClick={handleBestSolutionClick}
+                                                        disabled={!bestSolution}>
+                                                    Best Solution (from all the users solving)
+                                                </Button>
+                                                {openSolution && <SolutionDialog
+                                                    handleClose={handleBestSolutionClose}
+                                                    days={timetable.days}
+                                                    hours={timetable.hours}
+                                                    solution={bestSolution}
+                                                    teachers={timetable.teachers}
+                                                    schoolClasses={timetable.schoolClasses}
+                                                />}
                                             </Grid>
                                         </Grid>
                                     </Grid>
