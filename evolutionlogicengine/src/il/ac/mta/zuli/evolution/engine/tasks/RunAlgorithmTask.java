@@ -18,7 +18,6 @@ public class RunAlgorithmTask implements Runnable {
     private final List<EndPredicate> endPredicates;
     private final int generationsStride;
     private final EvolutionState inEvolutionState;
-    private final Consumer<TimetableSolution> reportBestSolution;
     private final Consumer<EvolutionState> reportState;
     private final Consumer<StrideDataDTO> reportStrideData;
     private TimetableSolution bestSolutionEver;
@@ -32,7 +31,6 @@ public class RunAlgorithmTask implements Runnable {
             int generationsStride,
             EvolutionState evolutionState,
             Consumer<EvolutionState> reportState,
-            Consumer<TimetableSolution> reportBestSolution,
             Consumer<StrideDataDTO> reportStrideData) {
         this.descriptor = descriptor;
         this.endPredicates = endPredicates;
@@ -43,9 +41,6 @@ public class RunAlgorithmTask implements Runnable {
                 descriptor.getEngineSettings(), descriptor.getRules());
         this.reportState = reportState;
         this.reportStrideData = reportStrideData;
-        this.reportBestSolution = (TimetableSolution bestSolution) -> {
-            reportBestSolution.accept(bestSolution);
-        };
         this.paused = false;
         this.stopped = false;
     }
@@ -72,8 +67,8 @@ public class RunAlgorithmTask implements Runnable {
                 //if we're resuming the task
                 bestSolutionEver = prevEvolutionState.getBestSolutionSoFar();
             }
+
             prevEvolutionState.setStatus(LogicalRunStatus.RUNNING);
-            reportBestSolution.accept(bestSolutionEver);
             int currGenerationNum = 0;
             TimetableSolution currBestSolution = null;
 
@@ -89,13 +84,11 @@ public class RunAlgorithmTask implements Runnable {
                         elapsedTime, //the generation time param is when we started the 1st generation
                         currSolutions,
                         bestSolutionEver);
-                currEvolutionState.setStatus(LogicalRunStatus.RUNNING);
 
                 currBestSolution = currEvolutionState.getGenerationBestSolution();
 
                 if (currBestSolution.getFitnessScore() > bestSolutionEver.getFitnessScore()) {
                     bestSolutionEver = currBestSolution;
-                    reportBestSolution.accept(bestSolutionEver);
                 }
 
                 //stride for purposes of info-display and to save a stride-generation history
@@ -148,7 +141,6 @@ public class RunAlgorithmTask implements Runnable {
     private void reportFirstGeneration(EvolutionState prevEvolutionState) {
         reportStrideData.accept(
                 new StrideDataDTO(prevEvolutionState.getGenerationNum(), prevEvolutionState.getGenerationBestSolution().getFitnessScore()));
-        System.out.println(prevEvolutionState.getGenerationNum()); //TODO delete later
         reportState.accept(prevEvolutionState);
     }
 
@@ -195,10 +187,7 @@ public class RunAlgorithmTask implements Runnable {
     }
 
     private EvolutionState createFirstGenerationState() {
-        EvolutionState state = new EvolutionState(1, 0, getInitialPopulation(), bestSolutionEver);
-        state.setStatus(LogicalRunStatus.RUNNING);
-
-        return state;
+        return new EvolutionState(1, 0, getInitialPopulation(), bestSolutionEver);
     }
 
     @NotNull

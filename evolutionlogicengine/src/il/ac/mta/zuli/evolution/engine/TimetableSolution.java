@@ -153,7 +153,7 @@ public class TimetableSolution implements Solution {
 
     public void addScoreToRule(@NotNull Rule rule, double score) {
         if (score < 0) {
-            throw new ValidationException("Score can't be negative number "+rule.getClass().getSimpleName());
+            throw new ValidationException("Score can't be negative number " + rule.getClass().getSimpleName());
         }
 
         fitnessScorePerRule.put(rule, score);
@@ -179,6 +179,7 @@ public class TimetableSolution implements Solution {
         if (numOfSoftRules != 0) {
             softRuleAvg = softRuleSum / numOfSoftRules;
         }
+
         if (numOfHardRules != 0) {
             hardRuleAvg = hardRuleSum / numOfHardRules;
         }
@@ -205,7 +206,6 @@ public class TimetableSolution implements Solution {
         return ((java.lang.Double) totalFitnessScore).compareTo(other.getFitnessScore());
     }
 
-
     @Override
     public String toString() {
         return "TimeTableSolution=" + System.lineSeparator() +
@@ -214,6 +214,4 @@ public class TimetableSolution implements Solution {
         //", solutionSize=" + solutionSize +
         //+", fitnessScorePerRole=" + fitnessScorePerRule;
     }
-
-
 }

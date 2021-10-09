@@ -24,7 +24,13 @@ public class EvolutionState {
         this.generationNum = generationNum;
         this.solutions = generationSolutions;
         this.netRunTime = time;
-        this.bestSolutionSoFar = bestSolutionSoFar;
+
+        // compare the "best so far" to the "best in the current generation" - keep the bestest
+        TimetableSolution generationBestSolution = getGenerationBestSolution();
+        this.bestSolutionSoFar = bestSolutionSoFar != null && bestSolutionSoFar.compareTo(generationBestSolution) > 0
+                ? bestSolutionSoFar : generationBestSolution;
+
+        this.status = LogicalRunStatus.RUNNING;
         this.taskDone = false;
     }
 

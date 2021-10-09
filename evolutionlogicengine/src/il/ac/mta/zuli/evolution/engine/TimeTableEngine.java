@@ -1,7 +1,7 @@
 package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.Constants;
-import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
+import il.ac.mta.zuli.evolution.dto.ProgressDTO;
 import il.ac.mta.zuli.evolution.dto.StrideDataDTO;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
@@ -22,7 +22,6 @@ public class TimeTableEngine implements Engine {
     //EX3 additions to class:
     private List<EndPredicate> endPredicates;
     private int generationsStride;
-    private TimetableSolution bestSolution;
     private final List<StrideDataDTO> strideData; //generation num and best score in generation
 
     //new CTOR for Ex 3
@@ -96,11 +95,7 @@ public class TimeTableEngine implements Engine {
                 endPredicates,
                 generationsStride,
                 currentState,
-                (EvolutionState state) -> {
-                    System.out.println("state status " + state.getStatus() + ", isDone? " + state.isTaskDone());
-                    this.currEvolutionState = state;
-                },
-                (TimetableSolution solution) -> bestSolution = solution,
+                (EvolutionState state) -> currEvolutionState = state,
                 (StrideDataDTO data) -> strideData.add(data));
 
         new Thread(currentRunningTask, "EvolutionAlgorithmThread").start();
@@ -139,24 +134,27 @@ public class TimeTableEngine implements Engine {
     }
 
     public TimetableSolution getBestSolution() {
-        return bestSolution;
+        return currEvolutionState.getBestSolutionSoFar();
     }
 
     public double getBestScore() {
-        if (bestSolution != null) {
-            return bestSolution.getFitnessScore();
+        if (currEvolutionState != null) {
+            return currEvolutionState.getBestScoreSoFar();
         } else {
             return 0;
         }
     }
 
-    public GenerationProgressDTO getProgressData() {
-        return new GenerationProgressDTO(
+    public ProgressDTO getProgressData() {
+        if (currEvolutionState == null) {
+            return null;
+        }
+
+        return new ProgressDTO(
                 currEvolutionState.getGenerationNum(),
                 currEvolutionState.getGenerationBestScore(),
-                currEvolutionState.getBestScoreSoFar(),
-                currEvolutionState.getStatus()
-        );
+                getBestScore(),
+                currEvolutionState.getStatus());
     }
 
     public List<StrideDataDTO> getStrideData() {

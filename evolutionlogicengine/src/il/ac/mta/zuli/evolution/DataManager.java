@@ -82,7 +82,7 @@ public class DataManager {
     //#endregion
 
     //#region getters
-    public GenerationProgressDTO getProgressData(String userName, int ttID) {
+    public ProgressDTO getProgressData(String userName, int ttID) {
         return users.get(userName).getProgressData(ttID);
     }
 
@@ -203,8 +203,7 @@ public class DataManager {
                         new OtherUserSolutionDTO(
                                 user.getUsername(),
                                 userTTEngine.getBestScore(),
-                                userTTEngine.getCurrGenerationNum())
-                );
+                                userTTEngine.getCurrGenerationNum()));
             }
         }
 

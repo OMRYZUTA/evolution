@@ -1,6 +1,6 @@
 package il.ac.mta.zuli.evolution;
 
-import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
+import il.ac.mta.zuli.evolution.dto.ProgressDTO;
 import il.ac.mta.zuli.evolution.dto.StrideDataDTO;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.TimetableSolution;
@@ -98,7 +98,7 @@ public class User {
         return null;
     }
 
-    public GenerationProgressDTO getProgressData(int ttID) {
+    public ProgressDTO getProgressData(int ttID) {
         if (isSolvingProblem(ttID)) {
             return userAlgorithmRuns.get(ttID).getProgressData();
         }

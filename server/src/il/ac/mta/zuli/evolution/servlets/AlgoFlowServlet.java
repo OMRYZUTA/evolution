@@ -3,7 +3,7 @@ package il.ac.mta.zuli.evolution.servlets;
 import com.google.gson.Gson;
 import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.DataManager;
-import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
+import il.ac.mta.zuli.evolution.dto.ProgressDTO;
 import il.ac.mta.zuli.evolution.engine.EngineUtils;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
 import il.ac.mta.zuli.evolution.utils.AlgorithmActions;
@@ -77,7 +77,7 @@ public class AlgoFlowServlet extends HttpServlet {
             String timetableIDFromParameter = request.getParameter(Constants.TIMETABLE_ID);
             int ttID = Integer.parseInt(timetableIDFromParameter);
             DataManager dataManager = ServletUtils.getDataManager(getServletContext());
-            GenerationProgressDTO progressDTO = dataManager.getProgressData(usernameFromSession, ttID);
+            ProgressDTO progressDTO = dataManager.getProgressData(usernameFromSession, ttID);
             mapForJSON.put(Constants.DATA, progressDTO);
         } catch (Throwable e) {
             mapForJSON.put(Constants.ERROR, e.getMessage());
