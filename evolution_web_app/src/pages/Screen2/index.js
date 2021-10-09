@@ -130,12 +130,12 @@ const Index = () => {
                   direction="row"
                   justifyContent="space-between"
                   spacing={2}>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={3}>
                     <Typography>Users</Typography>
                     <UserList users={users}/>
                 </Grid>
 
-                <Grid item xs={12} md={10}>
+                <Grid item xs={12} md={9}>
                     <Grid container direction={"row"} className={classes.summaries}>
                         {summaries.map(summary => {
                             return (
