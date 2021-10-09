@@ -433,9 +433,11 @@ const Screen3 = () => {
                                                 <OtherSolutions otherSolutionsList={otherSolutions}/>
                                             </Grid>
                                             <Grid item>
-                                                <Button id="bestSolution" onClick={handleBestSolutionClick}
+                                                <Button id="bestSolution"
+                                                        variant="outlined"
+                                                        onClick={handleBestSolutionClick}
                                                         disabled={!bestSolution}>
-                                                    Best Solution (from all the users solving)
+                                                    Global Best Solution
                                                 </Button>
                                                 {openSolution && <SolutionDialog
                                                     handleClose={handleBestSolutionClose}
