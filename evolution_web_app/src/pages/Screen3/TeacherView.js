@@ -1,13 +1,5 @@
 import * as React from 'react';
-import {useCallback, useEffect, useState} from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Typography from "@mui/material/Typography";
+import {useCallback, useState} from 'react';
 import {makeStyles} from "@mui/styles"
 import Grid from "@mui/material/Grid";
 import DropDown from "../../components/Dropdown";
@@ -45,8 +37,6 @@ const TeacherView = ({quintets, days, hours, teachersObject}) => {
     const [teachers] = useState(extractTeachersFromTeacherObject(teachersObject));
     const [currentTeacher, setCurrentTeacher] = useState(teachers[0]);
     const [teacherQuintets, setTeacherQuintets] = useState(quintets.filter(quintet => quintet.teacherID === currentTeacher.id));
-
-
 
     const setValueInTeacher = useCallback((name, value) => {
         setTeacherQuintets(quintets.filter(quintet => quintet.teacherID === value));
