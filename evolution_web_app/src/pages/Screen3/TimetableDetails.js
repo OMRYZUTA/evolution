@@ -11,11 +11,9 @@ import Typography from "@mui/material/Typography";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        spacing: 2,
         justifyContent: "space-between"
     },
     settings: {
-        spacing: 2,
         justifyContent: "space-between",
         backgroundColor: "#D3D3D3", //light gray
     },

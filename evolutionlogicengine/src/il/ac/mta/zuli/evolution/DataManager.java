@@ -35,7 +35,6 @@ public class DataManager {
     }
 
     //#region Algorithm Flow methods (these are single-User-Methods, non-synchronized)
-    //TODO should these algo-flow methods be synchronized?
     public void startAlgorithmRunForUser(String userName,
                                          int timetableID,
                                          Map<String, Object> engineSettingsMap,
@@ -89,6 +88,16 @@ public class DataManager {
     //for the graph  bonus implementation
     public List<StrideDataDTO> getStrideData(String userName, int ttID) {
         return users.get(userName).getStrideData(ttID);
+    }
+
+    public TimetableSolutionDTO getBestSolutionFromUser(String userName, int ttID) {
+        TimetableSolution userSolution = users.get(userName).getBestSolution(ttID);
+
+        if (userSolution != null) {
+            return new TimetableSolutionDTO(userSolution, userName);
+        } else {
+            return null;
+        }
     }
 
     //return value might be an empty list
@@ -250,10 +259,5 @@ public class DataManager {
     //return true if list isn't empty
     private boolean isSomeoneSolvingProblem(int ttID) {
         return !getUsersSolvingProblem(ttID).isEmpty();
-    }
-
-    //when do we remove users? delete later
-    public synchronized void removeUser(String username) {
-        users.remove(username);
     }
 }

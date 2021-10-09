@@ -80,6 +80,7 @@ public class TimeTableEngine implements Engine {
                 && (LogicalRunStatus.RUNNING == currEvolutionState.getStatus()
                 || LogicalRunStatus.PAUSED == currEvolutionState.getStatus())) {
             currentRunningTask.stop();
+            currEvolutionState.setStatus(LogicalRunStatus.STOPPED);
         } else {
             // task was not running/paused - can not stop
             throw new InvalidOperationException("Run can not stop");
