@@ -1,16 +1,14 @@
 package il.ac.mta.zuli.evolution;
 
 import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
-import il.ac.mta.zuli.evolution.engine.StrideData;
+import il.ac.mta.zuli.evolution.dto.StrideDataDTO;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
 import il.ac.mta.zuli.evolution.engine.timetable.TimeTable;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class User {
     private String username;
@@ -129,12 +127,12 @@ public class User {
         return null;
     }
 
-    public StrideData getStrideData(int ttID) {
+    public List<StrideDataDTO> getStrideData(int ttID) {
         if (isSolvingProblem(ttID)) {
             return userAlgorithmRuns.get(ttID).getStrideData();
         }
 
-        return null;
+        return new ArrayList<>();
     }
     //#endregion
 

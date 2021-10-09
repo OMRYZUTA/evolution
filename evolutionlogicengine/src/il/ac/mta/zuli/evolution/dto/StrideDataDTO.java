@@ -1,10 +1,10 @@
-package il.ac.mta.zuli.evolution.engine;
+package il.ac.mta.zuli.evolution.dto;
 
-public class StrideData {
+public class StrideDataDTO {
     private final int generationNum;
     private final double bestScoreInGeneration;
 
-    public StrideData(int generationNum, double solution) {
+    public StrideDataDTO(int generationNum, double solution) {
         this.generationNum = generationNum;
         this.bestScoreInGeneration = solution;
     }

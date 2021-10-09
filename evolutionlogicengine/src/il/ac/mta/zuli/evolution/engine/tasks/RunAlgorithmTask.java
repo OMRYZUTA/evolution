@@ -1,6 +1,10 @@
 package il.ac.mta.zuli.evolution.engine.tasks;
 
-import il.ac.mta.zuli.evolution.engine.*;
+import il.ac.mta.zuli.evolution.dto.StrideDataDTO;
+import il.ac.mta.zuli.evolution.engine.Descriptor;
+import il.ac.mta.zuli.evolution.engine.EvolutionState;
+import il.ac.mta.zuli.evolution.engine.LogicalRunStatus;
+import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EvolutionEngine;
 import il.ac.mta.zuli.evolution.engine.predicates.EndPredicate;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +20,7 @@ public class RunAlgorithmTask implements Runnable {
     private final EvolutionState inEvolutionState;
     private final Consumer<TimetableSolution> reportBestSolution;
     private final Consumer<EvolutionState> reportState;
-    private final Consumer<StrideData> reportStrideData;
+    private final Consumer<StrideDataDTO> reportStrideData;
     private TimetableSolution bestSolutionEver;
     private final EvolutionEngine<TimetableSolution> evolutionEngine;
     private boolean paused;
@@ -29,7 +33,7 @@ public class RunAlgorithmTask implements Runnable {
             EvolutionState evolutionState,
             Consumer<EvolutionState> reportState,
             Consumer<TimetableSolution> reportBestSolution,
-            Consumer<StrideData> reportStrideData) {
+            Consumer<StrideDataDTO> reportStrideData) {
         this.descriptor = descriptor;
         this.endPredicates = endPredicates;
         this.generationsStride = generationsStride;
@@ -98,7 +102,7 @@ public class RunAlgorithmTask implements Runnable {
 
                 if ((currGenerationNum % generationsStride == 0)) {
                     reportStrideData.accept(
-                            new StrideData(currGenerationNum, currBestSolution.getFitnessScore()));
+                            new StrideDataDTO(currGenerationNum, currBestSolution.getFitnessScore()));
                     System.out.println(currGenerationNum);
                 }
 
@@ -134,7 +138,7 @@ public class RunAlgorithmTask implements Runnable {
 
     private void reportFirstGeneration(EvolutionState prevEvolutionState) {
         reportStrideData.accept(
-                new StrideData(prevEvolutionState.getGenerationNum(), prevEvolutionState.getGenerationBestSolution().getFitnessScore()));
+                new StrideDataDTO(prevEvolutionState.getGenerationNum(), prevEvolutionState.getGenerationBestSolution().getFitnessScore()));
         System.out.println(prevEvolutionState.getGenerationNum()); //TODO delete later
         reportState.accept(prevEvolutionState);
     }

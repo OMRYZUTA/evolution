@@ -80,6 +80,7 @@ const Screen3 = () => {
     const [otherSolutions, setOtherSolutions] = useState([]);
     const [progress, setProgress] = useState();
     const [bestSolution, setBestSolution] = useState();
+    const [strideData, setStrideData] = useState([]);
     const classes = useStyles();
     const history = useHistory();
     const emptyAlgoConfig = {
@@ -132,10 +133,11 @@ const Screen3 = () => {
 
         const fetchIntervalData = async () => {
             try {
-                const [otherSolutionsResult, progressResult, bestSolutionResult] = await Promise.all([
+                const [otherSolutionsResult, progressResult, bestSolutionResult, strideDataResult] = await Promise.all([
                     Screen3Services.getOtherSolutionsInfo(currentTimetableID),
                     Screen3Services.getProgress(currentTimetableID),
-                    Screen3Services.getBestSolution(currentTimetableID)
+                    Screen3Services.getBestSolution(currentTimetableID),
+                    Screen3Services.getStrideData(currentTimetableID)
                 ]);
 
                 if (otherSolutionsResult.data) {
@@ -157,6 +159,13 @@ const Screen3 = () => {
                 } else if (bestSolutionResult.error) {
                     setAlertText('oops something went wrong ' + bestSolutionResult.error);
                     console.error('failed getting best solution', bestSolutionResult.error);
+                }
+
+                if (strideDataResult.data) {
+                    setStrideData(strideDataResult.data);
+                } else if (strideDataResult.error) {
+                    setAlertText('oops something went wrong ' + strideDataResult.error);
+                    console.error('failed getting strideData', strideDataResult.error);
                 }
 
             } catch (e) {
@@ -183,11 +192,7 @@ const Screen3 = () => {
     }, [progress]);
 
     useEffect(() => {
-        if (algorithmConfiguration && algorithmConfiguration !== emptyAlgoConfig) {
-            setSaveStatus(SAVED);
-        } else {
-            setSaveStatus(UNSAVED);
-        }
+        onAlgorithmConfigChanged(algorithmConfiguration);
     }, [algorithmConfiguration]);
 
     const renderAlert = () => {
@@ -297,15 +302,15 @@ const Screen3 = () => {
                     <Typography> Start running the algorithm to see some progress </Typography>}
             </Grid>
         );
-    }
+    };
 
     const routeChange = () => {
         history.push(SCREEN2URL);
-    }
+    };
 
     const handleSolutionClick = useCallback(() => {
         setOpen(true);
-    }, [open])
+    }, [open]);
 
     const handleClose = () => {
         setOpen(false);
@@ -349,7 +354,20 @@ const Screen3 = () => {
                 </Button>
             </ButtonGroup>
         );
-    }
+    };
+
+    const onAlgorithmConfigChanged = useCallback((data) => {
+        if (data === emptyAlgoConfig) {
+            console.log('setting to unsaved');
+            setSaveStatus(UNSAVED);
+        } else if (data === algorithmConfiguration) {
+            console.log('setting to saved');
+            setSaveStatus(SAVED);
+        } else {
+            console.log('setting to dirty');
+            setSaveStatus(DIRTY);
+        }
+    }, [algorithmConfiguration])
 
     return (
         <Grid>
@@ -370,6 +388,7 @@ const Screen3 = () => {
                             {/*TODO need to disable algoConfig ONLY tab as editable while running*/}
                             <InfoTabs algorithmConfiguration={algorithmConfiguration}
                                       handleAlgorithmConfigSave={setAlgorithmConfiguration}
+                                      handleAlgorithmConfigChanged={onAlgorithmConfigChanged}
                                       timetable={timetable}/>
                         </Grid>
                     </Grid>

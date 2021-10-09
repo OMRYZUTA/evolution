@@ -1,7 +1,6 @@
 package il.ac.mta.zuli.evolution;
 
 import il.ac.mta.zuli.evolution.dto.*;
-import il.ac.mta.zuli.evolution.engine.StrideData;
 import il.ac.mta.zuli.evolution.engine.TimeTableEngine;
 import il.ac.mta.zuli.evolution.engine.TimetableSolution;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
@@ -87,8 +86,8 @@ public class DataManager {
         return users.get(userName).getProgressData(ttID);
     }
 
-    //we might nor be using the stride updates (depends on the bonus we implement)
-    public StrideData getStrideData(String userName, int ttID) {
+    //for the graph  bonus implementation
+    public List<StrideDataDTO> getStrideData(String userName, int ttID) {
         return users.get(userName).getStrideData(ttID);
     }
 

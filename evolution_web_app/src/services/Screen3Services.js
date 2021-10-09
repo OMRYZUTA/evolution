@@ -1,5 +1,6 @@
 import {fetchWrapper} from "./Utils";
 
+
 export const getTimetableDetails = async (timetableID) => {
     const url = `/server_Web_exploded/api/timetable/details?timetableID=${timetableID}`;
     const method = 'GET';
@@ -26,6 +27,12 @@ export const getProgress = async (timetableID) => {
 
 export const getBestSolution = async (timetableID) => {
     const url = `/server_Web_exploded/api/bestsolution?timetableID=${timetableID}`;
+    const method = 'GET';
+    return await fetchWrapper(method, url);
+}
+
+export const getStrideData = async (timetableID) => {
+    const url = `/server_Web_exploded/api/stridedata?timetableID=${timetableID}`;
     const method = 'GET';
     return await fetchWrapper(method, url);
 }

@@ -2,6 +2,7 @@ package il.ac.mta.zuli.evolution.engine;
 
 import il.ac.mta.zuli.evolution.Constants;
 import il.ac.mta.zuli.evolution.dto.GenerationProgressDTO;
+import il.ac.mta.zuli.evolution.dto.StrideDataDTO;
 import il.ac.mta.zuli.evolution.engine.evolutionengine.EngineSettings;
 import il.ac.mta.zuli.evolution.engine.exceptions.InvalidOperationException;
 import il.ac.mta.zuli.evolution.engine.exceptions.ValidationException;
@@ -22,7 +23,7 @@ public class TimeTableEngine implements Engine {
     private List<EndPredicate> endPredicates;
     private int generationsStride;
     private TimetableSolution bestSolution;
-    private StrideData strideData; //so the UI can poll the GenerationNum and BestScore in that Generation
+    private final List<StrideDataDTO> strideData; //generation num and best score in generation
 
     //new CTOR for Ex 3
     public TimeTableEngine(TimeTable timetable,
@@ -34,6 +35,7 @@ public class TimeTableEngine implements Engine {
         this.descriptor = new Descriptor(timetable, engineSettings);
         setGenerationsStride(stride);
         this.endPredicates = generatePredicates(endPredicatesMap);
+        this.strideData = new ArrayList<>();
     }
 
     //#region algorithm-flow methods:
@@ -99,7 +101,7 @@ public class TimeTableEngine implements Engine {
                     this.currEvolutionState = state;
                 },
                 (TimetableSolution solution) -> bestSolution = solution,
-                (StrideData data) -> strideData = data);
+                (StrideDataDTO data) -> strideData.add(data));
 
         new Thread(currentRunningTask, "EvolutionAlgorithmThread").start();
     }
@@ -157,7 +159,7 @@ public class TimeTableEngine implements Engine {
         );
     }
 
-    public StrideData getStrideData() {
+    public List<StrideDataDTO> getStrideData() {
         return strideData;
     }
     //#endregion

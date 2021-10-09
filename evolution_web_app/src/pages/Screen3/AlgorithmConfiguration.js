@@ -47,7 +47,7 @@ function nullCoalesce(value, defValue = '') {
     return value == null ? '' : value;
 }
 
-const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSave}) => {
+const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSave, handleAlgorithmConfigChanged}) => {
     const classes = useStyles();
     const [data, setData] = useState(algorithmConfiguration); //currentSettings
 
@@ -60,9 +60,14 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
     const [cuttingPointsError, setCuttingPointsError] = useState(false);
     //#endregion
 
+    // when the algorithm configuration changes from the server - we want to update the local state
     useEffect(() => {
         setData(algorithmConfiguration);
     }, [algorithmConfiguration])
+
+    useEffect(() => {
+        handleAlgorithmConfigChanged(data);
+    }, [data]);
 
     const handleStrideChange = useCallback((e) => {
         let value = e.target.value.trim();
@@ -486,6 +491,7 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
         && !cuttingPointsError
         && !mutationsError;
     const saveEnabled = (data !== algorithmConfiguration) && noError;
+    const cancelEnabled = data !== algorithmConfiguration;
 
     return (
         <Paper>
@@ -499,9 +505,10 @@ const AlgorithmConfiguration = ({algorithmConfiguration, handleAlgorithmConfigSa
                         onClick={() => {
                             handleAlgorithmConfigSave(data);
                         }}>Save</Button>
-                <Button onClick={() => {
-                    setData(algorithmConfiguration);
-                }}>Cancel</Button>
+                <Button disabled={!cancelEnabled}
+                        onClick={() => {
+                            setData(algorithmConfiguration);
+                        }}>Cancel</Button>
             </ButtonGroup>
         </Paper>
     );
